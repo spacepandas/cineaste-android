@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Cineaste</string>
+    <string name="language_tag">de</string>
+    <string name="movieNight">Filmabend</string>
+    <string name="watchList">Watchlist</string>
+    <string name="watchedlist">Watchedlist</string>
+    <string name="search">Suche</string>
+    <plurals name="movieCounter">
+        <item quantity="one">Film: %d</item>
+        <item quantity="other">Filme: %d</item>
+    </plurals>
+    <string name="startMovieNight">Filmnacht starten</string>
+
+    <string name="enter_username">Username eingeben</string>
+    <string name="username">Username</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
