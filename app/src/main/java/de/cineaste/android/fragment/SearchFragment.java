@@ -1,4 +1,4 @@
-package de.cineaste.fragment;
+package de.cineaste.android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,10 +17,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.R;
-import de.cineaste.adapter.SearchQueryAdapter;
-import de.cineaste.entity.Movie;
-import de.cineaste.network.TheMovieDb;
+import de.cineaste.android.R;
+import de.cineaste.android.adapter.SearchQueryAdapter;
+import de.cineaste.android.entity.Movie;
+import de.cineaste.android.network.TheMovieDb;
 
 public class SearchFragment extends Fragment {
 

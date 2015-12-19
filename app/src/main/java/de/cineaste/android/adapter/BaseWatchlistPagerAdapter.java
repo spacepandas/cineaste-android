@@ -1,4 +1,4 @@
-package de.cineaste.adapter;
+package de.cineaste.android.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

@@ -1,4 +1,4 @@
-package de.cineaste.entity;
+package de.cineaste.android.entity;
 
 public class MatchingResult extends MovieDto {
 

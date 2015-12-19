@@ -1,4 +1,4 @@
-package de.cineaste.network;
+package de.cineaste.android.network;
 
 import android.content.Context;
 
@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.entity.Movie;
+import de.cineaste.android.entity.Movie;
 
 public class TheMovieDb extends BaseNetwork {
 

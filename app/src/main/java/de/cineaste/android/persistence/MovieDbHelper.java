@@ -1,4 +1,4 @@
-package de.cineaste.persistence;
+package de.cineaste.android.persistence;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.Context;
 import java.util.List;
 import java.util.Observable;
 
-import de.cineaste.entity.Movie;
+import de.cineaste.android.entity.Movie;
 
 /**
  * Created by christianbraun on 17/11/15.

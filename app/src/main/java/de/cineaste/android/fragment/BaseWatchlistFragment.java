@@ -1,4 +1,4 @@
-package de.cineaste.fragment;
+package de.cineaste.android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import de.cineaste.R;
-import de.cineaste.adapter.WatchedlistAdapter;
-import de.cineaste.adapter.WatchlistAdapter;
+import de.cineaste.android.R;
+import de.cineaste.android.adapter.WatchedlistAdapter;
+import de.cineaste.android.adapter.WatchlistAdapter;
 
 public class BaseWatchlistFragment extends Fragment {
 

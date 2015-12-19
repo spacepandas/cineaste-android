@@ -1,4 +1,4 @@
-package de.cineaste;
+package de.cineaste.android;
 
 public interface Constants {
 

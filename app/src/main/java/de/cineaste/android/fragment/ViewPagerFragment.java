@@ -1,4 +1,4 @@
-package de.cineaste.fragment;
+package de.cineaste.android.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,9 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import de.cineaste.MainActivity;
-import de.cineaste.R;
-import de.cineaste.adapter.BaseWatchlistPagerAdapter;
+import de.cineaste.android.MainActivity;
+import de.cineaste.android.R;
+import de.cineaste.android.adapter.BaseWatchlistPagerAdapter;
 
 public class ViewPagerFragment extends Fragment {
 

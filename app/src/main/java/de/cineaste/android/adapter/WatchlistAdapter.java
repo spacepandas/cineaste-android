@@ -1,4 +1,4 @@
-package de.cineaste.adapter;
+package de.cineaste.android.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import de.cineaste.R;
-import de.cineaste.entity.Movie;
-import de.cineaste.persistence.MovieDbHelper;
+import de.cineaste.android.R;
+import de.cineaste.android.entity.Movie;
+import de.cineaste.android.persistence.MovieDbHelper;
 
 public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.ViewHolder> {
 

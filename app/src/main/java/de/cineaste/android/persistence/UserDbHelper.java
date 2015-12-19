@@ -1,12 +1,11 @@
-package de.cineaste.persistence;
+package de.cineaste.android.persistence;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import de.cineaste.entity.User;
-
+import de.cineaste.android.entity.User;
 
 /**
  * Created by christianbraun on 17/11/15.

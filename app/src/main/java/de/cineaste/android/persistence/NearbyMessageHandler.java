@@ -1,9 +1,9 @@
-package de.cineaste.persistence;
+package de.cineaste.android.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.entity.NearbyMessage;
+import de.cineaste.android.entity.NearbyMessage;
 
 
 /**

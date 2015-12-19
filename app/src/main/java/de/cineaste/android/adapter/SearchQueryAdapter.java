@@ -1,4 +1,4 @@
-package de.cineaste.adapter;
+package de.cineaste.android.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +13,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import de.cineaste.Constants;
-import de.cineaste.R;
-import de.cineaste.entity.Movie;
-import de.cineaste.persistence.MovieDbHelper;
+import de.cineaste.android.Constants;
+import de.cineaste.android.R;
+import de.cineaste.android.entity.Movie;
+import de.cineaste.android.persistence.MovieDbHelper;
 
 
 public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.ViewHolder> {

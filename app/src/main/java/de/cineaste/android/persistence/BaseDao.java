@@ -1,11 +1,11 @@
-package de.cineaste.persistence;
+package de.cineaste.android.persistence;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import de.cineaste.Constants;
+import de.cineaste.android.Constants;
 
 
 /**

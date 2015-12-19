@@ -1,4 +1,4 @@
-package de.cineaste.network;
+package de.cineaste.android.network;
 
 import android.os.AsyncTask;
 

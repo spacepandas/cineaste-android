@@ -1,4 +1,4 @@
-package de.cineaste.persistence;
+package de.cineaste.android.persistence;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.Constants;
-import de.cineaste.entity.Movie;
+import de.cineaste.android.Constants;
+import de.cineaste.android.entity.Movie;
 
 
 /**
