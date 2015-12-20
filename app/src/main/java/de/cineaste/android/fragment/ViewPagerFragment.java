@@ -48,7 +48,7 @@ public class ViewPagerFragment extends Fragment {
 
         String[] titles = {getResources().getString( R.string.watchList ), getResources().getString( R.string.watchedlist )};
 
-        mPagerAdapter = new BaseWatchlistPagerAdapter( getFragmentManager(), fragments, titles );
+        mPagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), fragments, titles );
 
         mViewPager.setAdapter( mPagerAdapter );
 
