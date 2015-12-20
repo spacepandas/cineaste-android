@@ -6,7 +6,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,13 +41,11 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate( R.layout.fragment_search, container, false );
 
         movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
-        //movieQueryLayoutMgr =  new LinearLayoutManager(getActivity());
-        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        movieQueryLayoutMgr =  new LinearLayoutManager(getActivity());
         movieQueryAdapter = new SearchQueryAdapter(getActivity(), new ArrayList<Movie>());
         movieQueryRecyclerView.setItemAnimator( new DefaultItemAnimator() );
 
-        movieQueryRecyclerView.setLayoutManager(llm);
+        movieQueryRecyclerView.setLayoutManager(movieQueryLayoutMgr);
         movieQueryRecyclerView.setAdapter( movieQueryAdapter );
 
         return view;

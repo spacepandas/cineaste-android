@@ -28,7 +28,7 @@ public class BaseWatchlistFragment extends Fragment {
 
     @Override
     public void setArguments(Bundle args) {
-        super.setArguments(args);
+        super.setArguments( args );
         mWatchlistType = args.getString(WatchlistFragmentType.WATCHLIST_TYPE);
     }
 
@@ -38,19 +38,6 @@ public class BaseWatchlistFragment extends Fragment {
         View watchlistView = inflater.inflate(R.layout.fragment_base_watchlist, container, false);
 
         mBaseWatchlistRecyclerView = (RecyclerView)watchlistView.findViewById(R.id.basewatchlist_recycler_view);
-
-        return watchlistView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        setUpView();
-    }
-
-
-    private void setUpView() {
         mBaseWatchlistLayoutMgr = new LinearLayoutManager(getActivity());
 
         mBaseWatchlistRecyclerView.setHasFixedSize( true );
@@ -65,5 +52,6 @@ public class BaseWatchlistFragment extends Fragment {
         mBaseWatchlistRecyclerView.setLayoutManager( mBaseWatchlistLayoutMgr );
         mBaseWatchlistRecyclerView.setAdapter( mBaseWatchlistAdapter );
 
+        return watchlistView;
     }
 }

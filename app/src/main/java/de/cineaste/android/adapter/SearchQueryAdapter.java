@@ -21,8 +21,8 @@ import de.cineaste.android.persistence.MovieDbHelper;
 
 public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.ViewHolder> {
     public List<Movie> mDataset;
-    private MovieDbHelper _db;
-    private Context _context;
+    private MovieDbHelper mDb;
+    private Context context;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mMovieTitle;
@@ -43,8 +43,8 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
     }
 
     public SearchQueryAdapter(Context context, List<Movie> movies) {
-        _db = MovieDbHelper.getInstance(context);
-        this._context = context;
+        mDb = MovieDbHelper.getInstance(context);
+        this.context = context;
         mDataset = movies;
     }
 
@@ -62,7 +62,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
         holder.mMovieTitle.setText(movieTitle);
         String posterName = holder.mCurrentMovie.getPosterPath();
         String posterUri = Constants.POSTER_URI.replace("<posterName>", posterName != null ? posterName : "/" );
-        Picasso.with( _context ).load(posterUri).into(holder.mMoviePoster);
+        Picasso.with( context ).load(posterUri).into(holder.mMoviePoster);
 
 
         holder.mAddToWatchlistButton.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +71,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
             public void onClick(View v) {
                 int index = mDataset.indexOf(holder.mCurrentMovie);
                 Movie watchlistMovie = holder.mCurrentMovie;
-                _db.createNewMovieEntry(watchlistMovie);
+                mDb.createNewMovieEntry( watchlistMovie );
                 mDataset.remove(index);
                 notifyItemRemoved(index);
             }
@@ -84,7 +84,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
                 int index = mDataset.indexOf(holder.mCurrentMovie);
                 Movie watchlistMovie = holder.mCurrentMovie;
                 watchlistMovie.setWatched(true);
-                _db.createNewMovieEntry(watchlistMovie);
+                mDb.createNewMovieEntry( watchlistMovie );
                 mDataset.remove(index);
                 notifyItemRemoved(index);
             }
