@@ -1,5 +1,6 @@
 package de.cineaste.android.fragment;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -30,8 +31,8 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
-        setHasOptionsMenu( true );
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -62,6 +63,9 @@ public class SearchFragment extends Fragment {
         SearchView searchView;
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
+            searchView.setFocusable(true);
+            searchView.setIconified(false);
+            searchView.requestFocusFromTouch();
             searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit( String query ) {
