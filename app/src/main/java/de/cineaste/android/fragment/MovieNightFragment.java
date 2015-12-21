@@ -44,38 +44,49 @@ import de.cineaste.android.persistence.MovieDbHelper;
 import de.cineaste.android.persistence.NearbyMessageHandler;
 import de.cineaste.android.persistence.UserDbHelper;
 
-public class MovieNightFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
-
-    private static MovieNightFragment instance;
-    private static final String TAG = "movie_night_fragment";
-
-    private String userName;
+public class MovieNightFragment extends Fragment
+        implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
             .setTtlSeconds( 180 ).build();
+    private static final String TAG = "movie_night_fragment";
 
+    private static MovieNightFragment instance;
+
+    private final ArrayList<NearbyMessage> nearbyMessagesArrayList = new ArrayList<>();
+
+    private String userName;
     private Button startBtn;
-    private TextView searchingFrinds;
+    private TextView searchingFriends;
     private ProgressBar progressBar;
     private RecyclerView nearbyUser_rv;
 
     private NearbyUserAdapter nearbyUserAdapter;
-
-    private final ArrayList<NearbyMessage> nearbyMessagesArrayList = new ArrayList<>();
     private GoogleApiClient googleApiClient;
     private Message deviceInfoMessage;
     private MessageListener messageListener;
-
-
-    private boolean mResolvingNearbyPermissionError = false;
-
     private MovieDbHelper watchlistDbHelper;
+    private boolean mResolvingNearbyPermissionError = false;
 
     public static MovieNightFragment getInstance() {
         if( instance == null )
             instance = new MovieNightFragment();
         return instance;
+    }
+
+    public void finishedResolvingNearbyPermissionError() {
+        mResolvingNearbyPermissionError = false;
+    }
+
+    public void start() {
+        publish();
+        subscribe();
+    }
+
+    public void stop() {
+        unpublish();
+        unsubscribe();
     }
 
     @Override
@@ -85,7 +96,9 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
         watchlistDbHelper = MovieDbHelper.getInstance( getActivity() );
         UserDbHelper userDbHelper = UserDbHelper.getInstance( getActivity() );
         User currentUser = userDbHelper.getUser();
-        userName = (currentUser != null) ? currentUser.getUserName() : InstanceID.getInstance( getActivity().getApplicationContext() ).getId();
+        userName = (currentUser != null) ?
+                currentUser.getUserName() :
+                InstanceID.getInstance( getActivity().getApplicationContext() ).getId();
 
     }
 
@@ -97,11 +110,15 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
 
         nearbyUser_rv = (RecyclerView) view.findViewById( R.id.nearbyUser_rv );
         startBtn = (Button) view.findViewById( R.id.start_btn );
-        //startBtn.setEnabled( false );
-        searchingFrinds = (TextView) view.findViewById( R.id.searchingFriends );
+        startBtn.setEnabled( false );
+        searchingFriends = (TextView) view.findViewById( R.id.searchingFriends );
         progressBar = (ProgressBar) view.findViewById( R.id.progressBar );
 
-        nearbyUserAdapter = new NearbyUserAdapter( nearbyMessagesArrayList, R.layout.card_nearby_user, getActivity() );
+        nearbyUserAdapter =
+                new NearbyUserAdapter(
+                        nearbyMessagesArrayList,
+                        R.layout.card_nearby_user,
+                        getActivity() );
 
         final LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
         llm.setOrientation( LinearLayoutManager.VERTICAL );
@@ -116,17 +133,16 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
                     @Override
                     public void run() {
                         nearbyMessagesArrayList.add( NearbyMessage.fromMessage( message ) );
-                        if( nearbyMessagesArrayList.size() >0 ) {
+                        if( nearbyMessagesArrayList.size() > 0 ) {
                             startBtn.setEnabled( true );
                             nearbyUser_rv.setVisibility( View.VISIBLE );
-                            searchingFrinds.setVisibility( View.GONE );
+                            searchingFriends.setVisibility( View.GONE );
                             progressBar.setVisibility( View.GONE );
                         }
                         nearbyUserAdapter.notifyDataSetChanged();
                     }
                 } );
             }
-
             @Override
             public void onLost( final Message message ) {
                 getActivity().runOnUiThread( new Runnable() {
@@ -144,22 +160,12 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
         return view;
     }
 
-
-    private void clearDeviceList() {
-        getActivity().runOnUiThread( new Runnable() {
-            @Override
-            public void run() {
-                nearbyMessagesArrayList.clear();
-                nearbyUserAdapter.notifyDataSetChanged();
-            }
-        } );
-    }
-
     @Override
     public void onStart() {
         super.onStart();
 
-        final String deviceId = InstanceID.getInstance( getActivity().getApplicationContext() ).getId();
+        final String deviceId =
+                InstanceID.getInstance( getActivity().getApplicationContext() ).getId();
         List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus( false );
         final List<MovieDto> localMovies = transFormMovies( localWatchlistMovies );
         deviceInfoMessage = NearbyMessage.newNearbyMessage( deviceId, localMovies, userName );
@@ -176,10 +182,13 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
             @Override
             public void onClick( View v ) {
                 NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
-                NearbyMessage localNearbyMessage = new NearbyMessage( userName, deviceId, localMovies );
+                NearbyMessage localNearbyMessage =
+                        new NearbyMessage( userName, deviceId, localMovies );
                 handler.addMessage( localNearbyMessage );
                 handler.addMessages( nearbyMessagesArrayList );
-                MainActivity.replaceFragmentPopBackStack( getFragmentManager(), new ResultFragment() );
+                MainActivity.replaceFragmentPopBackStack(
+                        getFragmentManager(),
+                        new ResultFragment() );
             }
         } );
     }
@@ -192,7 +201,6 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
 
             googleApiClient.disconnect();
         }
-
         super.onStop();
     }
 
@@ -209,6 +217,11 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
                 + connectionSuspendedCauseToString( cause ) );
     }
 
+    @Override
+    public void onConnectionFailed( ConnectionResult connectionResult ) {
+        Log.i( TAG, "connection to GoogleApiClient failed" );
+    }
+
     private static String connectionSuspendedCauseToString( int cause ) {
         switch ( cause ) {
             case CAUSE_NETWORK_LOST:
@@ -220,11 +233,15 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
         }
     }
 
-    @Override
-    public void onConnectionFailed( ConnectionResult connectionResult ) {
-        Log.i( TAG, "connection to GoogleApiClient failed" );
+    private void clearDeviceList() {
+        getActivity().runOnUiThread( new Runnable() {
+            @Override
+            public void run() {
+                nearbyMessagesArrayList.clear();
+                nearbyUserAdapter.notifyDataSetChanged();
+            }
+        } );
     }
-
 
     private void subscribe() {
         Log.i( TAG, "trying to subscribe" );
@@ -363,20 +380,6 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
         }
     }
 
-    public void finishedResolvingNearbyPermissionError() {
-        mResolvingNearbyPermissionError = false;
-    }
-
-    public void start() {
-        publish();
-        subscribe();
-    }
-
-    public void stop() {
-        unpublish();
-        unsubscribe();
-    }
-
     private List<MovieDto> transFormMovies( List<Movie> movies ) {
         List<MovieDto> movieDtos = new ArrayList<>();
         for ( Movie movie : movies ) {
@@ -384,6 +387,4 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
         }
         return movieDtos;
     }
-
-
 }

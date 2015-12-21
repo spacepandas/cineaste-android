@@ -1,6 +1,5 @@
 package de.cineaste.android.fragment;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,42 +17,44 @@ import com.google.common.collect.Multisets;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.ResultAdapter;
 import de.cineaste.android.entity.MatchingResult;
+import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.MovieDto;
 import de.cineaste.android.entity.NearbyMessage;
+import de.cineaste.android.network.TheMovieDb;
+import de.cineaste.android.persistence.MovieDbHelper;
 import de.cineaste.android.persistence.NearbyMessageHandler;
 
-public class ResultFragment extends Fragment {
+public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSelectListener {
 
     private NearbyMessageHandler handler;
     private List<NearbyMessage> nearbyMessages;
     private RecyclerView result;
 
-    public ResultFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_result, container, false);
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState ) {
+        View view = inflater.inflate( R.layout.fragment_result, container, false );
 
         handler = NearbyMessageHandler.getInstance();
         nearbyMessages = handler.getMessages();
 
-        result = (RecyclerView) view.findViewById(R.id.result_list);
+        result = (RecyclerView) view.findViewById( R.id.result_list );
 
-        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        result.setLayoutManager(llm);
-        result.setItemAnimator(new DefaultItemAnimator());
+        final LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
+        llm.setOrientation( LinearLayoutManager.VERTICAL );
+        result.setLayoutManager( llm );
+        result.setItemAnimator( new DefaultItemAnimator() );
 
-        ResultAdapter resultAdapter = new ResultAdapter(getResult(), R.layout.result_card, getActivity());
-        result.setAdapter(resultAdapter);
+        ResultAdapter resultAdapter = new ResultAdapter(
+                getResult(),
+                R.layout.result_card,
+                getActivity(),
+                this );
+        result.setAdapter( resultAdapter );
 
         return view;
     }
@@ -69,28 +70,41 @@ public class ResultFragment extends Fragment {
         ArrayList<MatchingResult> results = new ArrayList<>();
         Multiset<MovieDto> movies = HashMultiset.create( getMovies() );
 
-        for (Multiset.Entry<MovieDto> entry : Multisets.copyHighestCountFirst( movies ).entrySet()) {
+        for ( Multiset.Entry<MovieDto> entry :
+                Multisets.copyHighestCountFirst( movies ).entrySet() ) {
             MovieDto current = entry.getElement();
-            results.add(new MatchingResult(current, movies.count(current)));
+            results.add( new MatchingResult( current, movies.count( current ) ) );
             Log.d( "Test", current.getTitle() + " " + current.getId() );
         }
 
         return results;
-
     }
 
+    @Override
+    public void onMovieSelectListener( int position ) {
+        MainActivity.replaceFragmentPopBackStack( getFragmentManager(), new ViewPagerFragment() );
+        TheMovieDb theMovieDb = new TheMovieDb( getActivity() );
+
+        theMovieDb.fetchMovie( getResult().get( position ).getId(), new TheMovieDb.OnFetchMovieResultListener() {
+            @Override
+            public void onFetchMovieResultListener( Movie movie ) {
+                MovieDbHelper db = MovieDbHelper.getInstance( getActivity() );
+                movie.setWatched( true );
+                db.createOrUpdate( movie );
+            }
+        } );
+    }
 
     private ArrayList<MovieDto> getMovies() {
         ArrayList<MovieDto> movies = new ArrayList<>();
 
-        for (NearbyMessage current: nearbyMessages) {
-            for (MovieDto movie : current.getMovies()) {
-                movies.add(movie);
+        for ( NearbyMessage current : nearbyMessages ) {
+            for ( MovieDto movie : current.getMovies() ) {
+                movies.add( movie );
             }
         }
 
         return movies;
-
     }
 }
 

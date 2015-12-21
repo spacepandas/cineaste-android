@@ -12,13 +12,14 @@ import android.widget.TextView;
 
 import de.cineaste.android.R;
 
-public class UserInputFragment extends DialogFragment implements TextView.OnEditorActionListener, View.OnClickListener {
+public class UserInputFragment extends DialogFragment
+        implements TextView.OnEditorActionListener, View.OnClickListener {
 
     private EditText editText;
     private TextView textview;
 
     public interface UserNameListener {
-        void onFinishUserDialog(String userName);
+        void onFinishUserDialog( String userName );
     }
 
     public static UserInputFragment newInstance() {
@@ -26,40 +27,42 @@ public class UserInputFragment extends DialogFragment implements TextView.OnEdit
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState ) {
 
-        View view = inflater.inflate( R.layout.fragment_user_input, container);
-        textview = (TextView) view.findViewById(R.id.ok_tv);
-        editText = (EditText) view.findViewById(R.id.username_et);
+        View view = inflater.inflate( R.layout.fragment_user_input, container );
+        textview = (TextView) view.findViewById( R.id.ok_tv );
+        editText = (EditText) view.findViewById( R.id.username_et );
 
-        textview.setOnClickListener(this);
-        editText.setOnEditorActionListener(this);
+        textview.setOnClickListener( this );
+        editText.setOnEditorActionListener( this );
         editText.requestFocus();
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        getDialog().setTitle(R.string.enter_username);
-        getDialog().setCancelable(false);
+        getDialog().getWindow()
+                .setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE );
+        getDialog().setTitle( R.string.enter_username );
+        getDialog().setCancelable( false );
 
         return view;
     }
 
     @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+    public boolean onEditorAction( TextView v, int actionId, KeyEvent event ) {
         getNameAndDismiss();
+
         return true;
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick( View v ) {
         getNameAndDismiss();
     }
 
     private void getNameAndDismiss() {
         String input = editText.getText().toString().trim();
 
-        if (!input.isEmpty()){
+        if( !input.isEmpty() ) {
             UserNameListener activity = (UserNameListener) getActivity();
-            activity.onFinishUserDialog(input);
+            activity.onFinishUserDialog( input );
             this.dismiss();
         }
     }

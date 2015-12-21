@@ -52,7 +52,7 @@ android.util.Log.wtf( "mgr", url );
                     @Override
                     public void onResultListener( Response response ) {
                         List<Movie> movies = new ArrayList<>();
-                        if( successfullRequest( response.getCode() ) ) {
+                        if( successfulRequest( response.getCode() ) ) {
                             JsonParser parser = new JsonParser();
                             JsonObject responseObject =
                                     parser.parse( response.getString() ).getAsJsonObject();
@@ -80,7 +80,7 @@ android.util.Log.wtf( "mgr", url );
                 new OnResultListener() {
                     @Override
                     public void onResultListener( Response response ) {
-                        if( !successfullRequest( response.getCode() ) ) {
+                        if( !successfulRequest( response.getCode() ) ) {
                             listener.onFetchMovieResultListener( null );
                         } else {
                             listener.onFetchMovieResultListener(

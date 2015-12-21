@@ -7,7 +7,7 @@ public class User {
     public User() {
     }
 
-    public User(String userName) {
+    public User( String userName ) {
         this.userName = userName;
     }
 
@@ -15,7 +15,7 @@ public class User {
         return userName;
     }
 
-    public void setUserName(String userName) {
+    public void setUserName( String userName ) {
         this.userName = userName;
     }
 }
