@@ -14,13 +14,17 @@ import de.cineaste.android.Constants;
 public abstract class BaseDao extends SQLiteOpenHelper {
 
     private Context context;
-    public static final int DATABASE_VERSION = Constants.DATABASE_VERSION;
-    public static final String DATABASE_NAME = Constants.DATABASE_NAME;
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
     private static final String COMMA_SEP = ",";
+
+    protected SQLiteDatabase readDb;
+    protected SQLiteDatabase writeDb;
+
+    public static final int DATABASE_VERSION = Constants.DATABASE_VERSION;
+    public static final String DATABASE_NAME = Constants.DATABASE_NAME;
 
     public static abstract class UserEntry implements BaseColumns {
 
@@ -68,6 +72,8 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 
     public BaseDao( Context context ) {
         super( context, DATABASE_NAME, null, DATABASE_VERSION );
+        this.readDb = getReadableDatabase();
+        this.writeDb = getWritableDatabase();
     }
 
     @Override
