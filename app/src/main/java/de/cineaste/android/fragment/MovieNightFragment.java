@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -54,6 +56,8 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
             .setTtlSeconds( 180 ).build();
 
     private Button startBtn;
+    private TextView searchingFrinds;
+    private ProgressBar progressBar;
     private RecyclerView nearbyUser_rv;
 
     private NearbyUserAdapter nearbyUserAdapter;
@@ -93,7 +97,9 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
 
         nearbyUser_rv = (RecyclerView) view.findViewById( R.id.nearbyUser_rv );
         startBtn = (Button) view.findViewById( R.id.start_btn );
-        startBtn.setEnabled( false );
+        //startBtn.setEnabled( false );
+        searchingFrinds = (TextView) view.findViewById( R.id.searchingFriends );
+        progressBar = (ProgressBar) view.findViewById( R.id.progressBar );
 
         nearbyUserAdapter = new NearbyUserAdapter( nearbyMessagesArrayList, R.layout.card_nearby_user, getActivity() );
 
@@ -103,7 +109,6 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
         nearbyUser_rv.setItemAnimator( new DefaultItemAnimator() );
         nearbyUser_rv.setAdapter( nearbyUserAdapter );
 
-
         messageListener = new MessageListener() {
             @Override
             public void onFound( final Message message ) {
@@ -111,8 +116,11 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
                     @Override
                     public void run() {
                         nearbyMessagesArrayList.add( NearbyMessage.fromMessage( message ) );
-                        if( nearbyMessagesArrayList.size() > 1 ) {
+                        if( nearbyMessagesArrayList.size() >0 ) {
                             startBtn.setEnabled( true );
+                            nearbyUser_rv.setVisibility( View.VISIBLE );
+                            searchingFrinds.setVisibility( View.GONE );
+                            progressBar.setVisibility( View.GONE );
                         }
                         nearbyUserAdapter.notifyDataSetChanged();
                     }
@@ -171,11 +179,9 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
                 NearbyMessage localNearbyMessage = new NearbyMessage( userName, deviceId, localMovies );
                 handler.addMessage( localNearbyMessage );
                 handler.addMessages( nearbyMessagesArrayList );
-                MainActivity.replaceFragment( getFragmentManager(), new ResultFragment() );
+                MainActivity.replaceFragmentPopBackStack( getFragmentManager(), new ResultFragment() );
             }
         } );
-
-
     }
 
     @Override

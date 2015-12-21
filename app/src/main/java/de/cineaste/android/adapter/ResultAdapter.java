@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.MatchingResult;
 import de.cineaste.android.entity.Movie;
@@ -61,6 +62,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
                     @Override
                     public void onFetchMovieResultListener( Movie movie ) {
                         MovieDbHelper db = MovieDbHelper.getInstance( context );
+                        movie.setWatched( true );
                         db.createOrUpdate( movie );
                         int pos = results.indexOf( result );
                         results.remove( pos );
