@@ -97,7 +97,7 @@ public class MovieNightFragment extends Fragment implements GoogleApiClient.Conn
 
         nearbyUser_rv = (RecyclerView) view.findViewById( R.id.nearbyUser_rv );
         startBtn = (Button) view.findViewById( R.id.start_btn );
-        //startBtn.setEnabled( false );
+        startBtn.setEnabled( false );
         searchingFrinds = (TextView) view.findViewById( R.id.searchingFriends );
         progressBar = (ProgressBar) view.findViewById( R.id.progressBar );
 

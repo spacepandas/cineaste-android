@@ -1,6 +1,5 @@
 package de.cineaste.android.fragment;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,23 +17,22 @@ import com.google.common.collect.Multisets;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.ResultAdapter;
 import de.cineaste.android.entity.MatchingResult;
+import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.MovieDto;
 import de.cineaste.android.entity.NearbyMessage;
+import de.cineaste.android.network.TheMovieDb;
+import de.cineaste.android.persistence.MovieDbHelper;
 import de.cineaste.android.persistence.NearbyMessageHandler;
 
-public class ResultFragment extends Fragment {
+public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSelectListener {
 
     private NearbyMessageHandler handler;
     private List<NearbyMessage> nearbyMessages;
     private RecyclerView result;
-
-    public ResultFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,7 +50,7 @@ public class ResultFragment extends Fragment {
         result.setLayoutManager(llm);
         result.setItemAnimator(new DefaultItemAnimator());
 
-        ResultAdapter resultAdapter = new ResultAdapter(getResult(), R.layout.result_card, getActivity());
+        ResultAdapter resultAdapter = new ResultAdapter(getResult(), R.layout.result_card, getActivity(), this);
         result.setAdapter(resultAdapter);
 
         return view;
@@ -90,7 +88,21 @@ public class ResultFragment extends Fragment {
         }
 
         return movies;
+    }
 
+    @Override
+    public void onMovieSelectListener( int position ) {
+        MainActivity.replaceFragmentPopBackStack( getFragmentManager(), new ViewPagerFragment() );
+        TheMovieDb theMovieDb = new TheMovieDb( getActivity() );
+
+        theMovieDb.fetchMovie( getResult().get( position ).getId(), new TheMovieDb.OnFetchMovieResultListener() {
+            @Override
+            public void onFetchMovieResultListener( Movie movie ) {
+                MovieDbHelper db = MovieDbHelper.getInstance( getActivity() );
+                movie.setWatched( true );
+                db.createOrUpdate( movie );
+            }
+        } );
     }
 }
 
