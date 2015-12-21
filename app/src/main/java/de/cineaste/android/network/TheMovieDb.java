@@ -66,7 +66,7 @@ android.util.Log.wtf( "mgr", url );
                 } );
     }
 
-    public void fetchMovie( String movieId, final OnFetchMovieResultListener listener ) {
+    public void fetchMovie( long movieId, final OnFetchMovieResultListener listener ) {
 
         String url = host + "movie/" + movieId + "?" + API_KEY_TAG;
 

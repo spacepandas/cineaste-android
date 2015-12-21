@@ -29,5 +29,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.3.0'
     compile 'com.google.android.gms:play-services-nearby:8.3.0'
     compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.guava:guava:19.0-rc2'
     compile 'com.squareup.picasso:picasso:2.5.2'
 }

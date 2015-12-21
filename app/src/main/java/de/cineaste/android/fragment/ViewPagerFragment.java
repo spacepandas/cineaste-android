@@ -37,7 +37,7 @@ public class ViewPagerFragment extends Fragment {
 
         mViewPager = (ViewPager) view.findViewById( R.id.basewatchlist_pager );
 
-        mPagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), getActivity());
+        mPagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), getActivity() );
 
         mViewPager.setAdapter( mPagerAdapter );
 
