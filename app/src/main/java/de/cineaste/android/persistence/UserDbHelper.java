@@ -28,26 +28,23 @@ public class UserDbHelper extends BaseDao {
 
 
     public long createUser(User user){
-        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(UserEntry.COLUMN_USER_NAME, user.getUserName());
 
         long newRowId;
-        newRowId = db.insert(UserEntry.TABLE_NAME, null, values);
-        db.close();
+        newRowId = writeDb.insert(UserEntry.TABLE_NAME, null, values);
         return newRowId;
     }
 
     public User getUser(){
-        SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
                 UserEntry._ID,
                 UserEntry.COLUMN_USER_NAME
         };
 
-        Cursor c = db.query(UserEntry.TABLE_NAME,projection,null,null,null,null,null,null);
+        Cursor c = readDb.query(UserEntry.TABLE_NAME,projection,null,null,null,null,null,null);
 
         User user = null;
 
@@ -59,7 +56,6 @@ public class UserDbHelper extends BaseDao {
             }while(c.moveToNext());
         }
         c.close();
-        db.close();
         return user;
     }
 
