@@ -1,16 +1,13 @@
 package de.cineaste.android;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import de.cineaste.android.entity.User;
@@ -32,17 +29,16 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
                         fragment )
                 .addToBackStack( null )
                 .commit();
-
     }
 
     public static void replaceFragmentPopBackStack( FragmentManager fm, Fragment fragment ) {
         fm.popBackStack();
-        replaceFragment(fm, fragment);
-
+        replaceFragment( fm, fragment );
     }
-    public static void startUserInputDialog(FragmentManager fragmentManager) {
+
+    public static void startUserInputDialog( FragmentManager fragmentManager ) {
         UserInputFragment userInputFragment = UserInputFragment.newInstance();
-        userInputFragment.show(fragmentManager,"");
+        userInputFragment.show( fragmentManager, "" );
     }
 
     public static void startMovieNight( FragmentManager fm ) {
@@ -62,7 +58,17 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     @Override
     public boolean onSupportNavigateUp() {
         fm.popBackStack();
+
         return false;
+    }
+
+    @Override
+    public void onFinishUserDialog( String userName ) {
+        if( !userName.isEmpty() ) {
+            currentUser = new User( userName );
+            userDbHelper.createUser( currentUser );
+            MainActivity.startMovieNight( fm );
+        }
     }
 
     @Override
@@ -82,6 +88,24 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
             fm.beginTransaction()
                     .replace( R.id.content_container, new ViewPagerFragment() )
                     .commit();
+        }
+    }
+
+    @Override
+    protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
+        super.onActivityResult( requestCode, resultCode, data );
+        MovieNightFragment movieNightFragment = MovieNightFragment.getInstance();
+        movieNightFragment.finishedResolvingNearbyPermissionError();
+        if( requestCode == 1001 ) {
+            if( resultCode == Activity.RESULT_OK ) {
+
+                movieNightFragment.start();
+            } else if( resultCode == Activity.RESULT_CANCELED ) {
+                movieNightFragment.stop();
+            } else {
+                Toast.makeText( this, "Failed to resolve error with code " + resultCode,
+                        Toast.LENGTH_LONG ).show();
+            }
         }
     }
 
@@ -106,32 +130,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
             actionBar.setDisplayHomeAsUpEnabled(
                     fm.getBackStackEntryCount() > 0
             );
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult( requestCode, resultCode, data);
-        MovieNightFragment movieNightFragment = MovieNightFragment.getInstance();
-        movieNightFragment.finishedResolvingNearbyPermissionError();
-        if (requestCode == 1001) {
-            if (resultCode == Activity.RESULT_OK) {
-
-                movieNightFragment.start();
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                movieNightFragment.stop();
-            } else {
-                Toast.makeText( this, "Failed to resolve error with code " + resultCode, Toast.LENGTH_LONG ).show();
-            }
-        }
-    }
-
-    @Override
-    public void onFinishUserDialog( String userName ) {
-        if (!userName.isEmpty()) {
-            currentUser = new User(userName);
-            userDbHelper.createUser(currentUser);
-            MainActivity.startMovieNight( fm );
         }
     }
 }

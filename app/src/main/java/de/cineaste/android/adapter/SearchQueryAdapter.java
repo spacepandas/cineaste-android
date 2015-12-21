@@ -18,7 +18,6 @@ import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.persistence.MovieDbHelper;
 
-
 public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.ViewHolder> {
     public List<Movie> mDataset;
     private MovieDbHelper mDb;
@@ -32,71 +31,71 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 
         public Movie mCurrentMovie;
 
-        public ViewHolder(View v) {
-            super(v);
-            mMovieTitle = (TextView) v.findViewById( R.id.movie_title);
-            mMoviePoster = (ImageView) v.findViewById(R.id.movie_poster_image_view);
-            mAddToWatchlistButton = (ImageButton) v.findViewById(R.id.to_watchlist_button);
-            mMovieWatchedButton = (ImageButton) v.findViewById(R.id.watched_button);
+        public ViewHolder( View v ) {
+            super( v );
+            mMovieTitle = (TextView) v.findViewById( R.id.movie_title );
+            mMoviePoster = (ImageView) v.findViewById( R.id.movie_poster_image_view );
+            mAddToWatchlistButton = (ImageButton) v.findViewById( R.id.to_watchlist_button );
+            mMovieWatchedButton = (ImageButton) v.findViewById( R.id.watched_button );
         }
 
     }
 
-    public SearchQueryAdapter(Context context, List<Movie> movies) {
-        mDb = MovieDbHelper.getInstance(context);
+    public SearchQueryAdapter( Context context, List<Movie> movies ) {
+        mDb = MovieDbHelper.getInstance( context );
         this.context = context;
         mDataset = movies;
     }
 
 
     @Override
-    public SearchQueryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from( parent.getContext() ).inflate(R.layout.movie_search_query_cardview, parent, false);
-        return new ViewHolder(v);
+    public SearchQueryAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
+        View v = LayoutInflater
+                .from( parent.getContext() )
+                .inflate( R.layout.movie_search_query_cardview, parent, false );
+        return new ViewHolder( v );
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        String movieTitle = mDataset.get(position).getTitle();
-        holder.mCurrentMovie = mDataset.get(position);
-        holder.mMovieTitle.setText(movieTitle);
+    public void onBindViewHolder( final ViewHolder holder, final int position ) {
+        String movieTitle = mDataset.get( position ).getTitle();
+        holder.mCurrentMovie = mDataset.get( position );
+        holder.mMovieTitle.setText( movieTitle );
         String posterName = holder.mCurrentMovie.getPosterPath();
-        String posterUri = Constants.POSTER_URI.replace("<posterName>", posterName != null ? posterName : "/" );
-        Picasso.with( context ).load(posterUri).into(holder.mMoviePoster);
+        String posterUri =
+                Constants.POSTER_URI
+                        .replace( "<posterName>", posterName != null ? posterName : "/" );
+        Picasso.with( context ).load( posterUri ).into( holder.mMoviePoster );
 
-
-        holder.mAddToWatchlistButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                int index = mDataset.indexOf(holder.mCurrentMovie);
-                Movie watchlistMovie = holder.mCurrentMovie;
-                mDb.createNewMovieEntry( watchlistMovie );
-                mDataset.remove(index);
-                notifyItemRemoved(index);
-            }
-        });
-
-        holder.mMovieWatchedButton.setOnClickListener(new View.OnClickListener() {
+        holder.mAddToWatchlistButton.setOnClickListener( new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-                int index = mDataset.indexOf(holder.mCurrentMovie);
+            public void onClick( View v ) {
+                int index = mDataset.indexOf( holder.mCurrentMovie );
                 Movie watchlistMovie = holder.mCurrentMovie;
-                watchlistMovie.setWatched(true);
                 mDb.createNewMovieEntry( watchlistMovie );
-                mDataset.remove(index);
-                notifyItemRemoved(index);
+                mDataset.remove( index );
+                notifyItemRemoved( index );
             }
-        });
+        } );
 
+        holder.mMovieWatchedButton.setOnClickListener( new View.OnClickListener() {
 
+            @Override
+            public void onClick( View v ) {
+                int index = mDataset.indexOf( holder.mCurrentMovie );
+                Movie watchlistMovie = holder.mCurrentMovie;
+                watchlistMovie.setWatched( true );
+                mDb.createNewMovieEntry( watchlistMovie );
+                mDataset.remove( index );
+                notifyItemRemoved( index );
+            }
+        } );
     }
 
     @Override
     public int getItemCount() {
         return mDataset.size();
     }
-
 }
 

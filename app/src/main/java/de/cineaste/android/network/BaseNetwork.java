@@ -72,19 +72,7 @@ public class BaseNetwork {
                                     new BufferedInputStream( connection.getInputStream() ) )
                     );
                 } catch ( IOException e ) {
-                   /* if( connection != null ) {
-                        try {
-                            return new Response(
-                                    connection.getResponseCode(),
-                                    readResponse(
-                                            new BufferedInputStream( connection.getErrorStream() ) )
-                            );
-                        } catch ( IOException ex ) {
-                            // fall through
-                        }
-                    }*/
-
-                    // otherwise fall through and return null
+                    // fall through
                 } finally {
                     if( connection != null )
                         connection.disconnect();
@@ -99,11 +87,9 @@ public class BaseNetwork {
                 listener.onResultListener( response );
             }
         }.execute( request );
-
-
     }
 
-    protected static boolean successfullRequest( int statusCode ) {
+    protected static boolean successfulRequest( int statusCode ) {
         return statusCode >= 200 && statusCode < 300;
     }
 

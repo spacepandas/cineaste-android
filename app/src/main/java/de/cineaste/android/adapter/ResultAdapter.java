@@ -12,14 +12,8 @@ import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.entity.MatchingResult;
-import de.cineaste.android.entity.Movie;
-import de.cineaste.android.network.TheMovieDb;
-import de.cineaste.android.persistence.MovieDbHelper;
 import de.cineaste.android.persistence.NearbyMessageHandler;
 
-/**
- * Created by marcelgross on 21.12.15.
- */
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
 
     private final NearbyMessageHandler handler;
@@ -30,10 +24,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
     OnMovieSelectListener listener;
 
     public interface OnMovieSelectListener {
-       public void onMovieSelectListener(int position);
+        public void onMovieSelectListener( int position );
     }
 
-    public ResultAdapter(List<MatchingResult> results, int rowLayout, Context context, OnMovieSelectListener listener) {
+    public ResultAdapter(
+            List<MatchingResult> results,
+            int rowLayout,
+            Context context,
+            OnMovieSelectListener listener ) {
         this.results = results;
         this.rowLayout = rowLayout;
         this.context = context;
@@ -47,15 +45,15 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from( parent.getContext() ).inflate(rowLayout, parent, false);
-        return new ViewHolder(v);
+    public ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
+        View v = LayoutInflater.from( parent.getContext() ).inflate( rowLayout, parent, false );
+        return new ViewHolder( v );
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder( final ViewHolder holder, final int position ) {
         holder.assignData( results.get( position ), handler.getSize() );
-        final MatchingResult result = results.get(position);
+        final MatchingResult result = results.get( position );
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -63,19 +61,20 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
         public ImageButton watchedButton;
         public View view;
 
-        public ViewHolder(final View itemView){
-            super(itemView);
-            title = (TextView) itemView.findViewById( R.id.movie_title_tv);
-            counter = (TextView) itemView.findViewById(R.id.movie_counter_tv);
+        public ViewHolder( final View itemView ) {
+            super( itemView );
+            title = (TextView) itemView.findViewById( R.id.movie_title_tv );
+            counter = (TextView) itemView.findViewById( R.id.movie_counter_tv );
             watchedButton = (ImageButton) itemView.findViewById( R.id.watched_button );
             view = itemView;
-
         }
 
-        public void assignData(MatchingResult matchingResult, int resultCounter) {
+        public void assignData( MatchingResult matchingResult, int resultCounter ) {
             watchedButton.setOnClickListener( this );
             title.setText( matchingResult.getTitle() );
-            counter.setText( String.format( "%d/%d", matchingResult.getCounter(), resultCounter ) );
+            counter.setText(
+                    String.format( "%d/%d", matchingResult.getCounter(), resultCounter )
+            );
         }
 
         @Override

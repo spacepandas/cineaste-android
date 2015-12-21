@@ -5,10 +5,6 @@ import java.util.List;
 
 import de.cineaste.android.entity.NearbyMessage;
 
-
-/**
- * Created by marcelgross on 18.11.15.
- */
 public class NearbyMessageHandler {
 
     private static NearbyMessageHandler instance;

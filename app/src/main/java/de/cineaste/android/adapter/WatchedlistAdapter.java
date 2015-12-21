@@ -27,56 +27,59 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     private Context context;
     private BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
 
-    public WatchedlistAdapter(Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment) {
+    public WatchedlistAdapter( Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment ) {
         this.mDb = MovieDbHelper.getInstance( context );
         this.context = context;
-        this.mDb.addObserver(this);
-        this.mDataset = mDb.readMoviesByWatchStatus(true);
+        this.mDb.addObserver( this );
+        this.mDataset = mDb.readMoviesByWatchStatus( true );
         this.baseFragment = baseFragment;
     }
 
     @Override
-    public void update(Observable observable, Object data) {
-        mDataset = mDb.readMoviesByWatchStatus(true);
+    public void update( Observable observable, Object data ) {
+        mDataset = mDb.readMoviesByWatchStatus( true );
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mMovieTitle;
         public ImageButton mRemoveMovie;
         public ImageView mImageView;
         public Movie mCurrentMovie;
 
-        public ViewHolder(View v){
-            super(v);
-            mMovieTitle = (TextView)v.findViewById( R.id.movie_title);
-            mRemoveMovie = (ImageButton)v.findViewById(R.id.remove_button);
+        public ViewHolder( View v ) {
+            super( v );
+            mMovieTitle = (TextView) v.findViewById( R.id.movie_title );
+            mRemoveMovie = (ImageButton) v.findViewById( R.id.remove_button );
             mImageView = (ImageView) v.findViewById( R.id.movie_poster_image_view );
         }
     }
 
-    public WatchedlistAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.watchedlist_cardview, parent, false);
-        return new ViewHolder(v);
+    public WatchedlistAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
+        View v = LayoutInflater
+                .from( parent.getContext() )
+                .inflate( R.layout.watchedlist_cardview, parent, false );
+        return new ViewHolder( v );
     }
 
     @Override
-    public void onBindViewHolder(final WatchedlistAdapter.ViewHolder holder, final int position) {
-        String movieTitle = mDataset.get(position).getTitle();
-        holder.mCurrentMovie = mDataset.get(position);
-        holder.mMovieTitle.setText(movieTitle);
+    public void onBindViewHolder( final WatchedlistAdapter.ViewHolder holder, final int position ) {
+        String movieTitle = mDataset.get( position ).getTitle();
+        holder.mCurrentMovie = mDataset.get( position );
+        holder.mMovieTitle.setText( movieTitle );
         String posterName = holder.mCurrentMovie.getPosterPath();
-        String posterUri = Constants.POSTER_URI.replace( "<posterName>", posterName != null ? posterName : "/" );
-        Picasso.with( context ).load(posterUri).into( holder.mImageView );
+        String posterUri = Constants.POSTER_URI
+                .replace( "<posterName>", posterName != null ? posterName : "/" );
+        Picasso.with( context ).load( posterUri ).into( holder.mImageView );
 
-        holder.mRemoveMovie.setOnClickListener(new View.OnClickListener(){
+        holder.mRemoveMovie.setOnClickListener( new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-                int index = mDataset.indexOf(holder.mCurrentMovie);
-                removeItemFromViewAndDb(index, holder.mCurrentMovie.getId());
+            public void onClick( View v ) {
+                int index = mDataset.indexOf( holder.mCurrentMovie );
+                removeItemFromViewAndDb( index, holder.mCurrentMovie.getId() );
             }
-        });
+        } );
     }
 
     @Override
@@ -84,12 +87,12 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         return mDataset.size();
     }
 
-    private void removeItemFromViewAndDb(int index, long dbId){
-        mDb.deleteMovieFromWatchlist(dbId);
-        mDataset.remove(index);
-        notifyItemRemoved(index);
+    private void removeItemFromViewAndDb( int index, long dbId ) {
+        mDb.deleteMovieFromWatchlist( dbId );
+        mDataset.remove( index );
+        notifyItemRemoved( index );
 
-        if(getItemCount() == 0){
+        if( getItemCount() == 0 ) {
             baseFragment.controlWatchedlistAdapter();
         }
     }

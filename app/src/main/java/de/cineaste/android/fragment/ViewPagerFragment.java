@@ -34,15 +34,12 @@ public class ViewPagerFragment extends Fragment {
 
         View view = inflater.inflate( R.layout.fragment_view_pager, container, false );
 
-
-        mViewPager = (ViewPager) view.findViewById( R.id.basewatchlist_pager );
-
         mPagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), getActivity() );
 
+        mViewPager = (ViewPager) view.findViewById( R.id.basewatchlist_pager );
         mViewPager.setAdapter( mPagerAdapter );
 
         fab = (FloatingActionButton) view.findViewById( R.id.fab );
-
         fab.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {

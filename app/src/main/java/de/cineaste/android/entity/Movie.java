@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 public class Movie extends MovieDto {
 
     private int runtime;
-    @SerializedName("vote_average")
+    @SerializedName( "vote_average" )
     private double voteAverage;
-    @SerializedName("vote_count")
+    @SerializedName( "vote_count" )
     private int voteCount;
     private boolean watched;
 
@@ -15,8 +15,14 @@ public class Movie extends MovieDto {
         this.watched = false;
     }
 
-    public Movie(long id, String posterPath, int runtime, String title, double voteAverage, int voteCount) {
-        super(id, posterPath, title);
+    public Movie(
+            long id,
+            String posterPath,
+            int runtime,
+            String title,
+            double voteAverage,
+            int voteCount ) {
+        super( id, posterPath, title );
         this.runtime = runtime;
         this.voteAverage = voteAverage;
         this.voteCount = voteCount;
@@ -27,7 +33,7 @@ public class Movie extends MovieDto {
         return runtime;
     }
 
-    public void setRuntime(int runtime) {
+    public void setRuntime( int runtime ) {
         this.runtime = runtime;
     }
 
@@ -35,7 +41,7 @@ public class Movie extends MovieDto {
         return voteAverage;
     }
 
-    public void setVoteAverage(double voteAverage) {
+    public void setVoteAverage( double voteAverage ) {
         this.voteAverage = voteAverage;
     }
 
@@ -43,7 +49,7 @@ public class Movie extends MovieDto {
         return voteCount;
     }
 
-    public void setVoteCount(int voteCount) {
+    public void setVoteCount( int voteCount ) {
         this.voteCount = voteCount;
     }
 

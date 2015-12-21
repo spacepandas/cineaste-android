@@ -35,23 +35,26 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
     private RecyclerView result;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_result, container, false);
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState ) {
+        View view = inflater.inflate( R.layout.fragment_result, container, false );
 
         handler = NearbyMessageHandler.getInstance();
         nearbyMessages = handler.getMessages();
 
-        result = (RecyclerView) view.findViewById(R.id.result_list);
+        result = (RecyclerView) view.findViewById( R.id.result_list );
 
-        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        result.setLayoutManager(llm);
-        result.setItemAnimator(new DefaultItemAnimator());
+        final LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
+        llm.setOrientation( LinearLayoutManager.VERTICAL );
+        result.setLayoutManager( llm );
+        result.setItemAnimator( new DefaultItemAnimator() );
 
-        ResultAdapter resultAdapter = new ResultAdapter(getResult(), R.layout.result_card, getActivity(), this);
-        result.setAdapter(resultAdapter);
+        ResultAdapter resultAdapter = new ResultAdapter(
+                getResult(),
+                R.layout.result_card,
+                getActivity(),
+                this );
+        result.setAdapter( resultAdapter );
 
         return view;
     }
@@ -67,27 +70,14 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
         ArrayList<MatchingResult> results = new ArrayList<>();
         Multiset<MovieDto> movies = HashMultiset.create( getMovies() );
 
-        for (Multiset.Entry<MovieDto> entry : Multisets.copyHighestCountFirst( movies ).entrySet()) {
+        for ( Multiset.Entry<MovieDto> entry :
+                Multisets.copyHighestCountFirst( movies ).entrySet() ) {
             MovieDto current = entry.getElement();
-            results.add(new MatchingResult(current, movies.count(current)));
+            results.add( new MatchingResult( current, movies.count( current ) ) );
             Log.d( "Test", current.getTitle() + " " + current.getId() );
         }
 
         return results;
-
-    }
-
-
-    private ArrayList<MovieDto> getMovies() {
-        ArrayList<MovieDto> movies = new ArrayList<>();
-
-        for (NearbyMessage current: nearbyMessages) {
-            for (MovieDto movie : current.getMovies()) {
-                movies.add(movie);
-            }
-        }
-
-        return movies;
     }
 
     @Override
@@ -103,6 +93,18 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
                 db.createOrUpdate( movie );
             }
         } );
+    }
+
+    private ArrayList<MovieDto> getMovies() {
+        ArrayList<MovieDto> movies = new ArrayList<>();
+
+        for ( NearbyMessage current : nearbyMessages ) {
+            for ( MovieDto movie : current.getMovies() ) {
+                movies.add( movie );
+            }
+        }
+
+        return movies;
     }
 }
 

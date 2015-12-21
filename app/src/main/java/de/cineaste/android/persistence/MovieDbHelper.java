@@ -8,9 +8,6 @@ import java.util.Observable;
 
 import de.cineaste.android.entity.Movie;
 
-/**
- * Created by christianbraun on 17/11/15.
- */
 public class MovieDbHelper extends Observable {
 
     private static MovieDbHelper mInstance;
@@ -56,7 +53,6 @@ public class MovieDbHelper extends Observable {
         else{
             createNewMovieEntry(movie);
         }
-
     }
 
     public void deleteMovieFromWatchlist(long movieId) {

@@ -15,8 +15,9 @@ public class BaseWatchlistPagerAdapter extends FragmentStatePagerAdapter {
     private String[] titles;
     private Context context;
 
-    public interface WatchlistFragment{
+    public interface WatchlistFragment {
         public void controlWatchlistAdapter();
+
         public void controlWatchedlistAdapter();
     }
 
@@ -26,17 +27,24 @@ public class BaseWatchlistPagerAdapter extends FragmentStatePagerAdapter {
         initiateAdapter();
     }
 
-    private void initiateAdapter(){
+    private void initiateAdapter() {
         fragments = new Fragment[]{new BaseWatchlistFragment(), new BaseWatchlistFragment()};
         Bundle bundle = new Bundle();
-        bundle.putString( BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE, BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST);
+        bundle.putString(
+                BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE,
+                BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST );
         fragments[0].setArguments( bundle );
 
         bundle = new Bundle();
-        bundle.putString( BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE, BaseWatchlistFragment.WatchlistFragmentType.WATCHED_LIST);
+        bundle.putString(
+                BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE,
+                BaseWatchlistFragment.WatchlistFragmentType.WATCHED_LIST );
         fragments[1].setArguments( bundle );
 
-        titles = new String[]{ context.getString(R.string.watchList) , context.getString( R.string.watchedlist) };
+        titles = new String[]{
+                context.getString( R.string.watchList ),
+                context.getString( R.string.watchedlist )
+        };
 
     }
 

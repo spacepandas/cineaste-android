@@ -1,6 +1,5 @@
 package de.cineaste.android.fragment;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,8 +32,8 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        super.onCreate( savedInstanceState );
+        setHasOptionsMenu( true );
     }
 
     @Override
@@ -44,11 +43,11 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate( R.layout.fragment_search, container, false );
 
         movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
-        movieQueryLayoutMgr =  new LinearLayoutManager(getActivity());
-        movieQueryAdapter = new SearchQueryAdapter(getActivity(), new ArrayList<Movie>());
+        movieQueryLayoutMgr = new LinearLayoutManager( getActivity() );
+        movieQueryAdapter = new SearchQueryAdapter( getActivity(), new ArrayList<Movie>() );
         movieQueryRecyclerView.setItemAnimator( new DefaultItemAnimator() );
 
-        movieQueryRecyclerView.setLayoutManager(movieQueryLayoutMgr);
+        movieQueryRecyclerView.setLayoutManager( movieQueryLayoutMgr );
         movieQueryRecyclerView.setAdapter( movieQueryAdapter );
 
         return view;
@@ -58,15 +57,15 @@ public class SearchFragment extends Fragment {
     public void onCreateOptionsMenu( Menu menu, MenuInflater inflater ) {
 
         MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.search_menu, menu);
+        menuInflater.inflate( R.menu.search_menu, menu );
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItem searchItem = menu.findItem( R.id.action_search );
 
         SearchView searchView;
-        if (searchItem != null) {
+        if( searchItem != null ) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setFocusable(true);
-            searchView.setIconified(false);
+            searchView.setFocusable( true );
+            searchView.setIconified( false );
             searchView.requestFocusFromTouch();
             searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
                 @Override
@@ -92,14 +91,15 @@ public class SearchFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
         View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if( view != null ) {
+            InputMethodManager imm =
+                    (InputMethodManager) getActivity()
+                            .getSystemService( Context.INPUT_METHOD_SERVICE );
+            imm.hideSoftInputFromWindow( view.getWindowToken(), 0 );
         }
     }
 
