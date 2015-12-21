@@ -33,6 +33,11 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
     }
 
+    public static void replaceFragmentPopBackStack( FragmentManager fm, Fragment fragment ) {
+        fm.popBackStack();
+        replaceFragment( fm, fragment );
+
+    }
     public static void startUserInputDialog(FragmentManager fragmentManager) {
         UserInputFragment userInputFragment = UserInputFragment.newInstance();
         userInputFragment.show(fragmentManager,"");
