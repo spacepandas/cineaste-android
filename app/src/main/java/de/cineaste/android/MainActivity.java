@@ -1,6 +1,7 @@
 package de.cineaste.android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import de.cineaste.android.entity.User;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
     public static void replaceFragmentPopBackStack( FragmentManager fm, Fragment fragment ) {
         fm.popBackStack();
-        replaceFragment( fm, fragment );
+        replaceFragment(fm, fragment);
 
     }
     public static void startUserInputDialog(FragmentManager fragmentManager) {
@@ -60,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     @Override
     public boolean onSupportNavigateUp() {
         fm.popBackStack();
-
         return false;
     }
 
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult( requestCode, resultCode, data );
+        super.onActivityResult( requestCode, resultCode, data);
         MovieNightFragment movieNightFragment = MovieNightFragment.getInstance();
         movieNightFragment.finishedResolvingNearbyPermissionError();
         if (requestCode == 1001) {
