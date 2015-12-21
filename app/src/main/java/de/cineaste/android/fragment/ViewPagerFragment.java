@@ -73,7 +73,7 @@ public class ViewPagerFragment extends Fragment {
     public boolean onOptionsItemSelected( MenuItem item ) {
         switch ( item.getItemId() ) {
             case R.id.startMovieNight:
-                MainActivity.replaceFragment( getFragmentManager(), new MovieNightFragment() );
+                MainActivity.startMovieNight( getFragmentManager() );
                 break;
         }
 

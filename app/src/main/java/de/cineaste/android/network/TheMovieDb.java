@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.cineaste.android.Constants;
 import de.cineaste.android.entity.Movie;
 
 public class TheMovieDb extends BaseNetwork {
@@ -24,8 +25,7 @@ public class TheMovieDb extends BaseNetwork {
 
     private final Context context;
 
-    private final String API_KEY = "7ddd4ae84251b937ce8cc6a9064d7d10";
-    private final String API_KEY_TAG = "api_key=" + API_KEY;
+    private final String API_KEY_TAG = "api_key=" + Constants.API_KEY;
 
     public TheMovieDb( Context context ) {
         super( "https://api.themoviedb.org/3/" );

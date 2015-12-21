@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent" tools:context="de.cineaste.android.fragment.UserInputFragment">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/username_et"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/username" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@android:string/ok"
+        android:id="@+id/ok_tv"
+        android:layout_below="@+id/username_et"
+        android:layout_alignRight="@+id/username_et"
+        android:layout_alignEnd="@+id/username_et"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+</RelativeLayout>

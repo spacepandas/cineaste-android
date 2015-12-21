@@ -1,13 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="de.cineaste.fragment.MovieNightFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="de.cineaste.fragment.MovieNightFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <Button
+        android:id="@+id/start_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:text="@string/startMovieNight"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/nearbyUser_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_above="@+id/start_btn"
+        tools:context="cineaste.de.cineaste.fragments.MovieNightFragment"/>
 
-</FrameLayout>
+</RelativeLayout>
