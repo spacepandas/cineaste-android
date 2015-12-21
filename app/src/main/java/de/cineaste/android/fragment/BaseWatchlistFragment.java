@@ -15,14 +15,14 @@ import de.cineaste.android.adapter.WatchlistAdapter;
 
 public class BaseWatchlistFragment extends Fragment {
 
-    private String mWatchlistType;
+    private String watchlistType;
 
-    private RecyclerView mBaseWatchlistRecyclerView;
-    private RecyclerView.Adapter mBaseWatchlistAdapter;
-    private RecyclerView.LayoutManager mBaseWatchlistLayoutMgr;
-    private TextView mTextview;
+    private RecyclerView baseWatchlistRecyclerView;
+    private RecyclerView.Adapter baseWatchlistAdapter;
+    private RecyclerView.LayoutManager baseWatchlistLayoutMgr;
+    private TextView emptyListTextView;
 
-    public interface WatchlistFragmentType{
+    public interface WatchlistFragmentType {
         String WATCHLIST_TYPE = "WatchlistType";
         String WATCH_LIST = "Watchlist";
         String WATCHED_LIST = "Watchedlist";
@@ -30,8 +30,8 @@ public class BaseWatchlistFragment extends Fragment {
 
     @Override
     public void setArguments(Bundle args) {
-        super.setArguments( args );
-        mWatchlistType = args.getString(WatchlistFragmentType.WATCHLIST_TYPE);
+        super.setArguments(args);
+        watchlistType = args.getString(WatchlistFragmentType.WATCHLIST_TYPE);
     }
 
     @Override
@@ -39,39 +39,60 @@ public class BaseWatchlistFragment extends Fragment {
                              Bundle savedInstanceState) {
         View watchlistView = inflater.inflate(R.layout.fragment_base_watchlist, container, false);
 
-        mTextview = (TextView) watchlistView.findViewById( R.id.info_text );
+        emptyListTextView = (TextView) watchlistView.findViewById(R.id.info_text);
 
-        mBaseWatchlistRecyclerView = (RecyclerView)watchlistView.findViewById(R.id.basewatchlist_recycler_view);
-        mBaseWatchlistLayoutMgr = new LinearLayoutManager(getActivity());
+        baseWatchlistRecyclerView = (RecyclerView) watchlistView.findViewById(R.id.basewatchlist_recycler_view);
+        baseWatchlistLayoutMgr = new LinearLayoutManager(getActivity());
 
-        mBaseWatchlistRecyclerView.setHasFixedSize( true );
-//todo Refactor
-        if( mWatchlistType.equals(WatchlistFragmentType.WATCH_LIST)){
-            mBaseWatchlistAdapter = new WatchlistAdapter(getActivity());
-            if( mBaseWatchlistAdapter.getItemCount() == 0) {
-                mBaseWatchlistRecyclerView.setVisibility( View.GONE );
-                mTextview.setVisibility( View.VISIBLE );
-                mTextview.setText( R.string.noMoviesOnWatchList );
-            }  else {
-                mBaseWatchlistRecyclerView.setVisibility( View.VISIBLE );
-                mTextview.setVisibility( View.GONE );
-            }
-        }
-        else{
-            mBaseWatchlistAdapter = new WatchedlistAdapter(getActivity());
-            if( mBaseWatchlistAdapter.getItemCount() == 0) {
-                mBaseWatchlistRecyclerView.setVisibility( View.GONE );
-                mTextview.setVisibility( View.VISIBLE );
-                mTextview.setText( R.string.noMoviesOnWatchedList );
-            }  else {
-                mBaseWatchlistRecyclerView.setVisibility( View.VISIBLE );
-                mTextview.setVisibility( View.GONE );
-            }
+        baseWatchlistRecyclerView.setHasFixedSize(true);
+
+        if (watchlistType.equals(WatchlistFragmentType.WATCH_LIST)) {
+            controlWatchlistAdapter();
+        } else {
+            controlWatchedlistAdapter();
         }
 
-        mBaseWatchlistRecyclerView.setLayoutManager( mBaseWatchlistLayoutMgr );
-        mBaseWatchlistRecyclerView.setAdapter( mBaseWatchlistAdapter );
+        baseWatchlistRecyclerView.setLayoutManager(baseWatchlistLayoutMgr);
+        baseWatchlistRecyclerView.setAdapter(baseWatchlistAdapter);
 
         return watchlistView;
+    }
+
+    private void controlWatchlistAdapter() {
+        baseWatchlistAdapter = new WatchlistAdapter(getActivity());
+        if (baseWatchlistAdapter.getItemCount() == 0) {
+            baseWatchlistRecyclerView.setVisibility(View.GONE);
+            emptyListTextView.setVisibility(View.VISIBLE);
+            emptyListTextView.setText(R.string.noMoviesOnWatchList);
+        } else {
+            baseWatchlistRecyclerView.setVisibility(View.VISIBLE);
+            emptyListTextView.setVisibility(View.GONE);
+        }
+    }
+
+    private void controlWatchedlistAdapter() {
+        baseWatchlistAdapter = new WatchedlistAdapter(getActivity());
+        if (baseWatchlistAdapter.getItemCount() == 0) {
+            baseWatchlistRecyclerView.setVisibility(View.GONE);
+            emptyListTextView.setVisibility(View.VISIBLE);
+            emptyListTextView.setText(R.string.noMoviesOnWatchedList);
+        } else {
+            baseWatchlistRecyclerView.setVisibility(View.VISIBLE);
+            emptyListTextView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(WatchlistFragmentType.WATCHLIST_TYPE, watchlistType);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            this.watchlistType = savedInstanceState.getString(WatchlistFragmentType.WATCHLIST_TYPE);
+        }
     }
 }

@@ -37,18 +37,7 @@ public class ViewPagerFragment extends Fragment {
 
         mViewPager = (ViewPager) view.findViewById( R.id.basewatchlist_pager );
 
-        Fragment[] fragments = {new BaseWatchlistFragment(), new BaseWatchlistFragment()};
-        Bundle bundle = new Bundle();
-        bundle.putString( BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE, BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST );
-        fragments[0].setArguments( bundle );
-
-        bundle = new Bundle();
-        bundle.putString( BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE, BaseWatchlistFragment.WatchlistFragmentType.WATCHED_LIST );
-        fragments[1].setArguments( bundle );
-
-        String[] titles = {getResources().getString( R.string.watchList ), getResources().getString( R.string.watchedlist )};
-
-        mPagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), fragments, titles );
+        mPagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), getActivity());
 
         mViewPager.setAdapter( mPagerAdapter );
 
