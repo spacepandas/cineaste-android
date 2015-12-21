@@ -15,6 +15,11 @@ public class BaseWatchlistPagerAdapter extends FragmentStatePagerAdapter {
     private String[] titles;
     private Context context;
 
+    public interface WatchlistFragment{
+        public void controlWatchlistAdapter();
+        public void controlWatchedlistAdapter();
+    }
+
     public BaseWatchlistPagerAdapter( FragmentManager fm, Context context ) {
         super( fm );
         this.context = context;
@@ -24,11 +29,11 @@ public class BaseWatchlistPagerAdapter extends FragmentStatePagerAdapter {
     private void initiateAdapter(){
         fragments = new Fragment[]{new BaseWatchlistFragment(), new BaseWatchlistFragment()};
         Bundle bundle = new Bundle();
-        bundle.putString( BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE, BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST );
+        bundle.putString( BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE, BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST);
         fragments[0].setArguments( bundle );
 
         bundle = new Bundle();
-        bundle.putString( BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE, BaseWatchlistFragment.WatchlistFragmentType.WATCHED_LIST );
+        bundle.putString( BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE, BaseWatchlistFragment.WatchlistFragmentType.WATCHED_LIST);
         fragments[1].setArguments( bundle );
 
         titles = new String[]{ context.getString(R.string.watchList) , context.getString( R.string.watchedlist) };

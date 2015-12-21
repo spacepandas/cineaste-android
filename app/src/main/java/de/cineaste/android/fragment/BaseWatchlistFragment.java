@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.cineaste.android.R;
+import de.cineaste.android.adapter.BaseWatchlistPagerAdapter;
 import de.cineaste.android.adapter.WatchedlistAdapter;
 import de.cineaste.android.adapter.WatchlistAdapter;
 
-public class BaseWatchlistFragment extends Fragment {
+public class BaseWatchlistFragment extends Fragment implements BaseWatchlistPagerAdapter.WatchlistFragment {
 
     private String watchlistType;
 
@@ -58,8 +59,8 @@ public class BaseWatchlistFragment extends Fragment {
         return watchlistView;
     }
 
-    private void controlWatchlistAdapter() {
-        baseWatchlistAdapter = new WatchlistAdapter(getActivity());
+    public void controlWatchlistAdapter() {
+        baseWatchlistAdapter = new WatchlistAdapter(getActivity(), this);
         if (baseWatchlistAdapter.getItemCount() == 0) {
             baseWatchlistRecyclerView.setVisibility(View.GONE);
             emptyListTextView.setVisibility(View.VISIBLE);
@@ -70,8 +71,8 @@ public class BaseWatchlistFragment extends Fragment {
         }
     }
 
-    private void controlWatchedlistAdapter() {
-        baseWatchlistAdapter = new WatchedlistAdapter(getActivity());
+    public void controlWatchedlistAdapter() {
+        baseWatchlistAdapter = new WatchedlistAdapter(getActivity(), this);
         if (baseWatchlistAdapter.getItemCount() == 0) {
             baseWatchlistRecyclerView.setVisibility(View.GONE);
             emptyListTextView.setVisibility(View.VISIBLE);

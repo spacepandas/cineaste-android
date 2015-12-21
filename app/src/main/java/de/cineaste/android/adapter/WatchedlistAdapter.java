@@ -25,12 +25,14 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     private List<Movie> mDataset;
     private MovieDbHelper mDb;
     private Context context;
+    private BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
 
-    public WatchedlistAdapter(Context context) {
+    public WatchedlistAdapter(Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment) {
         this.mDb = MovieDbHelper.getInstance( context );
         this.context = context;
-        mDb.addObserver(this);
-        mDataset = mDb.readMoviesByWatchStatus(true);
+        this.mDb.addObserver(this);
+        this.mDataset = mDb.readMoviesByWatchStatus(true);
+        this.baseFragment = baseFragment;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     }
 
     public WatchedlistAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.watchedlist_cardview,parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.watchedlist_cardview, parent, false);
         return new ViewHolder(v);
     }
 
@@ -72,7 +74,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
             @Override
             public void onClick(View v) {
                 int index = mDataset.indexOf(holder.mCurrentMovie);
-                removeMovie(index, holder.mCurrentMovie.getId());
+                removeItemFromViewAndDb(index, holder.mCurrentMovie.getId());
             }
         });
     }
@@ -82,9 +84,13 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         return mDataset.size();
     }
 
-    private void removeMovie(int index, long dbId){
+    private void removeItemFromViewAndDb(int index, long dbId){
         mDb.deleteMovieFromWatchlist(dbId);
         mDataset.remove(index);
         notifyItemRemoved(index);
+
+        if(getItemCount() == 0){
+            baseFragment.controlWatchedlistAdapter();
+        }
     }
 }
