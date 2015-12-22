@@ -5,4 +5,11 @@
           android:title="@string/startMovieNight"
           android:icon="@drawable/ic_start_movienight"
           app:showAsAction="always"/>
+
+    <group>
+        <item android:id="@+id/exportMovies"
+              android:title="@string/exportMovies"/>
+        <item android:id="@+id/importMovies"
+              android:title="@string/importMovies"/>
+    </group>
 </menu>

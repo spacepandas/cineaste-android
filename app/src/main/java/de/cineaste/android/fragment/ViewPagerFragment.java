@@ -2,6 +2,7 @@ package de.cineaste.android.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -11,16 +12,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import java.util.List;
 
 import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.BaseWatchlistPagerAdapter;
+import de.cineaste.android.entity.Movie;
+import de.cineaste.android.exportImport.ExportImport;
+import de.cineaste.android.persistence.MovieDbHelper;
 
 public class ViewPagerFragment extends Fragment {
 
     private ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
     private FloatingActionButton fab;
+    private MovieDbHelper movieDbHelper;
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -33,6 +41,8 @@ public class ViewPagerFragment extends Fragment {
                               Bundle savedInstanceState ) {
 
         View view = inflater.inflate( R.layout.fragment_view_pager, container, false );
+
+        movieDbHelper = MovieDbHelper.getInstance( getActivity() );
 
         mPagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), getActivity() );
 
@@ -61,8 +71,39 @@ public class ViewPagerFragment extends Fragment {
             case R.id.startMovieNight:
                 MainActivity.startMovieNight( getFragmentManager() );
                 break;
+            case R.id.exportMovies:
+                exportMovies();
+                break;
+            case R.id.importMovies:
+                importMovies();
+                break;
         }
 
         return super.onOptionsItemSelected( item );
+    }
+
+    private void exportMovies() {
+        List<Movie> movies = movieDbHelper.readAllMovies();
+        ExportImport.exportMovies( movies );
+        Snackbar snackbar = Snackbar
+                .make(mViewPager, R.string.successfulExport, Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+    private void importMovies() {
+        List<Movie> movies = ExportImport.importMovies();
+        int snackbarMessage;
+        if( movies.size() != 0 ) {
+            for ( Movie current : movies ) {
+                movieDbHelper.createOrUpdate( current );
+            }
+            snackbarMessage = R.string.successfulImport;
+
+        } else {
+           snackbarMessage = R.string.unsuccessfulImport;
+        }
+        Snackbar snackbar = Snackbar
+                .make(mViewPager, snackbarMessage, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 }
