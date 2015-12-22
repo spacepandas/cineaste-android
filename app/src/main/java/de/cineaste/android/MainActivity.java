@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         replaceFragment( fm, fragment );
     }
 
-    public static void startDialogFragment(FragmentManager fragmentManager, DialogFragment fragment) {
+    private static void startDialogFragment(FragmentManager fragmentManager, DialogFragment fragment) {
         fragment.show(fragmentManager,"");
     }
 

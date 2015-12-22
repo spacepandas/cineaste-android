@@ -25,4 +25,5 @@
     <string name="addToWatchedlist">Zur Watchedlist hinzufügen</string>
     <string name="remove">Film entfernen</string>
     <string name="noInternet">Keine Internetverbindung!</string>
+    <string name="runtime">Laufzeit: %d m</string>
 </resources>

@@ -84,7 +84,10 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
         MainActivity.replaceFragmentPopBackStack( getFragmentManager(), new ViewPagerFragment() );
         TheMovieDb theMovieDb = new TheMovieDb();
 
-        theMovieDb.fetchMovie( getResult().get( position ).getId(), new TheMovieDb.OnFetchMovieResultListener() {
+        theMovieDb.fetchMovie(
+                getResult().get( position ).getId(),
+                getActivity().getResources().getString(R.string.language_tag),
+                new TheMovieDb.OnFetchMovieResultListener() {
             @Override
             public void onFetchMovieResultListener( Movie movie ) {
                 MovieDbHelper db = MovieDbHelper.getInstance( getActivity() );
