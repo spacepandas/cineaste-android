@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/movie_title"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_marginTop="15dp"
             android:layout_toRightOf="@+id/movie_poster_image_view"
             android:layout_toEndOf="@+id/movie_poster_image_view"
