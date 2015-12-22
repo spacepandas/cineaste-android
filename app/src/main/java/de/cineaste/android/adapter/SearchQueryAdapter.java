@@ -16,12 +16,14 @@ import java.util.List;
 import de.cineaste.android.Constants;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
+import de.cineaste.android.network.TheMovieDb;
 import de.cineaste.android.persistence.MovieDbHelper;
 
 public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.ViewHolder> {
     public List<Movie> dataset;
     private final MovieDbHelper db;
     private final Context context;
+    private final TheMovieDb theMovieDb;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mMovieTitle;
@@ -44,6 +46,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
         db = MovieDbHelper.getInstance( context );
         this.context = context;
         dataset = movies;
+        theMovieDb = new TheMovieDb();
     }
 
     @Override
@@ -70,8 +73,14 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
             @Override
             public void onClick( View v ) {
                 int index = dataset.indexOf( holder.mCurrentMovie );
-                Movie watchlistMovie = holder.mCurrentMovie;
-                db.createNewMovieEntry( watchlistMovie );
+
+                theMovieDb.fetchMovie(holder.mCurrentMovie.getId(), new TheMovieDb.OnFetchMovieResultListener() {
+                    @Override
+                    public void onFetchMovieResultListener(Movie movie) {
+                        db.createNewMovieEntry(movie );
+                    }
+                });
+
                 dataset.remove( index );
                 notifyItemRemoved( index );
             }
@@ -82,14 +91,21 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
             @Override
             public void onClick( View v ) {
                 int index = dataset.indexOf( holder.mCurrentMovie );
-                Movie watchlistMovie = holder.mCurrentMovie;
-                watchlistMovie.setWatched( true );
-                db.createNewMovieEntry( watchlistMovie );
+
+                theMovieDb.fetchMovie(holder.mCurrentMovie.getId(), new TheMovieDb.OnFetchMovieResultListener() {
+                    @Override
+                    public void onFetchMovieResultListener(Movie movie) {
+                        movie.setWatched(true);
+                        db.createNewMovieEntry(movie );
+                    }
+                });
+
                 dataset.remove( index );
                 notifyItemRemoved( index );
             }
         } );
     }
+
 
     @Override
     public int getItemCount() {

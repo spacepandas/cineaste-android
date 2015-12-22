@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -39,9 +40,8 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         replaceFragment( fm, fragment );
     }
 
-    public static void startUserInputDialog( FragmentManager fragmentManager ) {
-        UserInputFragment userInputFragment = UserInputFragment.newInstance();
-        userInputFragment.show( fragmentManager, "" );
+    public static void startDialogFragment(FragmentManager fragmentManager, DialogFragment fragment) {
+        fragment.show(fragmentManager,"");
     }
 
     public static void startMovieNight( FragmentManager fm ) {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
                     .addToBackStack( null )
                     .commit();
         } else {
-            startUserInputDialog( fm );
+            startDialogFragment(fm, UserInputFragment.newInstance());
         }
 
     }
