@@ -2,6 +2,7 @@ package de.cineaste.android.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;
+import de.cineaste.android.broadcastReceiver.NetworkChangeReceiver;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.network.TheMovieDb;
 
@@ -27,6 +29,7 @@ public class SearchFragment extends Fragment {
 
     private final TheMovieDb theMovieDb = new TheMovieDb();
     private RecyclerView.Adapter movieQueryAdapter;
+    private View view;
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -38,7 +41,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState ) {
 
-        View view = inflater.inflate( R.layout.fragment_search, container, false );
+        view = inflater.inflate( R.layout.fragment_search, container, false );
 
         RecyclerView movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
         RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager( getActivity() );
@@ -47,6 +50,12 @@ public class SearchFragment extends Fragment {
 
         movieQueryRecyclerView.setLayoutManager( movieQueryLayoutMgr );
         movieQueryRecyclerView.setAdapter( movieQueryAdapter );
+
+        if( !NetworkChangeReceiver.getInstance().isConnected ){
+            Snackbar snackbar = Snackbar
+                    .make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
 
         return view;
     }
@@ -68,6 +77,11 @@ public class SearchFragment extends Fragment {
             searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit( String query ) {
+                    if( !NetworkChangeReceiver.getInstance().isConnected ){
+                        Snackbar snackbar = Snackbar
+                                .make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
                     return false;
                 }
 
@@ -75,13 +89,15 @@ public class SearchFragment extends Fragment {
                 public boolean onQueryTextChange( String query ) {
                     if( !query.isEmpty() ) {
                         query = query.replace( " ", "+" );
-                        theMovieDb.searchMoviesAsync( query, new TheMovieDb.OnSearchMoviesResultListener() {
-                            @Override
-                            public void onSearchMoviesResultListener( List<Movie> movies ) {
-                                ((SearchQueryAdapter) movieQueryAdapter).dataset = movies;
-                                movieQueryAdapter.notifyDataSetChanged();
-                            }
-                        }, getResources().getString( R.string.language_tag ) );
+                        if( NetworkChangeReceiver.getInstance().isConnected ) {
+                            theMovieDb.searchMoviesAsync( query, new TheMovieDb.OnSearchMoviesResultListener() {
+                                @Override
+                                public void onSearchMoviesResultListener( List<Movie> movies ) {
+                                    ((SearchQueryAdapter) movieQueryAdapter).dataset = movies;
+                                    movieQueryAdapter.notifyDataSetChanged();
+                                }
+                            }, getResources().getString( R.string.language_tag ) );
+                        }
                     } else {
                         ((SearchQueryAdapter) movieQueryAdapter).dataset = new ArrayList<>(  );
                     }

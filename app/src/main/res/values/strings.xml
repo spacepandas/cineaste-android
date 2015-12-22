@@ -24,4 +24,5 @@
     <string name="addToWatchlist">Zur Watchlist hinzufügen</string>
     <string name="addToWatchedlist">Zur Watchedlist hinzufügen</string>
     <string name="remove">Film entfernen</string>
+    <string name="noInternet">Keine Internetverbindung!</string>
 </resources>

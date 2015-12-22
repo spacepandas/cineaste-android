@@ -2,18 +2,17 @@ package de.cineaste.android.fragment;
 
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -50,7 +49,6 @@ public class MovieNightFragment extends Fragment
 
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
             .setTtlSeconds( 180 ).build();
-    private static final String TAG = "movie_night_fragment";
 
     private static MovieNightFragment instance;
 
@@ -61,6 +59,7 @@ public class MovieNightFragment extends Fragment
     private TextView searchingFriends;
     private ProgressBar progressBar;
     private RecyclerView nearbyUser_rv;
+    private View view;
 
     private NearbyUserAdapter nearbyUserAdapter;
     private GoogleApiClient googleApiClient;
@@ -106,7 +105,7 @@ public class MovieNightFragment extends Fragment
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState ) {
 
-        View view = inflater.inflate( R.layout.fragment_movie_night, container, false );
+        view = inflater.inflate( R.layout.fragment_movie_night, container, false );
 
         nearbyUser_rv = (RecyclerView) view.findViewById( R.id.nearbyUser_rv );
         startBtn = (Button) view.findViewById( R.id.start_btn );
@@ -143,8 +142,10 @@ public class MovieNightFragment extends Fragment
                     }
                 } );
             }
+
             @Override
             public void onLost( final Message message ) {
+                //do not remove messages when connection lost
               /*  getActivity().runOnUiThread( new Runnable() {
                     @Override
                     public void run() {
@@ -206,31 +207,18 @@ public class MovieNightFragment extends Fragment
 
     @Override
     public void onConnected( Bundle bundle ) {
-        Log.i( TAG, "GoogleApiClient connected" );
         subscribe();
         publish();
     }
 
     @Override
     public void onConnectionSuspended( int cause ) {
-        Log.i( TAG, "GoogleApiClient connection suspended: "
-                + connectionSuspendedCauseToString( cause ) );
+      // GoogleApiClient connection suspended
     }
 
     @Override
     public void onConnectionFailed( ConnectionResult connectionResult ) {
-        Log.i( TAG, "connection to GoogleApiClient failed" );
-    }
-
-    private static String connectionSuspendedCauseToString( int cause ) {
-        switch ( cause ) {
-            case CAUSE_NETWORK_LOST:
-                return "CAUSE_NETWORK_LOST";
-            case CAUSE_SERVICE_DISCONNECTED:
-                return "CAUSE_SERVICE_DISCONNECTED";
-            default:
-                return "CAUSE_UNKNOWN: " + cause;
-        }
+        //connection to GoogleApiClient failed
     }
 
     private void clearDeviceList() {
@@ -244,7 +232,7 @@ public class MovieNightFragment extends Fragment
     }
 
     private void subscribe() {
-        Log.i( TAG, "trying to subscribe" );
+        //trying to subscribe
         if( !googleApiClient.isConnected() ) {
             if( !googleApiClient.isConnecting() ) {
                 googleApiClient.connect();
@@ -257,7 +245,6 @@ public class MovieNightFragment extends Fragment
                         @Override
                         public void onExpired() {
                             super.onExpired();
-                            Log.i( TAG, "no longer subscribing" );
                         }
                     } ).build();
 
@@ -266,10 +253,7 @@ public class MovieNightFragment extends Fragment
 
                         @Override
                         public void onResult( Status status ) {
-                            if( status.isSuccess() ) {
-                                Log.i( TAG, "subscribed successfully" );
-                            } else {
-                                Log.i( TAG, "could not subscribe" );
+                            if( !status.isSuccess() ) {
                                 handleUnsuccessfulNearbyResult( status );
                             }
                         }
@@ -278,7 +262,6 @@ public class MovieNightFragment extends Fragment
     }
 
     private void unsubscribe() {
-        Log.i( TAG, "trying to unsubscribe" );
         if( !googleApiClient.isConnected() ) {
             if( !googleApiClient.isConnecting() ) {
                 googleApiClient.connect();
@@ -289,10 +272,7 @@ public class MovieNightFragment extends Fragment
 
                         @Override
                         public void onResult( Status status ) {
-                            if( status.isSuccess() ) {
-                                Log.i( TAG, "unsubscribed successfully" );
-                            } else {
-                                Log.i( TAG, "could not unsubscribe" );
+                            if( !status.isSuccess() ) {
                                 handleUnsuccessfulNearbyResult( status );
                             }
                         }
@@ -301,7 +281,6 @@ public class MovieNightFragment extends Fragment
     }
 
     private void publish() {
-        Log.i( TAG, "trying to publish" );
         if( !googleApiClient.isConnected() ) {
             if( !googleApiClient.isConnecting() ) {
                 googleApiClient.connect();
@@ -313,7 +292,7 @@ public class MovieNightFragment extends Fragment
                         @Override
                         public void onExpired() {
                             super.onExpired();
-                            Log.i( TAG, "no longer publishing" );
+                           //no longer publishing"
                         }
                     } ).build();
 
@@ -322,10 +301,7 @@ public class MovieNightFragment extends Fragment
 
                         @Override
                         public void onResult( Status status ) {
-                            if( status.isSuccess() ) {
-                                Log.i( TAG, "published successfully" );
-                            } else {
-                                Log.i( TAG, "could not publish" );
+                            if( !status.isSuccess() ) {
                                 handleUnsuccessfulNearbyResult( status );
                             }
                         }
@@ -334,7 +310,6 @@ public class MovieNightFragment extends Fragment
     }
 
     private void unpublish() {
-        Log.i( TAG, "trying to unpublish" );
         if( !googleApiClient.isConnected() ) {
             if( !googleApiClient.isConnecting() ) {
                 googleApiClient.connect();
@@ -345,10 +320,7 @@ public class MovieNightFragment extends Fragment
 
                         @Override
                         public void onResult( Status status ) {
-                            if( status.isSuccess() ) {
-                                Log.i( TAG, "unpublished successfully" );
-                            } else {
-                                Log.i( TAG, "could not unpublish" );
+                            if( !status.isSuccess() ) {
                                 handleUnsuccessfulNearbyResult( status );
                             }
                         }
@@ -357,7 +329,6 @@ public class MovieNightFragment extends Fragment
     }
 
     private void handleUnsuccessfulNearbyResult( Status status ) {
-        Log.i( TAG, "processing error, status = " + status );
         if( status.getStatusCode() == NearbyMessagesStatusCodes.APP_NOT_OPTED_IN ) {
             if( !mResolvingNearbyPermissionError ) {
                 try {
@@ -370,12 +341,15 @@ public class MovieNightFragment extends Fragment
             }
         } else {
             if( status.getStatusCode() == ConnectionResult.NETWORK_ERROR ) {
-                Toast.makeText( getActivity().getApplicationContext(),
-                        "No connectivity, cannot proceed. Fix in 'Settings' and try again.",
-                        Toast.LENGTH_LONG ).show();
+                Snackbar snackbar = Snackbar
+                        .make( view, R.string.noInternet, Snackbar.LENGTH_LONG );
+                snackbar.show();
+
             } else {
-                Toast.makeText( getActivity().getApplicationContext(), "Unsuccessful: " +
-                        status.getStatusMessage(), Toast.LENGTH_LONG ).show();
+                Snackbar snackbar = Snackbar
+                        .make( view, "Unsuccessful: " +
+                        status.getStatusMessage(), Snackbar.LENGTH_LONG );
+                snackbar.show();
             }
         }
     }
