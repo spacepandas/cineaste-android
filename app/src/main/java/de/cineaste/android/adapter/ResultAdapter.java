@@ -1,6 +1,5 @@
 package de.cineaste.android.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,23 +17,20 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     private final NearbyMessageHandler handler;
 
-    private List<MatchingResult> results;
-    private int rowLayout;
-    private Context context;
-    OnMovieSelectListener listener;
+    private final List<MatchingResult> results;
+    private final int rowLayout;
+    private final OnMovieSelectListener listener;
 
     public interface OnMovieSelectListener {
-        public void onMovieSelectListener( int position );
+        void onMovieSelectListener( int position );
     }
 
     public ResultAdapter(
             List<MatchingResult> results,
             int rowLayout,
-            Context context,
             OnMovieSelectListener listener ) {
         this.results = results;
         this.rowLayout = rowLayout;
-        this.context = context;
         this.listener = listener;
         handler = NearbyMessageHandler.getInstance();
     }
@@ -53,20 +49,17 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
     @Override
     public void onBindViewHolder( final ViewHolder holder, final int position ) {
         holder.assignData( results.get( position ), handler.getSize() );
-        final MatchingResult result = results.get( position );
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView title, counter;
-        public ImageButton watchedButton;
-        public View view;
+        public final TextView title, counter;
+        public final ImageButton watchedButton;
 
         public ViewHolder( final View itemView ) {
             super( itemView );
             title = (TextView) itemView.findViewById( R.id.movie_title_tv );
             counter = (TextView) itemView.findViewById( R.id.movie_counter_tv );
             watchedButton = (ImageButton) itemView.findViewById( R.id.watched_button );
-            view = itemView;
         }
 
         public void assignData( MatchingResult matchingResult, int resultCounter ) {

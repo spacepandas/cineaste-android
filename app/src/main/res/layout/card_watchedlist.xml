@@ -12,11 +12,13 @@
                     android:id="@+id/relativeLayout">
 
         <ImageView
+            android:contentDescription="@string/moviePoster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/movie_poster_image_view"/>
 
         <ImageButton
+            android:contentDescription="@string/remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/remove_button"
@@ -25,13 +27,16 @@
             android:src="@drawable/ic_remove"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/movie_title"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/movie_poster_image_view"
             android:layout_toEndOf="@+id/movie_poster_image_view"
-            android:layout_marginLeft="5dp"/>
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toStartOf="@+id/remove_button"
+            android:layout_toLeftOf="@+id/remove_button"/>
 
     </RelativeLayout>
 

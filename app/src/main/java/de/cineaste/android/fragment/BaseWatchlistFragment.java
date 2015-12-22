@@ -21,7 +21,6 @@ public class BaseWatchlistFragment extends Fragment
 
     private RecyclerView baseWatchlistRecyclerView;
     private RecyclerView.Adapter baseWatchlistAdapter;
-    private RecyclerView.LayoutManager baseWatchlistLayoutMgr;
     private TextView emptyListTextView;
 
     public interface WatchlistFragmentType {
@@ -45,7 +44,7 @@ public class BaseWatchlistFragment extends Fragment
 
         baseWatchlistRecyclerView =
                 (RecyclerView) watchlistView.findViewById( R.id.basewatchlist_recycler_view );
-        baseWatchlistLayoutMgr = new LinearLayoutManager( getActivity() );
+        RecyclerView.LayoutManager baseWatchlistLayoutMgr = new LinearLayoutManager( getActivity() );
 
         baseWatchlistRecyclerView.setHasFixedSize( true );
 

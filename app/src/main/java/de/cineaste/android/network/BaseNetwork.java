@@ -19,21 +19,21 @@ public class BaseNetwork {
         void onResultListener( Response response );
     }
 
-    protected static final String METHOD_DELETE = "DELETE";
-    protected static final String METHOD_GET = "GET";
-    protected static final String METHOD_POST = "POST";
-    protected static final String METHOD_PUT = "PUT";
+    static final String METHOD_DELETE = "DELETE";
+    static final String METHOD_GET = "GET";
+    static final String METHOD_POST = "POST";
+    static final String METHOD_PUT = "PUT";
 
-    protected final String host;
-    protected final Gson gson = new Gson();
+    final String host;
+    final Gson gson = new Gson();
 
     private static final int MAXIMUM_RESPONSE_SIZE = 1048576;
 
-    public BaseNetwork( String host ) {
+    BaseNetwork( String host ) {
         this.host = host;
     }
 
-    protected static void requestAsync( Request request, final OnResultListener listener ) {
+    static void requestAsync( Request request, final OnResultListener listener ) {
         new AsyncTask<Request, Void, Response>() {
             @Override
             protected Response doInBackground( Request... params ) {
@@ -89,7 +89,7 @@ public class BaseNetwork {
         }.execute( request );
     }
 
-    protected static boolean successfulRequest( int statusCode ) {
+    static boolean successfulRequest( int statusCode ) {
         return statusCode >= 200 && statusCode < 300;
     }
 
@@ -110,8 +110,8 @@ public class BaseNetwork {
     }
 
     protected static class Response {
-        private int code;
-        private byte data[];
+        private final int code;
+        private final byte data[];
 
         public Response( int code, byte data[] ) {
             this.code = code;
@@ -135,7 +135,7 @@ public class BaseNetwork {
         }
     }
 
-    protected static class Request {
+    static class Request {
         private String url;
         private String method;
         private String[] headers;

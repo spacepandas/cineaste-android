@@ -18,7 +18,7 @@ import de.cineaste.android.entity.Movie;
 
 public class ExportImport {
 
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     public static void exportMovies( List<Movie> movies ) {
 
@@ -40,7 +40,7 @@ public class ExportImport {
         } finally {
             try {
                 fileWriter.close();
-            } catch ( IOException e ) {
+            } catch ( Exception e ) {
                 //die silently
             }
         }
@@ -55,14 +55,13 @@ public class ExportImport {
             BufferedReader reader = new BufferedReader( fileReader );
 
             String temp;
-            StringBuffer text = new StringBuffer();
+            StringBuilder text = new StringBuilder();
             while ( (temp = reader.readLine()) != null ) {
                 text.append( temp );
             }
             Type listType = new TypeToken<List<Movie>>() {
             }.getType();
-            List<Movie> movies = gson.fromJson( text.toString(), listType );
-            return movies;
+            return gson.fromJson( text.toString(), listType );
         } catch ( Exception ex ) {
             return new ArrayList<>();
         }

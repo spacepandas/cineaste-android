@@ -16,7 +16,6 @@ public class UserInputFragment extends DialogFragment
         implements TextView.OnEditorActionListener, View.OnClickListener {
 
     private EditText editText;
-    private TextView textview;
 
     public interface UserNameListener {
         void onFinishUserDialog( String userName );
@@ -31,7 +30,7 @@ public class UserInputFragment extends DialogFragment
                               Bundle savedInstanceState ) {
 
         View view = inflater.inflate( R.layout.fragment_user_input, container );
-        textview = (TextView) view.findViewById( R.id.ok_tv );
+        TextView textview = (TextView) view.findViewById( R.id.ok_tv );
         editText = (EditText) view.findViewById( R.id.username_et );
 
         textview.setOnClickListener( this );

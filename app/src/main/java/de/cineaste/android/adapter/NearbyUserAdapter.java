@@ -15,9 +15,9 @@ import de.cineaste.android.entity.NearbyMessage;
 
 public class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdapter.ViewHolder> {
 
-    private List<NearbyMessage> nearbyMessages;
-    private int rowLayout;
-    private Context context;
+    private final List<NearbyMessage> nearbyMessages;
+    private final int rowLayout;
+    private final Context context;
 
     public NearbyUserAdapter(
             List<NearbyMessage> nearbyMessages,
@@ -49,7 +49,7 @@ public class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView userName, movieCounter;
+        private final TextView userName, movieCounter;
 
         public ViewHolder( final View itemView ) {
             super( itemView );

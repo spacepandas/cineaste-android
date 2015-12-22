@@ -14,7 +14,7 @@ public class NearbyMessage {
     private String deviceId;
     private List<MovieDto> movies;
 
-    public NearbyMessage() {
+    private NearbyMessage() {
     }
 
     public NearbyMessage( String userName, String deviceId, List<MovieDto> movies ) {
@@ -27,7 +27,7 @@ public class NearbyMessage {
         return userName;
     }
 
-    public void setUserName( String userName ) {
+    private void setUserName( String userName ) {
         this.userName = userName;
     }
 
@@ -43,7 +43,7 @@ public class NearbyMessage {
         return movies;
     }
 
-    public void setMovies( List<MovieDto> movies ) {
+    private void setMovies( List<MovieDto> movies ) {
         this.movies = movies;
     }
 

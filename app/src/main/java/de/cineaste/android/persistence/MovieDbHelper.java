@@ -12,11 +12,9 @@ public class MovieDbHelper extends Observable {
 
     private static MovieDbHelper mInstance;
 
-    private Context context;
-    private MovieDao mMovieDao;
+    private final MovieDao mMovieDao;
 
     private MovieDbHelper( Context context ) {
-        this.context = context;
         this.mMovieDao = MovieDao.getInstance( context );
     }
 

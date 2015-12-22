@@ -9,14 +9,14 @@ public class NearbyMessageHandler {
 
     private static NearbyMessageHandler instance;
 
-    private List<NearbyMessage> messages;
+    private final List<NearbyMessage> messages;
 
     public static NearbyMessageHandler getInstance() {
 
         return instance == null ? instance = new NearbyMessageHandler() : instance;
     }
 
-    public NearbyMessageHandler() {
+    private NearbyMessageHandler() {
         messages = new ArrayList<>();
     }
 

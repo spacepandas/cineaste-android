@@ -27,9 +27,7 @@ public class UserDbHelper extends BaseDao {
         ContentValues values = new ContentValues();
         values.put( UserEntry.COLUMN_USER_NAME, user.getUserName() );
 
-        long newRowId = writeDb.insert( UserEntry.TABLE_NAME, null, values );
-
-        return newRowId;
+        return writeDb.insert( UserEntry.TABLE_NAME, null, values );
     }
 
     public User getUser() {

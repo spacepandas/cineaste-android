@@ -4,11 +4,6 @@ public class MatchingResult extends MovieDto {
 
     private int counter;
 
-    public MatchingResult( long id, String posterPath, String title, int counter ) {
-        super( id, posterPath, title );
-        this.counter = counter;
-    }
-
     public MatchingResult( MovieDto movieDto, int counter ) {
         super( movieDto.getId(), movieDto.getPosterPath(), movieDto.getTitle() );
         this.counter = counter;

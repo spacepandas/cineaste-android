@@ -20,14 +20,14 @@ import de.cineaste.android.persistence.MovieDbHelper;
 
 public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.ViewHolder> {
     public List<Movie> mDataset;
-    private MovieDbHelper mDb;
-    private Context context;
+    private final MovieDbHelper mDb;
+    private final Context context;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mMovieTitle;
-        public ImageView mMoviePoster;
-        public ImageButton mAddToWatchlistButton;
-        public ImageButton mMovieWatchedButton;
+        public final TextView mMovieTitle;
+        public final ImageView mMoviePoster;
+        public final ImageButton mAddToWatchlistButton;
+        public final ImageButton mMovieWatchedButton;
 
         public Movie mCurrentMovie;
 
@@ -52,7 +52,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
     public SearchQueryAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
         View v = LayoutInflater
                 .from( parent.getContext() )
-                .inflate( R.layout.movie_search_query_cardview, parent, false );
+                .inflate( R.layout.card_movie_search_query, parent, false );
         return new ViewHolder( v );
     }
 

@@ -9,10 +9,10 @@ public class MovieDto {
     private String posterPath;
     private String title;
 
-    public MovieDto() {
+    MovieDto() {
     }
 
-    public MovieDto( long id, String posterPath, String title ) {
+    MovieDto( long id, String posterPath, String title ) {
         this.id = id;
         this.posterPath = posterPath;
         this.title = title;

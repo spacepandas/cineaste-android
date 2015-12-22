@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Cineaste</string>
     <string name="language_tag">de</string>
-    <string name="movieNight">Filmabend</string>
     <string name="watchList">Watchlist</string>
     <string name="watchedlist">Watchedlist</string>
     <string name="search">Suche</string>
@@ -21,4 +20,8 @@
     <string name="successfulExport">Export war erfolgreich</string>
     <string name="successfulImport">Import war erfolgreich</string>
     <string name="unsuccessfulImport">Import war nicht erfolgreich</string>
+    <string name="moviePoster">Filmposter</string>
+    <string name="addToWatchlist">Zur Watchlist hinzufügen</string>
+    <string name="addToWatchedlist">Zur Watchedlist hinzufügen</string>
+    <string name="remove">Film entfernen</string>
 </resources>

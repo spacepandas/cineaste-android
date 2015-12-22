@@ -1,7 +1,5 @@
 package de.cineaste.android.network;
 
-import android.content.Context;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -23,13 +21,11 @@ public class TheMovieDb extends BaseNetwork {
         void onFetchMovieResultListener( Movie movie );
     }
 
-    private final Context context;
 
     private final String API_KEY_TAG = "api_key=" + Constants.API_KEY;
 
-    public TheMovieDb( Context context ) {
+    public TheMovieDb() {
         super( "https://api.themoviedb.org/3/" );
-        this.context = context;
     }
 
     public void searchMoviesAsync( String query,

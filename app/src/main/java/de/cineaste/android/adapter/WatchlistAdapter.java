@@ -20,16 +20,16 @@ import de.cineaste.android.persistence.MovieDbHelper;
 
 public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.ViewHolder> {
 
-    private List<Movie> mDataset;
-    private MovieDbHelper mDb;
-    private Context context;
-    private BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
+    private final List<Movie> mDataset;
+    private final MovieDbHelper mDb;
+    private final Context context;
+    private final BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mMovieTitle;
-        public ImageView mImageView;
-        public ImageButton mRemoveMovieButton;
-        public ImageButton mMovieWatchedButton;
+        public final TextView mMovieTitle;
+        public final ImageView mImageView;
+        public final ImageButton mRemoveMovieButton;
+        public final ImageButton mMovieWatchedButton;
 
         public Movie mCurrentMovie;
 
@@ -51,7 +51,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
 
     @Override
     public WatchlistAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
-        View v = LayoutInflater.from( parent.getContext() ).inflate( R.layout.watchlist_cardview, parent, false );
+        View v = LayoutInflater.from( parent.getContext() ).inflate( R.layout.card_watchlist, parent, false );
         return new ViewHolder( v );
     }
 

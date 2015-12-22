@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,8 +25,6 @@ import de.cineaste.android.persistence.MovieDbHelper;
 public class ViewPagerFragment extends Fragment {
 
     private ViewPager mViewPager;
-    private PagerAdapter mPagerAdapter;
-    private FloatingActionButton fab;
     private MovieDbHelper movieDbHelper;
 
     @Override
@@ -44,12 +41,12 @@ public class ViewPagerFragment extends Fragment {
 
         movieDbHelper = MovieDbHelper.getInstance( getActivity() );
 
-        mPagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), getActivity() );
+        PagerAdapter pagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), getActivity() );
 
         mViewPager = (ViewPager) view.findViewById( R.id.basewatchlist_pager );
-        mViewPager.setAdapter( mPagerAdapter );
+        mViewPager.setAdapter( pagerAdapter );
 
-        fab = (FloatingActionButton) view.findViewById( R.id.fab );
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById( R.id.fab );
         fab.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -86,24 +83,24 @@ public class ViewPagerFragment extends Fragment {
         List<Movie> movies = movieDbHelper.readAllMovies();
         ExportImport.exportMovies( movies );
         Snackbar snackbar = Snackbar
-                .make(mViewPager, R.string.successfulExport, Snackbar.LENGTH_LONG);
+                .make(mViewPager, R.string.successfulExport, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
     private void importMovies() {
         List<Movie> movies = ExportImport.importMovies();
-        int snackbarMessage;
+        int snackBarMessage;
         if( movies.size() != 0 ) {
             for ( Movie current : movies ) {
                 movieDbHelper.createOrUpdate( current );
             }
-            snackbarMessage = R.string.successfulImport;
+            snackBarMessage = R.string.successfulImport;
 
         } else {
-           snackbarMessage = R.string.unsuccessfulImport;
+           snackBarMessage = R.string.unsuccessfulImport;
         }
         Snackbar snackbar = Snackbar
-                .make(mViewPager, snackbarMessage, Snackbar.LENGTH_LONG);
+                .make(mViewPager, snackBarMessage, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 }

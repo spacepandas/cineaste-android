@@ -32,7 +32,6 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 
     private NearbyMessageHandler handler;
     private List<NearbyMessage> nearbyMessages;
-    private RecyclerView result;
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
@@ -42,7 +41,7 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
         handler = NearbyMessageHandler.getInstance();
         nearbyMessages = handler.getMessages();
 
-        result = (RecyclerView) view.findViewById( R.id.result_list );
+        RecyclerView result = (RecyclerView) view.findViewById( R.id.result_list );
 
         final LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
         llm.setOrientation( LinearLayoutManager.VERTICAL );
@@ -51,8 +50,7 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 
         ResultAdapter resultAdapter = new ResultAdapter(
                 getResult(),
-                R.layout.result_card,
-                getActivity(),
+                R.layout.card_result,
                 this );
         result.setAdapter( resultAdapter );
 
@@ -83,7 +81,7 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
     @Override
     public void onMovieSelectListener( int position ) {
         MainActivity.replaceFragmentPopBackStack( getFragmentManager(), new ViewPagerFragment() );
-        TheMovieDb theMovieDb = new TheMovieDb( getActivity() );
+        TheMovieDb theMovieDb = new TheMovieDb();
 
         theMovieDb.fetchMovie( getResult().get( position ).getId(), new TheMovieDb.OnFetchMovieResultListener() {
             @Override

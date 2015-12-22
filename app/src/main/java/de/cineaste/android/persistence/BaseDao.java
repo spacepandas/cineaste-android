@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
 
 import de.cineaste.android.Constants;
 
-public abstract class BaseDao extends SQLiteOpenHelper {
+abstract class BaseDao extends SQLiteOpenHelper {
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
@@ -33,11 +33,11 @@ public abstract class BaseDao extends SQLiteOpenHelper {
     private static final String SQL_DELETE_MOVIE_ENTRIES =
             "DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME;
 
-    protected SQLiteDatabase readDb;
-    protected SQLiteDatabase writeDb;
+    final SQLiteDatabase readDb;
+    final SQLiteDatabase writeDb;
 
-    public static final int DATABASE_VERSION = Constants.DATABASE_VERSION;
-    public static final String DATABASE_NAME = Constants.DATABASE_NAME;
+    private static final int DATABASE_VERSION = Constants.DATABASE_VERSION;
+    private static final String DATABASE_NAME = Constants.DATABASE_NAME;
 
     public static abstract class UserEntry implements BaseColumns {
 
@@ -56,7 +56,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
         public static final String COLUMN_MOVIE_WATCHED = "watched";
     }
 
-    public BaseDao( Context context ) {
+    BaseDao( Context context ) {
         super( context, DATABASE_NAME, null, DATABASE_VERSION );
         this.readDb = getReadableDatabase();
         this.writeDb = getWritableDatabase();

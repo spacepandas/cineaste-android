@@ -25,10 +25,8 @@ import de.cineaste.android.network.TheMovieDb;
 
 public class SearchFragment extends Fragment {
 
-    private TheMovieDb mTheMovieDb = new TheMovieDb( getActivity() );
-    private RecyclerView movieQueryRecyclerView;
+    private final TheMovieDb theMovieDb = new TheMovieDb();
     private RecyclerView.Adapter movieQueryAdapter;
-    private RecyclerView.LayoutManager movieQueryLayoutMgr;
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -42,8 +40,8 @@ public class SearchFragment extends Fragment {
 
         View view = inflater.inflate( R.layout.fragment_search, container, false );
 
-        movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
-        movieQueryLayoutMgr = new LinearLayoutManager( getActivity() );
+        RecyclerView movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
+        RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager( getActivity() );
         movieQueryAdapter = new SearchQueryAdapter( getActivity(), new ArrayList<Movie>() );
         movieQueryRecyclerView.setItemAnimator( new DefaultItemAnimator() );
 
@@ -77,7 +75,7 @@ public class SearchFragment extends Fragment {
                 public boolean onQueryTextChange( String query ) {
                     if( !query.isEmpty() ) {
                         query = query.replace( " ", "+" );
-                        mTheMovieDb.searchMoviesAsync( query, new TheMovieDb.OnSearchMoviesResultListener() {
+                        theMovieDb.searchMoviesAsync( query, new TheMovieDb.OnSearchMoviesResultListener() {
                             @Override
                             public void onSearchMoviesResultListener( List<Movie> movies ) {
                                 ((SearchQueryAdapter) movieQueryAdapter).mDataset = movies;
