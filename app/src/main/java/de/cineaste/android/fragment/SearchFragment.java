@@ -78,13 +78,16 @@ public class SearchFragment extends Fragment {
                         theMovieDb.searchMoviesAsync( query, new TheMovieDb.OnSearchMoviesResultListener() {
                             @Override
                             public void onSearchMoviesResultListener( List<Movie> movies ) {
-                                ((SearchQueryAdapter) movieQueryAdapter).mDataset = movies;
+                                ((SearchQueryAdapter) movieQueryAdapter).dataset = movies;
                                 movieQueryAdapter.notifyDataSetChanged();
                             }
                         }, getResources().getString( R.string.language_tag ) );
+                    } else {
+                        ((SearchQueryAdapter) movieQueryAdapter).dataset = new ArrayList<>(  );
                     }
                     return false;
                 }
+
             } );
         }
     }

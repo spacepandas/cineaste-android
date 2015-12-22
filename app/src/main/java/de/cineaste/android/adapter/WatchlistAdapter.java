@@ -62,7 +62,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
         holder.mMovieTitle.setText( movieTitle );
         String posterName = holder.mCurrentMovie.getPosterPath();
         String posterUri = Constants.POSTER_URI.replace( "<posterName", posterName != null ? posterName : "/" );
-        Picasso.with( context ).load( posterUri ).into( holder.mImageView );
+        Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( holder.mImageView );
 
         holder.mRemoveMovieButton.setOnClickListener( new View.OnClickListener() {
 

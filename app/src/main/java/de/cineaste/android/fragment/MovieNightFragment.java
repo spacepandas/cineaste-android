@@ -145,7 +145,7 @@ public class MovieNightFragment extends Fragment
             }
             @Override
             public void onLost( final Message message ) {
-                getActivity().runOnUiThread( new Runnable() {
+              /*  getActivity().runOnUiThread( new Runnable() {
                     @Override
                     public void run() {
                         NearbyMessage temp = NearbyMessage.fromMessage( message );
@@ -153,7 +153,7 @@ public class MovieNightFragment extends Fragment
                         nearbyMessagesArrayList.remove( temp );
                         nearbyUserAdapter.notifyItemRemoved( position );
                     }
-                } );
+                } );*/
             }
         };
 
