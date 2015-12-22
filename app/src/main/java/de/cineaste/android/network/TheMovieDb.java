@@ -36,7 +36,6 @@ public class TheMovieDb extends BaseNetwork {
                 "search/movie?query=" + query +
                 "&language=" + lang +
                 "&" + API_KEY_TAG;
-android.util.Log.wtf( "mgr", url );
         requestAsync(
                 new Request(
                         url,

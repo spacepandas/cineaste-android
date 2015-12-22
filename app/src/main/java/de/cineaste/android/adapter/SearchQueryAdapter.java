@@ -19,8 +19,8 @@ import de.cineaste.android.entity.Movie;
 import de.cineaste.android.persistence.MovieDbHelper;
 
 public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.ViewHolder> {
-    public List<Movie> mDataset;
-    private final MovieDbHelper mDb;
+    public List<Movie> dataset;
+    private final MovieDbHelper db;
     private final Context context;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -38,15 +38,13 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
             mAddToWatchlistButton = (ImageButton) v.findViewById( R.id.to_watchlist_button );
             mMovieWatchedButton = (ImageButton) v.findViewById( R.id.watched_button );
         }
-
     }
 
     public SearchQueryAdapter( Context context, List<Movie> movies ) {
-        mDb = MovieDbHelper.getInstance( context );
+        db = MovieDbHelper.getInstance( context );
         this.context = context;
-        mDataset = movies;
+        dataset = movies;
     }
-
 
     @Override
     public SearchQueryAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
@@ -58,23 +56,23 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 
     @Override
     public void onBindViewHolder( final ViewHolder holder, final int position ) {
-        String movieTitle = mDataset.get( position ).getTitle();
-        holder.mCurrentMovie = mDataset.get( position );
+        String movieTitle = dataset.get( position ).getTitle();
+        holder.mCurrentMovie = dataset.get( position );
         holder.mMovieTitle.setText( movieTitle );
         String posterName = holder.mCurrentMovie.getPosterPath();
         String posterUri =
                 Constants.POSTER_URI
                         .replace( "<posterName>", posterName != null ? posterName : "/" );
-        Picasso.with( context ).load( posterUri ).into( holder.mMoviePoster );
+        Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( holder.mMoviePoster );
 
         holder.mAddToWatchlistButton.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick( View v ) {
-                int index = mDataset.indexOf( holder.mCurrentMovie );
+                int index = dataset.indexOf( holder.mCurrentMovie );
                 Movie watchlistMovie = holder.mCurrentMovie;
-                mDb.createNewMovieEntry( watchlistMovie );
-                mDataset.remove( index );
+                db.createNewMovieEntry( watchlistMovie );
+                dataset.remove( index );
                 notifyItemRemoved( index );
             }
         } );
@@ -83,11 +81,11 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 
             @Override
             public void onClick( View v ) {
-                int index = mDataset.indexOf( holder.mCurrentMovie );
+                int index = dataset.indexOf( holder.mCurrentMovie );
                 Movie watchlistMovie = holder.mCurrentMovie;
                 watchlistMovie.setWatched( true );
-                mDb.createNewMovieEntry( watchlistMovie );
-                mDataset.remove( index );
+                db.createNewMovieEntry( watchlistMovie );
+                dataset.remove( index );
                 notifyItemRemoved( index );
             }
         } );
@@ -95,7 +93,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return dataset.size();
     }
 }
 

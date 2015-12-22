@@ -51,6 +51,7 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
         ResultAdapter resultAdapter = new ResultAdapter(
                 getResult(),
                 R.layout.card_result,
+                getActivity(),
                 this );
         result.setAdapter( resultAdapter );
 
