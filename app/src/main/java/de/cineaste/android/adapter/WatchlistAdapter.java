@@ -25,31 +25,78 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
     private final MovieDbHelper db;
     private final Context context;
     private final BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
+    private final OnMovieClickListener listener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public interface OnMovieClickListener {
+        void onMovieClickListener( long movieId );
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView movieTitle;
         public final TextView movieRuntime;
+        public final TextView movieVote;
         public final ImageView imageView;
         public final ImageButton removeMovieButton;
         public final ImageButton movieWatchedButton;
-
-        public Movie currentMovie;
+        final View view;
 
         public ViewHolder( View v ) {
             super( v );
             movieTitle = (TextView) v.findViewById( R.id.movie_title );
             movieRuntime = (TextView) v.findViewById( R.id.movie_runtime );
+            movieVote = (TextView) v.findViewById( R.id.movie_vote );
             removeMovieButton = (ImageButton) v.findViewById( R.id.remove_button );
             movieWatchedButton = (ImageButton) v.findViewById( R.id.watched_button );
             imageView = (ImageView) v.findViewById( R.id.movie_poster_image_view );
+            view = v;
+        }
+
+        public void assignData( final Movie movie ) {
+            Resources resources = context.getResources();
+
+            movieTitle.setText( movie.getTitle() );
+            movieRuntime.setText( resources.getString( R.string.runtime, movie.getRuntime() ) );
+            movieVote.setText( resources.getString( R.string.vote, movie.getVoteAverage() ) );
+            String posterName = movie.getPosterPath();
+            String posterUri = Constants.POSTER_URI.replace( "<posterName", posterName != null ? posterName : "/" );
+            Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( imageView );
+
+            view.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick( View v ) {
+                    if( listener != null )
+                        listener.onMovieClickListener( movie.getId() );
+                }
+            } );
+
+            removeMovieButton.setOnClickListener( new View.OnClickListener() {
+
+                @Override
+                public void onClick( View v ) {
+                    int index = dataset.indexOf( movie );
+                    db.deleteMovieFromWatchlist( movie.getId() );
+                    removeItemFromView( index );
+                }
+            } );
+
+            movieWatchedButton.setOnClickListener( new View.OnClickListener() {
+
+                @Override
+                public void onClick( View v ) {
+                    int index = dataset.indexOf( movie );
+                    db.updateMovieWatched( true, movie.getId() );
+                    removeItemFromView( index );
+                }
+            } );
         }
     }
 
-    public WatchlistAdapter( Context context , BaseWatchlistPagerAdapter.WatchlistFragment baseFragment) {
+    public WatchlistAdapter( Context context , BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, OnMovieClickListener listener ) {
         this.db = MovieDbHelper.getInstance( context );
         this.context = context;
         this.dataset = db.readMoviesByWatchStatus( false );
         this.baseFragment = baseFragment;
+        this.listener = listener;
     }
 
     @Override
@@ -60,34 +107,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
 
     @Override
     public void onBindViewHolder( final WatchlistAdapter.ViewHolder holder, final int position ) {
-        Resources resources = context.getResources();
-
-        holder.currentMovie = dataset.get( position );
-        holder.movieTitle.setText(holder.currentMovie.getTitle());
-        holder.movieRuntime.setText(resources.getString(R.string.runtime, holder.currentMovie.getRuntime()));
-        String posterName = holder.currentMovie.getPosterPath();
-        String posterUri = Constants.POSTER_URI.replace( "<posterName", posterName != null ? posterName : "/" );
-        Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( holder.imageView);
-
-        holder.removeMovieButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                int index = dataset.indexOf(holder.currentMovie);
-                db.deleteMovieFromWatchlist(holder.currentMovie.getId());
-                removeItemFromView(index);
-            }
-        });
-
-        holder.movieWatchedButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                int index = dataset.indexOf(holder.currentMovie);
-                db.updateMovieWatched(true, holder.currentMovie.getId());
-                removeItemFromView(index);
-            }
-        });
+       holder.assignData( dataset.get( position ) );
     }
 
     @Override

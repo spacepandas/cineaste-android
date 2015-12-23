@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
 
 import de.cineaste.android.Constants;
 
-abstract class BaseDao extends SQLiteOpenHelper {
+public abstract class BaseDao extends SQLiteOpenHelper {
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";

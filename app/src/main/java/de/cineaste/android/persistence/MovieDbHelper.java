@@ -26,7 +26,14 @@ public class MovieDbHelper extends Observable {
     }
 
     public long createNewMovieEntry(Movie movie) {
-        return movieDao.create(movie);
+        return movieDao.create( movie );
+    }
+
+    public Movie readMovie(long movieId) {
+        String selection = BaseDao.MovieEntry._ID + " = ?";
+        String[] selectionArgs = {Long.toString( movieId )};
+
+        return movieDao.read( selection, selectionArgs ).get( 0 );
     }
 
     public List<Movie> readAllMovies() {

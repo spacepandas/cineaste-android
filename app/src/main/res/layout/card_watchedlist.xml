@@ -40,18 +40,31 @@
             android:layout_toStartOf="@+id/remove_button"
             android:layout_toLeftOf="@+id/remove_button"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/movie_runtime"
-            style="@style/cardviewDescriptionText"
+            android:orientation="vertical"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:layout_toStartOf="@+id/remove_button"
             android:layout_toLeftOf="@+id/remove_button"
             android:layout_toRightOf="@+id/movie_poster_image_view"
             android:layout_toEndOf="@+id/movie_poster_image_view"
-            android:layout_below="@+id/movie_title"/>
+            android:layout_below="@+id/movie_title">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/movie_runtime"
+            style="@style/cardviewDescriptionText"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/movie_vote"
+            style="@style/cardviewDescriptionText"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

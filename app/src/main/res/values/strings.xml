@@ -26,4 +26,9 @@
     <string name="remove">Film entfernen</string>
     <string name="noInternet">Keine Internetverbindung!</string>
     <string name="runtime">Laufzeit: %d m</string>
+    <string name="vote">Bewertung: %s</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="movieTitle">Titel</string>
 </resources>

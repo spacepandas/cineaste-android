@@ -8,14 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.BaseWatchlistPagerAdapter;
 import de.cineaste.android.adapter.WatchedlistAdapter;
 import de.cineaste.android.adapter.WatchlistAdapter;
+import de.cineaste.android.persistence.BaseDao;
 
 public class BaseWatchlistFragment extends Fragment
-        implements BaseWatchlistPagerAdapter.WatchlistFragment {
+        implements BaseWatchlistPagerAdapter.WatchlistFragment, WatchlistAdapter.OnMovieClickListener {
 
     private String watchlistType;
 
@@ -61,7 +64,7 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     public void controlWatchlistAdapter() {
-        baseWatchlistAdapter = new WatchlistAdapter( getActivity(), this );
+        baseWatchlistAdapter = new WatchlistAdapter( getActivity(), this, this );
         if( baseWatchlistAdapter.getItemCount() == 0 ) {
             baseWatchlistRecyclerView.setVisibility( View.GONE );
             emptyListTextView.setVisibility( View.VISIBLE );
@@ -97,5 +100,15 @@ public class BaseWatchlistFragment extends Fragment
             this.watchlistType =
                     savedInstanceState.getString( WatchlistFragmentType.WATCHLIST_TYPE );
         }
+    }
+
+    @Override
+    public void onMovieClickListener( long movieId ) {
+        Bundle bundle = new Bundle(  );
+        bundle.putLong( BaseDao.MovieEntry._ID, movieId );
+        MovieDetailsFragment fragment = new MovieDetailsFragment();
+        fragment.setArguments( bundle );
+android.widget.Toast.makeText( getActivity(), "test", Toast.LENGTH_LONG ).show();
+      //  MainActivity.replaceFragment( getFragmentManager(), fragment );
     }
 }

@@ -45,6 +45,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView movieTitle;
         public final TextView movieRuntime;
+        public final TextView movieVote;
         public final ImageButton removeMovie;
         public final ImageView imageView;
         public Movie currentMovie;
@@ -53,6 +54,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
             super( v );
             movieTitle = (TextView) v.findViewById( R.id.movie_title );
             movieRuntime = (TextView) v.findViewById( R.id.movie_runtime );
+            movieVote = (TextView) v.findViewById( R.id.movie_vote );
             removeMovie = (ImageButton) v.findViewById( R.id.remove_button );
             imageView = (ImageView) v.findViewById( R.id.movie_poster_image_view );
         }
@@ -72,6 +74,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         holder.currentMovie = dataset.get( position );
         holder.movieTitle.setText(holder.currentMovie.getTitle());
         holder.movieRuntime.setText(resources.getString(R.string.runtime, holder.currentMovie.getRuntime()));
+        holder.movieVote.setText(resources.getString(R.string.vote, holder.currentMovie.getVoteAverage()));
         String posterName = holder.currentMovie.getPosterPath();
         String posterUri = Constants.POSTER_URI
                 .replace( "<posterName>", posterName != null ? posterName : "/" );
