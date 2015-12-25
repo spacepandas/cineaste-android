@@ -25,8 +25,8 @@ import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.MovieDto;
 import de.cineaste.android.entity.NearbyMessage;
 import de.cineaste.android.network.TheMovieDb;
-import de.cineaste.android.persistence.MovieDbHelper;
-import de.cineaste.android.persistence.NearbyMessageHandler;
+import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.database.NearbyMessageHandler;
 
 public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSelectListener {
 
@@ -86,7 +86,7 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 
         theMovieDb.fetchMovie(
                 getResult().get( position ).getId(),
-                getActivity().getResources().getString(R.string.language_tag),
+                getActivity().getResources().getString( R.string.language_tag ),
                 new TheMovieDb.OnFetchMovieResultListener() {
             @Override
             public void onFetchMovieResultListener( Movie movie ) {

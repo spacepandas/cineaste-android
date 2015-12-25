@@ -1,4 +1,4 @@
-package de.cineaste.android.persistence;
+package de.cineaste.android.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,6 +26,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
                     MovieEntry.COLUMN_RUNTIME + INTEGER_TYPE + COMMA_SEP +
                     MovieEntry.COLUMN_VOTE_AVERAGE + REAL_TYPE + COMMA_SEP +
                     MovieEntry.COLUMN_VOTE_COUNT + INTEGER_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_MOVIE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
                     MovieEntry.COLUMN_MOVIE_WATCHED + INTEGER_TYPE +
                     " )";
     private static final String SQL_DELETE_USER_ENTRIES =
@@ -53,6 +54,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
         public static final String COLUMN_VOTE_AVERAGE = "voteAverage";
         public static final String COLUMN_VOTE_COUNT = "voteCount";
         public static final String COLUMN_MOVIE_TITLE = "title";
+        public static final String COLUMN_MOVIE_DESCRIPTION = "description";
         public static final String COLUMN_MOVIE_WATCHED = "watched";
     }
 

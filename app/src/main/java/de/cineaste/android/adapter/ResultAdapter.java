@@ -17,7 +17,7 @@ import java.util.List;
 import de.cineaste.android.Constants;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.MatchingResult;
-import de.cineaste.android.persistence.NearbyMessageHandler;
+import de.cineaste.android.database.NearbyMessageHandler;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
 

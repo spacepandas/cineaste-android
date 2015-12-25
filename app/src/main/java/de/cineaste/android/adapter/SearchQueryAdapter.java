@@ -14,39 +14,101 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.cineaste.android.Constants;
+import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.network.TheMovieDb;
-import de.cineaste.android.persistence.MovieDbHelper;
+import de.cineaste.android.database.MovieDbHelper;
 
 public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.ViewHolder> {
     public List<Movie> dataset;
     private final MovieDbHelper db;
     private final Context context;
     private final TheMovieDb theMovieDb;
+    private final MovieClickListener listener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mMovieTitle;
-        public final ImageView mMoviePoster;
-        public final ImageButton mAddToWatchlistButton;
-        public final ImageButton mMovieWatchedButton;
-
-        public Movie mCurrentMovie;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public final TextView movieTitle;
+        public final ImageView moviePoster;
+        public final ImageButton addToWatchlistButton;
+        public final ImageButton movieWatchedButton;
+        final View view;
 
         public ViewHolder(View v) {
             super(v);
-            mMovieTitle = (TextView) v.findViewById(R.id.movie_title);
-            mMoviePoster = (ImageView) v.findViewById(R.id.movie_poster_image_view);
-            mAddToWatchlistButton = (ImageButton) v.findViewById(R.id.to_watchlist_button);
-            mMovieWatchedButton = (ImageButton) v.findViewById(R.id.watched_button);
+            movieTitle = (TextView) v.findViewById(R.id.movie_title);
+            moviePoster = (ImageView) v.findViewById(R.id.movie_poster_image_view);
+            addToWatchlistButton = (ImageButton) v.findViewById(R.id.to_watchlist_button);
+            movieWatchedButton = (ImageButton) v.findViewById(R.id.watched_button);
+            view = v;
+        }
+
+        public void assignData( final Movie movie ) {
+            movieTitle.setText( movie.getTitle() );
+            String posterName = movie.getPosterPath();
+            String posterUri =
+                    Constants.POSTER_URI
+                            .replace("<posterName>", posterName != null ? posterName : "/");
+            Picasso.with(context).load(posterUri).error( R.mipmap.ic_launcher ).into( moviePoster );
+
+            addToWatchlistButton.setOnClickListener( new View.OnClickListener() {
+
+                @Override
+                public void onClick( View v ) {
+                    int index = dataset.indexOf( movie );
+
+                    theMovieDb.fetchMovie(
+                            movie.getId(),
+                            context.getResources().getString( R.string.language_tag ),
+                            new TheMovieDb.OnFetchMovieResultListener() {
+                                @Override
+                                public void onFetchMovieResultListener( Movie movie ) {
+                                    db.createNewMovieEntry( movie );
+                                }
+                            } );
+
+                    dataset.remove( index );
+                    notifyItemRemoved( index );
+                }
+            } );
+
+            movieWatchedButton.setOnClickListener( new View.OnClickListener() {
+
+                @Override
+                public void onClick( View v ) {
+                    int index = dataset.indexOf( movie );
+
+                    theMovieDb.fetchMovie(
+                            movie.getId(),
+                            context.getResources().getString( R.string.language_tag ),
+                            new TheMovieDb.OnFetchMovieResultListener() {
+                                @Override
+                                public void onFetchMovieResultListener( Movie movie ) {
+                                    movie.setWatched( true );
+                                    db.createNewMovieEntry( movie );
+                                }
+                            } );
+
+                    dataset.remove( index );
+                    notifyItemRemoved( index );
+                }
+            } );
+
+            view.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick( View v ) {
+                    listener.onMovieClickListener( movie.getId() );
+                }
+            } );
         }
     }
 
-    public SearchQueryAdapter(Context context, List<Movie> movies) {
+    public SearchQueryAdapter(Context context, List<Movie> movies, MovieClickListener listener) {
         db = MovieDbHelper.getInstance(context);
         this.context = context;
         dataset = movies;
         theMovieDb = new TheMovieDb();
+        this.listener = listener;
     }
 
     @Override
@@ -59,59 +121,8 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        String movieTitle = dataset.get(position).getTitle();
-        holder.mCurrentMovie = dataset.get(position);
-        holder.mMovieTitle.setText(movieTitle);
-        String posterName = holder.mCurrentMovie.getPosterPath();
-        String posterUri =
-                Constants.POSTER_URI
-                        .replace("<posterName>", posterName != null ? posterName : "/");
-        Picasso.with(context).load(posterUri).error(R.mipmap.ic_launcher).into(holder.mMoviePoster);
-
-        holder.mAddToWatchlistButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                int index = dataset.indexOf(holder.mCurrentMovie);
-
-                theMovieDb.fetchMovie(
-                        holder.mCurrentMovie.getId(),
-                        context.getResources().getString(R.string.language_tag),
-                        new TheMovieDb.OnFetchMovieResultListener() {
-                    @Override
-                    public void onFetchMovieResultListener(Movie movie) {
-                        db.createNewMovieEntry(movie);
-                    }
-                });
-
-                dataset.remove(index);
-                notifyItemRemoved(index);
-            }
-        });
-
-        holder.mMovieWatchedButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                int index = dataset.indexOf(holder.mCurrentMovie);
-
-                theMovieDb.fetchMovie(
-                        holder.mCurrentMovie.getId(),
-                        context.getResources().getString(R.string.language_tag),
-                        new TheMovieDb.OnFetchMovieResultListener() {
-                    @Override
-                    public void onFetchMovieResultListener(Movie movie) {
-                        movie.setWatched(true);
-                        db.createNewMovieEntry(movie);
-                    }
-                });
-
-                dataset.remove(index);
-                notifyItemRemoved(index);
-            }
-        });
+        holder.assignData( dataset.get( position ) );
     }
-
 
     @Override
     public int getItemCount() {

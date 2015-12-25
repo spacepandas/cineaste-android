@@ -20,7 +20,7 @@ import de.cineaste.android.R;
 import de.cineaste.android.adapter.BaseWatchlistPagerAdapter;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.exportImport.ExportImport;
-import de.cineaste.android.persistence.MovieDbHelper;
+import de.cineaste.android.database.MovieDbHelper;
 
 public class ViewPagerFragment extends Fragment {
 

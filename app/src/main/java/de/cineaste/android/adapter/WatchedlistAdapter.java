@@ -17,9 +17,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import de.cineaste.android.Constants;
+import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.persistence.MovieDbHelper;
+import de.cineaste.android.database.MovieDbHelper;
 
 public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.ViewHolder> implements Observer {
 
@@ -27,13 +28,15 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     private final MovieDbHelper db;
     private final Context context;
     private final BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
+    private final MovieClickListener listener;
 
-    public WatchedlistAdapter( Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment ) {
+    public WatchedlistAdapter( Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener ) {
         this.db = MovieDbHelper.getInstance( context );
         this.context = context;
         this.db.addObserver( this );
         this.dataset = db.readMoviesByWatchStatus( true );
         this.baseFragment = baseFragment;
+        this.listener = listener;
     }
 
     @Override
@@ -42,12 +45,13 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView movieTitle;
         public final TextView movieRuntime;
         public final TextView movieVote;
         public final ImageButton removeMovie;
         public final ImageView imageView;
+        final View view;
         public Movie currentMovie;
 
         public ViewHolder( View v ) {
@@ -57,10 +61,41 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
             movieVote = (TextView) v.findViewById( R.id.movie_vote );
             removeMovie = (ImageButton) v.findViewById( R.id.remove_button );
             imageView = (ImageView) v.findViewById( R.id.movie_poster_image_view );
+            view = v;
+        }
+
+        public void assignData( final Movie movie ) {
+            Resources resources = context.getResources();
+
+            movieTitle.setText( movie.getTitle() );
+            movieRuntime.setText(resources.getString( R.string.runtime, movie.getRuntime() ));
+            movieVote.setText( resources.getString( R.string.vote, movie.getVoteAverage() ) );
+            String posterName = movie.getPosterPath();
+            String posterUri = Constants.POSTER_URI
+                    .replace( "<posterName>", posterName != null ? posterName : "/" );
+            Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( imageView );
+
+            removeMovie.setOnClickListener( new View.OnClickListener() {
+
+                @Override
+                public void onClick( View v ) {
+                    int index = dataset.indexOf( movie );
+                    removeItemFromViewAndDb( index, movie.getId() );
+                }
+            } );
+
+            view.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick( View v ) {
+                    if( listener != null ) {
+                        listener.onMovieClickListener( movie.getId() );
+                    }
+                }
+            } );
         }
     }
 
-    public WatchedlistAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
+    public WatchedlistAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewTyp ) {
         View v = LayoutInflater
                 .from( parent.getContext() )
                 .inflate( R.layout.card_watchedlist, parent, false );
@@ -69,25 +104,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
 
     @Override
     public void onBindViewHolder( final WatchedlistAdapter.ViewHolder holder, final int position ) {
-        Resources resources = context.getResources();
-
-        holder.currentMovie = dataset.get( position );
-        holder.movieTitle.setText(holder.currentMovie.getTitle());
-        holder.movieRuntime.setText(resources.getString(R.string.runtime, holder.currentMovie.getRuntime()));
-        holder.movieVote.setText(resources.getString(R.string.vote, holder.currentMovie.getVoteAverage()));
-        String posterName = holder.currentMovie.getPosterPath();
-        String posterUri = Constants.POSTER_URI
-                .replace( "<posterName>", posterName != null ? posterName : "/" );
-        Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( holder.imageView);
-
-        holder.removeMovie.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                int index = dataset.indexOf(holder.currentMovie);
-                removeItemFromViewAndDb(index, holder.currentMovie.getId());
-            }
-        });
+       holder.assignData( dataset.get( position ) );
     }
 
     @Override

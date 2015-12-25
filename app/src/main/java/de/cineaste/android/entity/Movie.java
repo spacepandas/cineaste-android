@@ -9,6 +9,8 @@ public class Movie extends MovieDto {
     private double voteAverage;
     @SerializedName( "vote_count" )
     private int voteCount;
+    @SerializedName( "overview" )
+    private String description;
     private boolean watched;
 
     public Movie() {
@@ -21,11 +23,13 @@ public class Movie extends MovieDto {
             int runtime,
             String title,
             double voteAverage,
+            String description,
             int voteCount ) {
         super( id, posterPath, title );
         this.runtime = runtime;
         this.voteAverage = voteAverage;
         this.voteCount = voteCount;
+        this.description = description;
         this.watched = false;
     }
 
@@ -51,6 +55,14 @@ public class Movie extends MovieDto {
 
     public void setVoteCount( int voteCount ) {
         this.voteCount = voteCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription( String description ) {
+        this.description = description;
     }
 
     public boolean isWatched() {

@@ -39,9 +39,9 @@ import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.MovieDto;
 import de.cineaste.android.entity.NearbyMessage;
 import de.cineaste.android.entity.User;
-import de.cineaste.android.persistence.MovieDbHelper;
-import de.cineaste.android.persistence.NearbyMessageHandler;
-import de.cineaste.android.persistence.UserDbHelper;
+import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.database.NearbyMessageHandler;
+import de.cineaste.android.database.UserDbHelper;
 
 public class MovieNightFragment extends Fragment
         implements GoogleApiClient.ConnectionCallbacks,
@@ -348,7 +348,7 @@ public class MovieNightFragment extends Fragment
             } else {
                 Snackbar snackbar = Snackbar
                         .make( view, "Unsuccessful: " +
-                        status.getStatusMessage(), Snackbar.LENGTH_LONG );
+                                status.getStatusMessage(), Snackbar.LENGTH_LONG );
                 snackbar.show();
             }
         }

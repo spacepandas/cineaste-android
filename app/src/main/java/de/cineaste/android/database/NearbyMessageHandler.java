@@ -1,4 +1,4 @@
-package de.cineaste.android.persistence;
+package de.cineaste.android.database;
 
 import java.util.ArrayList;
 import java.util.List;

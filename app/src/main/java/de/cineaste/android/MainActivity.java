@@ -18,7 +18,7 @@ import de.cineaste.android.entity.User;
 import de.cineaste.android.fragment.MovieNightFragment;
 import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.ViewPagerFragment;
-import de.cineaste.android.persistence.UserDbHelper;
+import de.cineaste.android.database.UserDbHelper;
 
 public class MainActivity extends AppCompatActivity implements UserInputFragment.UserNameListener {
 
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
                     .addToBackStack( null )
                     .commit();
         } else {
-            startDialogFragment(fm, UserInputFragment.newInstance());
+            startDialogFragment( fm, UserInputFragment.newInstance() );
         }
 
     }

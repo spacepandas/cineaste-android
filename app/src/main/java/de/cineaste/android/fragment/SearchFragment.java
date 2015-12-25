@@ -19,13 +19,16 @@ import android.view.inputmethod.InputMethodManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.cineaste.android.MainActivity;
+import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;
 import de.cineaste.android.broadcastReceiver.NetworkChangeReceiver;
+import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.network.TheMovieDb;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements MovieClickListener{
 
     private final TheMovieDb theMovieDb = new TheMovieDb();
     private RecyclerView.Adapter movieQueryAdapter;
@@ -45,7 +48,7 @@ public class SearchFragment extends Fragment {
 
         RecyclerView movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
         RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager( getActivity() );
-        movieQueryAdapter = new SearchQueryAdapter( getActivity(), new ArrayList<Movie>() );
+        movieQueryAdapter = new SearchQueryAdapter( getActivity(), new ArrayList<Movie>(), this );
         movieQueryRecyclerView.setItemAnimator( new DefaultItemAnimator() );
 
         movieQueryRecyclerView.setLayoutManager( movieQueryLayoutMgr );
@@ -128,5 +131,14 @@ public class SearchFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected( item );
+    }
+    @Override
+    public void onMovieClickListener( long movieId ) {
+        //todo Implement better way to pass movie
+       /* Bundle bundle = new Bundle(  );
+        bundle.putLong( BaseDao.MovieEntry._ID, movieId );
+        MovieDetailsFragment fragment = new MovieDetailsFragment();
+        fragment.setArguments( bundle );
+        MainActivity.replaceFragment( getFragmentManager(), fragment );*/
     }
 }

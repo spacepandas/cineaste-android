@@ -1,4 +1,4 @@
-package de.cineaste.android.persistence;
+package de.cineaste.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -34,11 +34,12 @@ public class MovieDao extends BaseDao {
         values.put( MovieEntry.COLUMN_RUNTIME, movie.getRuntime() );
         values.put( MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage() );
         values.put( MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount() );
+        values.put( MovieEntry.COLUMN_MOVIE_DESCRIPTION, movie.getDescription() );
         values.put( MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0 );
 
         long newRowId;
         newRowId = writeDb.insert( MovieEntry.TABLE_NAME, null, values );
-android.util.Log.d( TAG, "Saved movie with name " + movie.getTitle() );
+        android.util.Log.d( TAG, "Saved movie with name " + movie.getTitle() );
 
         return newRowId;
     }
@@ -53,6 +54,7 @@ android.util.Log.d( TAG, "Saved movie with name " + movie.getTitle() );
                 MovieEntry.COLUMN_RUNTIME,
                 MovieEntry.COLUMN_VOTE_AVERAGE,
                 MovieEntry.COLUMN_VOTE_COUNT,
+                MovieEntry.COLUMN_MOVIE_DESCRIPTION,
                 MovieEntry.COLUMN_MOVIE_WATCHED
         };
 
@@ -81,6 +83,8 @@ android.util.Log.d( TAG, "Saved movie with name " + movie.getTitle() );
                         c.getDouble( c.getColumnIndexOrThrow( MovieEntry.COLUMN_VOTE_AVERAGE ) ) );
                 currentMovie.setVoteCount(
                         c.getInt( c.getColumnIndexOrThrow( MovieEntry.COLUMN_VOTE_COUNT ) ) );
+                currentMovie.setDescription(
+                        c.getString( c.getColumnIndexOrThrow( MovieEntry.COLUMN_MOVIE_DESCRIPTION ) ) );
                 currentMovie.setWatched(
                         c.getInt( c.getColumnIndexOrThrow( MovieEntry.COLUMN_MOVIE_WATCHED ) ) > 0 );
                 movies.add( currentMovie );

@@ -14,8 +14,8 @@ import com.squareup.picasso.Picasso;
 import de.cineaste.android.Constants;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.persistence.BaseDao;
-import de.cineaste.android.persistence.MovieDbHelper;
+import de.cineaste.android.database.BaseDao;
+import de.cineaste.android.database.MovieDbHelper;
 
 public class MovieDetailsFragment extends Fragment {
 
@@ -33,6 +33,7 @@ public class MovieDetailsFragment extends Fragment {
         TextView movieTitle = (TextView) view.findViewById( R.id.movie_title );
         TextView movieRuntime = (TextView) view.findViewById( R.id.movie_runtime );
         TextView movieVote = (TextView) view.findViewById( R.id.movie_vote );
+        TextView movieDescription = (TextView) view.findViewById( R.id.movie_description );
         ImageView moviePoster = (ImageView) view.findViewById( R.id.movie_poster );
 
         Resources resources = getResources();
@@ -40,6 +41,7 @@ public class MovieDetailsFragment extends Fragment {
         movieTitle.setText( currentMovie.getTitle() );
         movieRuntime.setText( resources.getString( R.string.runtime, currentMovie.getRuntime() ) );
         movieVote.setText( resources.getString( R.string.vote, currentMovie.getVoteAverage() ) );
+        movieDescription.setText( currentMovie.getDescription() );
 
         String posterUri = Constants.POSTER_URI
                 .replace( "<posterName>", currentMovie.getPosterPath() != null ?

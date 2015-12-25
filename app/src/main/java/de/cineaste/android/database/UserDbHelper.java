@@ -1,4 +1,4 @@
-package de.cineaste.android.persistence;
+package de.cineaste.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;

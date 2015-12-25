@@ -15,9 +15,10 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.cineaste.android.Constants;
+import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.persistence.MovieDbHelper;
+import de.cineaste.android.database.MovieDbHelper;
 
 public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.ViewHolder> {
 
@@ -25,11 +26,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
     private final MovieDbHelper db;
     private final Context context;
     private final BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
-    private final OnMovieClickListener listener;
-
-    public interface OnMovieClickListener {
-        void onMovieClickListener( long movieId );
-    }
+    private final MovieClickListener listener;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView movieTitle;
@@ -91,7 +88,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
         }
     }
 
-    public WatchlistAdapter( Context context , BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, OnMovieClickListener listener ) {
+    public WatchlistAdapter( Context context , BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener ) {
         this.db = MovieDbHelper.getInstance( context );
         this.context = context;
         this.dataset = db.readMoviesByWatchStatus( false );
