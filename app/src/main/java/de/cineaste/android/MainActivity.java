@@ -41,21 +41,15 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     }
 
     private static void startDialogFragment(FragmentManager fragmentManager, DialogFragment fragment) {
-        fragment.show(fragmentManager,"");
+        fragment.show( fragmentManager, "" );
     }
 
     public static void startMovieNight( FragmentManager fm ) {
         if( currentUser != null ) {
-            fm.beginTransaction()
-                    .replace(
-                            R.id.content_container,
-                            MovieNightFragment.getInstance() )
-                    .addToBackStack( null )
-                    .commit();
+            replaceFragment( fm, MovieNightFragment.getInstance() );
         } else {
             startDialogFragment( fm, UserInputFragment.newInstance() );
         }
-
     }
 
     @Override

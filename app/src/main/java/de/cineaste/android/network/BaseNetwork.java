@@ -33,7 +33,7 @@ public class BaseNetwork {
         this.host = host;
     }
 
-    static void requestAsync( Request request, final OnResultListener listener ) {
+    static void requestAsync( final Request request, final OnResultListener listener ) {
         new AsyncTask<Request, Void, Response>() {
             @Override
             protected Response doInBackground( Request... params ) {
@@ -78,7 +78,8 @@ public class BaseNetwork {
                         connection.disconnect();
                 }
 
-                return null;
+                return new Response(
+                        500, new byte[]{});
             }
 
             @Override
