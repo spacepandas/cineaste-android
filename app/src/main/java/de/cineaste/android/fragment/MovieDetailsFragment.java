@@ -16,8 +16,15 @@ import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.network.TheMovieDb;
 
 public class MovieDetailsFragment extends Fragment {
+
+    private TextView movieTitle;
+    private TextView movieRuntime;
+    private TextView movieVote;
+    private TextView movieDescription;
+    private ImageView moviePoster;
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
@@ -27,17 +34,31 @@ public class MovieDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         long movieId = bundle.getLong( BaseDao.MovieEntry._ID );
 
+        movieTitle = (TextView) view.findViewById( R.id.movie_title );
+        movieRuntime = (TextView) view.findViewById( R.id.movie_runtime );
+        movieVote = (TextView) view.findViewById( R.id.movie_vote );
+        movieDescription = (TextView) view.findViewById( R.id.movie_description );
+        moviePoster = (ImageView) view.findViewById( R.id.movie_poster );
+
         MovieDbHelper movieDbHelper = MovieDbHelper.getInstance( getActivity() );
-
         Movie currentMovie = movieDbHelper.readMovie( movieId );
-        TextView movieTitle = (TextView) view.findViewById( R.id.movie_title );
-        TextView movieRuntime = (TextView) view.findViewById( R.id.movie_runtime );
-        TextView movieVote = (TextView) view.findViewById( R.id.movie_vote );
-        TextView movieDescription = (TextView) view.findViewById( R.id.movie_description );
-        ImageView moviePoster = (ImageView) view.findViewById( R.id.movie_poster );
+        if( currentMovie == null ) {
+            TheMovieDb theMovieDb = new TheMovieDb();
+            theMovieDb.fetchMovie( movieId, getResources().getString( R.string.language_tag ), new TheMovieDb.OnFetchMovieResultListener() {
+                @Override
+                public void onFetchMovieResultListener( Movie movie ) {
+                    assignData( movie );
+                }
+            } );
+        } else {
+            assignData( currentMovie );
+        }
 
+        return view;
+    }
+
+    public void assignData( Movie currentMovie ) {
         Resources resources = getResources();
-
         movieTitle.setText( currentMovie.getTitle() );
         movieRuntime.setText( resources.getString( R.string.runtime, currentMovie.getRuntime() ) );
         movieVote.setText( resources.getString( R.string.vote, currentMovie.getVoteAverage() ) );
@@ -50,8 +71,5 @@ public class MovieDetailsFragment extends Fragment {
                 .load( posterUri )
                 .error( R.mipmap.ic_launcher )
                 .into( moviePoster );
-
-
-        return view;
     }
 }

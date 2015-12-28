@@ -135,10 +135,10 @@ public class SearchFragment extends Fragment implements MovieClickListener{
     @Override
     public void onMovieClickListener( long movieId ) {
         //todo Implement better way to pass movie
-       /* Bundle bundle = new Bundle(  );
+        Bundle bundle = new Bundle(  );
         bundle.putLong( BaseDao.MovieEntry._ID, movieId );
         MovieDetailsFragment fragment = new MovieDetailsFragment();
         fragment.setArguments( bundle );
-        MainActivity.replaceFragment( getFragmentManager(), fragment );*/
+        MainActivity.replaceFragment( getFragmentManager(), fragment );
     }
 }

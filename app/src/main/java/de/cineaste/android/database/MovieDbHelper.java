@@ -33,7 +33,9 @@ public class MovieDbHelper extends Observable {
         String selection = BaseDao.MovieEntry._ID + " = ?";
         String[] selectionArgs = {Long.toString( movieId )};
 
-        return movieDao.read( selection, selectionArgs ).get( 0 );
+        List<Movie> movies = movieDao.read( selection, selectionArgs );
+
+        return movies.size() == 0 ? null : movies.get( 0 );
     }
 
     public List<Movie> readAllMovies() {

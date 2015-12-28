@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         fm.beginTransaction()
                 .replace(
                         R.id.content_container,
-                        fragment )
+                        fragment, fragment.getClass().getName() )
                 .addToBackStack( null )
                 .commit();
     }
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
     public static void startMovieNight( FragmentManager fm ) {
         if( currentUser != null ) {
-            replaceFragment( fm, MovieNightFragment.getInstance() );
+            replaceFragment( fm, new MovieNightFragment() );
         } else {
             startDialogFragment( fm, UserInputFragment.newInstance() );
         }
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
         super.onActivityResult( requestCode, resultCode, data );
-        MovieNightFragment movieNightFragment = MovieNightFragment.getInstance();
+        MovieNightFragment movieNightFragment = (MovieNightFragment)fm.findFragmentByTag( MovieNightFragment.class.getName() );
         movieNightFragment.finishedResolvingNearbyPermissionError();
         if( requestCode == 1001 ) {
             if( resultCode == Activity.RESULT_OK ) {

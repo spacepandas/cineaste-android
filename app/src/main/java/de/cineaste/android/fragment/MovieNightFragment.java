@@ -50,8 +50,6 @@ public class MovieNightFragment extends Fragment
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
             .setTtlSeconds( 180 ).build();
 
-    private static MovieNightFragment instance;
-
     private final ArrayList<NearbyMessage> nearbyMessagesArrayList = new ArrayList<>();
 
     private String userName;
@@ -68,11 +66,6 @@ public class MovieNightFragment extends Fragment
     private MovieDbHelper watchlistDbHelper;
     private boolean mResolvingNearbyPermissionError = false;
 
-    public static MovieNightFragment getInstance() {
-        if( instance == null )
-            instance = new MovieNightFragment();
-        return instance;
-    }
 
     public void finishedResolvingNearbyPermissionError() {
         mResolvingNearbyPermissionError = false;
