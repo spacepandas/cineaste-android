@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import de.cineaste.android.broadcastReceiver.NetworkChangeReceiver;
+import de.cineaste.android.receiver.NetworkChangeReceiver;
 import de.cineaste.android.entity.User;
 import de.cineaste.android.fragment.MovieNightFragment;
 import de.cineaste.android.fragment.UserInputFragment;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         if( currentUser != null ) {
             replaceFragment( fm, new MovieNightFragment() );
         } else {
-            startDialogFragment( fm, UserInputFragment.newInstance() );
+            startDialogFragment( fm, new UserInputFragment() );
         }
     }
 
@@ -82,9 +82,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         currentUser = userDbHelper.getUser();
 
         if( savedInstanceState == null ) {
-            fm.beginTransaction()
-                    .replace( R.id.content_container, new ViewPagerFragment() )
-                    .commit();
+            replaceFragment( fm, new ViewPagerFragment() );
         }
 
         registerNetworkChangeReceiver();

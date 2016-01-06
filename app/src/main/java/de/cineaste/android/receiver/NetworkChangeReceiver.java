@@ -1,4 +1,4 @@
-package de.cineaste.android.broadcastReceiver;
+package de.cineaste.android.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

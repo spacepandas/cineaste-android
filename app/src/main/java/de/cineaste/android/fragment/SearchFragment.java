@@ -23,7 +23,7 @@ import de.cineaste.android.MainActivity;
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;
-import de.cineaste.android.broadcastReceiver.NetworkChangeReceiver;
+import de.cineaste.android.receiver.NetworkChangeReceiver;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.network.TheMovieDb;
@@ -123,6 +123,7 @@ public class SearchFragment extends Fragment implements MovieClickListener{
         }
     }
 
+//// TODO: 30.12.15 Delete!
     @Override
     public boolean onOptionsItemSelected( MenuItem item ) {
         switch ( item.getItemId() ) {
@@ -134,7 +135,6 @@ public class SearchFragment extends Fragment implements MovieClickListener{
     }
     @Override
     public void onMovieClickListener( long movieId ) {
-        //todo Implement better way to pass movie
         Bundle bundle = new Bundle(  );
         bundle.putLong( BaseDao.MovieEntry._ID, movieId );
         MovieDetailsFragment fragment = new MovieDetailsFragment();

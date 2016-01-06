@@ -117,7 +117,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
         notifyItemRemoved( index );
 
         if(getItemCount() == 0){
-            baseFragment.controlWatchlistAdapter();
+            baseFragment.setWatchlistAdapter();
         }
     }
 }

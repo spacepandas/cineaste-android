@@ -21,9 +21,6 @@ public class UserInputFragment extends DialogFragment
         void onFinishUserDialog( String userName );
     }
 
-    public static UserInputFragment newInstance() {
-        return new UserInputFragment();
-    }
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,

@@ -52,9 +52,9 @@ public class BaseWatchlistFragment extends Fragment
         baseWatchlistRecyclerView.setHasFixedSize( true );
 
         if( watchlistType.equals( WatchlistFragmentType.WATCH_LIST ) ) {
-            controlWatchlistAdapter();
+            setWatchlistAdapter();
         } else {
-            controlWatchedlistAdapter();
+            setWatchedlistAdapter();
         }
 
         baseWatchlistRecyclerView.setLayoutManager( baseWatchlistLayoutMgr );
@@ -63,7 +63,7 @@ public class BaseWatchlistFragment extends Fragment
         return watchlistView;
     }
 
-    public void controlWatchlistAdapter() {
+    public void setWatchlistAdapter() {
         baseWatchlistAdapter = new WatchlistAdapter( getActivity(), this, this );
         if( baseWatchlistAdapter.getItemCount() == 0 ) {
             baseWatchlistRecyclerView.setVisibility( View.GONE );
@@ -75,7 +75,7 @@ public class BaseWatchlistFragment extends Fragment
         }
     }
 
-    public void controlWatchedlistAdapter() {
+    public void setWatchedlistAdapter() {
         baseWatchlistAdapter = new WatchedlistAdapter( getActivity(), this, this );
         if( baseWatchlistAdapter.getItemCount() == 0 ) {
             baseWatchlistRecyclerView.setVisibility( View.GONE );

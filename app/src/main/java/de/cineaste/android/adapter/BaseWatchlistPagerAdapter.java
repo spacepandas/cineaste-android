@@ -16,9 +16,9 @@ public class BaseWatchlistPagerAdapter extends FragmentStatePagerAdapter {
     private final Context context;
 
     public interface WatchlistFragment {
-        void controlWatchlistAdapter();
+        void setWatchlistAdapter();
 
-        void controlWatchedlistAdapter();
+        void setWatchedlistAdapter();
     }
 
     public BaseWatchlistPagerAdapter( FragmentManager fm, Context context ) {
