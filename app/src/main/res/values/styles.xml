@@ -23,4 +23,9 @@
     <style name="cardviewDescriptionText">
         <item name="android:textColor">@color/toolbar_text</item>
     </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/toolbar_text</item>
+    </style>
 </resources>

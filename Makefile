@@ -1,9 +1,5 @@
 PACKAGE = de.cineaste.android
 APK = app/build/outputs/apk/app-debug.apk
-DEPENDENCIES = \
-	"kta-camera-preview-android" \
-	"kta-inigma-android" \
-	"kta-mobile-sdk-android"
 
 all: debug install start
 
@@ -28,15 +24,6 @@ start:
 
 uninstall:
 	adb $(TARGET) uninstall $(PACKAGE)
-
-update: $(DEPENDENCIES)
-
-$(DEPENDENCIES):
-	git remote | grep $@ &>/dev/null ||\
-		git remote add $@ \
-			https://git.adorsys.de/kta/$@.git
-	git fetch --no-tags $@
-	git merge -s subtree --squash $@/master
 
 clean:
 	./gradlew clean
