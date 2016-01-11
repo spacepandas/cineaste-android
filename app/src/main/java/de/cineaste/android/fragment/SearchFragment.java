@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,8 @@ public class SearchFragment extends Fragment implements MovieClickListener{
     private final TheMovieDb theMovieDb = new TheMovieDb();
     private RecyclerView.Adapter movieQueryAdapter;
     private View view;
+    private SearchView searchView;
+    private String searchText;
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -41,10 +44,26 @@ public class SearchFragment extends Fragment implements MovieClickListener{
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (isAdded()) {
+            if (searchView != null) {
+                String searchText = searchView.getQuery().toString();
+                if (!TextUtils.isEmpty( searchText ))
+                    outState.putString("query", searchText);
+            }
+        }
+        super.onSaveInstanceState( outState );
+    }
+
+    @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState ) {
 
         view = inflater.inflate( R.layout.fragment_search, container, false );
+
+        if (savedInstanceState != null) {
+             searchText = savedInstanceState.getString("query", null);
+        }
 
         RecyclerView movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
         RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager( getActivity() );
@@ -71,7 +90,7 @@ public class SearchFragment extends Fragment implements MovieClickListener{
 
         MenuItem searchItem = menu.findItem( R.id.action_search );
 
-        SearchView searchView;
+
         if( searchItem != null ) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setFocusable( true );
@@ -108,7 +127,11 @@ public class SearchFragment extends Fragment implements MovieClickListener{
                 }
 
             } );
+            if (!TextUtils.isEmpty(searchText))
+                searchView.setQuery(searchText, false);
         }
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

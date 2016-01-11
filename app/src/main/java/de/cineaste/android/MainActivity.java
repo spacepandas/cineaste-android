@@ -53,6 +53,14 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     }
 
     @Override
+    public void onBackPressed() {
+        if( fm.getBackStackEntryCount() > 1 )
+            super.onBackPressed();
+        else
+            finish();
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         fm.popBackStack();
 
@@ -135,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         ActionBar actionBar = getSupportActionBar();
         if( actionBar != null ) {
             actionBar.setDisplayHomeAsUpEnabled(
-                    fm.getBackStackEntryCount() > 0
+                    fm.getBackStackEntryCount() > 1
             );
         }
     }
