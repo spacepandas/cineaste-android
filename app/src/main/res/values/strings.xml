@@ -28,7 +28,6 @@
     <string name="runtime">Laufzeit: %d m</string>
     <string name="vote">Bewertung: %s</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="movieTitle">Titel</string>
+    <string name="noDescription">Keine Beschreibung vorhanden</string>
 </resources>

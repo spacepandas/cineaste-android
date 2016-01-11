@@ -33,7 +33,6 @@ public class MovieDetailsFragment extends Fragment {
 
         Bundle bundle = getArguments();
         long movieId = bundle.getLong( BaseDao.MovieEntry._ID );
-
         movieTitle = (TextView) view.findViewById( R.id.movie_title );
         movieRuntime = (TextView) view.findViewById( R.id.movie_runtime );
         movieVote = (TextView) view.findViewById( R.id.movie_vote );
@@ -60,9 +59,12 @@ public class MovieDetailsFragment extends Fragment {
     public void assignData( Movie currentMovie ) {
         Resources resources = getResources();
         movieTitle.setText( currentMovie.getTitle() );
+        String description = currentMovie.getDescription();
         movieRuntime.setText( resources.getString( R.string.runtime, currentMovie.getRuntime() ) );
         movieVote.setText( resources.getString( R.string.vote, currentMovie.getVoteAverage() ) );
-        movieDescription.setText( currentMovie.getDescription() );
+        movieDescription.setText(
+                (description == null || description.isEmpty())
+                        ? resources.getString( R.string.noDescription ) : description );
 
         String posterUri = Constants.POSTER_URI
                 .replace( "<posterName>", currentMovie.getPosterPath() != null ?
