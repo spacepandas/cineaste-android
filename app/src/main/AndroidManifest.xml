@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
-            android:value="AIzaSyDw-cqtquxp3MDUo9GcdAwhHq9FURaZt4w"/>
+            android:value="AIzaSyAG-yFS_5fOTXkNn6AL2MNQSajcJta1c7I"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>
