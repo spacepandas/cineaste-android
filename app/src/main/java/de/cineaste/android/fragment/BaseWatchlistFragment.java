@@ -33,9 +33,9 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     @Override
-    public void setArguments( Bundle args ) {
-        super.setArguments( args );
-        watchlistType = args.getString( WatchlistFragmentType.WATCHLIST_TYPE );
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+        watchlistType = args.getString(WatchlistFragmentType.WATCHLIST_TYPE);
     }
 
     @Override
@@ -51,13 +51,7 @@ public class BaseWatchlistFragment extends Fragment
 
         baseWatchlistRecyclerView.setHasFixedSize(true);
 
-        if (watchlistType.equals(WatchlistFragmentType.WATCH_LIST)) {
-            baseWatchlistAdapter = new WatchlistAdapter(getActivity(), this, this);
-            setWatchlistAdapter();
-        } else {
-            baseWatchlistAdapter = new WatchedlistAdapter(getActivity(), this, this);
-            setWatchedlistAdapter();
-        }
+        setCorrectWatchlistAdapter();
 
         baseWatchlistRecyclerView.setLayoutManager(baseWatchlistLayoutMgr);
         baseWatchlistRecyclerView.setAdapter(baseWatchlistAdapter);
@@ -68,10 +62,21 @@ public class BaseWatchlistFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        baseWatchlistAdapter.notifyDataSetChanged();
+        setCorrectWatchlistAdapter();
     }
 
-    public void setWatchlistAdapter() {
+    private void setCorrectWatchlistAdapter() {
+        if (watchlistType.equals(WatchlistFragmentType.WATCH_LIST)) {
+            baseWatchlistAdapter = new WatchlistAdapter(getActivity(), this, this);
+            configureWatchlistVisibility();
+        } else {
+            baseWatchlistAdapter = new WatchedlistAdapter(getActivity(), this, this);
+            configureWatchedlistVisibility();
+        }
+    }
+
+    @Override
+    public void configureWatchlistVisibility() {
 
         if (baseWatchlistAdapter.getItemCount() == 0) {
             baseWatchlistRecyclerView.setVisibility(View.GONE);
@@ -83,7 +88,8 @@ public class BaseWatchlistFragment extends Fragment
         }
     }
 
-    public void setWatchedlistAdapter() {
+    @Override
+    public void configureWatchedlistVisibility() {
         if (baseWatchlistAdapter.getItemCount() == 0) {
             baseWatchlistRecyclerView.setVisibility(View.GONE);
             emptyListTextView.setVisibility(View.VISIBLE);

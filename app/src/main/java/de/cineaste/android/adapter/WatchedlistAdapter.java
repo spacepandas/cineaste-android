@@ -42,9 +42,10 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     @Override
     public void update( Observable observable, Object data ) {
         dataset = db.readMoviesByWatchStatus( true );
-        baseFragment.setWatchedlistAdapter();
+        baseFragment.configureWatchedlistVisibility();
         notifyDataSetChanged();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView movieTitle;
@@ -118,7 +119,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         notifyItemRemoved( index );
 
         if( getItemCount() == 0 ) {
-            baseFragment.setWatchedlistAdapter();
+            baseFragment.configureWatchedlistVisibility();
         }
     }
 }

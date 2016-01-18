@@ -14,13 +14,13 @@ public class BaseWatchlistPagerAdapter extends FragmentStatePagerAdapter {
     private final Context context;
 
     public interface WatchlistFragment {
-        void setWatchlistAdapter();
+        void configureWatchlistVisibility();
 
-        void setWatchedlistAdapter();
+        void configureWatchedlistVisibility();
     }
 
     public BaseWatchlistPagerAdapter( FragmentManager fm, Context context ) {
-        super( fm );
+        super(fm);
         this.context = context;
     }
 
