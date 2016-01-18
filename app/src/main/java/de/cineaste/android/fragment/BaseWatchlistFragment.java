@@ -65,6 +65,12 @@ public class BaseWatchlistFragment extends Fragment
         return watchlistView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        baseWatchlistAdapter.notifyDataSetChanged();
+    }
+
     public void setWatchlistAdapter() {
 
         if (baseWatchlistAdapter.getItemCount() == 0) {
