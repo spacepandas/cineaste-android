@@ -55,7 +55,7 @@ public class MovieDbHelper extends Observable {
         List<Movie> movieList =  movieDao.read(selection, selectionArgs);
 
         if(!movieList.isEmpty()){
-            updateMovieWatched(movie.isWatched(), movie.getId());
+            updateMovieWatched(movie.isWatched(), movie.getId(), movie.getWatchedDate());
         }
         else{
             createNewMovieEntry(movie);
@@ -70,9 +70,10 @@ public class MovieDbHelper extends Observable {
         return movieDao.getRowCount();
     }
 
-    public int updateMovieWatched(Boolean watched, Long dbId) {
+    public int updateMovieWatched(Boolean watched, Long dbId, long watchedDate) {
         ContentValues values = new ContentValues();
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, watched ? 1 : 0);
+        values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, watchedDate );
         String selection = BaseDao.MovieEntry._ID + " LIKE ?";
         String[] where = {String.valueOf(dbId)};
 

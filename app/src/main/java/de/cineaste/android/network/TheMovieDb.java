@@ -64,7 +64,7 @@ public class TheMovieDb extends BaseNetwork {
     public void fetchMovie(long movieId, String lang, final OnFetchMovieResultListener listener) {
 
         String url = host + "movie/" + movieId + "?language=" + lang +
-                "&" + API_KEY_TAG;;
+                "&" + API_KEY_TAG;
 
         requestAsync(
                 new Request(

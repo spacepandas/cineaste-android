@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 import de.cineaste.android.Constants;
@@ -81,7 +82,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
                 @Override
                 public void onClick( View v ) {
                     int index = dataset.indexOf( movie );
-                    db.updateMovieWatched( true, movie.getId() );
+                    db.updateMovieWatched( true, movie.getId(), new Date(  ).getTime() );
                     removeItemFromView( index );
                 }
             } );

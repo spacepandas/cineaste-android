@@ -27,7 +27,7 @@ public class MovieDao extends BaseDao {
 
     public long create( Movie movie ) {
         ContentValues values = new ContentValues();
-
+android.util.Log.wtf( "mgr", movie.toString() );
         values.put( MovieEntry._ID, movie.getId() );
         values.put( MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle() );
         values.put( MovieEntry.COlUMN_POSTER_PATH, movie.getPosterPath() );
@@ -36,10 +36,10 @@ public class MovieDao extends BaseDao {
         values.put( MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount() );
         values.put( MovieEntry.COLUMN_MOVIE_DESCRIPTION, movie.getDescription() );
         values.put( MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0 );
+        values.put( MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate() );
 
         long newRowId;
         newRowId = writeDb.insert( MovieEntry.TABLE_NAME, null, values );
-        android.util.Log.d( TAG, "Saved movie with name " + movie.getTitle() );
 
         return newRowId;
     }
@@ -55,7 +55,8 @@ public class MovieDao extends BaseDao {
                 MovieEntry.COLUMN_VOTE_AVERAGE,
                 MovieEntry.COLUMN_VOTE_COUNT,
                 MovieEntry.COLUMN_MOVIE_DESCRIPTION,
-                MovieEntry.COLUMN_MOVIE_WATCHED
+                MovieEntry.COLUMN_MOVIE_WATCHED,
+                MovieEntry.COLUMN_MOVIE_WATCHED_DATE
         };
 
         Cursor c = readDb.query(
@@ -87,6 +88,8 @@ public class MovieDao extends BaseDao {
                         c.getString( c.getColumnIndexOrThrow( MovieEntry.COLUMN_MOVIE_DESCRIPTION ) ) );
                 currentMovie.setWatched(
                         c.getInt( c.getColumnIndexOrThrow( MovieEntry.COLUMN_MOVIE_WATCHED ) ) > 0 );
+                currentMovie.setWatchedDate(
+                        c.getLong( c.getColumnIndexOrThrow( MovieEntry.COLUMN_MOVIE_WATCHED_DATE ) ) );
                 movies.add( currentMovie );
             } while ( c.moveToNext() );
         }
