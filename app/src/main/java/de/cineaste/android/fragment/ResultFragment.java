@@ -16,7 +16,6 @@ import com.google.common.collect.Multisets;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.ResultAdapter;
 import de.cineaste.android.entity.MatchingResult;
@@ -79,7 +78,7 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 
     @Override
     public void onMovieSelectListener( int position ) {
-        MainActivity.replaceFragmentPopBackStack( getFragmentManager(), new ViewPagerFragment() );
+        getFragmentManager().popBackStack();
         TheMovieDb theMovieDb = new TheMovieDb();
 
         theMovieDb.fetchMovie(
