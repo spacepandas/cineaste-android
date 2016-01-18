@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -52,17 +50,14 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         public final TextView movieTitle;
         public final TextView movieRuntime;
         public final TextView movieVote;
-        public final TextView movieDate;
         public final ImageButton removeMovie;
         public final ImageView imageView;
         final View view;
-        public Movie currentMovie;
 
         public ViewHolder( View v ) {
             super( v );
             movieTitle = (TextView) v.findViewById( R.id.movie_title );
             movieRuntime = (TextView) v.findViewById( R.id.movie_runtime );
-            movieDate = (TextView) v.findViewById( R.id.movie_date );
             movieVote = (TextView) v.findViewById( R.id.movie_vote );
             removeMovie = (ImageButton) v.findViewById( R.id.remove_button );
             imageView = (ImageView) v.findViewById( R.id.movie_poster_image_view );
@@ -73,11 +68,8 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
             Resources resources = context.getResources();
 
             movieTitle.setText( movie.getTitle() );
-            movieRuntime.setText(resources.getString( R.string.runtime, movie.getRuntime() ));
+            movieRuntime.setText( resources.getString( R.string.runtime, movie.getRuntime() ) );
             movieVote.setText( resources.getString( R.string.vote, movie.getVoteAverage() ) );
-            SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:yyyy");
-            String date = sdf.format(new Date( movie.getWatchedDate() ));
-            movieDate.setText( date );
             String posterName = movie.getPosterPath();
             String posterUri = Constants.POSTER_URI
                     .replace( "<posterName>", posterName != null ? posterName : "/" );
@@ -112,7 +104,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
 
     @Override
     public void onBindViewHolder( final WatchedlistAdapter.ViewHolder holder, final int position ) {
-       holder.assignData( dataset.get( position ) );
+        holder.assignData( dataset.get( position ) );
     }
 
     @Override
@@ -121,8 +113,8 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     }
 
     private void removeItemFromViewAndDb( int index, long dbId ) {
-        db.deleteMovieFromWatchlist(dbId);
-        dataset.remove(index);
+        db.deleteMovieFromWatchlist( dbId );
+        dataset.remove( index );
         notifyItemRemoved( index );
 
         if( getItemCount() == 0 ) {

@@ -33,9 +33,9 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        watchlistType = args.getString(WatchlistFragmentType.WATCHLIST_TYPE);
+    public void setArguments( Bundle args ) {
+        super.setArguments( args );
+        watchlistType = args.getString( WatchlistFragmentType.WATCHLIST_TYPE );
     }
 
     @Override

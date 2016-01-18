@@ -10,7 +10,6 @@ import java.util.List;
 import de.cineaste.android.entity.Movie;
 
 public class MovieDao extends BaseDao {
-    private static final String TAG = "MOVIEDB";
     private static MovieDao mInstance;
 
     private MovieDao( Context context ) {
@@ -27,7 +26,6 @@ public class MovieDao extends BaseDao {
 
     public long create( Movie movie ) {
         ContentValues values = new ContentValues();
-android.util.Log.wtf( "mgr", movie.toString() );
         values.put( MovieEntry._ID, movie.getId() );
         values.put( MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle() );
         values.put( MovieEntry.COlUMN_POSTER_PATH, movie.getPosterPath() );
@@ -102,9 +100,7 @@ android.util.Log.wtf( "mgr", movie.toString() );
     }
 
     public void delete( long id ) {
-
         writeDb.delete( MovieEntry.TABLE_NAME, MovieEntry._ID + " = ?", new String[]{id + ""} );
-        android.util.Log.d( TAG, "Deleted movie with id = " + id );
     }
 
     public int getRowCount() {

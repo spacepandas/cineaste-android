@@ -79,7 +79,7 @@ public class BaseNetwork {
                 }
 
                 return new Response(
-                        500, new byte[]{});
+                        500, new byte[]{} );
             }
 
             @Override

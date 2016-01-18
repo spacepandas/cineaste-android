@@ -14,23 +14,23 @@ import de.cineaste.android.entity.Movie;
 public class TheMovieDb extends BaseNetwork {
 
     public interface OnSearchMoviesResultListener {
-        void onSearchMoviesResultListener(List<Movie> movies);
+        void onSearchMoviesResultListener( List<Movie> movies );
     }
 
     public interface OnFetchMovieResultListener {
-        void onFetchMovieResultListener(Movie movie);
+        void onFetchMovieResultListener( Movie movie );
     }
 
 
     private final String API_KEY_TAG = "api_key=" + Constants.API_KEY;
 
     public TheMovieDb() {
-        super("https://api.themoviedb.org/3/");
+        super( "https://api.themoviedb.org/3/" );
     }
 
-    public void searchMoviesAsync(String query,
-                                  final OnSearchMoviesResultListener listener,
-                                  String lang) {
+    public void searchMoviesAsync( String query,
+                                   final OnSearchMoviesResultListener listener,
+                                   String lang ) {
 
         String url = host +
                 "search/movie?query=" + query +
@@ -45,23 +45,23 @@ public class TheMovieDb extends BaseNetwork {
                 ),
                 new OnResultListener() {
                     @Override
-                    public void onResultListener(Response response) {
+                    public void onResultListener( Response response ) {
                         List<Movie> movies = new ArrayList<>();
-                        if (successfulRequest(response.getCode())) {
+                        if( successfulRequest( response.getCode() ) ) {
                             JsonParser parser = new JsonParser();
                             JsonObject responseObject =
-                                    parser.parse(response.getString()).getAsJsonObject();
-                            String movieListJson = responseObject.get("results").toString();
+                                    parser.parse( response.getString() ).getAsJsonObject();
+                            String movieListJson = responseObject.get( "results" ).toString();
                             Type listType = new TypeToken<List<Movie>>() {
                             }.getType();
-                            movies = gson.fromJson(movieListJson, listType);
+                            movies = gson.fromJson( movieListJson, listType );
                         }
-                        listener.onSearchMoviesResultListener(movies);
+                        listener.onSearchMoviesResultListener( movies );
                     }
-                });
+                } );
     }
 
-    public void fetchMovie(long movieId, String lang, final OnFetchMovieResultListener listener) {
+    public void fetchMovie( long movieId, String lang, final OnFetchMovieResultListener listener ) {
 
         String url = host + "movie/" + movieId + "?language=" + lang +
                 "&" + API_KEY_TAG;
@@ -75,15 +75,15 @@ public class TheMovieDb extends BaseNetwork {
                 ),
                 new OnResultListener() {
                     @Override
-                    public void onResultListener(Response response) {
-                        if (!successfulRequest(response.getCode())) {
-                            listener.onFetchMovieResultListener(null);
+                    public void onResultListener( Response response ) {
+                        if( !successfulRequest( response.getCode() ) ) {
+                            listener.onFetchMovieResultListener( null );
                         } else {
                             listener.onFetchMovieResultListener(
-                                    gson.fromJson(response.getString(), Movie.class)
+                                    gson.fromJson( response.getString(), Movie.class )
                             );
                         }
                     }
-                });
+                } );
     }
 }

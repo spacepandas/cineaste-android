@@ -82,14 +82,14 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
                 @Override
                 public void onClick( View v ) {
                     int index = dataset.indexOf( movie );
-                    db.updateMovieWatched( true, movie.getId(), new Date(  ).getTime() );
+                    db.updateMovieWatched( true, movie.getId(), new Date().getTime() );
                     removeItemFromView( index );
                 }
             } );
         }
     }
 
-    public WatchlistAdapter( Context context , BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener ) {
+    public WatchlistAdapter( Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener ) {
         this.db = MovieDbHelper.getInstance( context );
         this.context = context;
         this.dataset = db.readMoviesByWatchStatus( false );
@@ -105,7 +105,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
 
     @Override
     public void onBindViewHolder( final WatchlistAdapter.ViewHolder holder, final int position ) {
-       holder.assignData( dataset.get( position ) );
+        holder.assignData( dataset.get( position ) );
     }
 
     @Override
@@ -113,11 +113,11 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
         return dataset.size();
     }
 
-    private void removeItemFromView(int index){
-        dataset.remove(index);
+    private void removeItemFromView( int index ) {
+        dataset.remove( index );
         notifyItemRemoved( index );
 
-        if(getItemCount() == 0){
+        if( getItemCount() == 0 ) {
             baseFragment.setWatchlistAdapter();
         }
     }

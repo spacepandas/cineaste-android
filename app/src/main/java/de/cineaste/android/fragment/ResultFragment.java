@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +72,6 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
                 Multisets.copyHighestCountFirst( movies ).entrySet() ) {
             MovieDto current = entry.getElement();
             results.add( new MatchingResult( current, movies.count( current ) ) );
-            Log.d( "Test", current.getTitle() + " " + current.getId() );
         }
 
         return results;
@@ -88,13 +86,13 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
                 getResult().get( position ).getId(),
                 getActivity().getResources().getString( R.string.language_tag ),
                 new TheMovieDb.OnFetchMovieResultListener() {
-            @Override
-            public void onFetchMovieResultListener( Movie movie ) {
-                MovieDbHelper db = MovieDbHelper.getInstance( getActivity() );
-                movie.setWatched( true );
-                db.createOrUpdate( movie );
-            }
-        } );
+                    @Override
+                    public void onFetchMovieResultListener( Movie movie ) {
+                        MovieDbHelper db = MovieDbHelper.getInstance( getActivity() );
+                        movie.setWatched( true );
+                        db.createOrUpdate( movie );
+                    }
+                } );
     }
 
     private ArrayList<MovieDto> getMovies() {

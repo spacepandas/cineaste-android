@@ -34,12 +34,12 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
         public final ImageButton movieWatchedButton;
         final View view;
 
-        public ViewHolder(View v) {
-            super(v);
-            movieTitle = (TextView) v.findViewById(R.id.movie_title);
-            moviePoster = (ImageView) v.findViewById(R.id.movie_poster_image_view);
-            addToWatchlistButton = (ImageButton) v.findViewById(R.id.to_watchlist_button);
-            movieWatchedButton = (ImageButton) v.findViewById(R.id.watched_button);
+        public ViewHolder( View v ) {
+            super( v );
+            movieTitle = (TextView) v.findViewById( R.id.movie_title );
+            moviePoster = (ImageView) v.findViewById( R.id.movie_poster_image_view );
+            addToWatchlistButton = (ImageButton) v.findViewById( R.id.to_watchlist_button );
+            movieWatchedButton = (ImageButton) v.findViewById( R.id.watched_button );
             view = v;
         }
 
@@ -48,8 +48,8 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
             String posterName = movie.getPosterPath();
             String posterUri =
                     Constants.POSTER_URI
-                            .replace("<posterName>", posterName != null ? posterName : "/");
-            Picasso.with(context).load(posterUri).error( R.mipmap.ic_launcher ).into( moviePoster );
+                            .replace( "<posterName>", posterName != null ? posterName : "/" );
+            Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( moviePoster );
 
             addToWatchlistButton.setOnClickListener( new View.OnClickListener() {
 
@@ -103,8 +103,8 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
         }
     }
 
-    public SearchQueryAdapter(Context context, List<Movie> movies, MovieClickListener listener) {
-        db = MovieDbHelper.getInstance(context);
+    public SearchQueryAdapter( Context context, List<Movie> movies, MovieClickListener listener ) {
+        db = MovieDbHelper.getInstance( context );
         this.context = context;
         dataset = movies;
         theMovieDb = new TheMovieDb();
@@ -112,15 +112,15 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
     }
 
     @Override
-    public SearchQueryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchQueryAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
         View v = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.card_movie_search_query, parent, false);
-        return new ViewHolder(v);
+                .from( parent.getContext() )
+                .inflate( R.layout.card_movie_search_query, parent, false );
+        return new ViewHolder( v );
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder( final ViewHolder holder, final int position ) {
         holder.assignData( dataset.get( position ) );
     }
 

@@ -206,7 +206,7 @@ public class MovieNightFragment extends Fragment
 
     @Override
     public void onConnectionSuspended( int cause ) {
-      // GoogleApiClient connection suspended
+        // GoogleApiClient connection suspended
     }
 
     @Override
@@ -285,7 +285,7 @@ public class MovieNightFragment extends Fragment
                         @Override
                         public void onExpired() {
                             super.onExpired();
-                           //no longer publishing"
+                            //no longer publishing"
                         }
                     } ).build();
 
