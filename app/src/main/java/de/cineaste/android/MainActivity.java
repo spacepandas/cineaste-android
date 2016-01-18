@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         replaceFragment( fm, fragment );
     }
 
-    private static void startDialogFragment(FragmentManager fragmentManager, DialogFragment fragment) {
+    private static void startDialogFragment( FragmentManager fragmentManager, DialogFragment fragment ) {
         fragment.show( fragmentManager, "" );
     }
 
@@ -100,16 +100,16 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     protected void onPause() {
         super.onPause();
         try {
-            getBaseContext().unregisterReceiver(NetworkChangeReceiver.getInstance());
-        } catch (IllegalArgumentException e){
-           //die silently
+            getBaseContext().unregisterReceiver( NetworkChangeReceiver.getInstance() );
+        } catch ( IllegalArgumentException e ) {
+            //die silently
         }
     }
 
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
         super.onActivityResult( requestCode, resultCode, data );
-        MovieNightFragment movieNightFragment = (MovieNightFragment)fm.findFragmentByTag( MovieNightFragment.class.getName() );
+        MovieNightFragment movieNightFragment = (MovieNightFragment) fm.findFragmentByTag( MovieNightFragment.class.getName() );
         movieNightFragment.finishedResolvingNearbyPermissionError();
         if( requestCode == 1001 ) {
             if( resultCode == Activity.RESULT_OK ) {
@@ -148,9 +148,9 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         }
     }
 
-    private void registerNetworkChangeReceiver(){
+    private void registerNetworkChangeReceiver() {
         IntentFilter networkFilter = new IntentFilter();
-        networkFilter.addAction( ConnectivityManager.CONNECTIVITY_ACTION);
-        getBaseContext().registerReceiver( NetworkChangeReceiver.getInstance(), networkFilter);
+        networkFilter.addAction( ConnectivityManager.CONNECTIVITY_ACTION );
+        getBaseContext().registerReceiver( NetworkChangeReceiver.getInstance(), networkFilter );
     }
 }

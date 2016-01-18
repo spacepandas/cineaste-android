@@ -29,7 +29,7 @@ import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.network.TheMovieDb;
 
-public class SearchFragment extends Fragment implements MovieClickListener{
+public class SearchFragment extends Fragment implements MovieClickListener {
 
     private final TheMovieDb theMovieDb = new TheMovieDb();
     private RecyclerView.Adapter movieQueryAdapter;
@@ -39,17 +39,17 @@ public class SearchFragment extends Fragment implements MovieClickListener{
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        super.onCreate( savedInstanceState );
+        setHasOptionsMenu( true );
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (isAdded()) {
-            if (searchView != null) {
+    public void onSaveInstanceState( Bundle outState ) {
+        if( isAdded() ) {
+            if( searchView != null ) {
                 String searchText = searchView.getQuery().toString();
-                if (!TextUtils.isEmpty( searchText ))
-                    outState.putString("query", searchText);
+                if( !TextUtils.isEmpty( searchText ) )
+                    outState.putString( "query", searchText );
             }
         }
         super.onSaveInstanceState( outState );
@@ -61,8 +61,8 @@ public class SearchFragment extends Fragment implements MovieClickListener{
 
         view = inflater.inflate( R.layout.fragment_search, container, false );
 
-        if (savedInstanceState != null) {
-             searchText = savedInstanceState.getString("query", null);
+        if( savedInstanceState != null ) {
+            searchText = savedInstanceState.getString( "query", null );
         }
 
         RecyclerView movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
@@ -73,9 +73,9 @@ public class SearchFragment extends Fragment implements MovieClickListener{
         movieQueryRecyclerView.setLayoutManager( movieQueryLayoutMgr );
         movieQueryRecyclerView.setAdapter( movieQueryAdapter );
 
-        if( !NetworkChangeReceiver.getInstance().isConnected ){
+        if( !NetworkChangeReceiver.getInstance().isConnected ) {
             Snackbar snackbar = Snackbar
-                    .make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
+                    .make( view, R.string.noInternet, Snackbar.LENGTH_LONG );
             snackbar.show();
         }
 
@@ -99,9 +99,9 @@ public class SearchFragment extends Fragment implements MovieClickListener{
             searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit( String query ) {
-                    if( !NetworkChangeReceiver.getInstance().isConnected ){
+                    if( !NetworkChangeReceiver.getInstance().isConnected ) {
                         Snackbar snackbar = Snackbar
-                                .make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
+                                .make( view, R.string.noInternet, Snackbar.LENGTH_LONG );
                         snackbar.show();
                     }
                     return false;
@@ -121,17 +121,17 @@ public class SearchFragment extends Fragment implements MovieClickListener{
                             }, getResources().getString( R.string.language_tag ) );
                         }
                     } else {
-                        ((SearchQueryAdapter) movieQueryAdapter).dataset = new ArrayList<>(  );
+                        ((SearchQueryAdapter) movieQueryAdapter).dataset = new ArrayList<>();
                     }
                     return false;
                 }
 
             } );
-            if (!TextUtils.isEmpty(searchText))
-                searchView.setQuery(searchText, false);
+            if( !TextUtils.isEmpty( searchText ) )
+                searchView.setQuery( searchText, false );
         }
 
-        super.onCreateOptionsMenu(menu, inflater);
+        super.onCreateOptionsMenu( menu, inflater );
     }
 
     @Override
@@ -146,7 +146,7 @@ public class SearchFragment extends Fragment implements MovieClickListener{
         }
     }
 
-//// TODO: 30.12.15 Delete!
+    //// TODO: 30.12.15 Delete!
     @Override
     public boolean onOptionsItemSelected( MenuItem item ) {
         switch ( item.getItemId() ) {
@@ -156,9 +156,10 @@ public class SearchFragment extends Fragment implements MovieClickListener{
 
         return super.onOptionsItemSelected( item );
     }
+
     @Override
     public void onMovieClickListener( long movieId ) {
-        Bundle bundle = new Bundle(  );
+        Bundle bundle = new Bundle();
         bundle.putLong( BaseDao.MovieEntry._ID, movieId );
         MovieDetailsFragment fragment = new MovieDetailsFragment();
         fragment.setArguments( bundle );

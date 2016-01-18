@@ -34,7 +34,7 @@ public class BaseWatchlistFragment extends Fragment
 
     @Override
     public void setArguments( Bundle args ) {
-        super.setArguments(args);
+        super.setArguments( args );
         watchlistType = args.getString( WatchlistFragmentType.WATCHLIST_TYPE );
     }
 
@@ -64,7 +64,7 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     public void setWatchlistAdapter() {
-        if(baseWatchlistAdapter == null){
+        if( baseWatchlistAdapter == null ) {
             baseWatchlistAdapter = new WatchlistAdapter( getActivity(), this, this );
         }
         if( baseWatchlistAdapter.getItemCount() == 0 ) {
@@ -78,7 +78,7 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     public void setWatchedlistAdapter() {
-        if(baseWatchlistAdapter == null){
+        if( baseWatchlistAdapter == null ) {
             baseWatchlistAdapter = new WatchedlistAdapter( getActivity(), this, this );
         }
         if( baseWatchlistAdapter.getItemCount() == 0 ) {
@@ -108,7 +108,7 @@ public class BaseWatchlistFragment extends Fragment
 
     @Override
     public void onMovieClickListener( long movieId ) {
-        Bundle bundle = new Bundle(  );
+        Bundle bundle = new Bundle();
         bundle.putLong( BaseDao.MovieEntry._ID, movieId );
         MovieDetailsFragment fragment = new MovieDetailsFragment();
         fragment.setArguments( bundle );

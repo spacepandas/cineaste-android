@@ -20,16 +20,16 @@ public class NearbyMessageHandler {
         messages = new ArrayList<>();
     }
 
-    public void addMessage(NearbyMessage message) {
-        messages.add(message);
+    public void addMessage( NearbyMessage message ) {
+        messages.add( message );
     }
 
-    public void addMessages(List<NearbyMessage> message) {
-        messages.addAll(message);
+    public void addMessages( List<NearbyMessage> message ) {
+        messages.addAll( message );
     }
 
-    public void removeMessage(NearbyMessage message) {
-        messages.remove(message);
+    public void removeMessage( NearbyMessage message ) {
+        messages.remove( message );
     }
 
     public List<NearbyMessage> getMessages() {

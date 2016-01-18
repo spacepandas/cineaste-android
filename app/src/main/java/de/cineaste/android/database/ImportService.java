@@ -18,7 +18,7 @@ public class ImportService {
 
     private static final Gson gson = new Gson();
 
-    public static List<Movie> importMovies( ) {
+    public static List<Movie> importMovies() {
 
         final File importFile = new File(
                 Environment.getExternalStorageDirectory() + "/Cineaste/movies.json" );

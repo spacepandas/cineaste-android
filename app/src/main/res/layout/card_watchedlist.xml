@@ -64,12 +64,6 @@
             android:id="@+id/movie_vote"
             style="@style/cardviewDescriptionText"/>
 
-            <TextView
-                style="@style/cardviewDescriptionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/movie_date"/>
-
         </LinearLayout>
 
     </RelativeLayout>

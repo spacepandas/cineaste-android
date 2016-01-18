@@ -75,7 +75,7 @@ public class Movie extends MovieDto {
     public void setWatched( boolean watched ) {
         this.watched = watched;
         if( watched && this.watchedDate == 0 ) {
-            this.watchedDate = new Date(  ).getTime();
+            this.watchedDate = new Date().getTime();
         }
     }
 
@@ -85,17 +85,5 @@ public class Movie extends MovieDto {
 
     public void setWatchedDate( long watchedDate ) {
         this.watchedDate = watchedDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "runtime=" + runtime +
-                ", voteAverage=" + voteAverage +
-                ", voteCount=" + voteCount +
-                ", description='" + description + '\'' +
-                ", watched=" + watched +
-                ", watchedDate=" + watchedDate +
-                '}';
     }
 }

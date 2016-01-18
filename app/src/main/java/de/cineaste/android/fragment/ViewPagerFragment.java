@@ -84,7 +84,7 @@ public class ViewPagerFragment extends Fragment {
         List<Movie> movies = movieDbHelper.readAllMovies();
         ExportService.exportMovies( movies );
         Snackbar snackbar = Snackbar
-                .make( viewPager, R.string.successfulExport, Snackbar.LENGTH_SHORT);
+                .make( viewPager, R.string.successfulExport, Snackbar.LENGTH_SHORT );
         snackbar.show();
     }
 
@@ -98,10 +98,10 @@ public class ViewPagerFragment extends Fragment {
             snackBarMessage = R.string.successfulImport;
 
         } else {
-           snackBarMessage = R.string.unsuccessfulImport;
+            snackBarMessage = R.string.unsuccessfulImport;
         }
         Snackbar snackbar = Snackbar
-                .make( viewPager, snackBarMessage, Snackbar.LENGTH_SHORT);
+                .make( viewPager, snackBarMessage, Snackbar.LENGTH_SHORT );
         snackbar.show();
     }
 }
