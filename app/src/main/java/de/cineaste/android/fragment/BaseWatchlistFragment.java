@@ -34,7 +34,7 @@ public class BaseWatchlistFragment extends Fragment
 
     @Override
     public void setArguments( Bundle args ) {
-        super.setArguments( args );
+        super.setArguments(args);
         watchlistType = args.getString( WatchlistFragmentType.WATCHLIST_TYPE );
     }
 
@@ -64,7 +64,9 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     public void setWatchlistAdapter() {
-        baseWatchlistAdapter = new WatchlistAdapter( getActivity(), this, this );
+        if(baseWatchlistAdapter == null){
+            baseWatchlistAdapter = new WatchlistAdapter( getActivity(), this, this );
+        }
         if( baseWatchlistAdapter.getItemCount() == 0 ) {
             baseWatchlistRecyclerView.setVisibility( View.GONE );
             emptyListTextView.setVisibility( View.VISIBLE );
@@ -76,7 +78,9 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     public void setWatchedlistAdapter() {
-        baseWatchlistAdapter = new WatchedlistAdapter( getActivity(), this, this );
+        if(baseWatchlistAdapter == null){
+            baseWatchlistAdapter = new WatchedlistAdapter( getActivity(), this, this );
+        }
         if( baseWatchlistAdapter.getItemCount() == 0 ) {
             baseWatchlistRecyclerView.setVisibility( View.GONE );
             emptyListTextView.setVisibility( View.VISIBLE );

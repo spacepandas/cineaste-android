@@ -44,6 +44,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     @Override
     public void update( Observable observable, Object data ) {
         dataset = db.readMoviesByWatchStatus( true );
+        baseFragment.setWatchedlistAdapter();
         notifyDataSetChanged();
     }
 

@@ -2,6 +2,7 @@ package de.cineaste.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 import java.util.Observable;
