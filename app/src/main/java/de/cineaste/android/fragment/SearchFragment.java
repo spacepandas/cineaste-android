@@ -47,12 +47,20 @@ public class SearchFragment extends Fragment implements MovieClickListener {
     public void onSaveInstanceState( Bundle outState ) {
         if( isAdded() ) {
             if( searchView != null ) {
-                String searchText = searchView.getQuery().toString();
-                if( !TextUtils.isEmpty( searchText ) )
+                if( !TextUtils.isEmpty( searchText ) ) {
                     outState.putString( "query", searchText );
+                }
             }
         }
         super.onSaveInstanceState( outState );
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Bundle outState = new Bundle(  );
+        outState.putString( "query", searchText );
+        onSaveInstanceState( outState );
     }
 
     @Override
@@ -120,6 +128,7 @@ public class SearchFragment extends Fragment implements MovieClickListener {
                                 }
                             }, getResources().getString( R.string.language_tag ) );
                         }
+                        searchText = query;
                     } else {
                         ((SearchQueryAdapter) movieQueryAdapter).dataset = new ArrayList<>();
                     }
@@ -144,17 +153,6 @@ public class SearchFragment extends Fragment implements MovieClickListener {
                             .getSystemService( Context.INPUT_METHOD_SERVICE );
             imm.hideSoftInputFromWindow( view.getWindowToken(), 0 );
         }
-    }
-
-    //// TODO: 30.12.15 Delete!
-    @Override
-    public boolean onOptionsItemSelected( MenuItem item ) {
-        switch ( item.getItemId() ) {
-            case R.id.startMovieNight:
-                break;
-        }
-
-        return super.onOptionsItemSelected( item );
     }
 
     @Override
