@@ -92,6 +92,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
                 public void onClick( View v ) {
                     int index = dataset.indexOf( movie );
                     db.deleteMovieFromWatchlist( movie.getId() );
+                    removeItemFromView(index);
                 }
             } );
 
@@ -130,5 +131,14 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
     @Override
     public int getItemCount() {
         return dataset.size();
+    }
+
+    private void removeItemFromView(int index) {
+        dataset.remove(index);
+        notifyItemRemoved(index);
+
+        if (getItemCount() == 0) {
+            baseFragment.configureWatchedlistVisibility();
+        }
     }
 }
