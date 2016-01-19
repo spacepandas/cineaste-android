@@ -60,9 +60,8 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        setCorrectWatchlistAdapter();
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     private void setCorrectWatchlistAdapter() {

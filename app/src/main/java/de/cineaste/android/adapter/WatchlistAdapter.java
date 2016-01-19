@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import de.cineaste.android.Constants;
 import de.cineaste.android.MovieClickListener;
@@ -21,13 +23,30 @@ import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.database.MovieDbHelper;
 
-public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.ViewHolder> {
+public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.ViewHolder> implements Observer {
 
-    private final List<Movie> dataset;
+    private List<Movie> dataset;
     private final MovieDbHelper db;
     private final Context context;
     private final BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
     private final MovieClickListener listener;
+
+    @Override
+    public void update(Observable observable, Object o) {
+        Movie changedMovie = (Movie)o;
+
+        int index = dataset.indexOf(o);
+        if(index != -1 ){
+            dataset.remove(index);
+            notifyItemRemoved(index);
+        }
+        else{
+            dataset.add(changedMovie);
+            notifyItemInserted(dataset.size());
+        }
+
+        baseFragment.configureWatchlistVisibility();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView movieTitle;
@@ -73,7 +92,6 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
                 public void onClick( View v ) {
                     int index = dataset.indexOf( movie );
                     db.deleteMovieFromWatchlist( movie.getId() );
-                    removeItemFromView( index );
                 }
             } );
 
@@ -82,8 +100,8 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
                 @Override
                 public void onClick( View v ) {
                     int index = dataset.indexOf( movie );
-                    db.updateMovieWatched( true, movie.getId(), new Date().getTime() );
-                    removeItemFromView( index );
+                    movie.setWatched(true);
+                    db.createOrUpdate(movie);
                 }
             } );
         }
@@ -94,6 +112,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
         this.context = context;
         this.dataset = db.readMoviesByWatchStatus( false );
         this.baseFragment = baseFragment;
+        this.db.addObserver(this);
         this.listener = listener;
     }
 
@@ -111,14 +130,5 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
     @Override
     public int getItemCount() {
         return dataset.size();
-    }
-
-    private void removeItemFromView( int index ) {
-        dataset.remove( index );
-        notifyItemRemoved( index );
-
-        if( getItemCount() == 0 ) {
-            baseFragment.configureWatchlistVisibility();
-        }
     }
 }

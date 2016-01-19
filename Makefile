@@ -1,7 +1,10 @@
 PACKAGE = de.cineaste.android
 APK = app/build/outputs/apk/app-debug.apk
+APKRELEASE = app/build/outputs/apk/app-release.apk
 
 all: debug install start
+
+clean: release uninstall installRelease start
 
 debug:
 	./gradlew assembleDebug
@@ -19,6 +22,8 @@ release:
 install:
 	adb $(TARGET) install -rk $(APK)
 
+installRelease:
+	 adb $(TARGET) install -rk $(APKRELEASE)
 start:
 	adb $(TARGET) shell 'am start -n $(PACKAGE)/.MainActivity'
 

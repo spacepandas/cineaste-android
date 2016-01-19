@@ -124,14 +124,16 @@ public class MovieNightFragment extends Fragment
                 getActivity().runOnUiThread( new Runnable() {
                     @Override
                     public void run() {
-                        nearbyMessagesArrayList.add( NearbyMessage.fromMessage( message ) );
-                        if( nearbyMessagesArrayList.size() > 0 ) {
-                            startBtn.setEnabled( true );
-                            nearbyUser_rv.setVisibility( View.VISIBLE );
-                            searchingFriends.setVisibility( View.GONE );
-                            progressBar.setVisibility( View.GONE );
+                        if( !nearbyMessagesArrayList.contains( NearbyMessage.fromMessage( message ) ) ) {
+                            nearbyMessagesArrayList.add( NearbyMessage.fromMessage( message ) );
+                            if( nearbyMessagesArrayList.size() > 0 ) {
+                                startBtn.setEnabled( true );
+                                nearbyUser_rv.setVisibility( View.VISIBLE );
+                                searchingFriends.setVisibility( View.GONE );
+                                progressBar.setVisibility( View.GONE );
+                            }
+                            nearbyUserAdapter.notifyDataSetChanged();
                         }
-                        nearbyUserAdapter.notifyDataSetChanged();
                     }
                 } );
             }
