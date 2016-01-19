@@ -35,7 +35,6 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         this.context = context;
         this.db.addObserver(this);
         this.dataset = db.readMoviesByWatchStatus(true);
-
         this.baseFragment = baseFragment;
         this.listener = listener;
     }
@@ -44,13 +43,13 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     public void update(Observable observable, Object data) {
         Movie changedMovie = (Movie) data;
         int index = dataset.indexOf(changedMovie);
-        if(index != -1 && !changedMovie.isWatched()){
+        if( !changedMovie.isWatched() && index != -1 ){
             dataset.remove(index);
-            notifyItemRemoved(index);
+            notifyItemRemoved( index );
         }
-        else if(changedMovie.isWatched()){
+        else if(changedMovie.isWatched() && index == -1){
             dataset.add(changedMovie);
-            notifyItemInserted(dataset.size());
+            notifyItemInserted( dataset.size() );
         }
         baseFragment.configureWatchedlistVisibility();
     }
@@ -89,8 +88,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
 
                 @Override
                 public void onClick(View v) {
-                    int index = dataset.indexOf(movie);
-                    removeItemFromViewAndDb(index, movie.getId());
+                    removeItemFromDbAndView( movie );
                 }
             });
 
@@ -122,13 +120,11 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         return dataset.size();
     }
 
-    private void removeItemFromViewAndDb(int index, long dbId) {
-        db.deleteMovieFromWatchlist(dbId);
-        dataset.remove(index);
-        notifyItemRemoved(index);
-
-        if (getItemCount() == 0) {
-            baseFragment.configureWatchedlistVisibility();
-        }
+    private void removeItemFromDbAndView(Movie movie) {
+        int index = dataset.indexOf(movie);
+        dataset.remove( index );
+        db.deleteMovieFromWatchlist(movie);
+        notifyItemRemoved( index );
+        baseFragment.configureWatchedlistVisibility();
     }
 }

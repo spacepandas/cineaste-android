@@ -63,15 +63,15 @@ public class MovieDbHelper extends Observable {
         notifyObservers(movie);
     }
 
-    public void deleteMovieFromWatchlist( long movieId ) {
-        movieDao.delete( movieId );
+    public void deleteMovieFromWatchlist( Movie movie ) {
+        movieDao.delete( movie.getId() );
     }
 
     public int getMovieCount() {
         return movieDao.getRowCount();
     }
 
-    public int updateMovieWatched( Boolean watched, Long dbId, long watchedDate ) {
+    private int updateMovieWatched( Boolean watched, Long dbId, long watchedDate ) {
         ContentValues values = new ContentValues();
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, watched ? 1 : 0 );
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, watchedDate );

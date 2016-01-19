@@ -5,8 +5,8 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        resValue "string", "nearbyKey", System.getenv("MOVIE_KEY")
-        buildConfigField("String", "MovieKey", '"' +System.getenv("NEARBY_KEY") + '"')
+        resValue "string", "nearbyKey", System.getenv("NEARBY_KEY")
+        buildConfigField("String", "MovieKey", '"' +System.getenv("MOVIE_KEY") + '"')
         applicationId "de.cineaste.android"
         minSdkVersion 16
         targetSdkVersion 23

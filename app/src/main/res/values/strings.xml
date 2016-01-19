@@ -12,7 +12,7 @@
 
     <string name="enter_username">Username eingeben</string>
     <string name="username">Username</string>
-    <string name="noMoviesOnWatchList">Du hast noch keine Filme auf deiner Watchlist, \nUnten Rechts fügst du neue Titel hinzu!</string>
+    <string name="noMoviesOnWatchList">Du hast noch keine Filme auf deiner Watchlist. \nUnten Rechts fügst du neue Titel hinzu!</string>
     <string name="noMoviesOnWatchedList">Du hast noch keine Filme auf deiner Watchedlist \nZieh dir doch einen Titel rein!</string>
     <string name="searching_for_friends">Suche nach Freunden</string>
     <string name="importMovies">Import</string>

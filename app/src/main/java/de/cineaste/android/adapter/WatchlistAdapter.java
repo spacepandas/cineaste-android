@@ -35,12 +35,12 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
     public void update(Observable observable, Object o) {
         Movie changedMovie = (Movie)o;
 
-        int index = dataset.indexOf(o);
-        if(index != -1 && changedMovie.isWatched()){
+        int index = dataset.indexOf(changedMovie);
+        if(changedMovie.isWatched() && index != -1){
                 dataset.remove(index);
                 notifyItemRemoved(index);
         }
-        else if(!changedMovie.isWatched()){
+        else if(!changedMovie.isWatched() && index == -1){
             dataset.add(changedMovie);
             notifyItemInserted(dataset.size());
         }
@@ -90,9 +90,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
 
                 @Override
                 public void onClick( View v ) {
-                    int index = dataset.indexOf( movie );
-                    db.deleteMovieFromWatchlist( movie.getId() );
-                    removeItemFromView(index);
+                   removeItemFromDbAndView( movie );
                 }
             } );
 
@@ -133,12 +131,11 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
         return dataset.size();
     }
 
-    private void removeItemFromView(int index) {
-        dataset.remove(index);
-        notifyItemRemoved(index);
-
-        if (getItemCount() == 0) {
-            baseFragment.configureWatchedlistVisibility();
-        }
+    private void removeItemFromDbAndView(Movie movie) {
+        int index = dataset.indexOf(movie);
+        dataset.remove( index );
+        db.deleteMovieFromWatchlist(movie);
+        notifyItemRemoved( index );
+        baseFragment.configureWatchlistVisibility();
     }
 }
