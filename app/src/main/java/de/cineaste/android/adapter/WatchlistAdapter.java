@@ -36,11 +36,11 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
         Movie changedMovie = (Movie)o;
 
         int index = dataset.indexOf(o);
-        if(index != -1 ){
-            dataset.remove(index);
-            notifyItemRemoved(index);
+        if(index != -1 && changedMovie.isWatched()){
+                dataset.remove(index);
+                notifyItemRemoved(index);
         }
-        else{
+        else if(!changedMovie.isWatched()){
             dataset.add(changedMovie);
             notifyItemInserted(dataset.size());
         }
