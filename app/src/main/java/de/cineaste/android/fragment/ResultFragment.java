@@ -78,20 +78,20 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 
     @Override
     public void onMovieSelectListener( int position ) {
-        getFragmentManager().popBackStack();
         TheMovieDb theMovieDb = new TheMovieDb();
 
         theMovieDb.fetchMovie(
-                getResult().get( position ).getId(),
-                getActivity().getResources().getString( R.string.language_tag ),
+                getResult().get(position).getId(),
+                getActivity().getResources().getString(R.string.language_tag),
                 new TheMovieDb.OnFetchMovieResultListener() {
                     @Override
-                    public void onFetchMovieResultListener( Movie movie ) {
-                        MovieDbHelper db = MovieDbHelper.getInstance( getActivity() );
-                        movie.setWatched( true );
-                        db.createOrUpdate( movie );
+                    public void onFetchMovieResultListener(Movie movie) {
+                        MovieDbHelper db = MovieDbHelper.getInstance(getActivity());
+                        movie.setWatched(true);
+                        db.createOrUpdate(movie);
                     }
                 } );
+        getFragmentManager().popBackStack();
     }
 
     private ArrayList<MovieDto> getMovies() {

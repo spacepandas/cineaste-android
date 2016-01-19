@@ -59,6 +59,8 @@ public class MovieDbHelper extends Observable {
         } else {
             createNewMovieEntry( movie );
         }
+        setChanged();
+        notifyObservers(movie);
     }
 
     public void deleteMovieFromWatchlist( long movieId ) {
@@ -77,10 +79,6 @@ public class MovieDbHelper extends Observable {
         String[] where = {String.valueOf( dbId )};
 
         int affectedRows = movieDao.update( values, selection, where );
-        if( affectedRows > 0 ) {
-            setChanged();
-            notifyObservers();
-        }
 
         return affectedRows;
     }

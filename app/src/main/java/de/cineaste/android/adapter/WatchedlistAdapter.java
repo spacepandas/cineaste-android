@@ -30,20 +30,29 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     private final BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
     private final MovieClickListener listener;
 
-    public WatchedlistAdapter( Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener ) {
-        this.db = MovieDbHelper.getInstance( context );
+    public WatchedlistAdapter(Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener) {
+        this.db = MovieDbHelper.getInstance(context);
         this.context = context;
-        this.db.addObserver( this );
-        this.dataset = db.readMoviesByWatchStatus( true );
+        this.db.addObserver(this);
+        this.dataset = db.readMoviesByWatchStatus(true);
+
         this.baseFragment = baseFragment;
         this.listener = listener;
     }
 
     @Override
-    public void update( Observable observable, Object data ) {
-        dataset = db.readMoviesByWatchStatus( true );
+    public void update(Observable observable, Object data) {
+        Movie changedMovie = (Movie) data;
+        int index = dataset.indexOf(changedMovie);
+        if(index != -1){
+            dataset.remove(index);
+            notifyItemRemoved(index);
+        }
+        else{
+            dataset.add(changedMovie);
+            notifyItemInserted(dataset.size());
+        }
         baseFragment.configureWatchedlistVisibility();
-        notifyDataSetChanged();
     }
 
 
@@ -55,57 +64,57 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         public final ImageView imageView;
         final View view;
 
-        public ViewHolder( View v ) {
-            super( v );
-            movieTitle = (TextView) v.findViewById( R.id.movie_title );
-            movieRuntime = (TextView) v.findViewById( R.id.movie_runtime );
-            movieVote = (TextView) v.findViewById( R.id.movie_vote );
-            removeMovie = (ImageButton) v.findViewById( R.id.remove_button );
-            imageView = (ImageView) v.findViewById( R.id.movie_poster_image_view );
+        public ViewHolder(View v) {
+            super(v);
+            movieTitle = (TextView) v.findViewById(R.id.movie_title);
+            movieRuntime = (TextView) v.findViewById(R.id.movie_runtime);
+            movieVote = (TextView) v.findViewById(R.id.movie_vote);
+            removeMovie = (ImageButton) v.findViewById(R.id.remove_button);
+            imageView = (ImageView) v.findViewById(R.id.movie_poster_image_view);
             view = v;
         }
 
-        public void assignData( final Movie movie ) {
+        public void assignData(final Movie movie) {
             Resources resources = context.getResources();
 
-            movieTitle.setText( movie.getTitle() );
-            movieRuntime.setText( resources.getString( R.string.runtime, movie.getRuntime() ) );
-            movieVote.setText( resources.getString( R.string.vote, movie.getVoteAverage() ) );
+            movieTitle.setText(movie.getTitle());
+            movieRuntime.setText(resources.getString(R.string.runtime, movie.getRuntime()));
+            movieVote.setText(resources.getString(R.string.vote, movie.getVoteAverage()));
             String posterName = movie.getPosterPath();
             String posterUri = Constants.POSTER_URI
-                    .replace( "<posterName>", posterName != null ? posterName : "/" );
-            Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( imageView );
+                    .replace("<posterName>", posterName != null ? posterName : "/");
+            Picasso.with(context).load(posterUri).error(R.mipmap.ic_launcher).into(imageView);
 
-            removeMovie.setOnClickListener( new View.OnClickListener() {
+            removeMovie.setOnClickListener(new View.OnClickListener() {
 
                 @Override
-                public void onClick( View v ) {
-                    int index = dataset.indexOf( movie );
-                    removeItemFromViewAndDb( index, movie.getId() );
+                public void onClick(View v) {
+                    int index = dataset.indexOf(movie);
+                    removeItemFromViewAndDb(index, movie.getId());
                 }
-            } );
+            });
 
-            view.setOnClickListener( new View.OnClickListener() {
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick( View v ) {
-                    if( listener != null ) {
-                        listener.onMovieClickListener( movie.getId() );
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onMovieClickListener(movie.getId());
                     }
                 }
-            } );
+            });
         }
     }
 
-    public WatchedlistAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewTyp ) {
+    public WatchedlistAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewTyp) {
         View v = LayoutInflater
-                .from( parent.getContext() )
-                .inflate( R.layout.card_watchedlist, parent, false );
-        return new ViewHolder( v );
+                .from(parent.getContext())
+                .inflate(R.layout.card_watchedlist, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder( final WatchedlistAdapter.ViewHolder holder, final int position ) {
-        holder.assignData( dataset.get( position ) );
+    public void onBindViewHolder(final WatchedlistAdapter.ViewHolder holder, final int position) {
+        holder.assignData(dataset.get(position));
     }
 
     @Override
@@ -113,12 +122,12 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
         return dataset.size();
     }
 
-    private void removeItemFromViewAndDb( int index, long dbId ) {
-        db.deleteMovieFromWatchlist( dbId );
-        dataset.remove( index );
-        notifyItemRemoved( index );
+    private void removeItemFromViewAndDb(int index, long dbId) {
+        db.deleteMovieFromWatchlist(dbId);
+        dataset.remove(index);
+        notifyItemRemoved(index);
 
-        if( getItemCount() == 0 ) {
+        if (getItemCount() == 0) {
             baseFragment.configureWatchedlistVisibility();
         }
     }
