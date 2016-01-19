@@ -131,6 +131,7 @@ public class SearchFragment extends Fragment implements MovieClickListener {
                         searchText = query;
                     } else {
                         ((SearchQueryAdapter) movieQueryAdapter).dataset = new ArrayList<>();
+                        movieQueryAdapter.notifyDataSetChanged();
                     }
                     return false;
                 }
