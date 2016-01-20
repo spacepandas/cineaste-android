@@ -54,16 +54,8 @@ public class NearbyMessage {
                 (new String( nearbyMessageString.getBytes( Charset.forName( "UTF-8" ) ) )),
                 NearbyMessage.class );
     }
-
-    public static Message newNearbyMessage(
-            String instanceId,
-            List<MovieDto> movies,
-            String userName ) {
-        NearbyMessage nearbyMessage = new NearbyMessage();
-        nearbyMessage.setUserName( instanceId );
-        nearbyMessage.setMovies( movies );
-        nearbyMessage.setUserName( userName );
-
+    
+    public static Message newNearbyMessage( NearbyMessage nearbyMessage ) {
         return new Message(
                 GSON.toJson( nearbyMessage ).getBytes( Charset.forName( "UTF-8" ) ) );
     }

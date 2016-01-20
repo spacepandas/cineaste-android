@@ -1,7 +1,9 @@
 package de.cineaste.android.fragment;
 
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,7 +20,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.iid.InstanceID;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
@@ -52,7 +53,7 @@ public class MovieNightFragment extends Fragment
 
     private final ArrayList<NearbyMessage> nearbyMessagesArrayList = new ArrayList<>();
 
-    private String userName;
+    private String deviceID;
     private Button startBtn;
     private TextView searchingFriends;
     private ProgressBar progressBar;
@@ -61,11 +62,10 @@ public class MovieNightFragment extends Fragment
 
     private NearbyUserAdapter nearbyUserAdapter;
     private GoogleApiClient googleApiClient;
-    private Message deviceInfoMessage;
     private MessageListener messageListener;
-    private MovieDbHelper watchlistDbHelper;
     private boolean mResolvingNearbyPermissionError = false;
 
+    private NearbyMessage localNearbyMessage;
 
     public void finishedResolvingNearbyPermissionError() {
         mResolvingNearbyPermissionError = false;
@@ -85,13 +85,16 @@ public class MovieNightFragment extends Fragment
     public void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setRetainInstance( true );
-        watchlistDbHelper = MovieDbHelper.getInstance( getActivity() );
+        loadDeviceID();
+
+        android.util.Log.wtf( "mgr", "after load " + deviceID );
+        MovieDbHelper watchlistDbHelper = MovieDbHelper.getInstance( getActivity() );
         UserDbHelper userDbHelper = UserDbHelper.getInstance( getActivity() );
         User currentUser = userDbHelper.getUser();
-        userName = (currentUser != null) ?
-                currentUser.getUserName() :
-                InstanceID.getInstance( getActivity().getApplicationContext() ).getId();
-
+        List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus( false );
+        final List<MovieDto> localMovies = transFormMovies( localWatchlistMovies );
+        localNearbyMessage = new NearbyMessage( currentUser.getUserName(), deviceID, localMovies );
+android.util.Log.wtf( "mgr", localNearbyMessage.getDeviceId() + " " + localNearbyMessage.getUserName() );
     }
 
     @Override
@@ -160,12 +163,6 @@ public class MovieNightFragment extends Fragment
     public void onStart() {
         super.onStart();
 
-        final String deviceId =
-                InstanceID.getInstance( getActivity().getApplicationContext() ).getId();
-        List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus( false );
-        final List<MovieDto> localMovies = transFormMovies( localWatchlistMovies );
-        deviceInfoMessage = NearbyMessage.newNearbyMessage( deviceId, localMovies, userName );
-
         googleApiClient = new GoogleApiClient.Builder( getActivity().getApplicationContext() )
                 .addApi( Nearby.MESSAGES_API )
                 .addConnectionCallbacks( this )
@@ -178,8 +175,7 @@ public class MovieNightFragment extends Fragment
             @Override
             public void onClick( View v ) {
                 NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
-                NearbyMessage localNearbyMessage =
-                        new NearbyMessage( userName, deviceId, localMovies );
+android.util.Log.wtf( "mgr", "start matching " + localNearbyMessage.getDeviceId() );
                 handler.addMessage( localNearbyMessage );
                 handler.addMessages( nearbyMessagesArrayList );
                 MainActivity.replaceFragmentPopBackStack(
@@ -290,8 +286,8 @@ public class MovieNightFragment extends Fragment
                             //no longer publishing"
                         }
                     } ).build();
-
-            Nearby.Messages.publish( googleApiClient, deviceInfoMessage, options )
+            android.util.Log.wtf( "mgr", "publish " + localNearbyMessage.getDeviceId() );
+            Nearby.Messages.publish( googleApiClient, NearbyMessage.newNearbyMessage( localNearbyMessage ), options )
                     .setResultCallback( new ResultCallback<Status>() {
 
                         @Override
@@ -310,7 +306,7 @@ public class MovieNightFragment extends Fragment
                 googleApiClient.connect();
             }
         } else {
-            Nearby.Messages.unpublish( googleApiClient, deviceInfoMessage )
+            Nearby.Messages.unpublish( googleApiClient, NearbyMessage.newNearbyMessage( localNearbyMessage ) )
                     .setResultCallback( new ResultCallback<Status>() {
 
                         @Override
@@ -355,5 +351,27 @@ public class MovieNightFragment extends Fragment
             movieDtos.add( new MovieDto( movie ) );
         }
         return movieDtos;
+    }
+
+    private void loadDeviceID() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+        deviceID = sharedPreferences.getString( "deviceID", "deviceID" );
+
+        if( deviceID.equals( "deviceID" ) )
+            generateDeviceId();
+android.util.Log.wtf( "mgr", "load prefs " + deviceID );
+    }
+
+    private void generateDeviceId() {
+        String id = "";
+        for (int i = 0 ; i < 6; i++) {
+            id += String.valueOf((int)(Math.random()*10));
+        }
+android.util.Log.wtf( "mgr", "generate id " + id );
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString( "deviceID", id );
+        editor.apply();
+        loadDeviceID();
     }
 }

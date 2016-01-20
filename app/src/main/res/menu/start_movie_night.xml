@@ -11,5 +11,7 @@
               android:title="@string/exportMovies"/>
         <item android:id="@+id/importMovies"
               android:title="@string/importMovies"/>
+        <item android:id="@+id/about"
+              android:title="@string/about"/>
     </group>
 </menu>

@@ -30,4 +30,6 @@
 
     <string name="movieTitle">Titel</string>
     <string name="noDescription">Keine Beschreibung vorhanden</string>
+    <string name="about">About</string>
+
 </resources>

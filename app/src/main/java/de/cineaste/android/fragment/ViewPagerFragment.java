@@ -75,6 +75,9 @@ public class ViewPagerFragment extends Fragment {
             case R.id.importMovies:
                 importMovies();
                 break;
+            case R.id.about:
+                MainActivity.replaceFragment( getFragmentManager(), new AboutFragment() );
+                break;
         }
 
         return super.onOptionsItemSelected( item );
