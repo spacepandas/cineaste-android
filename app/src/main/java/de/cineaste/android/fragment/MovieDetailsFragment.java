@@ -1,5 +1,6 @@
 package de.cineaste.android.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import de.cineaste.android.entity.Movie;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.network.TheMovieDb;
+import de.cineaste.android.receiver.NetworkChangeReceiver;
 
 public class MovieDetailsFragment extends Fragment {
 
@@ -42,13 +44,15 @@ public class MovieDetailsFragment extends Fragment {
         MovieDbHelper movieDbHelper = MovieDbHelper.getInstance( getActivity() );
         Movie currentMovie = movieDbHelper.readMovie( movieId );
         if( currentMovie == null ) {
-            TheMovieDb theMovieDb = new TheMovieDb();
-            theMovieDb.fetchMovie( movieId, getResources().getString( R.string.language_tag ), new TheMovieDb.OnFetchMovieResultListener() {
-                @Override
-                public void onFetchMovieResultListener( Movie movie ) {
-                    assignData( movie );
-                }
-            } );
+            if(NetworkChangeReceiver.getInstance().isConnected){
+                TheMovieDb theMovieDb = new TheMovieDb();
+                theMovieDb.fetchMovie(movieId, getResources().getString(R.string.language_tag), new TheMovieDb.OnFetchMovieResultListener() {
+                    @Override
+                    public void onFetchMovieResultListener(Movie movie) {
+                        assignData(movie);
+                    }
+                });
+            }
         } else {
             assignData( currentMovie );
         }
