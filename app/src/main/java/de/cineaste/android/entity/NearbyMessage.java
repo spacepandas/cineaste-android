@@ -54,7 +54,7 @@ public class NearbyMessage {
                 (new String( nearbyMessageString.getBytes( Charset.forName( "UTF-8" ) ) )),
                 NearbyMessage.class );
     }
-    
+
     public static Message newNearbyMessage( NearbyMessage nearbyMessage ) {
         return new Message(
                 GSON.toJson( nearbyMessage ).getBytes( Charset.forName( "UTF-8" ) ) );

@@ -56,12 +56,6 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
         return view;
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        handler.clearMessages();
-    }
-
     private ArrayList<MatchingResult> getResult() {
 
         ArrayList<MatchingResult> results = new ArrayList<>();

@@ -87,14 +87,12 @@ public class MovieNightFragment extends Fragment
         setRetainInstance( true );
         loadDeviceID();
 
-        android.util.Log.wtf( "mgr", "after load " + deviceID );
         MovieDbHelper watchlistDbHelper = MovieDbHelper.getInstance( getActivity() );
         UserDbHelper userDbHelper = UserDbHelper.getInstance( getActivity() );
         User currentUser = userDbHelper.getUser();
         List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus( false );
         final List<MovieDto> localMovies = transFormMovies( localWatchlistMovies );
         localNearbyMessage = new NearbyMessage( currentUser.getUserName(), deviceID, localMovies );
-android.util.Log.wtf( "mgr", localNearbyMessage.getDeviceId() + " " + localNearbyMessage.getUserName() );
     }
 
     @Override
@@ -175,7 +173,7 @@ android.util.Log.wtf( "mgr", localNearbyMessage.getDeviceId() + " " + localNearb
             @Override
             public void onClick( View v ) {
                 NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
-android.util.Log.wtf( "mgr", "start matching " + localNearbyMessage.getDeviceId() );
+                handler.clearMessages();
                 handler.addMessage( localNearbyMessage );
                 handler.addMessages( nearbyMessagesArrayList );
                 MainActivity.replaceFragmentPopBackStack(
@@ -286,7 +284,6 @@ android.util.Log.wtf( "mgr", "start matching " + localNearbyMessage.getDeviceId(
                             //no longer publishing"
                         }
                     } ).build();
-            android.util.Log.wtf( "mgr", "publish " + localNearbyMessage.getDeviceId() );
             Nearby.Messages.publish( googleApiClient, NearbyMessage.newNearbyMessage( localNearbyMessage ), options )
                     .setResultCallback( new ResultCallback<Status>() {
 
@@ -359,7 +356,6 @@ android.util.Log.wtf( "mgr", "start matching " + localNearbyMessage.getDeviceId(
 
         if( deviceID.equals( "deviceID" ) )
             generateDeviceId();
-android.util.Log.wtf( "mgr", "load prefs " + deviceID );
     }
 
     private void generateDeviceId() {
@@ -367,7 +363,6 @@ android.util.Log.wtf( "mgr", "load prefs " + deviceID );
         for (int i = 0 ; i < 6; i++) {
             id += String.valueOf((int)(Math.random()*10));
         }
-android.util.Log.wtf( "mgr", "generate id " + id );
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString( "deviceID", id );
