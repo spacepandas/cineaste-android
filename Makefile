@@ -4,7 +4,7 @@ APKRELEASE = app/build/outputs/apk/app-release.apk
 
 all: debug install start
 
-clean: release uninstall installRelease start
+cleanInstall: release uninstall installRelease start
 
 debug:
 	./gradlew assembleDebug

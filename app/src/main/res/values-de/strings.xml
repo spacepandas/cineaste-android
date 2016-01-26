@@ -1,0 +1,36 @@
+<resources>
+    <string name="language_tag">de</string>
+
+    <string name="search">Suche</string>
+    <plurals name="movieCounter">
+        <item quantity="one">Film: %d</item>
+        <item quantity="other">Filme: %d</item>
+    </plurals>
+    <string name="startMovieNight">Filmnacht starten</string>
+
+    <string name="enter_username">Username eingeben</string>
+    <string name="username">Username</string>
+    <string name="noMoviesOnWatchList">Du hast noch keine Filme auf deiner Watchlist. \nUnten Rechts fügst du neue Titel hinzu!</string>
+    <string name="noMoviesOnWatchedList">Du hast noch keine Filme auf deiner Watchedlist. \nZieh dir doch einen Titel rein!</string>
+    <string name="searching_for_friends">Suche nach Freunden</string>
+
+    <string name="successfulExport">Export war erfolgreich</string>
+    <string name="successfulImport">Import war erfolgreich</string>
+    <string name="unsuccessfulImport">Import war nicht erfolgreich</string>
+    <string name="moviePoster">Filmposter</string>
+    <string name="addToWatchlist">Zur Watchlist hinzufügen</string>
+    <string name="addToWatchedlist">Zur Watchedlist hinzufügen</string>
+    <string name="remove">Film entfernen</string>
+    <string name="noInternet">Keine Internetverbindung!</string>
+    <string name="runtime">Laufzeit: %d m</string>
+    <string name="vote">Bewertung: %s</string>
+
+    <string name="movieTitle">Titel</string>
+    <string name="noDescription">Keine Beschreibung vorhanden</string>
+
+    <string name="aboutContent">Cineaste ist ein Open Source Projekt von zwei Informatik Studenten. Das Kernfeature der App liegt darin, möglichst leicht Filme für einen gemeinsamen Filmeabend zu finden. Über den "Matching"-Button sucht dein Handy nach Freunden in deiner Umgebung und findet Filme, die ihr Alle sehen wollt.
+        \n\nDie Daten werden dabei über Bluetooth übertragen. Das heißt, dass deine Filmlisten zu jedem Zeitpunkt sicher auf deinem Gerät sind und dort auch bleiben. Daten werden also nur innerhalb deines Wohnzimmers ausgetauscht.
+\n\nCineaste befindet sich noch im Anfangsstadium und könnte manchmal nicht richtig funktionieren. Natürlich geben wir unser Bestes um das Erlebnis so gut wie möglich zu machen, dabei sind wir aber auf dein Feedback angewiesen. Schreib doch einfach ein Kommentar im Play Store oder entwickle einfach gemeinsam mit uns Cineaste weiter! Dazu findest du unten das GitHub Icon. Für die Filme zapfen wir übrigens TheMovieDb an. Auch hier kannst du über das Icon mal vorbeischaun.
+</string>
+
+</resources>
