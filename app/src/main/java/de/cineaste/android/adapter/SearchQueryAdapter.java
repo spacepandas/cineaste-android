@@ -49,7 +49,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
             String posterUri =
                     Constants.POSTER_URI
                             .replace( "<posterName>", posterName != null ? posterName : "/" );
-            Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( moviePoster );
+            Picasso.with( context ).load( posterUri ).error( R.drawable.placeholder_poster ).into( moviePoster );
 
             addToWatchlistButton.setOnClickListener( new View.OnClickListener() {
 

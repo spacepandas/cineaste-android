@@ -75,8 +75,8 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
             movieRuntime.setText( resources.getString( R.string.runtime, movie.getRuntime() ) );
             movieVote.setText( resources.getString( R.string.vote, movie.getVoteAverage() ) );
             String posterName = movie.getPosterPath();
-            String posterUri = Constants.POSTER_URI.replace( "<posterName", posterName != null ? posterName : "/" );
-            Picasso.with( context ).load( posterUri ).error( R.mipmap.ic_launcher ).into( imageView );
+            String posterUri = Constants.POSTER_URI.replace( "<posterName>", posterName != null ? posterName : "/" );
+            Picasso.with( context ).load( posterUri ).error(R.drawable.placeholder_poster ).into( imageView );
 
             view.setOnClickListener( new View.OnClickListener() {
                 @Override

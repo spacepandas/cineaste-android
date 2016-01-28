@@ -80,7 +80,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
                                     matchingResult.getPosterPath() : "/" );
             Picasso.with( context )
                     .load( Uri.parse( posterUri ) )
-                    .error( R.mipmap.ic_launcher )
+                    .error( R.drawable.placeholder_poster )
                     .into( moviePoster );
             watchedButton.setOnClickListener( this );
             title.setText( matchingResult.getTitle() );

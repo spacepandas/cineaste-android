@@ -75,7 +75,7 @@ public class MovieDetailsFragment extends Fragment {
                         currentMovie.getPosterPath() : "/" );
         Picasso.with( getActivity() )
                 .load( posterUri )
-                .error( R.mipmap.ic_launcher )
+                .error( R.drawable.placeholder_poster )
                 .into( moviePoster );
     }
 }

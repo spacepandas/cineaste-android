@@ -28,10 +28,10 @@
     <string name="movieTitle">Title</string>
     <string name="noDescription">No description available</string>
 
-    <string name="aboutContent">Cineaste is an Open Source project of two computer science students. The main feature of the app is to find easily movies for a common movie night. Via the "Matching"-Button your mobile phone searches for friends in your surroundings and finds all movies, which you all would like to watch.\n\n
-The data is transmitted via Bluetooth. This means all the lists of movies is stored safely on your phone and stays there. The data will be only shared in your living room.\n\n
+    <string name="aboutContent">Cineaste is an Open Source project of two computer science students. The main feature of the app is to find easily movies for a shared movie night. Via the "Matching"-Button your mobile phone searches for friends in your surroundings and suggests the movies, which you all would like to watch.\n\n
+The data is transmitted via Bluetooth. This means all your movies are stored securely on your phone and stays there. The data will be only shared in your living room between your friends!\n\n
 Cineaste is still at its beginning and there could be some problems sometimes. We will do our best to make this experience as good as possible, therefore we need your feedback.
-Please leave a comment at Play Store or develop Cineaste together with us! Via the GitHub icon you can find the sources of Cineaste. For the displaying the movies we are using TMDb. Go ahead and check them out!
+Please leave a comment at the Play Store or develop Cineaste together with us! Via the GitHub icon you can find the sources of Cineaste. The movie data you see is provided by TMDb. Go ahead and check them out!
 </string>
 
 </resources>

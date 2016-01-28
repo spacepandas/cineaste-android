@@ -82,7 +82,7 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
             String posterName = movie.getPosterPath();
             String posterUri = Constants.POSTER_URI
                     .replace("<posterName>", posterName != null ? posterName : "/");
-            Picasso.with(context).load(posterUri).error(R.mipmap.ic_launcher).into(imageView);
+            Picasso.with(context).load(posterUri).error(R.drawable.placeholder_poster).into(imageView);
 
             removeMovie.setOnClickListener(new View.OnClickListener() {
 
