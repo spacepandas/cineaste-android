@@ -55,12 +55,12 @@ public class MovieDbHelper extends Observable {
         List<Movie> movieList = movieDao.read( selection, selectionArgs );
 
         if( !movieList.isEmpty() ) {
-            updateMovieWatched( movie.isWatched(), movie.getId(), movie.getWatchedDate() );
+            updateMovieWatched( movie );
         } else {
             createNewMovieEntry( movie );
         }
         setChanged();
-        notifyObservers(movie);
+        notifyObservers( movie );
     }
 
     public void deleteMovieFromWatchlist( Movie movie ) {
@@ -71,15 +71,21 @@ public class MovieDbHelper extends Observable {
         return movieDao.getRowCount();
     }
 
-    private int updateMovieWatched( Boolean watched, Long dbId, long watchedDate ) {
+    private int updateMovieWatched( Movie movie ) {
         ContentValues values = new ContentValues();
-        values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, watched ? 1 : 0 );
-        values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, watchedDate );
+        values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0 );
+        values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate() );
+        values.put( BaseDao.MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle() );
+        values.put( BaseDao.MovieEntry.COLUMN_RUNTIME, movie.getRuntime() );
+        values.put( BaseDao.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage() );
+        values.put( BaseDao.MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount() );
+        values.put( BaseDao.MovieEntry.COLUMN_MOVIE_DESCRIPTION, movie.getDescription() );
         String selection = BaseDao.MovieEntry._ID + " LIKE ?";
-        String[] where = {String.valueOf( dbId )};
+        String[] where = {String.valueOf( movie.getId() )};
 
         int affectedRows = movieDao.update( values, selection, where );
 
         return affectedRows;
     }
+
 }
