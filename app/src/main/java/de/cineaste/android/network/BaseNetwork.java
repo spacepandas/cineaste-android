@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +11,10 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 public class BaseNetwork {
-
     public interface OnResultListener {
         void onResultListener( Response response );
     }
@@ -29,47 +29,23 @@ public class BaseNetwork {
 
     private static final int MAXIMUM_RESPONSE_SIZE = 1048576;
 
-    BaseNetwork( String host ) {
+    protected BaseNetwork( String host ) {
         this.host = host;
     }
 
-    static void requestAsync( final Request request, final OnResultListener listener ) {
+    protected void requestAsync( final Request request, final OnResultListener listener ) {
         new AsyncTask<Request, Void, Response>() {
             @Override
             protected Response doInBackground( Request... params ) {
                 HttpURLConnection connection = null;
 
                 try {
-                    connection = (HttpURLConnection)
-                            (new URL( params[0].getUrl() )).openConnection();
-
-                    if( params[0].getMethod() != null )
-                        connection.setRequestMethod( params[0].getMethod() );
-
-                    for ( int n = params[0].getHeaders() != null
-                            ? params[0].getHeaders().length : 0;
-                          n-- > 0; ) {
-                        String tokens[] = params[0].getHeaders()[n].split( ":" );
-
-                        if( tokens.length != 2 )
-                            continue;
-
-                        connection.setRequestProperty( tokens[0], tokens[1] );
-                    }
-
-                    if( params[0].getData() != null ) {
-                        connection.setDoOutput( true );
-
-                        OutputStreamWriter writer =
-                                new OutputStreamWriter( connection.getOutputStream() );
-                        writer.write( params[0].getData() );
-                        writer.flush();
-                    }
+                    connection = openConnection( params[0] );
 
                     return new Response(
                             connection.getResponseCode(),
-                            readResponse(
-                                    new BufferedInputStream( connection.getInputStream() ) )
+                            readResponse( connection.getInputStream() ),
+                            connection.getHeaderFields()
                     );
                 } catch ( IOException e ) {
                     // fall through
@@ -78,8 +54,7 @@ public class BaseNetwork {
                         connection.disconnect();
                 }
 
-                return new Response(
-                        500, new byte[]{} );
+                return new Response( HttpURLConnection.HTTP_INTERNAL_ERROR, new byte[]{}, null );
             }
 
             @Override
@@ -90,15 +65,54 @@ public class BaseNetwork {
         }.execute( request );
     }
 
-    static boolean successfulRequest( int statusCode ) {
-        return statusCode >= 200 && statusCode < 300;
+    protected boolean successfulRequest( int statusCode ) {
+        return statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE;
     }
 
-    private static byte[] readResponse( InputStream in ) throws IOException {
-        ByteArrayOutputStream data = new ByteArrayOutputStream();
-        byte buffer[] = new byte[4096];
+    private HttpURLConnection openConnection( Request request ) throws IOException {
+        HttpURLConnection connection =
+                (HttpURLConnection) new URL( request.getUrl() ).openConnection();
+        connection.setRequestMethod( request.getMethod() );
 
-        for ( int bytes, length = 0; (bytes = in.read( buffer )) > -1; )
+        setHeaders( request, connection );
+        addData( request, connection );
+
+        return connection;
+    }
+
+
+    private void setHeaders( Request request, HttpURLConnection connection ) {
+        if( request.getHeaders() != null ) {
+            for ( String header : request.getHeaders() ) {
+                String tokens[] = header.split( ":" );
+
+                if( tokens.length != 2 )
+                    continue;
+
+                connection.setRequestProperty( tokens[0], tokens[1] );
+            }
+        }
+    }
+
+    private void addData( Request request, HttpURLConnection connection ) throws IOException {
+        if( request.getData() != null ) {
+            connection.setDoOutput( true );
+
+            OutputStreamWriter writer =
+                    new OutputStreamWriter( connection.getOutputStream() );
+            writer.write( request.getData() );
+            writer.flush();
+        }
+    }
+
+    private byte[] readResponse( InputStream in ) throws IOException {
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+
+        int length = 0;
+        int bytes = in.read( buffer );
+
+        while ( bytes > -1 ) {
             if( bytes > 0 ) {
                 data.write( buffer, 0, bytes );
                 length += bytes;
@@ -106,17 +120,26 @@ public class BaseNetwork {
                 if( length > MAXIMUM_RESPONSE_SIZE )
                     return null;
             }
+            bytes = in.read( buffer );
+        }
 
         return data.toByteArray();
     }
 
-    protected static class Response {
+
+    protected class Response {
         private final int code;
         private final byte data[];
+        private final Map<String, List<String>> headers;
 
-        public Response( int code, byte data[] ) {
+        public Response( int code, byte data[], Map<String, List<String>> headers ) {
             this.code = code;
             this.data = data;
+            this.headers = headers;
+        }
+
+        public Map<String, List<String>> getHeaders() {
+            return headers;
         }
 
         public int getCode() {
@@ -136,7 +159,7 @@ public class BaseNetwork {
         }
     }
 
-    static class Request {
+    protected class Request {
         private String url;
         private String method;
         private String[] headers;

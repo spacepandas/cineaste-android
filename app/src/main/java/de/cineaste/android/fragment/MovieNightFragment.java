@@ -161,7 +161,7 @@ public class MovieNightFragment extends Fragment
     public void onStart() {
         super.onStart();
 
-        googleApiClient = new GoogleApiClient.Builder( getActivity().getApplicationContext() )
+        googleApiClient = new GoogleApiClient.Builder( getContext() )
                 .addApi( Nearby.MESSAGES_API )
                 .addConnectionCallbacks( this )
                 .addOnConnectionFailedListener( this )

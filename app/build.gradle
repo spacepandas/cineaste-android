@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         resValue "string", "nearbyKey", System.getenv("NEARBY_KEY")
-        buildConfigField("String", "MovieKey", '"' +System.getenv("MOVIE_KEY") + '"')
+        buildConfigField("String", "MovieKey", '"' + System.getenv("MOVIE_KEY") + '"')
         applicationId "de.cineaste.android"
         minSdkVersion 16
         targetSdkVersion 23
@@ -30,8 +30,8 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.google.android.gms:play-services-gcm:8.3.0'
-    compile 'com.google.android.gms:play-services-nearby:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-nearby:8.4.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.google.guava:guava:19.0-rc2'
     compile 'com.squareup.picasso:picasso:2.5.2'
