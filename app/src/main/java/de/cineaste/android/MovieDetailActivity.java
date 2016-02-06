@@ -2,15 +2,12 @@ package de.cineaste.android;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.support.v4.app.FragmentManager;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +26,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView movieVote;
     private TextView movieDescription;
     private ImageView moviePoster;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private MovieDbHelper movieDbHelper;
+    private long movieId;
+    private Movie currentMovie;
 
     @Override
     public boolean onOptionsItemSelected( MenuItem item ) {
@@ -48,7 +49,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView( R.layout.activity_movie_detail );
 
         Intent intent = getIntent();
-        long movieId = intent.getLongExtra( BaseDao.MovieEntry._ID, -1 );
+        movieId = intent.getLongExtra( BaseDao.MovieEntry._ID, -1 );
 
         initToolbar();
 
@@ -57,18 +58,21 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieVote = (TextView) findViewById( R.id.movie_vote );
         movieDescription = (TextView) findViewById( R.id.movie_description );
         moviePoster = (ImageView) findViewById( R.id.movie_poster );
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById( R.id.swipe_refresh );
 
-        MovieDbHelper movieDbHelper = MovieDbHelper.getInstance( this );
-        Movie currentMovie = movieDbHelper.readMovie( movieId );
+        initSwipeRefresh();
+        movieDbHelper = MovieDbHelper.getInstance( this );
+        currentMovie = movieDbHelper.readMovie( movieId );
         if( currentMovie == null ) {
-            if( NetworkChangeReceiver.getInstance().isConnected){
+            if( NetworkChangeReceiver.getInstance().isConnected ) {
                 TheMovieDb theMovieDb = new TheMovieDb();
-                theMovieDb.fetchMovie(movieId, getResources().getString(R.string.language_tag), new TheMovieDb.OnFetchMovieResultListener() {
+                theMovieDb.fetchMovie( movieId, getResources().getString( R.string.language_tag ),
+                        new TheMovieDb.OnFetchMovieResultListener() {
                     @Override
-                    public void onFetchMovieResultListener(Movie movie) {
-                        assignData(movie);
+                    public void onFetchMovieResultListener( Movie movie ) {
+                        assignData( movie );
                     }
-                });
+                } );
             }
         } else {
             assignData( currentMovie );
@@ -100,6 +104,40 @@ public class MovieDetailActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if( actionBar != null )
             actionBar.setDisplayHomeAsUpEnabled( true );
+    }
+
+    private void initSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        updateMovie();
+                    }
+                } );
+    }
+
+    private void updateMovie() {
+        if( NetworkChangeReceiver.getInstance().isConnected ) {
+            TheMovieDb theMovieDb = new TheMovieDb();
+            theMovieDb.fetchMovie( movieId, getResources().getString( R.string.language_tag ),
+                    new TheMovieDb.OnFetchMovieResultListener() {
+                @Override
+                public void onFetchMovieResultListener( Movie movie ) {
+                    assignData( movie );
+                    updateMovieDetails( movie );
+                    movieDbHelper.createOrUpdate( currentMovie );
+                    swipeRefreshLayout.setRefreshing( false );
+                }
+            } );
+        }
+    }
+
+    private void updateMovieDetails( Movie movie ) {
+        currentMovie.setTitle( movie.getTitle() );
+        currentMovie.setRuntime( movie.getRuntime() );
+        currentMovie.setVoteAverage( movie.getVoteAverage() );
+        currentMovie.setVoteCount( movie.getVoteCount() );
+        currentMovie.setDescription( movie.getDescription() );
     }
 
 }

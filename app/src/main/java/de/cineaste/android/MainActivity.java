@@ -36,16 +36,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
                 .commit();
     }
 
-    public static void replaceSharedElementsFragment( FragmentManager fm, Fragment fragment, View view, String name ) {
-        fm.beginTransaction()
-                .addSharedElement( view, name )
-                .replace(
-                        R.id.content_container,
-                        fragment, fragment.getClass().getName() )
-                .addToBackStack( null )
-                .commit();
-    }
-
     public static void replaceFragmentPopBackStack( FragmentManager fm, Fragment fragment ) {
         fm.popBackStack();
         replaceFragment( fm, fragment );

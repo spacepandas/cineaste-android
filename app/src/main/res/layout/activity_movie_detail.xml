@@ -8,6 +8,7 @@
     tools:context="de.cineaste.android.MovieDetailActivity">
 
     <include layout="@layout/toolbar"/>
+
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         style="@style/cardView"
@@ -15,77 +16,83 @@
         android:layout_margin="5dp"
         android:transitionName="card">
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/movie_poster"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:contentDescription="@string/moviePoster"
-                        android:transitionName="poster"/>
-
-                    <TextView
-                        android:id="@+id/movie_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/movie_poster"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_toEndOf="@+id/movie_poster"
-                        android:layout_toRightOf="@+id/movie_poster"
-                        android:text="@string/movieTitle"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:transitionName="title"/>
-
-                    <TextView
-                        android:id="@+id/movie_runtime"
-                        style="@style/cardviewDescriptionText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/movie_title"
-                        android:layout_alignStart="@+id/movie_title"
-                        android:layout_below="@+id/movie_title"
-                        android:text="@string/runtime"
-                        android:transitionName="runtime"/>
-
-                    <TextView
-                        android:id="@+id/movie_vote"
-                        style="@style/cardviewDescriptionText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/movie_runtime"
-                        android:layout_alignStart="@+id/movie_runtime"
-                        android:layout_below="@+id/movie_runtime"
-                        android:text="@string/vote"
-                        android:transitionName="vote"/>
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/movie_description"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"/>
-            </LinearLayout>
-        </ScrollView>
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/movie_poster"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:contentDescription="@string/moviePoster"
+                            android:transitionName="poster"/>
+
+                        <TextView
+                            android:id="@+id/movie_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@+id/movie_poster"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@+id/movie_poster"
+                            android:layout_toRightOf="@+id/movie_poster"
+                            android:text="@string/movieTitle"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:transitionName="title"/>
+
+                        <TextView
+                            android:id="@+id/movie_runtime"
+                            style="@style/cardviewDescriptionText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@+id/movie_title"
+                            android:layout_alignStart="@+id/movie_title"
+                            android:layout_below="@+id/movie_title"
+                            android:text="@string/runtime"
+                            android:transitionName="runtime"/>
+
+                        <TextView
+                            android:id="@+id/movie_vote"
+                            style="@style/cardviewDescriptionText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@+id/movie_runtime"
+                            android:layout_alignStart="@+id/movie_runtime"
+                            android:layout_below="@+id/movie_runtime"
+                            android:text="@string/vote"
+                            android:transitionName="vote"/>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/movie_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"/>
+                </LinearLayout>
+            </ScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
