@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
+    android:transitionName="card"
     android:id="@+id/card_view"
     style="@style/cardView"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,6 +13,7 @@
                     android:id="@+id/relativeLayout">
 
         <ImageView
+            android:transitionName="poster"
             android:contentDescription="@string/moviePoster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,17 +30,18 @@
             android:src="@drawable/ic_remove"/>
 
         <TextView
+            android:text="@string/movieTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/movie_title"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginTop="15dp"
             android:layout_toRightOf="@+id/movie_poster_image_view"
             android:layout_toEndOf="@+id/movie_poster_image_view"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:layout_toStartOf="@+id/remove_button"
-            android:layout_toLeftOf="@+id/remove_button"/>
+            android:layout_toLeftOf="@+id/remove_button"
+            android:transitionName="title"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -53,16 +56,20 @@
             android:layout_below="@+id/movie_title">
 
         <TextView
+            android:text="@string/runtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/movie_runtime"
-            style="@style/cardviewDescriptionText"/>
+            style="@style/cardviewDescriptionText"
+            android:transitionName="runtime"/>
 
         <TextView
+            android:text="@string/vote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/movie_vote"
-            style="@style/cardviewDescriptionText"/>
+            style="@style/cardviewDescriptionText"
+            android:transitionName="vote"/>
 
         </LinearLayout>
 

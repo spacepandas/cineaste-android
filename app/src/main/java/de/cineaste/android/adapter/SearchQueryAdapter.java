@@ -97,7 +97,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
             view.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick( View v ) {
-                    listener.onMovieClickListener( movie.getId() );
+                    listener.onMovieClickListener( movie.getId(), new View[]{view, moviePoster} );
                 }
             } );
         }

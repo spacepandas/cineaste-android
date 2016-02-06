@@ -24,12 +24,19 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
+
                 <!-- deep linking -->
                 <action android:name="android.intent.action.VIEW"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="http" android:host="www.cineaste.de"/>
+
+                <data
+                    android:host="www.cineaste.de"
+                    android:scheme="http"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".MovieDetailActivity">
         </activity>
     </application>
 

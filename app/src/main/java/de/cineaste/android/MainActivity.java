@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import de.cineaste.android.receiver.NetworkChangeReceiver;
@@ -28,6 +29,16 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
     public static void replaceFragment( FragmentManager fm, Fragment fragment ) {
         fm.beginTransaction()
+                .replace(
+                        R.id.content_container,
+                        fragment, fragment.getClass().getName() )
+                .addToBackStack( null )
+                .commit();
+    }
+
+    public static void replaceSharedElementsFragment( FragmentManager fm, Fragment fragment, View view, String name ) {
+        fm.beginTransaction()
+                .addSharedElement( view, name )
                 .replace(
                         R.id.content_container,
                         fragment, fragment.getClass().getName() )

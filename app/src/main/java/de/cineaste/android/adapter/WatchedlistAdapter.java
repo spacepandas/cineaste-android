@@ -96,7 +96,8 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onMovieClickListener(movie.getId());
+                        listener.onMovieClickListener(movie.getId(),
+                                new View[]{view, imageView, movieTitle, movieRuntime, movieVote});
                     }
                 }
             });

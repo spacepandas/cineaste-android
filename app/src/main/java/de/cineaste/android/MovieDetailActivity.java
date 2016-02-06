@@ -1,10 +1,14 @@
-package de.cineaste.android.fragment;
+package de.cineaste.android;
 
-import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,15 +16,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import de.cineaste.android.Constants;
-import de.cineaste.android.R;
-import de.cineaste.android.entity.Movie;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.entity.Movie;
 import de.cineaste.android.network.TheMovieDb;
 import de.cineaste.android.receiver.NetworkChangeReceiver;
 
-public class MovieDetailsFragment extends Fragment {
+public class MovieDetailActivity extends AppCompatActivity {
 
     private TextView movieTitle;
     private TextView movieRuntime;
@@ -29,22 +31,37 @@ public class MovieDetailsFragment extends Fragment {
     private ImageView moviePoster;
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
-        View view = inflater.inflate( R.layout.fragment_movie_details, container, false );
+    public boolean onOptionsItemSelected( MenuItem item ) {
+        switch ( item.getItemId() ) {
+            case android.R.id.home:
+                onBackPressed();
+                //overridePendingTransition( R.anim.fade_out, R.anim.fade_in );
+                return true;
+            default:
+                return super.onOptionsItemSelected( item );
+        }
+    }
 
-        Bundle bundle = getArguments();
-        long movieId = bundle.getLong( BaseDao.MovieEntry._ID );
-        movieTitle = (TextView) view.findViewById( R.id.movie_title );
-        movieRuntime = (TextView) view.findViewById( R.id.movie_runtime );
-        movieVote = (TextView) view.findViewById( R.id.movie_vote );
-        movieDescription = (TextView) view.findViewById( R.id.movie_description );
-        moviePoster = (ImageView) view.findViewById( R.id.movie_poster );
+    @Override
+    protected void onCreate( Bundle savedInstanceState ) {
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_movie_detail );
 
-        MovieDbHelper movieDbHelper = MovieDbHelper.getInstance( getActivity() );
+        Intent intent = getIntent();
+        long movieId = intent.getLongExtra( BaseDao.MovieEntry._ID, -1 );
+
+        initToolbar();
+
+        movieTitle = (TextView) findViewById( R.id.movie_title );
+        movieRuntime = (TextView) findViewById( R.id.movie_runtime );
+        movieVote = (TextView) findViewById( R.id.movie_vote );
+        movieDescription = (TextView) findViewById( R.id.movie_description );
+        moviePoster = (ImageView) findViewById( R.id.movie_poster );
+
+        MovieDbHelper movieDbHelper = MovieDbHelper.getInstance( this );
         Movie currentMovie = movieDbHelper.readMovie( movieId );
         if( currentMovie == null ) {
-            if(NetworkChangeReceiver.getInstance().isConnected){
+            if( NetworkChangeReceiver.getInstance().isConnected){
                 TheMovieDb theMovieDb = new TheMovieDb();
                 theMovieDb.fetchMovie(movieId, getResources().getString(R.string.language_tag), new TheMovieDb.OnFetchMovieResultListener() {
                     @Override
@@ -56,11 +73,9 @@ public class MovieDetailsFragment extends Fragment {
         } else {
             assignData( currentMovie );
         }
-
-        return view;
     }
 
-    public void assignData( Movie currentMovie ) {
+    private void assignData( Movie currentMovie ) {
         Resources resources = getResources();
         movieTitle.setText( currentMovie.getTitle() );
         String description = currentMovie.getDescription();
@@ -73,9 +88,18 @@ public class MovieDetailsFragment extends Fragment {
         String posterUri = Constants.POSTER_URI
                 .replace( "<posterName>", currentMovie.getPosterPath() != null ?
                         currentMovie.getPosterPath() : "/" );
-        Picasso.with( getActivity() )
+        Picasso.with( this )
                 .load( posterUri )
                 .error( R.drawable.placeholder_poster )
                 .into( moviePoster );
     }
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById( R.id.toolbar );
+        setSupportActionBar( toolbar );
+        ActionBar actionBar = getSupportActionBar();
+        if( actionBar != null )
+            actionBar.setDisplayHomeAsUpEnabled( true );
+    }
+
 }

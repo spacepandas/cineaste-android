@@ -1,6 +1,9 @@
 package de.cineaste.android.fragment;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -9,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +26,7 @@ import java.util.List;
 
 import de.cineaste.android.MainActivity;
 import de.cineaste.android.MovieClickListener;
+import de.cineaste.android.MovieDetailActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;
 import de.cineaste.android.receiver.NetworkChangeReceiver;
@@ -157,11 +162,18 @@ public class SearchFragment extends Fragment implements MovieClickListener {
     }
 
     @Override
-    public void onMovieClickListener( long movieId ) {
-        Bundle bundle = new Bundle();
-        bundle.putLong( BaseDao.MovieEntry._ID, movieId );
-        MovieDetailsFragment fragment = new MovieDetailsFragment();
-        fragment.setArguments( bundle );
-        MainActivity.replaceFragment( getFragmentManager(), fragment );
+    public void onMovieClickListener( long movieId, View[] views ) {
+        Intent intent = new Intent( getActivity(), MovieDetailActivity.class );
+        intent.putExtra( BaseDao.MovieEntry._ID, movieId );
+
+        if( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation( getActivity(),
+                    Pair.create( views[0], "card" ),
+                    Pair.create( views[1], "poster" ) );
+            getActivity().startActivity( intent, options.toBundle() );
+        } else {
+            getActivity().startActivity( intent );
+            // getActivity().overridePendingTransition( R.anim.fade_out, R.anim.fade_in );
+        }
     }
 }
