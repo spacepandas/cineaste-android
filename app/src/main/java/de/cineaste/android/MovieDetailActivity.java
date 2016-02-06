@@ -138,6 +138,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         currentMovie.setVoteAverage( movie.getVoteAverage() );
         currentMovie.setVoteCount( movie.getVoteCount() );
         currentMovie.setDescription( movie.getDescription() );
+        currentMovie.setPosterPath( movie.getPosterPath() );
     }
 
 }

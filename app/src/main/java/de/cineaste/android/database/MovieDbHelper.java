@@ -80,6 +80,7 @@ public class MovieDbHelper extends Observable {
         values.put( BaseDao.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage() );
         values.put( BaseDao.MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount() );
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_DESCRIPTION, movie.getDescription() );
+        values.put( BaseDao.MovieEntry.COlUMN_POSTER_PATH, movie.getPosterPath() );
         String selection = BaseDao.MovieEntry._ID + " LIKE ?";
         String[] where = {String.valueOf( movie.getId() )};
 
