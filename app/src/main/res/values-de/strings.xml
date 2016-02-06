@@ -8,7 +8,7 @@
     </plurals>
     <string name="startMovieNight">Filmnacht starten</string>
 
-    <string name="enter_username">Username eingeben</string>
+    <string name="enter_username">Dein Benutzername</string>
     <string name="username">Username</string>
     <string name="noMoviesOnWatchList">Du hast noch keine Filme auf deiner Watchlist. \nUnten Rechts fügst du neue Titel hinzu!</string>
     <string name="noMoviesOnWatchedList">Du hast noch keine Filme auf deiner Watchedlist. \nZieh dir doch einen Titel rein!</string>

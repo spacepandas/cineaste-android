@@ -8,7 +8,7 @@
     </plurals>
     <string name="startMovieNight">Start Movienight</string>
 
-    <string name="enter_username">Input Username</string>
+    <string name="enter_username">Your Username</string>
     <string name="username">Username</string>
     <string name="noMoviesOnWatchList">You do not have movies on your Watchlist. \nOn the bottom right you can add new titles!</string>
     <string name="noMoviesOnWatchedList">You do not have movies on your Watchedlist. \nGo ahead and watch some!</string>
