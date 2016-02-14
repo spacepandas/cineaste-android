@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/about"
             android:textColor="@color/toolbar_text"
-            android:textSize="32dp"
+            android:textSize="32sp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="16dp"/>
 

@@ -18,9 +18,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/movie_poster_image_view"/>
 
-        <Button
+        <ImageButton
             android:contentDescription="@string/addToWatchlist"
-            android:background="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/to_watchlist_button"
@@ -28,7 +27,7 @@
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_add_movie"/>
 
-        <Button
+        <ImageButton
             android:contentDescription="@string/addToWatchedlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
