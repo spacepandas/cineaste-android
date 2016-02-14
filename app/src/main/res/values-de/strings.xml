@@ -14,6 +14,8 @@
     <string name="noMoviesOnWatchedList">Du hast noch keine Filme auf deiner Watchedlist. \nZieh dir doch einen Titel rein!</string>
     <string name="searching_for_friends">Suche nach Freunden</string>
 
+    <string name="watchList">Musst du sehen</string>
+    <string name="watchedlist">Schon gesehen</string>
     <string name="successfulExport">Export war erfolgreich</string>
     <string name="successfulImport">Import war erfolgreich</string>
     <string name="unsuccessfulImport">Import war nicht erfolgreich</string>

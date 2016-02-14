@@ -14,6 +14,8 @@
     <string name="noMoviesOnWatchedList">You do not have movies on your Watchedlist. \nGo ahead and watch some!</string>
     <string name="searching_for_friends">Searching for friends</string>
 
+    <string name="watchList">To See Movies</string>
+    <string name="watchedlist">Seen Movies</string>
     <string name="successfulExport">Successfully Export</string>
     <string name="successfulImport">Successfully Import</string>
     <string name="unsuccessfulImport">Import failed</string>

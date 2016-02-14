@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cineaste</string>
-    <string name="watchList">Watchlist</string>
-    <string name="watchedlist">Watchedlist</string>
     <string name="importMovies">Import</string>
     <string name="exportMovies">Export</string>
     <string name="about">About</string>
