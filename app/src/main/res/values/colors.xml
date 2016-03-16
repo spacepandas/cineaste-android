@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1D2939</color>
-    <color name="colorPrimaryDark">#1D2924</color>
-    <color name="colorAccent">#EE6456</color>
-    <color name="toolbar_text">#009688</color>
-    <color name="backgroundColor">#1CAF9A</color>
+    <color name="colorPrimary">#285769</color>
+    <color name="colorPrimaryDark">#3D3E40</color>
+    <color name="colorAccent">#D3E33F</color>
+    <color name="toolbar_text">#ACB6BA</color>
+    <color name="backgroundColor">#ACB6BA</color>
 </resources>

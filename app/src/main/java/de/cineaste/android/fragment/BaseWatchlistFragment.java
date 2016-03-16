@@ -16,13 +16,13 @@ import android.widget.TextView;
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.MovieDetailActivity;
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.BaseWatchlistPagerAdapter;
+import de.cineaste.android.adapter.WatchlistViewPagerAdapter;
 import de.cineaste.android.adapter.WatchedlistAdapter;
 import de.cineaste.android.adapter.WatchlistAdapter;
 import de.cineaste.android.database.BaseDao;
 
 public class BaseWatchlistFragment extends Fragment
-        implements BaseWatchlistPagerAdapter.WatchlistFragment, MovieClickListener {
+        implements WatchlistViewPagerAdapter.WatchlistFragment, MovieClickListener {
 
     private String watchlistType;
 

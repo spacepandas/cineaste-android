@@ -22,15 +22,14 @@ import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.database.MovieDbHelper;
 
-public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.ViewHolder> implements Observer {
+public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer {
 
-    private List<Movie> dataset;
     private final MovieDbHelper db;
     private final Context context;
-    private final BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
+    private final WatchlistViewPagerAdapter.WatchlistFragment baseFragment;
     private final MovieClickListener listener;
 
-    public WatchedlistAdapter(Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener) {
+    public WatchedlistAdapter(Context context, WatchlistViewPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener) {
         this.db = MovieDbHelper.getInstance(context);
         this.context = context;
         this.db.addObserver(this);
@@ -112,8 +111,8 @@ public class WatchedlistAdapter extends RecyclerView.Adapter<WatchedlistAdapter.
     }
 
     @Override
-    public void onBindViewHolder(final WatchedlistAdapter.ViewHolder holder, final int position) {
-        holder.assignData(dataset.get(position));
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        ((WatchedlistAdapter.ViewHolder)holder).assignData(dataset.get(position));
     }
 
     @Override

@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import de.cineaste.android.R;
 import de.cineaste.android.fragment.BaseWatchlistFragment;
 
-public class BaseWatchlistPagerAdapter extends FragmentStatePagerAdapter {
+public class WatchlistViewPagerAdapter extends FragmentStatePagerAdapter {
 
     private final Context context;
 
@@ -19,7 +19,7 @@ public class BaseWatchlistPagerAdapter extends FragmentStatePagerAdapter {
         void configureWatchedlistVisibility();
     }
 
-    public BaseWatchlistPagerAdapter( FragmentManager fm, Context context ) {
+    public WatchlistViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
     }

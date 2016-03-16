@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,12 +22,11 @@ import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.database.MovieDbHelper;
 
-public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.ViewHolder> implements Observer {
+public class WatchlistAdapter extends BaseWatchlistAdapter implements Observer {
 
-    private List<Movie> dataset;
     private final MovieDbHelper db;
     private final Context context;
-    private final BaseWatchlistPagerAdapter.WatchlistFragment baseFragment;
+    private final WatchlistViewPagerAdapter.WatchlistFragment baseFragment;
     private final MovieClickListener listener;
 
     @Override
@@ -111,7 +109,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
         }
     }
 
-    public WatchlistAdapter( Context context, BaseWatchlistPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener ) {
+    public WatchlistAdapter( Context context, WatchlistViewPagerAdapter.WatchlistFragment baseFragment, MovieClickListener listener ) {
         this.db = MovieDbHelper.getInstance( context );
         this.context = context;
         this.dataset = db.readMoviesByWatchStatus( false );
@@ -127,8 +125,8 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
     }
 
     @Override
-    public void onBindViewHolder( final WatchlistAdapter.ViewHolder holder, final int position ) {
-        holder.assignData( dataset.get( position ) );
+    public void onBindViewHolder( final RecyclerView.ViewHolder holder, final int position ) {
+        ((WatchlistAdapter.ViewHolder)holder).assignData( dataset.get( position ) );
     }
 
     @Override

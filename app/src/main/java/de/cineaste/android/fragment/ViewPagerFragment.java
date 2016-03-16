@@ -17,7 +17,7 @@ import java.util.List;
 
 import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.BaseWatchlistPagerAdapter;
+import de.cineaste.android.adapter.WatchlistViewPagerAdapter;
 import de.cineaste.android.database.ExportService;
 import de.cineaste.android.database.ImportService;
 import de.cineaste.android.entity.Movie;
@@ -42,7 +42,7 @@ public class ViewPagerFragment extends Fragment {
 
         movieDbHelper = MovieDbHelper.getInstance( getActivity() );
 
-        PagerAdapter pagerAdapter = new BaseWatchlistPagerAdapter( getChildFragmentManager(), getActivity() );
+        PagerAdapter pagerAdapter = new WatchlistViewPagerAdapter( getChildFragmentManager(), getActivity() );
 
         viewPager = (ViewPager) view.findViewById( R.id.basewatchlist_pager );
         viewPager.setAdapter( pagerAdapter );
