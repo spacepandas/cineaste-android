@@ -50,7 +50,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick( View v ) {
         switch ( v.getId() ) {
-            case R.id.watched_button:
+            case R.id.watchedlist_button:
                 theMovieDb.fetchMovie(
                         movieId,
                         getString( R.string.language_tag ),
@@ -58,14 +58,14 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onFetchMovieResultListener( Movie movie ) {
                                 movie.setWatched( true );
-                                db.createNewMovieEntry( movie );
+                                db.createOrUpdate( movie );
                             }
                         } );
                 break;
-            case R.id.remove_button:
+            case R.id.removelist_button:
                 db.deleteMovieFromWatchlist( currentMovie );
                 break;
-            case R.id.to_watchlist_button:
+            case R.id.watchlist_button:
                 theMovieDb.fetchMovie(
                         movieId,
                         getString( R.string.language_tag ),
@@ -185,27 +185,27 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initButtons( int state ) {
-        ImageButton addMovie = (ImageButton) findViewById( R.id.to_watchlist_button );
-        ImageButton addMovieToWatchlist = (ImageButton) findViewById( R.id.watched_button );
-        ImageButton deleteMovie = (ImageButton) findViewById( R.id.remove_button );
+        ImageButton addMovieToWatchedlist = (ImageButton) findViewById( R.id.watchedlist_button );
+        ImageButton addMovieToWatchlist = (ImageButton) findViewById( R.id.watchlist_button );
+        ImageButton deleteMovie = (ImageButton) findViewById( R.id.removelist_button );
 
-        addMovie.setOnClickListener( this );
+        addMovieToWatchedlist.setOnClickListener( this );
         addMovieToWatchlist.setOnClickListener( this );
         deleteMovie.setOnClickListener( this );
 
         switch ( state ) {
             case R.string.searchState:
-                addMovie.setVisibility( View.VISIBLE );
+                addMovieToWatchedlist.setVisibility( View.VISIBLE );
                 addMovieToWatchlist.setVisibility( View.VISIBLE );
                 deleteMovie.setVisibility( View.GONE );
                 break;
             case R.string.watchlistState:
-                addMovie.setVisibility( View.GONE );
-                addMovieToWatchlist.setVisibility( View.VISIBLE );
+                addMovieToWatchedlist.setVisibility( View.VISIBLE );
+                addMovieToWatchlist.setVisibility( View.GONE );
                 deleteMovie.setVisibility( View.VISIBLE );
                 break;
             case R.string.watchedlistState:
-                addMovie.setVisibility( View.GONE );
+                addMovieToWatchedlist.setVisibility( View.GONE );
                 addMovieToWatchlist.setVisibility( View.GONE );
                 deleteMovie.setVisibility( View.VISIBLE );
                 break;
