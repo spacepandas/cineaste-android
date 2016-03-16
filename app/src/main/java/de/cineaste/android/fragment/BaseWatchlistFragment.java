@@ -120,8 +120,15 @@ public class BaseWatchlistFragment extends Fragment
 
     @Override
     public void onMovieClickListener(long movieId, View[] views) {
+        int state;
+        if (watchlistType.equals(WatchlistFragmentType.WATCH_LIST)) {
+            state = R.string.watchlistState;
+        } else {
+            state = R.string.watchedlistState;
+        }
         Intent intent = new Intent( getActivity(), MovieDetailActivity.class );
         intent.putExtra( BaseDao.MovieEntry._ID, movieId );
+        intent.putExtra( getString( R.string.state ), state );
 
         if( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation( getActivity(),
