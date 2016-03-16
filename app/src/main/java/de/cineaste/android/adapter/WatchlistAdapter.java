@@ -44,7 +44,7 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.View
             dataset.add(changedMovie);
             notifyItemInserted(dataset.size());
         }
-        else{
+        else if( index != -1){
             dataset.set(index, changedMovie);
             notifyItemChanged(index);
         }
