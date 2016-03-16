@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -34,6 +36,7 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
         this.context = context;
         this.db.addObserver(this);
         this.dataset = db.readMoviesByWatchStatus(true);
+        this.filteredDataset = new LinkedList<>(dataset);
         this.baseFragment = baseFragment;
         this.listener = listener;
     }
@@ -42,13 +45,12 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
     public void update(Observable observable, Object data) {
         Movie changedMovie = (Movie) data;
         int index = dataset.indexOf(changedMovie);
-        if( !changedMovie.isWatched() && index != -1 ){
+        if (!changedMovie.isWatched() && index != -1) {
             dataset.remove(index);
-            notifyItemRemoved( index );
-        }
-        else if(changedMovie.isWatched() && index == -1){
+            filter(oldSearchTerm);
+        } else if (changedMovie.isWatched() && index == -1) {
             dataset.add(changedMovie);
-            notifyItemInserted( dataset.size() );
+            filter(oldSearchTerm);
         }
         baseFragment.configureWatchedlistVisibility();
     }
@@ -87,7 +89,7 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
 
                 @Override
                 public void onClick(View v) {
-                    removeItemFromDbAndView( movie );
+                    removeItemFromDbAndView(movie);
                 }
             });
 
@@ -112,19 +114,20 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        ((WatchedlistAdapter.ViewHolder)holder).assignData(dataset.get(position));
+        ((WatchedlistAdapter.ViewHolder) holder).assignData(filteredDataset.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return filteredDataset.size();
     }
 
     private void removeItemFromDbAndView(Movie movie) {
-        int index = dataset.indexOf(movie);
-        dataset.remove( index );
+        int index = filteredDataset.indexOf(movie);
+        dataset.remove(movie);
+        filteredDataset.remove(index);
         db.deleteMovieFromWatchlist(movie);
-        notifyItemRemoved( index );
+        notifyItemRemoved(index);
         baseFragment.configureWatchedlistVisibility();
     }
 }

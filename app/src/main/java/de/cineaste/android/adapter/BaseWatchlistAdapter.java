@@ -13,9 +13,14 @@ public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter< Recycle
 
     protected List<Movie> dataset;
     protected List<Movie> filteredDataset;
+    protected String oldSearchTerm;
 
     public void filter(String searchTerm){
+        if(filteredDataset == null)
+            return;
+
         if(searchTerm != null && !searchTerm.isEmpty()){
+            oldSearchTerm = searchTerm;
             for(Movie currentMovie: dataset){
                 String movieTitle = currentMovie.getTitle().toLowerCase();
                 int index = filteredDataset.indexOf(currentMovie);
@@ -32,9 +37,14 @@ public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter< Recycle
                 }
             }
         } else{
+            searchTerm = null;
             filteredDataset.clear();
             filteredDataset.addAll(dataset);
             notifyDataSetChanged();
         }
+    }
+
+    public int getTotalItemCount(){
+        return dataset.size();
     }
 }

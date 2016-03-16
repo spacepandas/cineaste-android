@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -16,6 +20,7 @@ import android.widget.TextView;
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.MovieDetailActivity;
 import de.cineaste.android.R;
+import de.cineaste.android.adapter.BaseWatchlistAdapter;
 import de.cineaste.android.adapter.WatchlistViewPagerAdapter;
 import de.cineaste.android.adapter.WatchedlistAdapter;
 import de.cineaste.android.adapter.WatchlistAdapter;
@@ -27,14 +32,17 @@ public class BaseWatchlistFragment extends Fragment
     private String watchlistType;
 
     private RecyclerView baseWatchlistRecyclerView;
-    private RecyclerView.Adapter baseWatchlistAdapter;
+    private BaseWatchlistAdapter baseWatchlistAdapter;
     private TextView emptyListTextView;
+    private SearchView searchView;
 
     public interface WatchlistFragmentType {
         String WATCHLIST_TYPE = "WatchlistType";
         String WATCH_LIST = "Watchlist";
         String WATCHED_LIST = "Watchedlist";
     }
+
+
 
     @Override
     public void setArguments(Bundle args) {
@@ -93,7 +101,7 @@ public class BaseWatchlistFragment extends Fragment
 
     @Override
     public void configureWatchedlistVisibility() {
-        if (baseWatchlistAdapter.getItemCount() == 0) {
+        if (baseWatchlistAdapter.getTotalItemCount() == 0) {
             baseWatchlistRecyclerView.setVisibility(View.GONE);
             emptyListTextView.setVisibility(View.VISIBLE);
             emptyListTextView.setText(R.string.noMoviesOnWatchedList);
@@ -112,10 +120,37 @@ public class BaseWatchlistFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (savedInstanceState != null) {
             this.watchlistType =
                     savedInstanceState.getString(WatchlistFragmentType.WATCHLIST_TYPE);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate( R.menu.search_menu, menu );
+
+        MenuItem searchItem = menu.findItem( R.id.action_search );
+
+
+        if( searchItem != null ) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    ((BaseWatchlistAdapter)baseWatchlistRecyclerView.getAdapter()).filter(newText);
+                    return false;
+                }
+            });
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
