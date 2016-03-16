@@ -103,7 +103,7 @@ public class MovieNightFragment extends Fragment
 
         nearbyUser_rv = (RecyclerView) view.findViewById( R.id.nearbyUser_rv );
         startBtn = (Button) view.findViewById( R.id.start_btn );
-        startBtn.setEnabled( false );
+        startBtn.setVisibility( View.GONE );
         searchingFriends = (TextView) view.findViewById( R.id.searchingFriends );
         progressBar = (ProgressBar) view.findViewById( R.id.progressBar );
 
@@ -128,7 +128,7 @@ public class MovieNightFragment extends Fragment
                         if( !nearbyMessagesArrayList.contains( NearbyMessage.fromMessage( message ) ) ) {
                             nearbyMessagesArrayList.add( NearbyMessage.fromMessage( message ) );
                             if( nearbyMessagesArrayList.size() > 0 ) {
-                                startBtn.setEnabled( true );
+                                startBtn.setVisibility( View.VISIBLE );
                                 nearbyUser_rv.setVisibility( View.VISIBLE );
                                 searchingFriends.setVisibility( View.GONE );
                                 progressBar.setVisibility( View.GONE );
