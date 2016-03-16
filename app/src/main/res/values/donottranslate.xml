@@ -4,4 +4,8 @@
     <string name="importMovies">Import</string>
     <string name="exportMovies">Export</string>
     <string name="about">About</string>
+    <string name="state">state</string>
+    <string name="watchlistState">watchlist</string>
+    <string name="watchedlistState">watchedlist</string>
+    <string name="searchState">search</string>
 </resources>

@@ -165,6 +165,7 @@ public class SearchFragment extends Fragment implements MovieClickListener {
     public void onMovieClickListener( long movieId, View[] views ) {
         Intent intent = new Intent( getActivity(), MovieDetailActivity.class );
         intent.putExtra( BaseDao.MovieEntry._ID, movieId );
+        intent.putExtra( getActivity().getString( R.string.state ), R.string.searchState );
 
         if( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation( getActivity(),
