@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class SearchFragment extends Fragment implements MovieClickListener {
     private View view;
     private SearchView searchView;
     private String searchText;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -78,6 +80,7 @@ public class SearchFragment extends Fragment implements MovieClickListener {
             searchText = savedInstanceState.getString( "query", null );
         }
 
+        progressBar = (ProgressBar) view.findViewById( R.id.progressBar );
         RecyclerView movieQueryRecyclerView = (RecyclerView) view.findViewById( R.id.search_recycler_view );
         RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager( getActivity() );
         movieQueryAdapter = new SearchQueryAdapter( getActivity(), new ArrayList<Movie>(), this );
@@ -125,11 +128,13 @@ public class SearchFragment extends Fragment implements MovieClickListener {
                     if( !query.isEmpty() ) {
                         query = query.replace( " ", "+" );
                         if( NetworkChangeReceiver.getInstance().isConnected ) {
+                            progressBar.setVisibility( View.VISIBLE );
                             theMovieDb.searchMoviesAsync( query, new TheMovieDb.OnSearchMoviesResultListener() {
                                 @Override
                                 public void onSearchMoviesResultListener( List<Movie> movies ) {
                                     ((SearchQueryAdapter) movieQueryAdapter).dataset = movies;
                                     movieQueryAdapter.notifyDataSetChanged();
+                                    progressBar.setVisibility( View.GONE );
                                 }
                             }, getResources().getString( R.string.language_tag ) );
                         }
