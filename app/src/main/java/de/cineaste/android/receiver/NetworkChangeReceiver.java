@@ -21,10 +21,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService( Context.CONNECTIVITY_SERVICE );
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if( activeNetwork != null ) {
-            isConnected = true;
-        } else {
-            isConnected = false;
-        }
+        isConnected = activeNetwork != null;
     }
 }

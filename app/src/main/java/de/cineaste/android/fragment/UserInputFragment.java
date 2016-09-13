@@ -1,7 +1,7 @@
 package de.cineaste.android.fragment;
 
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +20,6 @@ public class UserInputFragment extends DialogFragment
     public interface UserNameListener {
         void onFinishUserDialog( String userName );
     }
-
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,

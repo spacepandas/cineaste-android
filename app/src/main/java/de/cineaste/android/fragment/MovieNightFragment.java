@@ -4,6 +4,7 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -36,13 +37,13 @@ import java.util.List;
 import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.NearbyUserAdapter;
+import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.database.NearbyMessageHandler;
+import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.MovieDto;
 import de.cineaste.android.entity.NearbyMessage;
 import de.cineaste.android.entity.User;
-import de.cineaste.android.database.MovieDbHelper;
-import de.cineaste.android.database.NearbyMessageHandler;
-import de.cineaste.android.database.UserDbHelper;
 
 public class MovieNightFragment extends Fragment
         implements GoogleApiClient.ConnectionCallbacks,
@@ -110,7 +111,6 @@ public class MovieNightFragment extends Fragment
         nearbyUserAdapter =
                 new NearbyUserAdapter(
                         nearbyMessagesArrayList,
-                        R.layout.card_nearby_user,
                         getActivity() );
 
         final LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
@@ -206,7 +206,7 @@ public class MovieNightFragment extends Fragment
     }
 
     @Override
-    public void onConnectionFailed( ConnectionResult connectionResult ) {
+    public void onConnectionFailed( @NonNull ConnectionResult connectionResult ) {
         //connection to GoogleApiClient failed
     }
 
@@ -241,7 +241,7 @@ public class MovieNightFragment extends Fragment
                     .setResultCallback( new ResultCallback<Status>() {
 
                         @Override
-                        public void onResult( Status status ) {
+                        public void onResult( @NonNull Status status ) {
                             if( !status.isSuccess() ) {
                                 handleUnsuccessfulNearbyResult( status );
                             }
@@ -260,7 +260,7 @@ public class MovieNightFragment extends Fragment
                     .setResultCallback( new ResultCallback<Status>() {
 
                         @Override
-                        public void onResult( Status status ) {
+                        public void onResult( @NonNull Status status ) {
                             if( !status.isSuccess() ) {
                                 handleUnsuccessfulNearbyResult( status );
                             }
@@ -288,7 +288,7 @@ public class MovieNightFragment extends Fragment
                     .setResultCallback( new ResultCallback<Status>() {
 
                         @Override
-                        public void onResult( Status status ) {
+                        public void onResult( @NonNull Status status ) {
                             if( !status.isSuccess() ) {
                                 handleUnsuccessfulNearbyResult( status );
                             }
@@ -307,7 +307,7 @@ public class MovieNightFragment extends Fragment
                     .setResultCallback( new ResultCallback<Status>() {
 
                         @Override
-                        public void onResult( Status status ) {
+                        public void onResult( @NonNull Status status ) {
                             if( !status.isSuccess() ) {
                                 handleUnsuccessfulNearbyResult( status );
                             }

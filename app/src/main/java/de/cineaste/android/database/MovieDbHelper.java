@@ -65,6 +65,8 @@ public class MovieDbHelper extends Observable {
 
     public void deleteMovieFromWatchlist( Movie movie ) {
         movieDao.delete( movie.getId() );
+        setChanged();
+        notifyObservers(movie);
     }
 
     public int getMovieCount() {
@@ -84,9 +86,7 @@ public class MovieDbHelper extends Observable {
         String selection = BaseDao.MovieEntry._ID + " LIKE ?";
         String[] where = {String.valueOf( movie.getId() )};
 
-        int affectedRows = movieDao.update( values, selection, where );
-
-        return affectedRows;
+        return  movieDao.update( values, selection, where );
     }
 
 }

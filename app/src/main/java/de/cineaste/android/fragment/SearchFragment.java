@@ -25,15 +25,14 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.MainActivity;
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.MovieDetailActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;
-import de.cineaste.android.receiver.NetworkChangeReceiver;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.network.TheMovieDb;
+import de.cineaste.android.receiver.NetworkChangeReceiver;
 
 public class SearchFragment extends Fragment implements MovieClickListener {
 
@@ -48,26 +47,6 @@ public class SearchFragment extends Fragment implements MovieClickListener {
     public void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setHasOptionsMenu( true );
-    }
-
-    @Override
-    public void onSaveInstanceState( Bundle outState ) {
-        if( isAdded() ) {
-            if( searchView != null ) {
-                if( !TextUtils.isEmpty( searchText ) ) {
-                    outState.putString( "query", searchText );
-                }
-            }
-        }
-        super.onSaveInstanceState( outState );
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Bundle outState = new Bundle(  );
-        outState.putString( "query", searchText );
-        onSaveInstanceState( outState );
     }
 
     @Override
@@ -96,6 +75,26 @@ public class SearchFragment extends Fragment implements MovieClickListener {
         }
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState( Bundle outState ) {
+        if( isAdded() ) {
+            if( searchView != null ) {
+                if( !TextUtils.isEmpty( searchText ) ) {
+                    outState.putString( "query", searchText );
+                }
+            }
+        }
+        super.onSaveInstanceState( outState );
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Bundle outState = new Bundle(  );
+        outState.putString( "query", searchText );
+        onSaveInstanceState( outState );
     }
 
     @Override

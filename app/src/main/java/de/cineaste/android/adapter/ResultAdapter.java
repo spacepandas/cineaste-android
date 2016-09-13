@@ -13,11 +13,12 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
 
 import de.cineaste.android.Constants;
 import de.cineaste.android.R;
-import de.cineaste.android.entity.MatchingResult;
 import de.cineaste.android.database.NearbyMessageHandler;
+import de.cineaste.android.entity.MatchingResult;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
 
@@ -34,11 +35,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     public ResultAdapter(
             List<MatchingResult> results,
-            int rowLayout,
             Context context,
             OnMovieSelectListener listener ) {
         this.results = results;
-        this.rowLayout = rowLayout;
+        this.rowLayout = R.layout.card_result;
         this.context = context;
         this.listener = listener;
         handler = NearbyMessageHandler.getInstance();
@@ -67,7 +67,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
         public ViewHolder( final View itemView ) {
             super( itemView );
-            title = (TextView) itemView.findViewById( R.id.movie_title_tv );
+            title = (TextView) itemView.findViewById( R.id.movie_title );
             counter = (TextView) itemView.findViewById( R.id.movie_counter_tv );
             watchedButton = (ImageButton) itemView.findViewById( R.id.watched_button );
             moviePoster = (ImageView) itemView.findViewById( R.id.movie_poster_image_view );
@@ -75,7 +75,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
         public void assignData( MatchingResult matchingResult, int resultCounter ) {
             String posterUri =
-                    Constants.POSTER_URI
+                    Constants.POSTER_URI_SMALL
                             .replace( "<posterName>", matchingResult.getPosterPath() != null ?
                                     matchingResult.getPosterPath() : "/" );
             Picasso.with( context )
@@ -85,7 +85,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
             watchedButton.setOnClickListener( this );
             title.setText( matchingResult.getTitle() );
             counter.setText(
-                    String.format( "%d/%d", matchingResult.getCounter(), resultCounter )
+                    String.format( Locale.getDefault(), "%d/%d", matchingResult.getCounter(), resultCounter )
             );
         }
 

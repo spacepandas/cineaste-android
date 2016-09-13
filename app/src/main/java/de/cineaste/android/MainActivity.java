@@ -1,25 +1,29 @@
 package de.cineaste.android;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Toast;
 
-import de.cineaste.android.receiver.NetworkChangeReceiver;
+import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.entity.User;
 import de.cineaste.android.fragment.MovieNightFragment;
 import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.ViewPagerFragment;
-import de.cineaste.android.database.UserDbHelper;
+import de.cineaste.android.receiver.NetworkChangeReceiver;
 
 public class MainActivity extends AppCompatActivity implements UserInputFragment.UserNameListener {
 
@@ -39,10 +43,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     public static void replaceFragmentPopBackStack( FragmentManager fm, Fragment fragment ) {
         fm.popBackStack();
         replaceFragment( fm, fragment );
-    }
-
-    private static void startDialogFragment( FragmentManager fragmentManager, DialogFragment fragment ) {
-        fragment.show( fragmentManager, "" );
     }
 
     public static void startMovieNight( FragmentManager fm ) {
@@ -78,6 +78,26 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     }
 
     @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int grantResults[] ) {
+        switch ( requestCode ) {
+            default:
+                break;
+            case 1:
+                if( grantResults.length > 0 && grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED ) {
+                    Toast.makeText(
+                            this,
+                            R.string.missing_permission,
+                            Toast.LENGTH_SHORT ).show();
+                }
+                break;
+        }
+    }
+
+    @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
@@ -86,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
         initToolbar();
 
+        checkPermissions();
         userDbHelper = UserDbHelper.getInstance( this );
 
         currentUser = userDbHelper.getUser();
@@ -125,6 +146,15 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         }
     }
 
+    private void checkPermissions() {
+        String storage = Manifest.permission.READ_EXTERNAL_STORAGE;
+        if( ContextCompat.checkSelfPermission( this, storage ) == PackageManager.PERMISSION_GRANTED )
+            return;
+
+
+        ActivityCompat.requestPermissions(this, new String[]{storage}, 1 );
+    }
+
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById( R.id.toolbar );
         setSupportActionBar( toolbar );
@@ -153,5 +183,9 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         IntentFilter networkFilter = new IntentFilter();
         networkFilter.addAction( ConnectivityManager.CONNECTIVITY_ACTION );
         getBaseContext().registerReceiver( NetworkChangeReceiver.getInstance(), networkFilter );
+    }
+
+    private static void startDialogFragment( FragmentManager fragmentManager, DialogFragment fragment ) {
+        fragment.show( fragmentManager, "" );
     }
 }

@@ -34,7 +34,8 @@ public class ExportService {
             e.printStackTrace();
         } finally {
             try {
-                fileWriter.close();
+                if (fileWriter != null)
+                    fileWriter.close();
             } catch ( Exception e ) {
                 //die silently
             }

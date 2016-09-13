@@ -55,7 +55,7 @@ public class MovieDao extends BaseDao {
                 MovieEntry.COLUMN_MOVIE_DESCRIPTION,
                 MovieEntry.COLUMN_MOVIE_WATCHED,
                 MovieEntry.COLUMN_MOVIE_WATCHED_DATE
-        };
+    };
 
         Cursor c = readDb.query(
                 MovieEntry.TABLE_NAME,
@@ -64,7 +64,7 @@ public class MovieDao extends BaseDao {
                 selectionArgs,
                 null,
                 null,
-                null,
+                MovieEntry.COLUMN_MOVIE_TITLE + " ASC",
                 null );
 
         if( c.moveToFirst() ) {

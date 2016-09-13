@@ -1,12 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
-        resValue "string", "nearbyKey", System.getenv("NEARBY_KEY")
+       
         buildConfigField("String", "MovieKey", '"' + System.getenv("MOVIE_KEY") + '"')
+        resValue "string", "nearbyKey", System.getenv("NEARBY_KEY")
+
         applicationId "de.cineaste.android"
         minSdkVersion 16
         targetSdkVersion 23
@@ -25,13 +27,13 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:cardview-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
-    compile 'com.google.android.gms:play-services-nearby:8.4.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.google.android.gms:play-services-gcm:9.4.0'
+    compile 'com.google.android.gms:play-services-nearby:9.4.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.google.guava:guava:19.0-rc2'
     compile 'com.squareup.picasso:picasso:2.5.2'

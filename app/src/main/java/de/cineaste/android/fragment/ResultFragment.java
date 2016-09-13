@@ -18,17 +18,16 @@ import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.ResultAdapter;
+import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.database.NearbyMessageHandler;
 import de.cineaste.android.entity.MatchingResult;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.MovieDto;
 import de.cineaste.android.entity.NearbyMessage;
 import de.cineaste.android.network.TheMovieDb;
-import de.cineaste.android.database.MovieDbHelper;
-import de.cineaste.android.database.NearbyMessageHandler;
 
 public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSelectListener {
 
-    private NearbyMessageHandler handler;
     private List<NearbyMessage> nearbyMessages;
 
     @Override
@@ -36,7 +35,7 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
                               Bundle savedInstanceState ) {
         View view = inflater.inflate( R.layout.fragment_result, container, false );
 
-        handler = NearbyMessageHandler.getInstance();
+        NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
         nearbyMessages = handler.getMessages();
 
         RecyclerView result = (RecyclerView) view.findViewById( R.id.result_list );
@@ -48,26 +47,11 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 
         ResultAdapter resultAdapter = new ResultAdapter(
                 getResult(),
-                R.layout.card_result,
                 getActivity(),
                 this );
         result.setAdapter( resultAdapter );
 
         return view;
-    }
-
-    private ArrayList<MatchingResult> getResult() {
-
-        ArrayList<MatchingResult> results = new ArrayList<>();
-        Multiset<MovieDto> movies = HashMultiset.create( getMovies() );
-
-        for ( Multiset.Entry<MovieDto> entry :
-                Multisets.copyHighestCountFirst( movies ).entrySet() ) {
-            MovieDto current = entry.getElement();
-            results.add( new MatchingResult( current, movies.count( current ) ) );
-        }
-
-        return results;
     }
 
     @Override
@@ -98,6 +82,20 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
         }
 
         return movies;
+    }
+
+    private ArrayList<MatchingResult> getResult() {
+
+        ArrayList<MatchingResult> results = new ArrayList<>();
+        Multiset<MovieDto> movies = HashMultiset.create( getMovies() );
+
+        for ( Multiset.Entry<MovieDto> entry :
+                Multisets.copyHighestCountFirst( movies ).entrySet() ) {
+            MovieDto current = entry.getElement();
+            results.add( new MatchingResult( current, movies.count( current ) ) );
+        }
+
+        return results;
     }
 }
 

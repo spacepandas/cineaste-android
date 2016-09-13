@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class Movie extends MovieDto {
+public class Movie extends MovieDto implements Comparable<Movie> {
 
     private int runtime;
     @SerializedName( "vote_average" )
@@ -85,5 +85,10 @@ public class Movie extends MovieDto {
 
     public void setWatchedDate( long watchedDate ) {
         this.watchedDate = watchedDate;
+    }
+
+    @Override
+    public int compareTo(Movie another) {
+        return this.getTitle().compareTo(another.getTitle());
     }
 }

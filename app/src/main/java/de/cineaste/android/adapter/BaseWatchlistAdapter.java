@@ -6,9 +6,6 @@ import java.util.List;
 
 import de.cineaste.android.entity.Movie;
 
-/**
- * Created by christianbraun on 16/03/16.
- */
 public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter< RecyclerView.ViewHolder> {
 
     protected List<Movie> dataset;
@@ -31,17 +28,26 @@ public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter< Recycle
                     }
                 }else{
                     if(index == -1){
-                        filteredDataset.add(currentMovie);
-                        notifyItemInserted(filteredDataset.size());
+                        int location = indexInAlphabeticalOrder(currentMovie, filteredDataset);
+                        filteredDataset.add(location, currentMovie);
+                        notifyItemInserted(location);
                     }
                 }
             }
         } else{
-            searchTerm = null;
             filteredDataset.clear();
             filteredDataset.addAll(dataset);
             notifyDataSetChanged();
         }
+    }
+
+    protected int indexInAlphabeticalOrder(Movie movie, List<Movie> movies){
+        for(int i = 0; i < movies.size(); ++i){
+            if(movie.compareTo(movies.get(i)) <= 0){
+                return i;
+            }
+        }
+        return movies.size();
     }
 
     public int getTotalItemCount(){

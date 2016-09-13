@@ -1,5 +1,6 @@
 package de.cineaste.android.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
@@ -20,8 +22,8 @@ import de.cineaste.android.R;
 import de.cineaste.android.adapter.WatchlistViewPagerAdapter;
 import de.cineaste.android.database.ExportService;
 import de.cineaste.android.database.ImportService;
-import de.cineaste.android.entity.Movie;
 import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.entity.Movie;
 
 public class ViewPagerFragment extends Fragment {
 
@@ -54,6 +56,28 @@ public class ViewPagerFragment extends Fragment {
                 MainActivity.replaceFragment( getFragmentManager(), new SearchFragment() );
             }
         } );
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                View view = getView();
+//                ensures that the keaboard disapears when changing tabs
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         return view;
     }

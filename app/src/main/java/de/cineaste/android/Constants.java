@@ -6,5 +6,5 @@ public interface Constants {
     String DATABASE_NAME = "cineaste.db";
 
     String API_KEY = BuildConfig.MovieKey;
-    String POSTER_URI = "https://image.tmdb.org/t/p/w185<posterName>?api_key=" + API_KEY;
+    String POSTER_URI_SMALL = "https://image.tmdb.org/t/p/w342<posterName>?api_key=" + API_KEY;
 }

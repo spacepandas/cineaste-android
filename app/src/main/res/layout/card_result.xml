@@ -1,51 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:id="@+id/result_cv"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
     style="@style/cardView"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_margin="5dp">
 
-    <RelativeLayout
-        android:orientation="horizontal"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:contentDescription="@string/moviePoster"
+            android:id="@+id/movie_poster_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/movie_poster_image_view"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/placeholder_poster"
+            android:contentDescription="@string/moviePoster" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/movie_poster_image_view"
+            android:layout_alignTop="@+id/movie_poster_image_view"
+            android:layout_toEndOf="@+id/movie_poster_image_view"
+            android:layout_toRightOf="@+id/movie_poster_image_view"
+            android:background="@color/colorPrimary" />
+
+
+        <TextView
+            android:id="@+id/movie_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/view"
+            android:layout_toRightOf="@+id/view"
+            android:layout_toLeftOf="@+id/watched_button"
+            android:layout_toStartOf="@+id/watched_button"
+            android:maxLines="2"
+            android:text="@string/movieTitle"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black" />
 
         <ImageButton
-            android:contentDescription="@string/addToWatchedlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/watched_button"
+            style="@style/ButtonStyleGrey"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/movie_poster_image_view"
+            android:layout_alignParentBottom="false"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_add_watchedlist"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/movie_counter_tv"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/watched_button"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/movie_title_tv"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/movie_poster_image_view"
-            android:layout_toEndOf="@+id/movie_poster_image_view"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_toStartOf="@+id/watched_button"
-            android:layout_toLeftOf="@+id/watched_button"/>
+            android:contentDescription="@string/addToWatchedlist"
+            android:src="@drawable/ic_add_watchedlist" />
 
-
-
+        <TextView
+            android:id="@+id/movie_counter_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/movie_title"
+            android:layout_toEndOf="@+id/view"
+            android:layout_toRightOf="@+id/view"
+            android:text="@string/counter" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

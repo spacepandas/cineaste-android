@@ -8,4 +8,7 @@
     <string name="watchlistState">watchlist</string>
     <string name="watchedlistState">watchedlist</string>
     <string name="searchState">search</string>
+    <string name="githubLogo">GitHub</string>
+    <string name="tmdbLogo">tmdb</string>
+    <string name="counter">counter</string>
 </resources>

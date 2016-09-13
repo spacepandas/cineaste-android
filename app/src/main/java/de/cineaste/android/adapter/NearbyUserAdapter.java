@@ -21,10 +21,9 @@ public class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdapter.Vi
 
     public NearbyUserAdapter(
             List<NearbyMessage> nearbyMessages,
-            int rowLayout,
             Context context ) {
         this.nearbyMessages = nearbyMessages;
-        this.rowLayout = rowLayout;
+        this.rowLayout = R.layout.card_nearby_user;
         this.context = context;
     }
 
