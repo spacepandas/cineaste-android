@@ -14,6 +14,8 @@ import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.MovieAndState;
+import de.cineaste.android.entity.MovieStateType;
 import de.cineaste.android.fragment.BaseWatchlistFragment;
 import de.cineaste.android.viewholder.WatchlistViewHolder;
 
@@ -36,20 +38,40 @@ public class WatchlistAdapter extends BaseWatchlistAdapter implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        Movie changedMovie = (Movie) o;
+        MovieAndState movieAndState = (MovieAndState) o;
+        MovieStateType state = movieAndState.getState();
+        Movie changedMovie = movieAndState.getMovie();
 
         int index = dataset.indexOf(changedMovie);
-        if ((changedMovie.isWatched() && index != -1) ||
-                (!changedMovie.isWatched() && index != -1)) {
-            dataset.remove(index);
-            int filterListIndex = filteredDataset.indexOf(changedMovie);
-            filteredDataset.remove(filterListIndex);
-            notifyItemRemoved(filterListIndex);
-            filter(oldSearchTerm);
-        } else if (!changedMovie.isWatched() && index == -1) {
-            dataset.add(indexInAlphabeticalOrder(changedMovie, dataset), changedMovie);
-            filter(oldSearchTerm);
+
+        if(index == -1 && state != MovieStateType.INSERT) {
+            return;
         }
+
+        if (index == -1 && state == MovieStateType.INSERT) {
+            if (!changedMovie.isWatched()) {
+                dataset.add(indexInAlphabeticalOrder(changedMovie, dataset),
+                        changedMovie);
+                filter(oldSearchTerm);
+                return;
+            }
+        }
+
+        switch (state) {
+            case STATUS_CHANGED:
+            case DELETE:
+                dataset.remove(index);
+                int filterListIndex = filteredDataset.indexOf(changedMovie);
+                filteredDataset.remove(filterListIndex);
+                notifyItemRemoved(filterListIndex);
+                filter(oldSearchTerm);
+                break;
+            case UPDATE:
+                filteredDataset.set(index, changedMovie);
+                notifyDataSetChanged();
+                break;
+        }
+
         if (dataset.size() == 0) {
             baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchList);
         }

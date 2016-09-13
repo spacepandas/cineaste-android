@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Observable;
 
 import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.MovieAndState;
+import de.cineaste.android.entity.MovieStateType;
 
 public class MovieDbHelper extends Observable {
 
@@ -54,19 +56,30 @@ public class MovieDbHelper extends Observable {
         String[] selectionArgs = {Long.toString( movie.getId() )};
         List<Movie> movieList = movieDao.read( selection, selectionArgs );
 
+        MovieAndState movieAndState;
         if( !movieList.isEmpty() ) {
             updateMovieWatched( movie );
+            movieAndState = new MovieAndState(movie, MovieStateType.UPDATE);
         } else {
             createNewMovieEntry( movie );
+            movieAndState = new MovieAndState(movie, MovieStateType.INSERT);
         }
+
         setChanged();
-        notifyObservers( movie );
+        notifyObservers(movieAndState);
+    }
+
+    public void update(Movie movie) {
+        updateMovieWatched(movie);
+        setChanged();
+        notifyObservers(new MovieAndState(movie, MovieStateType.STATUS_CHANGED));
     }
 
     public void deleteMovieFromWatchlist( Movie movie ) {
-        movieDao.delete( movie.getId() );
+        movieDao.delete(movie.getId());
+
         setChanged();
-        notifyObservers(movie);
+        notifyObservers(new MovieAndState(movie, MovieStateType.DELETE));
     }
 
     public int getMovieCount() {

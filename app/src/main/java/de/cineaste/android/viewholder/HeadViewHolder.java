@@ -22,6 +22,7 @@ public class HeadViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private Movie currentMovie;
     private final Context context;
     private final OnBackPressedListener listener;
+    private final int state;
 
     public interface OnBackPressedListener {
         void onBackPressedListener();
@@ -29,6 +30,7 @@ public class HeadViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     public HeadViewHolder( View v, Context context, int state, OnBackPressedListener listener ) {
         super( v );
+        this.state = state;
         this.context = context;
         movieTitle = (TextView) v.findViewById( R.id.movieTitle );
         movieRuntime = (TextView) v.findViewById( R.id.movieRuntime );
@@ -36,7 +38,7 @@ public class HeadViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         addToWatchedList = (ImageButton) v.findViewById( R.id.addToWatchedList );
         delete = (ImageButton) v.findViewById( R.id.remove );
         this.listener = listener;
-        initButtons(state);
+        initButtons();
     }
 
     public void assignData( final Movie movie ) {
@@ -60,7 +62,12 @@ public class HeadViewHolder extends RecyclerView.ViewHolder implements View.OnCl
                             @Override
                             public void onFetchMovieResultListener( Movie movie ) {
                                 movie.setWatched( true );
-                                db.createOrUpdate( movie );
+
+                                if (state == R.string.searchState ) {
+                                    db.createOrUpdate( movie );
+                                } else {
+                                    db.update(movie);
+                                }
                             }
                         } );
                 break;
@@ -82,7 +89,7 @@ public class HeadViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         listener.onBackPressedListener();
     }
 
-    private void initButtons(int state ) {
+    private void initButtons() {
 
         addToWatchedList.setOnClickListener( this );
         addToWatchList.setOnClickListener( this );

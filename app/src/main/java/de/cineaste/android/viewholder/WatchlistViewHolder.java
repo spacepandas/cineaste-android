@@ -76,7 +76,7 @@ public class WatchlistViewHolder extends RecyclerView.ViewHolder {
 			@Override
 			public void onClick(View v) {
 				movie.setWatched(true);
-				db.createOrUpdate(movie);
+				db.update(movie);
 			}
 		});
 	}

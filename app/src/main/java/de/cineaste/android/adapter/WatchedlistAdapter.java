@@ -14,6 +14,8 @@ import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.MovieAndState;
+import de.cineaste.android.entity.MovieStateType;
 import de.cineaste.android.fragment.BaseWatchlistFragment;
 import de.cineaste.android.viewholder.WatchedlistViewHolder;
 
@@ -35,15 +37,23 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
     }
 
     @Override
-    public void update(Observable observable, Object data) {
-        Movie changedMovie = (Movie) data;
+    public void update(Observable observable, Object o) {
+        MovieAndState movieAndState = (MovieAndState) o;
+        MovieStateType state = movieAndState.getState();
+        Movie changedMovie = movieAndState.getMovie();
+
         int index = dataset.indexOf(changedMovie);
-        if ((!changedMovie.isWatched() && index != -1) ||
-                (changedMovie.isWatched() && index != -1)) {
+
+        if (index == -1 && (state == MovieStateType.INSERT || state == MovieStateType.STATUS_CHANGED)) {
+            if (changedMovie.isWatched()) {
+                dataset.add(indexInAlphabeticalOrder(changedMovie, dataset), changedMovie);
+                filter(oldSearchTerm);
+            }
+        } else if (index != -1 && state == MovieStateType.UPDATE) {
+            filteredDataset.set(index, changedMovie);
+            notifyDataSetChanged();
+        } else if (index != -1 && state == MovieStateType.DELETE) {
             dataset.remove(index);
-            filter(oldSearchTerm);
-        } else if (changedMovie.isWatched() && index == -1) {
-            dataset.add(indexInAlphabeticalOrder(changedMovie, dataset), changedMovie);
             filter(oldSearchTerm);
         }
         baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchedList);
