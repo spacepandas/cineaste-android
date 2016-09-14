@@ -25,14 +25,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import de.cineaste.android.adapter.DetailViewAdapter;
+import de.cineaste.android.adapter.OnBackPressedListener;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.network.TheMovieDb;
 import de.cineaste.android.receiver.NetworkChangeReceiver;
-import de.cineaste.android.viewholder.HeadViewHolder;
 
-public class MovieDetailActivity extends AppCompatActivity implements HeadViewHolder.OnBackPressedListener {
+public class MovieDetailActivity extends AppCompatActivity implements OnBackPressedListener {
 
     private ImageView moviePoster;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -106,7 +106,7 @@ public class MovieDetailActivity extends AppCompatActivity implements HeadViewHo
             recyclerView.setItemAnimator( new DefaultItemAnimator() );
         }
 
-        RecyclerView.Adapter adapter = new DetailViewAdapter(this, currentMovie, state, new HeadViewHolder.OnBackPressedListener() {
+        RecyclerView.Adapter adapter = new DetailViewAdapter(this, currentMovie, state, new OnBackPressedListener() {
             @Override
             public void onBackPressedListener() {
                 onBackPressed();

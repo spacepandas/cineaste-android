@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+									xmlns:app="http://schemas.android.com/apk/res-auto"
+									android:id="@+id/card_view"
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									app:cardCornerRadius="0dp">
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				  android:id="@+id/relativeLayout"
+				  android:layout_width="match_parent"
+				  android:layout_height="match_parent"
+				  android:layout_margin="8dp"
+				  android:orientation="vertical">
+
+
+		<include layout="@layout/card_detail_head"/>
+
+		 <LinearLayout
+			 android:orientation="horizontal"
+			 android:layout_width="match_parent"
+			 android:layout_height="wrap_content"
+			 android:gravity="center_horizontal"
+			 android:layout_marginTop="4dp">
+
+			 <ImageButton
+				 android:contentDescription="@string/addToWatchlist"
+				 style="@style/ButtonStyleGreyFixedSize"
+				 android:id="@+id/addToWatchList"
+				 android:src="@drawable/ic_add_watchlist"
+				 android:layout_marginLeft="4.0dp"
+				 android:layout_marginRight="4.0dp" />
+
+			 <ImageButton
+				 android:contentDescription="@string/addToWatchedlist"
+				 style="@style/ButtonStyleGreyFixedSize"
+				 android:id="@+id/addToWatchedList"
+				 android:src="@drawable/ic_add_watchedlist"
+				 android:layout_marginLeft="4.0dp"
+				 android:layout_marginRight="4.0dp"/>
+
+		 </LinearLayout>
+
+	</LinearLayout>
+
+</android.support.v7.widget.CardView>
