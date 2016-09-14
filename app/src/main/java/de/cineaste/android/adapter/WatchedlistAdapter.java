@@ -54,6 +54,9 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
             notifyDataSetChanged();
         } else if (index != -1 && state == MovieStateType.DELETE) {
             dataset.remove(index);
+            int filterListIndex = filteredDataset.indexOf(changedMovie);
+            filteredDataset.remove(filterListIndex);
+            notifyItemRemoved(filterListIndex);
             filter(oldSearchTerm);
         }
         baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchedList);
