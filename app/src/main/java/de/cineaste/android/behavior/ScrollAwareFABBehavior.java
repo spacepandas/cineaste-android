@@ -1,6 +1,7 @@
 package de.cineaste.android.behavior;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
@@ -33,7 +34,7 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
     @Override
     public void onNestedScroll(
             CoordinatorLayout coordinatorLayout,
-            FloatingActionButton child,
+            final FloatingActionButton child,
             View target,
             int dxConsumed,
             int dyConsumed,
@@ -50,6 +51,23 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 
         if( dyConsumed > 0 && child.getVisibility() == View.VISIBLE ) {
             child.hide();
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        //do nothing
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    child.show();
+                }
+            }.execute();
         } else if( dyConsumed < 0 && child.getVisibility() != View.VISIBLE ) {
             child.show();
         }
