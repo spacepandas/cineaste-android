@@ -21,6 +21,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -40,9 +41,17 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
     private long movieId;
     private Movie currentMovie;
     private TextView rating;
+    private RecyclerView recyclerView;
 
     @Override
     public void onBackPressedListener() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressedListener(Movie movie) {
+        Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
+                movie.getTitle()), Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
 
@@ -98,7 +107,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
     }
 
     private void assignData(Movie currentMovie, int state ) {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation( LinearLayoutManager.VERTICAL );
         if (recyclerView != null) {
@@ -109,6 +118,13 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
         RecyclerView.Adapter adapter = new DetailViewAdapter(this, currentMovie, state, new OnBackPressedListener() {
             @Override
             public void onBackPressedListener() {
+                onBackPressed();
+            }
+
+            @Override
+            public void onBackPressedListener(Movie movie) {
+                Toast.makeText(MovieDetailActivity.this, MovieDetailActivity.this.getResources().getString(R.string.movieAdd,
+                        movie.getTitle()), Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
         });

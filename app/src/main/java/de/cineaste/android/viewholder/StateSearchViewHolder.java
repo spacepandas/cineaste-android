@@ -76,6 +76,6 @@ public class StateSearchViewHolder extends RecyclerView.ViewHolder implements Vi
 						});
 				break;
 		}
-		listener.onBackPressedListener();
+		listener.onBackPressedListener(currentMovie);
 	}
 }
