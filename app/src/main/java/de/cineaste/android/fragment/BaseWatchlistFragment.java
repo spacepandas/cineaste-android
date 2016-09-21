@@ -89,8 +89,8 @@ public class BaseWatchlistFragment extends Fragment
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-//        if the fragment is not visibile, i have to retrigger the search to ensure that
-//        the recyclerview of the hidden page will be filled correctly when navigated back
+//        if the fragment is not visible, i have to re-trigger the search to ensure that
+//        the recyclerView of the hidden page will be filled correctly when navigated back
         if (isVisibleToUser == false) {
             if(baseWatchlistAdapter != null){
                 baseWatchlistAdapter.filter(null);

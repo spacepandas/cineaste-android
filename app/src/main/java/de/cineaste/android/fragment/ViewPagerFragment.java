@@ -61,7 +61,7 @@ public class ViewPagerFragment extends Fragment {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 View view = getView();
-//                ensures that the keaboard disapears when changing tabs
+//                ensures that the keyboard disappears when changing tabs
                 if (view != null) {
                     InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);

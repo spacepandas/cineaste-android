@@ -22,12 +22,12 @@ public class WatchedlistViewHolder extends RecyclerView.ViewHolder {
 	private final MovieDbHelper db;
 	private final MovieClickListener listener;
 
-	public final TextView movieTitle;
-	public final TextView movieRuntime;
-	public final TextView movieVote;
-	public final ImageButton removeMovie;
-	public final ImageView imageView;
-	final View view;
+	private final TextView movieTitle;
+	private final TextView movieRuntime;
+	private final TextView movieVote;
+	private final ImageButton removeMovie;
+	private final ImageView imageView;
+	private final View view;
 
 	public WatchedlistViewHolder(View v, Context context, MovieDbHelper db, MovieClickListener listener) {
 		super(v);

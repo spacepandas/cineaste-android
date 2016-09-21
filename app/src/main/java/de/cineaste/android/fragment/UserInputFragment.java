@@ -32,6 +32,9 @@ public class UserInputFragment extends DialogFragment
         textview.setOnClickListener( this );
         editText.setOnEditorActionListener( this );
         editText.requestFocus();
+        if (getDialog().getWindow() == null) {
+            return view;
+        }
         getDialog().getWindow()
                 .setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE );
         getDialog().setTitle( R.string.enter_username );

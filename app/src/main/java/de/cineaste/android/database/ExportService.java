@@ -20,7 +20,8 @@ public class ExportService {
         File exportPath = new File( Environment.getExternalStorageDirectory() + "/Cineaste" );
 
         if( !exportPath.exists() ) {
-            exportPath.mkdir();
+            if (!exportPath.mkdir())
+                return;
         }
 
         File exportFile = new File(

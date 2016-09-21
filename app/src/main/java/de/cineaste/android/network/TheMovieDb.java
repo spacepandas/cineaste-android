@@ -39,9 +39,7 @@ public class TheMovieDb extends BaseNetwork {
         requestAsync(
                 new Request(
                         url,
-                        METHOD_GET,
-                        new String[]{"Accept:application/json"},
-                        null
+                        new String[]{"Accept:application/json"}
                 ),
                 new OnResultListener() {
                     @Override
@@ -69,9 +67,7 @@ public class TheMovieDb extends BaseNetwork {
         requestAsync(
                 new Request(
                         url,
-                        METHOD_GET,
-                        new String[]{"Accept:application/json"},
-                        null
+                        new String[]{"Accept:application/json"}
                 ),
                 new OnResultListener() {
                     @Override

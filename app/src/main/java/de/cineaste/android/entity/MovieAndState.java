@@ -1,8 +1,8 @@
 package de.cineaste.android.entity;
 
 public class MovieAndState {
-	private MovieStateType state;
-	private Movie movie;
+	private final MovieStateType state;
+	private final Movie movie;
 
 	public MovieAndState(Movie movie, MovieStateType state) {
 		this.movie = movie;

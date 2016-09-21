@@ -8,9 +8,9 @@ import de.cineaste.android.entity.Movie;
 
 public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter< RecyclerView.ViewHolder> {
 
-    protected List<Movie> dataset;
-    protected List<Movie> filteredDataset;
-    protected String oldSearchTerm;
+    List<Movie> dataset;
+    List<Movie> filteredDataset;
+    String oldSearchTerm;
 
     public void filter(String searchTerm){
         if(filteredDataset == null)
@@ -41,16 +41,12 @@ public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter< Recycle
         }
     }
 
-    protected int indexInAlphabeticalOrder(Movie movie, List<Movie> movies){
+    int indexInAlphabeticalOrder(Movie movie, List<Movie> movies){
         for(int i = 0; i < movies.size(); ++i){
             if(movie.compareTo(movies.get(i)) <= 0){
                 return i;
             }
         }
         return movies.size();
-    }
-
-    public int getTotalItemCount(){
-        return dataset.size();
     }
 }

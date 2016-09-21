@@ -41,7 +41,6 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
     private long movieId;
     private Movie currentMovie;
     private TextView rating;
-    private RecyclerView recyclerView;
 
     @Override
     public void onBackPressedListener() {
@@ -107,7 +106,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
     }
 
     private void assignData(Movie currentMovie, int state ) {
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation( LinearLayoutManager.VERTICAL );
         if (recyclerView != null) {

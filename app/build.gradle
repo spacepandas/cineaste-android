@@ -5,13 +5,13 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-       
+
         buildConfigField("String", "MovieKey", '"' + System.getenv("MOVIE_KEY") + '"')
-        resValue "string", "nearbyKey", System.getenv("NEARBY_KEY")
+        "string", "nearbyKey", System.getenv("NEARBY_KEY")
 
         applicationId "de.cineaste.android"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 2
         versionName "1.0.0"
     }

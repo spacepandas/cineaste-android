@@ -16,7 +16,6 @@ import de.cineaste.android.network.TheMovieDb;
 public class StateWatchedListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 	private final TextView movieTitle;
 	private final TextView movieRuntime;
-	private final ImageButton delete;
 	private Movie currentMovie;
 	private final Context context;
 	private final OnBackPressedListener listener;
@@ -27,7 +26,7 @@ public class StateWatchedListViewHolder extends RecyclerView.ViewHolder implemen
 		this.context = context;
 		movieTitle = (TextView) v.findViewById( R.id.movieTitle );
 		movieRuntime = (TextView) v.findViewById( R.id.movieRuntime );
-		delete = (ImageButton) v.findViewById( R.id.remove );
+		ImageButton delete = (ImageButton) v.findViewById(R.id.remove);
 		this.listener = listener;
 		delete.setOnClickListener( this );
 	}
@@ -42,7 +41,6 @@ public class StateWatchedListViewHolder extends RecyclerView.ViewHolder implemen
 	@Override
 	public void onClick( View v ) {
 		final MovieDbHelper db = MovieDbHelper.getInstance( context );
-		TheMovieDb theMovieDb = new TheMovieDb();
 
 		switch ( v.getId() ) {
 			case R.id.remove:

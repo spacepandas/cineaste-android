@@ -7,33 +7,27 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 
-public class BaseNetwork {
-    public interface OnResultListener {
+class BaseNetwork {
+    interface OnResultListener {
         void onResultListener( Response response );
     }
 
-    static final String METHOD_DELETE = "DELETE";
-    static final String METHOD_GET = "GET";
-    static final String METHOD_POST = "POST";
-    static final String METHOD_PUT = "PUT";
+    private static final String METHOD_GET = "GET";
 
     final String host;
     final Gson gson = new Gson();
 
     private static final int MAXIMUM_RESPONSE_SIZE = 1048576;
 
-    protected BaseNetwork( String host ) {
+    BaseNetwork(String host) {
         this.host = host;
     }
 
-    protected void requestAsync( final Request request, final OnResultListener listener ) {
+    void requestAsync( final Request request, final OnResultListener listener ) {
         new AsyncTask<Request, Void, Response>() {
             @Override
             protected Response doInBackground( Request... params ) {
@@ -44,8 +38,7 @@ public class BaseNetwork {
 
                     return new Response(
                             connection.getResponseCode(),
-                            readResponse( connection.getInputStream() ),
-                            connection.getHeaderFields()
+                            readResponse( connection.getInputStream() )
                     );
                 } catch ( IOException e ) {
                     // fall through
@@ -54,7 +47,7 @@ public class BaseNetwork {
                         connection.disconnect();
                 }
 
-                return new Response( HttpURLConnection.HTTP_INTERNAL_ERROR, new byte[]{}, null );
+                return new Response( HttpURLConnection.HTTP_INTERNAL_ERROR, new byte[]{} );
             }
 
             @Override
@@ -65,7 +58,7 @@ public class BaseNetwork {
         }.execute( request );
     }
 
-    protected boolean successfulRequest( int statusCode ) {
+    boolean successfulRequest( int statusCode ) {
         return statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE;
     }
 
@@ -75,7 +68,6 @@ public class BaseNetwork {
         connection.setRequestMethod( request.getMethod() );
 
         setHeaders( request, connection );
-        addData( request, connection );
 
         return connection;
     }
@@ -91,17 +83,6 @@ public class BaseNetwork {
 
                 connection.setRequestProperty( tokens[0], tokens[1] );
             }
-        }
-    }
-
-    private void addData( Request request, HttpURLConnection connection ) throws IOException {
-        if( request.getData() != null ) {
-            connection.setDoOutput( true );
-
-            OutputStreamWriter writer =
-                    new OutputStreamWriter( connection.getOutputStream() );
-            writer.write( request.getData() );
-            writer.flush();
         }
     }
 
@@ -126,28 +107,17 @@ public class BaseNetwork {
         return data.toByteArray();
     }
 
-
-    protected class Response {
+    class Response {
         private final int code;
         private final byte data[];
-        private final Map<String, List<String>> headers;
 
-        public Response( int code, byte data[], Map<String, List<String>> headers ) {
+        Response( int code, byte data[] ) {
             this.code = code;
             this.data = data;
-            this.headers = headers;
         }
 
-        public Map<String, List<String>> getHeaders() {
-            return headers;
-        }
-
-        public int getCode() {
+        int getCode() {
             return code;
-        }
-
-        public byte[] getData() {
-            return data;
         }
 
         public String getString() {
@@ -159,49 +129,27 @@ public class BaseNetwork {
         }
     }
 
-    protected class Request {
-        private String url;
-        private String method;
-        private String[] headers;
-        private String data;
+    class Request {
+        private final String url;
+        private final String method;
+        private final String[] headers;
 
-        public Request( String url, String method, String[] headers, String data ) {
+        Request( String url, String[] headers ) {
             this.url = url;
-            this.method = method;
+            this.method = METHOD_GET;
             this.headers = headers;
-            this.data = data;
         }
 
-        public String getUrl() {
+        String getUrl() {
             return url;
         }
 
-        public void setUrl( String url ) {
-            this.url = url;
-        }
-
-        public String getMethod() {
+        String getMethod() {
             return method;
         }
 
-        public void setMethod( String method ) {
-            this.method = method;
-        }
-
-        public String[] getHeaders() {
+        String[] getHeaders() {
             return headers;
-        }
-
-        public void setHeaders( String[] headers ) {
-            this.headers = headers;
-        }
-
-        public String getData() {
-            return data;
-        }
-
-        public void setData( String data ) {
-            this.data = data;
         }
     }
 }

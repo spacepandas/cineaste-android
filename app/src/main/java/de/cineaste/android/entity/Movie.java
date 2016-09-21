@@ -1,5 +1,7 @@
 package de.cineaste.android.entity;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -88,7 +90,7 @@ public class Movie extends MovieDto implements Comparable<Movie> {
     }
 
     @Override
-    public int compareTo(Movie another) {
+    public int compareTo(@NonNull Movie another) {
         return this.getTitle().compareTo(another.getTitle());
     }
 }

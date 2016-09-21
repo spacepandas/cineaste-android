@@ -16,8 +16,6 @@ import de.cineaste.android.network.TheMovieDb;
 public class StateSearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 	private final TextView movieTitle;
 	private final TextView movieRuntime;
-	private final ImageButton addToWatchList;
-	private final ImageButton addToWatchedList;
 	private Movie currentMovie;
 	private final Context context;
 	private final OnBackPressedListener listener;
@@ -28,8 +26,8 @@ public class StateSearchViewHolder extends RecyclerView.ViewHolder implements Vi
 		this.context = context;
 		movieTitle = (TextView) v.findViewById(R.id.movieTitle);
 		movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
-		addToWatchList = (ImageButton) v.findViewById(R.id.addToWatchList);
-		addToWatchedList = (ImageButton) v.findViewById(R.id.addToWatchedList);
+		ImageButton addToWatchList = (ImageButton) v.findViewById(R.id.addToWatchList);
+		ImageButton addToWatchedList = (ImageButton) v.findViewById(R.id.addToWatchedList);
 		this.listener = listener;
 
 		addToWatchedList.setOnClickListener(this);

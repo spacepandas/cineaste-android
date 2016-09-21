@@ -230,12 +230,7 @@ public class MovieNightFragment extends Fragment
             clearDeviceList();
             SubscribeOptions options = new SubscribeOptions.Builder()
                     .setStrategy( PUB_SUB_STRATEGY )
-                    .setCallback( new SubscribeCallback() {
-                        @Override
-                        public void onExpired() {
-                            super.onExpired();
-                        }
-                    } ).build();
+                    .setCallback( new SubscribeCallback() {} ).build();
 
             Nearby.Messages.subscribe( googleApiClient, messageListener, options )
                     .setResultCallback( new ResultCallback<Status>() {
@@ -277,13 +272,7 @@ public class MovieNightFragment extends Fragment
         } else {
             PublishOptions options = new PublishOptions.Builder()
                     .setStrategy( PUB_SUB_STRATEGY )
-                    .setCallback( new PublishCallback() {
-                        @Override
-                        public void onExpired() {
-                            super.onExpired();
-                            //no longer publishing"
-                        }
-                    } ).build();
+                    .setCallback( new PublishCallback() {} ).build();
             Nearby.Messages.publish( googleApiClient, NearbyMessage.newNearbyMessage( localNearbyMessage ), options )
                     .setResultCallback( new ResultCallback<Status>() {
 
