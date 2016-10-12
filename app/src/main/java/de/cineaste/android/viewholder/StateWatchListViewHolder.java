@@ -44,20 +44,11 @@ public class StateWatchListViewHolder extends RecyclerView.ViewHolder implements
 	@Override
 	public void onClick( View v ) {
 		final MovieDbHelper db = MovieDbHelper.getInstance( context );
-		TheMovieDb theMovieDb = new TheMovieDb();
 
 		switch ( v.getId() ) {
 			case R.id.addToWatchedList:
-				theMovieDb.fetchMovie(
-						currentMovie.getId(),
-						context.getString( R.string.language_tag ),
-						new TheMovieDb.OnFetchMovieResultListener() {
-							@Override
-							public void onFetchMovieResultListener( Movie movie ) {
-								movie.setWatched( true );
-								db.update(movie);
-							}
-						} );
+				currentMovie.setWatched(true);
+				db.update(currentMovie);
 				break;
 			case R.id.remove:
 				db.deleteMovieFromWatchlist( currentMovie );

@@ -49,4 +49,8 @@ public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter< Recycle
         }
         return movies.size();
     }
+
+    public int getDatasetSize() {
+        return dataset.size();
+    }
 }

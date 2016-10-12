@@ -47,7 +47,9 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
         if (index == -1 && (state == MovieStateType.INSERT || state == MovieStateType.STATUS_CHANGED)) {
             if (changedMovie.isWatched()) {
                 dataset.add(indexInAlphabeticalOrder(changedMovie, dataset), changedMovie);
-                filter(oldSearchTerm);
+                int filterListIndex = indexInAlphabeticalOrder(changedMovie, filteredDataset);
+                filteredDataset.add(filterListIndex, changedMovie);
+                notifyItemInserted(filterListIndex);
             }
         } else if (index != -1 && state == MovieStateType.UPDATE) {
             filteredDataset.set(index, changedMovie);
@@ -57,8 +59,8 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
             int filterListIndex = filteredDataset.indexOf(changedMovie);
             filteredDataset.remove(filterListIndex);
             notifyItemRemoved(filterListIndex);
-            filter(oldSearchTerm);
         }
+
         baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchedList);
     }
 

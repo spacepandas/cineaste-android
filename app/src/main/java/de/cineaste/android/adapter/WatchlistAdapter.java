@@ -52,7 +52,9 @@ public class WatchlistAdapter extends BaseWatchlistAdapter implements Observer {
             if (!changedMovie.isWatched()) {
                 dataset.add(indexInAlphabeticalOrder(changedMovie, dataset),
                         changedMovie);
-                filter(oldSearchTerm);
+                int filterListIndex = indexInAlphabeticalOrder(changedMovie, filteredDataset);
+                filteredDataset.add(filterListIndex, changedMovie);
+                notifyItemInserted(filterListIndex);
                 return;
             }
         }
@@ -64,7 +66,6 @@ public class WatchlistAdapter extends BaseWatchlistAdapter implements Observer {
                 int filterListIndex = filteredDataset.indexOf(changedMovie);
                 filteredDataset.remove(filterListIndex);
                 notifyItemRemoved(filterListIndex);
-                filter(oldSearchTerm);
                 break;
             case UPDATE:
                 filteredDataset.set(index, changedMovie);
@@ -72,9 +73,7 @@ public class WatchlistAdapter extends BaseWatchlistAdapter implements Observer {
                 break;
         }
 
-        if (dataset.size() == 0) {
-            baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchList);
-        }
+        baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchList);
     }
 
     @Override

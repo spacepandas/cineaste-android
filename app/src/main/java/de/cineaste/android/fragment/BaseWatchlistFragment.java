@@ -124,7 +124,7 @@ public class BaseWatchlistFragment extends Fragment
     }
 
     public void showMessageIfEmptyList(int messageId) {
-        if (baseWatchlistAdapter.getItemCount() == 0) {
+        if (baseWatchlistAdapter.getDatasetSize() == 0) {
             baseWatchlistRecyclerView.setVisibility(View.GONE);
             emptyListTextView.setVisibility(View.VISIBLE);
             emptyListTextView.setText(messageId);
