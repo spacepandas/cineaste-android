@@ -1,7 +1,6 @@
 package de.cineaste.android.viewholder;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,7 +14,6 @@ import de.cineaste.android.network.TheMovieDb;
 
 public class StateSearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 	private final TextView movieTitle;
-	private final TextView movieRuntime;
 	private Movie currentMovie;
 	private final Context context;
 	private final OnBackPressedListener listener;
@@ -25,7 +23,8 @@ public class StateSearchViewHolder extends RecyclerView.ViewHolder implements Vi
 		super(v);
 		this.context = context;
 		movieTitle = (TextView) v.findViewById(R.id.movieTitle);
-		movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
+		TextView movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
+		movieRuntime.setVisibility(View.GONE);
 		ImageButton addToWatchList = (ImageButton) v.findViewById(R.id.addToWatchList);
 		ImageButton addToWatchedList = (ImageButton) v.findViewById(R.id.addToWatchedList);
 		this.listener = listener;
@@ -35,10 +34,8 @@ public class StateSearchViewHolder extends RecyclerView.ViewHolder implements Vi
 	}
 
 	public void assignData(final Movie movie) {
-		Resources resources = context.getResources();
 		currentMovie = movie;
 		movieTitle.setText(movie.getTitle());
-		movieRuntime.setText(resources.getString(R.string.runtime, movie.getRuntime()));
 	}
 
 	@Override
