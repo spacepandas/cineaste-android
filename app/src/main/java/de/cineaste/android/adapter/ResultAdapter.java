@@ -80,6 +80,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 									matchingResult.getPosterPath() : "/");
 			Picasso.with(context)
 					.load(Uri.parse(posterUri))
+					.resize(222, 334)
 					.error(R.drawable.placeholder_poster)
 					.into(moviePoster);
 			watchedButton.setOnClickListener(this);

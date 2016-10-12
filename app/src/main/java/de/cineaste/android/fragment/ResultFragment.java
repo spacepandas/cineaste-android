@@ -66,7 +66,11 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 					public void onFetchMovieResultListener(Movie movie) {
 						MovieDbHelper db = MovieDbHelper.getInstance(getActivity());
 						movie.setWatched(true);
-						db.createOrUpdate(movie);
+						if (db.readMovie(movie.getId()) != null) {
+							db.update(movie);
+						} else {
+							db.createOrUpdate(movie);
+						}
 					}
 				});
 		getFragmentManager().popBackStack();
