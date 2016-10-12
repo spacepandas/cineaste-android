@@ -68,6 +68,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 			super(v);
 			movieTitle = (TextView) v.findViewById(R.id.movie_title);
 			movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
+			movieRuntime.setVisibility(View.GONE);
 			movieVote = (TextView) v.findViewById(R.id.movie_vote);
 			moviePoster = (ImageView) v.findViewById(R.id.movie_poster_image_view);
 			addToWatchlistButton = (ImageButton) v.findViewById(R.id.to_watchlist_button);
@@ -78,7 +79,6 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 		public void assignData(final Movie movie) {
 			Resources resources = context.getResources();
 			movieTitle.setText(movie.getTitle());
-			movieRuntime.setText(resources.getString(R.string.runtime, movie.getRuntime()));
 			movieVote.setText(resources.getString(R.string.vote, String.valueOf(movie.getVoteAverage())));
 			String posterName = movie.getPosterPath();
 			String posterUri =
