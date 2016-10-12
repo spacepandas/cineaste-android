@@ -28,74 +28,74 @@ import de.cineaste.android.network.TheMovieDb;
 
 public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSelectListener {
 
-    private List<NearbyMessage> nearbyMessages;
+	private List<NearbyMessage> nearbyMessages;
 
-    @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
-        View view = inflater.inflate( R.layout.fragment_result, container, false );
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_result, container, false);
 
-        NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
-        nearbyMessages = handler.getMessages();
+		NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
+		nearbyMessages = handler.getMessages();
 
-        RecyclerView result = (RecyclerView) view.findViewById( R.id.result_list );
+		RecyclerView result = (RecyclerView) view.findViewById(R.id.result_list);
 
-        final LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
-        llm.setOrientation( LinearLayoutManager.VERTICAL );
-        result.setLayoutManager( llm );
-        result.setItemAnimator( new DefaultItemAnimator() );
+		final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+		llm.setOrientation(LinearLayoutManager.VERTICAL);
+		result.setLayoutManager(llm);
+		result.setItemAnimator(new DefaultItemAnimator());
 
-        ResultAdapter resultAdapter = new ResultAdapter(
-                getResult(),
-                getActivity(),
-                this );
-        result.setAdapter( resultAdapter );
+		ResultAdapter resultAdapter = new ResultAdapter(
+				getResult(),
+				getActivity(),
+				this);
+		result.setAdapter(resultAdapter);
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public void onMovieSelectListener( int position ) {
-        TheMovieDb theMovieDb = new TheMovieDb();
+	@Override
+	public void onMovieSelectListener(int position) {
+		TheMovieDb theMovieDb = new TheMovieDb();
 
-        theMovieDb.fetchMovie(
-                getResult().get(position).getId(),
-                getActivity().getResources().getString(R.string.language_tag),
-                new TheMovieDb.OnFetchMovieResultListener() {
-                    @Override
-                    public void onFetchMovieResultListener(Movie movie) {
-                        MovieDbHelper db = MovieDbHelper.getInstance(getActivity());
-                        movie.setWatched(true);
-                        db.createOrUpdate(movie);
-                    }
-                } );
-        getFragmentManager().popBackStack();
-    }
+		theMovieDb.fetchMovie(
+				getResult().get(position).getId(),
+				getActivity().getResources().getString(R.string.language_tag),
+				new TheMovieDb.OnFetchMovieResultListener() {
+					@Override
+					public void onFetchMovieResultListener(Movie movie) {
+						MovieDbHelper db = MovieDbHelper.getInstance(getActivity());
+						movie.setWatched(true);
+						db.createOrUpdate(movie);
+					}
+				});
+		getFragmentManager().popBackStack();
+	}
 
-    private ArrayList<MovieDto> getMovies() {
-        ArrayList<MovieDto> movies = new ArrayList<>();
+	private ArrayList<MovieDto> getMovies() {
+		ArrayList<MovieDto> movies = new ArrayList<>();
 
-        for ( NearbyMessage current : nearbyMessages ) {
-            for ( MovieDto movie : current.getMovies() ) {
-                movies.add( movie );
-            }
-        }
+		for (NearbyMessage current : nearbyMessages) {
+			for (MovieDto movie : current.getMovies()) {
+				movies.add(movie);
+			}
+		}
 
-        return movies;
-    }
+		return movies;
+	}
 
-    private ArrayList<MatchingResult> getResult() {
+	private ArrayList<MatchingResult> getResult() {
 
-        ArrayList<MatchingResult> results = new ArrayList<>();
-        Multiset<MovieDto> movies = HashMultiset.create( getMovies() );
+		ArrayList<MatchingResult> results = new ArrayList<>();
+		Multiset<MovieDto> movies = HashMultiset.create(getMovies());
 
-        for ( Multiset.Entry<MovieDto> entry :
-                Multisets.copyHighestCountFirst( movies ).entrySet() ) {
-            MovieDto current = entry.getElement();
-            results.add( new MatchingResult( current, movies.count( current ) ) );
-        }
+		for (Multiset.Entry<MovieDto> entry :
+				Multisets.copyHighestCountFirst(movies).entrySet()) {
+			MovieDto current = entry.getElement();
+			results.add(new MatchingResult(current, movies.count(current)));
+		}
 
-        return results;
-    }
+		return results;
+	}
 }
 

@@ -49,7 +49,7 @@ public class WatchlistViewHolder extends RecyclerView.ViewHolder {
 
 		movieTitle.setText(movie.getTitle());
 		movieRuntime.setText(resources.getString(R.string.runtime, movie.getRuntime()));
-		movieVote.setText(resources.getString(R.string.vote, movie.getVoteAverage()));
+		movieVote.setText(resources.getString(R.string.vote, String.valueOf(movie.getVoteAverage())));
 		String posterName = movie.getPosterPath();
 		String posterUri = Constants.POSTER_URI_SMALL.replace("<posterName>", posterName != null ? posterName : "/");
 		Picasso.with(context).load(posterUri).resize(222, 334).error(R.drawable.placeholder_poster).into(imageView);

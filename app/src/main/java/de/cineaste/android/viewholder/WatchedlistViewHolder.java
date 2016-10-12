@@ -47,7 +47,7 @@ public class WatchedlistViewHolder extends RecyclerView.ViewHolder {
 
 		movieTitle.setText(movie.getTitle());
 		movieRuntime.setText(resources.getString(R.string.runtime, movie.getRuntime()));
-		movieVote.setText(resources.getString(R.string.vote, movie.getVoteAverage()));
+		movieVote.setText(resources.getString(R.string.vote, String.valueOf(movie.getVoteAverage())));
 		String posterName = movie.getPosterPath();
 		String posterUri = Constants.POSTER_URI_SMALL
 				.replace("<posterName>", posterName != null ? posterName : "/");

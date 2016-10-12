@@ -21,64 +21,64 @@ import de.cineaste.android.viewholder.WatchedlistViewHolder;
 
 public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer {
 
-    private final MovieDbHelper db;
-    private final Context context;
-    private final BaseWatchlistFragment baseFragment;
-    private final MovieClickListener listener;
+	private final MovieDbHelper db;
+	private final Context context;
+	private final BaseWatchlistFragment baseFragment;
+	private final MovieClickListener listener;
 
-    public WatchedlistAdapter(Context context, BaseWatchlistFragment baseFragment, MovieClickListener listener) {
-        this.db = MovieDbHelper.getInstance(context);
-        this.context = context;
-        this.db.addObserver(this);
-        this.dataset = db.readMoviesByWatchStatus(true);
-        this.filteredDataset = new LinkedList<>(dataset);
-        this.baseFragment = baseFragment;
-        this.listener = listener;
-    }
+	public WatchedlistAdapter(Context context, BaseWatchlistFragment baseFragment, MovieClickListener listener) {
+		this.db = MovieDbHelper.getInstance(context);
+		this.context = context;
+		this.db.addObserver(this);
+		this.dataset = db.readMoviesByWatchStatus(true);
+		this.filteredDataset = new LinkedList<>(dataset);
+		this.baseFragment = baseFragment;
+		this.listener = listener;
+	}
 
-    @Override
-    public void update(Observable observable, Object o) {
-        MovieAndState movieAndState = (MovieAndState) o;
-        MovieStateType state = movieAndState.getState();
-        Movie changedMovie = movieAndState.getMovie();
+	@Override
+	public void update(Observable observable, Object o) {
+		MovieAndState movieAndState = (MovieAndState) o;
+		MovieStateType state = movieAndState.getState();
+		Movie changedMovie = movieAndState.getMovie();
 
-        int index = dataset.indexOf(changedMovie);
+		int index = dataset.indexOf(changedMovie);
 
-        if (index == -1 && (state == MovieStateType.INSERT || state == MovieStateType.STATUS_CHANGED)) {
-            if (changedMovie.isWatched()) {
-                dataset.add(indexInAlphabeticalOrder(changedMovie, dataset), changedMovie);
-                int filterListIndex = indexInAlphabeticalOrder(changedMovie, filteredDataset);
-                filteredDataset.add(filterListIndex, changedMovie);
-                notifyItemInserted(filterListIndex);
-            }
-        } else if (index != -1 && state == MovieStateType.UPDATE) {
-            filteredDataset.set(index, changedMovie);
-            notifyDataSetChanged();
-        } else if (index != -1 && state == MovieStateType.DELETE) {
-            dataset.remove(index);
-            int filterListIndex = filteredDataset.indexOf(changedMovie);
-            filteredDataset.remove(filterListIndex);
-            notifyItemRemoved(filterListIndex);
-        }
+		if (index == -1 && (state == MovieStateType.INSERT || state == MovieStateType.STATUS_CHANGED)) {
+			if (changedMovie.isWatched()) {
+				dataset.add(indexInAlphabeticalOrder(changedMovie, dataset), changedMovie);
+				int filterListIndex = indexInAlphabeticalOrder(changedMovie, filteredDataset);
+				filteredDataset.add(filterListIndex, changedMovie);
+				notifyItemInserted(filterListIndex);
+			}
+		} else if (index != -1 && state == MovieStateType.UPDATE) {
+			filteredDataset.set(index, changedMovie);
+			notifyDataSetChanged();
+		} else if (index != -1 && state == MovieStateType.DELETE) {
+			dataset.remove(index);
+			int filterListIndex = filteredDataset.indexOf(changedMovie);
+			filteredDataset.remove(filterListIndex);
+			notifyItemRemoved(filterListIndex);
+		}
 
-        baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchedList);
-    }
+		baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchedList);
+	}
 
-    public WatchedlistViewHolder onCreateViewHolder(ViewGroup parent, int viewTyp) {
-        View v = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.card_watchedlist, parent, false);
-        return new WatchedlistViewHolder(v, context, db, listener);
-    }
+	public WatchedlistViewHolder onCreateViewHolder(ViewGroup parent, int viewTyp) {
+		View v = LayoutInflater
+				.from(parent.getContext())
+				.inflate(R.layout.card_watchedlist, parent, false);
+		return new WatchedlistViewHolder(v, context, db, listener);
+	}
 
-    @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        ((WatchedlistViewHolder) holder).assignData(filteredDataset.get(position));
-    }
+	@Override
+	public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+		((WatchedlistViewHolder) holder).assignData(filteredDataset.get(position));
+	}
 
-    @Override
-    public int getItemCount() {
-        return filteredDataset.size();
-    }
+	@Override
+	public int getItemCount() {
+		return filteredDataset.size();
+	}
 
 }

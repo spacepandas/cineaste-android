@@ -8,19 +8,19 @@ import android.net.NetworkInfo;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    public boolean isConnected;
+	public boolean isConnected;
 
-    private static NetworkChangeReceiver instance;
+	private static NetworkChangeReceiver instance;
 
-    public static NetworkChangeReceiver getInstance() {
-        return instance == null ? instance = new NetworkChangeReceiver() : instance;
-    }
+	public static NetworkChangeReceiver getInstance() {
+		return instance == null ? instance = new NetworkChangeReceiver() : instance;
+	}
 
-    @Override
-    public void onReceive( Context context, Intent intent ) {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService( Context.CONNECTIVITY_SERVICE );
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        isConnected = activeNetwork != null;
-    }
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		ConnectivityManager cm =
+				(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		isConnected = activeNetwork != null;
+	}
 }
