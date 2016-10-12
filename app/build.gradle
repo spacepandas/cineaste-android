@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
 
     defaultConfig {
 
         buildConfigField("String", "MovieKey", '"' + System.getenv("MOVIE_KEY") + '"')
-        "string", "nearbyKey", System.getenv("NEARBY_KEY")
+        resValue "string", "nearbyKey", System.getenv("NEARBY_KEY")
 
         applicationId "de.cineaste.android"
         minSdkVersion 16
@@ -32,8 +32,8 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.google.android.gms:play-services-gcm:9.4.0'
-    compile 'com.google.android.gms:play-services-nearby:9.4.0'
+    compile 'com.google.android.gms:play-services-gcm:9.6.1'
+    compile 'com.google.android.gms:play-services-nearby:9.6.1'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.google.guava:guava:19.0-rc2'
     compile 'com.squareup.picasso:picasso:2.5.2'
