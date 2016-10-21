@@ -13,33 +13,33 @@ import de.cineaste.android.entity.Movie;
 
 public class ExportService {
 
-    private static final Gson gson = new Gson();
+	private static final Gson gson = new Gson();
 
-    public static void exportMovies( List<Movie> movies ) {
+	public static void exportMovies(List<Movie> movies) {
 
-        File exportPath = new File( Environment.getExternalStorageDirectory() + "/Cineaste" );
+		File exportPath = new File(Environment.getExternalStorageDirectory() + "/Cineaste");
 
-        if( !exportPath.exists() ) {
-            if (!exportPath.mkdir())
-                return;
-        }
+		if (!exportPath.exists()) {
+			if (!exportPath.mkdir())
+				return;
+		}
 
-        File exportFile = new File(
-                Environment.getExternalStorageDirectory() + "/Cineaste/movies.json" );
+		File exportFile = new File(
+				Environment.getExternalStorageDirectory() + "/Cineaste/movies.json");
 
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter( exportFile );
-            fileWriter.write( gson.toJson( movies ) );
-        } catch ( IOException e ) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (fileWriter != null)
-                    fileWriter.close();
-            } catch ( Exception e ) {
-                //die silently
-            }
-        }
-    }
+		FileWriter fileWriter = null;
+		try {
+			fileWriter = new FileWriter(exportFile);
+			fileWriter.write(gson.toJson(movies));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fileWriter != null)
+					fileWriter.close();
+			} catch (Exception e) {
+				//die silently
+			}
+		}
+	}
 }

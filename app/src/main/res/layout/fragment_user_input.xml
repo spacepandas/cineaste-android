@@ -10,7 +10,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:hint="@string/username" />
+        android:hint="@string/enter_username" />
 
     <TextView
         android:layout_width="wrap_content"

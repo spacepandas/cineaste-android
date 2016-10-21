@@ -13,73 +13,73 @@ import de.cineaste.android.entity.Movie;
 
 public class TheMovieDb extends BaseNetwork {
 
-    public interface OnSearchMoviesResultListener {
-        void onSearchMoviesResultListener( List<Movie> movies );
-    }
+	public interface OnSearchMoviesResultListener {
+		void onSearchMoviesResultListener(List<Movie> movies);
+	}
 
-    public interface OnFetchMovieResultListener {
-        void onFetchMovieResultListener( Movie movie );
-    }
+	public interface OnFetchMovieResultListener {
+		void onFetchMovieResultListener(Movie movie);
+	}
 
 
-    private final String API_KEY_TAG = "api_key=" + Constants.API_KEY;
+	private final String API_KEY_TAG = "api_key=" + Constants.API_KEY;
 
-    public TheMovieDb() {
-        super( "https://api.themoviedb.org/3/" );
-    }
+	public TheMovieDb() {
+		super("https://api.themoviedb.org/3/");
+	}
 
-    public void searchMoviesAsync( String query,
-                                   final OnSearchMoviesResultListener listener,
-                                   String lang ) {
+	public void searchMoviesAsync(String query,
+								  final OnSearchMoviesResultListener listener,
+								  String lang) {
 
-        String url = host +
-                "search/movie?query=" + query +
-                "&language=" + lang +
-                "&" + API_KEY_TAG;
-        requestAsync(
-                new Request(
-                        url,
-                        new String[]{"Accept:application/json"}
-                ),
-                new OnResultListener() {
-                    @Override
-                    public void onResultListener( Response response ) {
-                        List<Movie> movies = new ArrayList<>();
-                        if( successfulRequest( response.getCode() ) ) {
-                            JsonParser parser = new JsonParser();
-                            JsonObject responseObject =
-                                    parser.parse( response.getString() ).getAsJsonObject();
-                            String movieListJson = responseObject.get( "results" ).toString();
-                            Type listType = new TypeToken<List<Movie>>() {
-                            }.getType();
-                            movies = gson.fromJson( movieListJson, listType );
-                        }
-                        listener.onSearchMoviesResultListener( movies );
-                    }
-                } );
-    }
+		String url = host +
+				"search/movie?query=" + query +
+				"&language=" + lang +
+				"&" + API_KEY_TAG;
+		requestAsync(
+				new Request(
+						url,
+						new String[]{"Accept:application/json"}
+				),
+				new OnResultListener() {
+					@Override
+					public void onResultListener(Response response) {
+						List<Movie> movies = new ArrayList<>();
+						if (successfulRequest(response.getCode())) {
+							JsonParser parser = new JsonParser();
+							JsonObject responseObject =
+									parser.parse(response.getString()).getAsJsonObject();
+							String movieListJson = responseObject.get("results").toString();
+							Type listType = new TypeToken<List<Movie>>() {
+							}.getType();
+							movies = gson.fromJson(movieListJson, listType);
+						}
+						listener.onSearchMoviesResultListener(movies);
+					}
+				});
+	}
 
-    public void fetchMovie( long movieId, String lang, final OnFetchMovieResultListener listener ) {
+	public void fetchMovie(long movieId, String lang, final OnFetchMovieResultListener listener) {
 
-        String url = host + "movie/" + movieId + "?language=" + lang +
-                "&" + API_KEY_TAG;
+		String url = host + "movie/" + movieId + "?language=" + lang +
+				"&" + API_KEY_TAG;
 
-        requestAsync(
-                new Request(
-                        url,
-                        new String[]{"Accept:application/json"}
-                ),
-                new OnResultListener() {
-                    @Override
-                    public void onResultListener( Response response ) {
-                        if( !successfulRequest( response.getCode() ) ) {
-                            listener.onFetchMovieResultListener( null );
-                        } else {
-                            listener.onFetchMovieResultListener(
-                                    gson.fromJson( response.getString(), Movie.class )
-                            );
-                        }
-                    }
-                } );
-    }
+		requestAsync(
+				new Request(
+						url,
+						new String[]{"Accept:application/json"}
+				),
+				new OnResultListener() {
+					@Override
+					public void onResultListener(Response response) {
+						if (!successfulRequest(response.getCode())) {
+							listener.onFetchMovieResultListener(null);
+						} else {
+							listener.onFetchMovieResultListener(
+									gson.fromJson(response.getString(), Movie.class)
+							);
+						}
+					}
+				});
+	}
 }

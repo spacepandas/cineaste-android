@@ -22,80 +22,81 @@ import de.cineaste.android.entity.MatchingResult;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
 
-    private final NearbyMessageHandler handler;
+	private final NearbyMessageHandler handler;
 
-    private final List<MatchingResult> results;
-    private final OnMovieSelectListener listener;
-    private final Context context;
-    private final int rowLayout;
+	private final List<MatchingResult> results;
+	private final OnMovieSelectListener listener;
+	private final Context context;
+	private final int rowLayout;
 
-    public interface OnMovieSelectListener {
-        void onMovieSelectListener( int position );
-    }
+	public interface OnMovieSelectListener {
+		void onMovieSelectListener(int position);
+	}
 
-    public ResultAdapter(
-            List<MatchingResult> results,
-            Context context,
-            OnMovieSelectListener listener ) {
-        this.results = results;
-        this.rowLayout = R.layout.card_result;
-        this.context = context;
-        this.listener = listener;
-        handler = NearbyMessageHandler.getInstance();
-    }
+	public ResultAdapter(
+			List<MatchingResult> results,
+			Context context,
+			OnMovieSelectListener listener) {
+		this.results = results;
+		this.rowLayout = R.layout.card_result;
+		this.context = context;
+		this.listener = listener;
+		handler = NearbyMessageHandler.getInstance();
+	}
 
-    @Override
-    public int getItemCount() {
-        return results == null ? 0 : results.size();
-    }
+	@Override
+	public int getItemCount() {
+		return results == null ? 0 : results.size();
+	}
 
-    @Override
-    public ViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
-        View v = LayoutInflater.from( parent.getContext() ).inflate( rowLayout, parent, false );
-        return new ViewHolder( v );
-    }
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
+		return new ViewHolder(v);
+	}
 
-    @Override
-    public void onBindViewHolder( final ViewHolder holder, final int position ) {
-        holder.assignData( results.get( position ), handler.getSize() );
-    }
+	@Override
+	public void onBindViewHolder(final ViewHolder holder, final int position) {
+		holder.assignData(results.get(position), handler.getSize());
+	}
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView title, counter;
-        public final ImageButton watchedButton;
-        public final ImageView moviePoster;
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+		final ImageView moviePoster;
+		final ImageButton watchedButton;
+		final TextView title, counter;
 
-        public ViewHolder( final View itemView ) {
-            super( itemView );
-            title = (TextView) itemView.findViewById( R.id.movie_title );
-            counter = (TextView) itemView.findViewById( R.id.movie_counter_tv );
-            watchedButton = (ImageButton) itemView.findViewById( R.id.watched_button );
-            moviePoster = (ImageView) itemView.findViewById( R.id.movie_poster_image_view );
-        }
+		public ViewHolder(final View itemView) {
+			super(itemView);
+			title = (TextView) itemView.findViewById(R.id.movie_title);
+			counter = (TextView) itemView.findViewById(R.id.movie_counter_tv);
+			watchedButton = (ImageButton) itemView.findViewById(R.id.watched_button);
+			moviePoster = (ImageView) itemView.findViewById(R.id.movie_poster_image_view);
+		}
 
-        public void assignData( MatchingResult matchingResult, int resultCounter ) {
-            String posterUri =
-                    Constants.POSTER_URI_SMALL
-                            .replace( "<posterName>", matchingResult.getPosterPath() != null ?
-                                    matchingResult.getPosterPath() : "/" );
-            Picasso.with( context )
-                    .load( Uri.parse( posterUri ) )
-                    .error( R.drawable.placeholder_poster )
-                    .into( moviePoster );
-            watchedButton.setOnClickListener( this );
-            title.setText( matchingResult.getTitle() );
-            counter.setText(
-                    String.format( Locale.getDefault(), "%d/%d", matchingResult.getCounter(), resultCounter )
-            );
-        }
+		public void assignData(MatchingResult matchingResult, int resultCounter) {
+			String posterUri =
+					Constants.POSTER_URI_SMALL
+							.replace("<posterName>", matchingResult.getPosterPath() != null ?
+									matchingResult.getPosterPath() : "/");
+			Picasso.with(context)
+					.load(Uri.parse(posterUri))
+					.resize(222, 334)
+					.error(R.drawable.placeholder_poster)
+					.into(moviePoster);
+			watchedButton.setOnClickListener(this);
+			title.setText(matchingResult.getTitle());
+			counter.setText(
+					String.format(Locale.getDefault(), "%d/%d", matchingResult.getCounter(), resultCounter)
+			);
+		}
 
-        @Override
-        public void onClick( View v ) {
-            int position = getAdapterPosition();
-            if( listener != null )
-                listener.onMovieSelectListener( position );
-            results.remove( position );
-            notifyItemRemoved( position );
-        }
-    }
+		@Override
+		public void onClick(View v) {
+			int position = getAdapterPosition();
+			if (listener != null)
+				listener.onMovieSelectListener(position);
+			results.remove(position);
+			notifyItemRemoved(position);
+		}
+	}
 }

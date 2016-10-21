@@ -8,89 +8,89 @@ import java.util.Date;
 
 public class Movie extends MovieDto implements Comparable<Movie> {
 
-    private int runtime;
-    @SerializedName( "vote_average" )
-    private double voteAverage;
-    @SerializedName( "vote_count" )
-    private int voteCount;
-    @SerializedName( "overview" )
-    private String description;
-    private boolean watched;
-    private long watchedDate;
+	private int runtime;
+	@SerializedName("vote_average")
+	private double voteAverage;
+	@SerializedName("vote_count")
+	private int voteCount;
+	@SerializedName("overview")
+	private String description;
+	private boolean watched;
+	private long watchedDate;
 
-    public Movie() {
-        this.watched = false;
-    }
+	public Movie() {
+		this.watched = false;
+	}
 
-    public Movie(
-            long id,
-            String posterPath,
-            int runtime,
-            String title,
-            double voteAverage,
-            String description,
-            int voteCount ) {
-        super( id, posterPath, title );
-        this.runtime = runtime;
-        this.voteAverage = voteAverage;
-        this.voteCount = voteCount;
-        this.description = description;
-        this.watched = false;
-    }
+	public Movie(
+			long id,
+			String posterPath,
+			int runtime,
+			String title,
+			double voteAverage,
+			String description,
+			int voteCount) {
+		super(id, posterPath, title);
+		this.runtime = runtime;
+		this.voteAverage = voteAverage;
+		this.voteCount = voteCount;
+		this.description = description;
+		this.watched = false;
+	}
 
-    public int getRuntime() {
-        return runtime;
-    }
+	public int getRuntime() {
+		return runtime;
+	}
 
-    public void setRuntime( int runtime ) {
-        this.runtime = runtime;
-    }
+	public void setRuntime(int runtime) {
+		this.runtime = runtime;
+	}
 
-    public double getVoteAverage() {
-        return voteAverage;
-    }
+	public double getVoteAverage() {
+		return voteAverage;
+	}
 
-    public void setVoteAverage( double voteAverage ) {
-        this.voteAverage = voteAverage;
-    }
+	public void setVoteAverage(double voteAverage) {
+		this.voteAverage = voteAverage;
+	}
 
-    public int getVoteCount() {
-        return voteCount;
-    }
+	public int getVoteCount() {
+		return voteCount;
+	}
 
-    public void setVoteCount( int voteCount ) {
-        this.voteCount = voteCount;
-    }
+	public void setVoteCount(int voteCount) {
+		this.voteCount = voteCount;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription( String description ) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public boolean isWatched() {
-        return watched;
-    }
+	public boolean isWatched() {
+		return watched;
+	}
 
-    public void setWatched( boolean watched ) {
-        this.watched = watched;
-        if( watched && this.watchedDate == 0 ) {
-            this.watchedDate = new Date().getTime();
-        }
-    }
+	public void setWatched(boolean watched) {
+		this.watched = watched;
+		if (watched && this.watchedDate == 0) {
+			this.watchedDate = new Date().getTime();
+		}
+	}
 
-    public long getWatchedDate() {
-        return watchedDate;
-    }
+	public long getWatchedDate() {
+		return watchedDate;
+	}
 
-    public void setWatchedDate( long watchedDate ) {
-        this.watchedDate = watchedDate;
-    }
+	public void setWatchedDate(long watchedDate) {
+		this.watchedDate = watchedDate;
+	}
 
-    @Override
-    public int compareTo(@NonNull Movie another) {
-        return this.getTitle().compareTo(another.getTitle());
-    }
+	@Override
+	public int compareTo(@NonNull Movie another) {
+		return this.getTitle().compareTo(another.getTitle());
+	}
 }

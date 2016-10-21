@@ -16,26 +16,26 @@ import de.cineaste.android.entity.Movie;
 
 public class ImportService {
 
-    private static final Gson gson = new Gson();
+	private static final Gson gson = new Gson();
 
-    public static List<Movie> importMovies() {
+	public static List<Movie> importMovies() {
 
-        final File importFile = new File(
-                Environment.getExternalStorageDirectory() + "/Cineaste/movies.json" );
-        try {
-            FileReader fileReader = new FileReader( importFile );
-            BufferedReader reader = new BufferedReader( fileReader );
+		final File importFile = new File(
+				Environment.getExternalStorageDirectory() + "/Cineaste/movies.json");
+		try {
+			FileReader fileReader = new FileReader(importFile);
+			BufferedReader reader = new BufferedReader(fileReader);
 
-            String temp;
-            StringBuilder text = new StringBuilder();
-            while ( (temp = reader.readLine()) != null ) {
-                text.append( temp );
-            }
-            Type listType = new TypeToken<List<Movie>>() {
-            }.getType();
-            return gson.fromJson( text.toString(), listType );
-        } catch ( Exception ex ) {
-            return new ArrayList<>();
-        }
-    }
+			String temp;
+			StringBuilder text = new StringBuilder();
+			while ((temp = reader.readLine()) != null) {
+				text.append(temp);
+			}
+			Type listType = new TypeToken<List<Movie>>() {
+			}.getType();
+			return gson.fromJson(text.toString(), listType);
+		} catch (Exception ex) {
+			return new ArrayList<>();
+		}
+	}
 }

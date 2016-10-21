@@ -46,103 +46,103 @@ import de.cineaste.android.entity.NearbyMessage;
 import de.cineaste.android.entity.User;
 
 public class MovieNightFragment extends Fragment
-        implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+		implements GoogleApiClient.ConnectionCallbacks,
+		GoogleApiClient.OnConnectionFailedListener {
 
-    private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
-            .setTtlSeconds( 180 ).build();
+	private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
+			.setTtlSeconds(180).build();
 
-    private final ArrayList<NearbyMessage> nearbyMessagesArrayList = new ArrayList<>();
+	private final ArrayList<NearbyMessage> nearbyMessagesArrayList = new ArrayList<>();
 
-    private String deviceID;
-    private Button startBtn;
-    private TextView searchingFriends;
-    private ProgressBar progressBar;
-    private RecyclerView nearbyUser_rv;
-    private View view;
+	private String deviceID;
+	private Button startBtn;
+	private TextView searchingFriends;
+	private ProgressBar progressBar;
+	private RecyclerView nearbyUser_rv;
+	private View view;
 
-    private NearbyUserAdapter nearbyUserAdapter;
-    private GoogleApiClient googleApiClient;
-    private MessageListener messageListener;
-    private boolean mResolvingNearbyPermissionError = false;
+	private NearbyUserAdapter nearbyUserAdapter;
+	private GoogleApiClient googleApiClient;
+	private MessageListener messageListener;
+	private boolean mResolvingNearbyPermissionError = false;
 
-    private NearbyMessage localNearbyMessage;
+	private NearbyMessage localNearbyMessage;
 
-    public void finishedResolvingNearbyPermissionError() {
-        mResolvingNearbyPermissionError = false;
-    }
+	public void finishedResolvingNearbyPermissionError() {
+		mResolvingNearbyPermissionError = false;
+	}
 
-    public void start() {
-        publish();
-        subscribe();
-    }
+	public void start() {
+		publish();
+		subscribe();
+	}
 
-    public void stop() {
-        unpublish();
-        unsubscribe();
-    }
+	public void stop() {
+		unpublish();
+		unsubscribe();
+	}
 
-    @Override
-    public void onCreate( Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
-        setRetainInstance( true );
-        loadDeviceID();
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+		loadDeviceID();
 
-        MovieDbHelper watchlistDbHelper = MovieDbHelper.getInstance( getActivity() );
-        UserDbHelper userDbHelper = UserDbHelper.getInstance( getActivity() );
-        User currentUser = userDbHelper.getUser();
-        List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus( false );
-        final List<MovieDto> localMovies = transFormMovies( localWatchlistMovies );
-        localNearbyMessage = new NearbyMessage( currentUser.getUserName(), deviceID, localMovies );
-    }
+		MovieDbHelper watchlistDbHelper = MovieDbHelper.getInstance(getActivity());
+		UserDbHelper userDbHelper = UserDbHelper.getInstance(getActivity());
+		User currentUser = userDbHelper.getUser();
+		List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(false);
+		final List<MovieDto> localMovies = transFormMovies(localWatchlistMovies);
+		localNearbyMessage = new NearbyMessage(currentUser.getUserName(), deviceID, localMovies);
+	}
 
-    @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
 
-        view = inflater.inflate( R.layout.fragment_movie_night, container, false );
+		view = inflater.inflate(R.layout.fragment_movie_night, container, false);
 
-        nearbyUser_rv = (RecyclerView) view.findViewById( R.id.nearbyUser_rv );
-        startBtn = (Button) view.findViewById( R.id.start_btn );
-        startBtn.setVisibility( View.GONE );
-        searchingFriends = (TextView) view.findViewById( R.id.searchingFriends );
-        progressBar = (ProgressBar) view.findViewById( R.id.progressBar );
+		nearbyUser_rv = (RecyclerView) view.findViewById(R.id.nearbyUser_rv);
+		startBtn = (Button) view.findViewById(R.id.start_btn);
+		startBtn.setVisibility(View.GONE);
+		searchingFriends = (TextView) view.findViewById(R.id.searchingFriends);
+		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        nearbyUserAdapter =
-                new NearbyUserAdapter(
-                        nearbyMessagesArrayList,
-                        getActivity() );
+		nearbyUserAdapter =
+				new NearbyUserAdapter(
+						nearbyMessagesArrayList,
+						getActivity());
 
-        final LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
-        llm.setOrientation( LinearLayoutManager.VERTICAL );
-        nearbyUser_rv.setLayoutManager( llm );
-        nearbyUser_rv.setItemAnimator( new DefaultItemAnimator() );
-        nearbyUser_rv.setAdapter( nearbyUserAdapter );
+		final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+		llm.setOrientation(LinearLayoutManager.VERTICAL);
+		nearbyUser_rv.setLayoutManager(llm);
+		nearbyUser_rv.setItemAnimator(new DefaultItemAnimator());
+		nearbyUser_rv.setAdapter(nearbyUserAdapter);
 
-        messageListener = new MessageListener() {
-            @Override
-            public void onFound( final Message message ) {
-                getActivity().runOnUiThread( new Runnable() {
-                    @Override
-                    public void run() {
-                        if( !nearbyMessagesArrayList.contains( NearbyMessage.fromMessage( message ) ) ) {
-                            nearbyMessagesArrayList.add( NearbyMessage.fromMessage( message ) );
-                            if( nearbyMessagesArrayList.size() > 0 ) {
-                                startBtn.setVisibility( View.VISIBLE );
-                                nearbyUser_rv.setVisibility( View.VISIBLE );
-                                searchingFriends.setVisibility( View.GONE );
-                                progressBar.setVisibility( View.GONE );
-                            }
-                            nearbyUserAdapter.notifyDataSetChanged();
-                        }
-                    }
-                } );
-            }
+		messageListener = new MessageListener() {
+			@Override
+			public void onFound(final Message message) {
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if (!nearbyMessagesArrayList.contains(NearbyMessage.fromMessage(message))) {
+							nearbyMessagesArrayList.add(NearbyMessage.fromMessage(message));
+							if (nearbyMessagesArrayList.size() > 0) {
+								startBtn.setVisibility(View.VISIBLE);
+								nearbyUser_rv.setVisibility(View.VISIBLE);
+								searchingFriends.setVisibility(View.GONE);
+								progressBar.setVisibility(View.GONE);
+							}
+							nearbyUserAdapter.notifyDataSetChanged();
+						}
+					}
+				});
+			}
 
-            @Override
-            public void onLost( final Message message ) {
-                //do not remove messages when connection lost
-              /*  getActivity().runOnUiThread( new Runnable() {
+			@Override
+			public void onLost(final Message message) {
+				//do not remove messages when connection lost
+			  /*  getActivity().runOnUiThread( new Runnable() {
                     @Override
                     public void run() {
                         NearbyMessage temp = NearbyMessage.fromMessage( message );
@@ -151,211 +151,213 @@ public class MovieNightFragment extends Fragment
                         nearbyUserAdapter.notifyItemRemoved( position );
                     }
                 } );*/
-            }
-        };
+			}
+		};
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
+	@Override
+	public void onStart() {
+		super.onStart();
 
-        googleApiClient = new GoogleApiClient.Builder( getContext() )
-                .addApi( Nearby.MESSAGES_API )
-                .addConnectionCallbacks( this )
-                .addOnConnectionFailedListener( this )
-                .build();
-        googleApiClient.connect();
+		googleApiClient = new GoogleApiClient.Builder(getContext())
+				.addApi(Nearby.MESSAGES_API)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.build();
+		googleApiClient.connect();
 
 
-        startBtn.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick( View v ) {
-                NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
-                handler.clearMessages();
-                handler.addMessage( localNearbyMessage );
-                handler.addMessages( nearbyMessagesArrayList );
-                MainActivity.replaceFragmentPopBackStack(
-                        getFragmentManager(),
-                        new ResultFragment() );
-            }
-        } );
-    }
+		startBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
+				handler.clearMessages();
+				handler.addMessage(localNearbyMessage);
+				handler.addMessages(nearbyMessagesArrayList);
+				MainActivity.replaceFragmentPopBackStack(
+						getFragmentManager(),
+						new ResultFragment());
+			}
+		});
+	}
 
-    @Override
-    public void onStop() {
-        if( googleApiClient.isConnected() && !getActivity().isChangingConfigurations() ) {
-            unsubscribe();
-            unpublish();
+	@Override
+	public void onStop() {
+		if (googleApiClient.isConnected() && !getActivity().isChangingConfigurations()) {
+			unsubscribe();
+			unpublish();
 
-            googleApiClient.disconnect();
-        }
-        super.onStop();
-    }
+			googleApiClient.disconnect();
+		}
+		super.onStop();
+	}
 
-    @Override
-    public void onConnected( Bundle bundle ) {
-        subscribe();
-        publish();
-    }
+	@Override
+	public void onConnected(Bundle bundle) {
+		subscribe();
+		publish();
+	}
 
-    @Override
-    public void onConnectionSuspended( int cause ) {
-        // GoogleApiClient connection suspended
-    }
+	@Override
+	public void onConnectionSuspended(int cause) {
+		// GoogleApiClient connection suspended
+	}
 
-    @Override
-    public void onConnectionFailed( @NonNull ConnectionResult connectionResult ) {
-        //connection to GoogleApiClient failed
-    }
+	@Override
+	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+		//connection to GoogleApiClient failed
+	}
 
-    private void clearDeviceList() {
-        getActivity().runOnUiThread( new Runnable() {
-            @Override
-            public void run() {
-                nearbyMessagesArrayList.clear();
-                nearbyUserAdapter.notifyDataSetChanged();
-            }
-        } );
-    }
+	private void clearDeviceList() {
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				nearbyMessagesArrayList.clear();
+				nearbyUserAdapter.notifyDataSetChanged();
+			}
+		});
+	}
 
-    private void subscribe() {
-        //trying to subscribe
-        if( !googleApiClient.isConnected() ) {
-            if( !googleApiClient.isConnecting() ) {
-                googleApiClient.connect();
-            }
-        } else {
-            clearDeviceList();
-            SubscribeOptions options = new SubscribeOptions.Builder()
-                    .setStrategy( PUB_SUB_STRATEGY )
-                    .setCallback( new SubscribeCallback() {} ).build();
+	private void subscribe() {
+		//trying to subscribe
+		if (!googleApiClient.isConnected()) {
+			if (!googleApiClient.isConnecting()) {
+				googleApiClient.connect();
+			}
+		} else {
+			clearDeviceList();
+			SubscribeOptions options = new SubscribeOptions.Builder()
+					.setStrategy(PUB_SUB_STRATEGY)
+					.setCallback(new SubscribeCallback() {
+					}).build();
 
-            Nearby.Messages.subscribe( googleApiClient, messageListener, options )
-                    .setResultCallback( new ResultCallback<Status>() {
+			Nearby.Messages.subscribe(googleApiClient, messageListener, options)
+					.setResultCallback(new ResultCallback<Status>() {
 
-                        @Override
-                        public void onResult( @NonNull Status status ) {
-                            if( !status.isSuccess() ) {
-                                handleUnsuccessfulNearbyResult( status );
-                            }
-                        }
-                    } );
-        }
-    }
+						@Override
+						public void onResult(@NonNull Status status) {
+							if (!status.isSuccess()) {
+								handleUnsuccessfulNearbyResult(status);
+							}
+						}
+					});
+		}
+	}
 
-    private void unsubscribe() {
-        if( !googleApiClient.isConnected() ) {
-            if( !googleApiClient.isConnecting() ) {
-                googleApiClient.connect();
-            }
-        } else {
-            Nearby.Messages.unsubscribe( googleApiClient, messageListener )
-                    .setResultCallback( new ResultCallback<Status>() {
+	private void unsubscribe() {
+		if (!googleApiClient.isConnected()) {
+			if (!googleApiClient.isConnecting()) {
+				googleApiClient.connect();
+			}
+		} else {
+			Nearby.Messages.unsubscribe(googleApiClient, messageListener)
+					.setResultCallback(new ResultCallback<Status>() {
 
-                        @Override
-                        public void onResult( @NonNull Status status ) {
-                            if( !status.isSuccess() ) {
-                                handleUnsuccessfulNearbyResult( status );
-                            }
-                        }
-                    } );
-        }
-    }
+						@Override
+						public void onResult(@NonNull Status status) {
+							if (!status.isSuccess()) {
+								handleUnsuccessfulNearbyResult(status);
+							}
+						}
+					});
+		}
+	}
 
-    private void publish() {
-        if( !googleApiClient.isConnected() ) {
-            if( !googleApiClient.isConnecting() ) {
-                googleApiClient.connect();
-            }
-        } else {
-            PublishOptions options = new PublishOptions.Builder()
-                    .setStrategy( PUB_SUB_STRATEGY )
-                    .setCallback( new PublishCallback() {} ).build();
-            Nearby.Messages.publish( googleApiClient, NearbyMessage.newNearbyMessage( localNearbyMessage ), options )
-                    .setResultCallback( new ResultCallback<Status>() {
+	private void publish() {
+		if (!googleApiClient.isConnected()) {
+			if (!googleApiClient.isConnecting()) {
+				googleApiClient.connect();
+			}
+		} else {
+			PublishOptions options = new PublishOptions.Builder()
+					.setStrategy(PUB_SUB_STRATEGY)
+					.setCallback(new PublishCallback() {
+					}).build();
+			Nearby.Messages.publish(googleApiClient, NearbyMessage.newNearbyMessage(localNearbyMessage), options)
+					.setResultCallback(new ResultCallback<Status>() {
 
-                        @Override
-                        public void onResult( @NonNull Status status ) {
-                            if( !status.isSuccess() ) {
-                                handleUnsuccessfulNearbyResult( status );
-                            }
-                        }
-                    } );
-        }
-    }
+						@Override
+						public void onResult(@NonNull Status status) {
+							if (!status.isSuccess()) {
+								handleUnsuccessfulNearbyResult(status);
+							}
+						}
+					});
+		}
+	}
 
-    private void unpublish() {
-        if( !googleApiClient.isConnected() ) {
-            if( !googleApiClient.isConnecting() ) {
-                googleApiClient.connect();
-            }
-        } else {
-            Nearby.Messages.unpublish( googleApiClient, NearbyMessage.newNearbyMessage( localNearbyMessage ) )
-                    .setResultCallback( new ResultCallback<Status>() {
+	private void unpublish() {
+		if (!googleApiClient.isConnected()) {
+			if (!googleApiClient.isConnecting()) {
+				googleApiClient.connect();
+			}
+		} else {
+			Nearby.Messages.unpublish(googleApiClient, NearbyMessage.newNearbyMessage(localNearbyMessage))
+					.setResultCallback(new ResultCallback<Status>() {
 
-                        @Override
-                        public void onResult( @NonNull Status status ) {
-                            if( !status.isSuccess() ) {
-                                handleUnsuccessfulNearbyResult( status );
-                            }
-                        }
-                    } );
-        }
-    }
+						@Override
+						public void onResult(@NonNull Status status) {
+							if (!status.isSuccess()) {
+								handleUnsuccessfulNearbyResult(status);
+							}
+						}
+					});
+		}
+	}
 
-    private void handleUnsuccessfulNearbyResult( Status status ) {
-        if( status.getStatusCode() == NearbyMessagesStatusCodes.APP_NOT_OPTED_IN ) {
-            if( !mResolvingNearbyPermissionError ) {
-                try {
-                    mResolvingNearbyPermissionError = true;
-                    status.startResolutionForResult( getActivity(), 1001 );
+	private void handleUnsuccessfulNearbyResult(Status status) {
+		if (status.getStatusCode() == NearbyMessagesStatusCodes.APP_NOT_OPTED_IN) {
+			if (!mResolvingNearbyPermissionError) {
+				try {
+					mResolvingNearbyPermissionError = true;
+					status.startResolutionForResult(getActivity(), 1001);
 
-                } catch ( IntentSender.SendIntentException e ) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            if( status.getStatusCode() == ConnectionResult.NETWORK_ERROR ) {
-                Snackbar snackbar = Snackbar
-                        .make( view, R.string.noInternet, Snackbar.LENGTH_LONG );
-                snackbar.show();
+				} catch (IntentSender.SendIntentException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			if (status.getStatusCode() == ConnectionResult.NETWORK_ERROR) {
+				Snackbar snackbar = Snackbar
+						.make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
+				snackbar.show();
 
-            } else {
-                Snackbar snackbar = Snackbar
-                        .make( view, "Unsuccessful: " +
-                                status.getStatusMessage(), Snackbar.LENGTH_LONG );
-                snackbar.show();
-            }
-        }
-    }
+			} else {
+				Snackbar snackbar = Snackbar
+						.make(view, "Unsuccessful: " +
+								status.getStatusMessage(), Snackbar.LENGTH_LONG);
+				snackbar.show();
+			}
+		}
+	}
 
-    private List<MovieDto> transFormMovies( List<Movie> movies ) {
-        List<MovieDto> movieDtos = new ArrayList<>();
-        for ( Movie movie : movies ) {
-            movieDtos.add( new MovieDto( movie ) );
-        }
-        return movieDtos;
-    }
+	private List<MovieDto> transFormMovies(List<Movie> movies) {
+		List<MovieDto> movieDtos = new ArrayList<>();
+		for (Movie movie : movies) {
+			movieDtos.add(new MovieDto(movie));
+		}
+		return movieDtos;
+	}
 
-    private void loadDeviceID() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-        deviceID = sharedPreferences.getString( "deviceID", "deviceID" );
+	private void loadDeviceID() {
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		deviceID = sharedPreferences.getString("deviceID", "deviceID");
 
-        if( deviceID.equals( "deviceID" ) )
-            generateDeviceId();
-    }
+		if (deviceID.equals("deviceID"))
+			generateDeviceId();
+	}
 
-    private void generateDeviceId() {
-        String id = "";
-        for (int i = 0 ; i < 6; i++) {
-            id += String.valueOf((int)(Math.random()*10));
-        }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString( "deviceID", id );
-        editor.apply();
-        loadDeviceID();
-    }
+	private void generateDeviceId() {
+		String id = "";
+		for (int i = 0; i < 6; i++) {
+			id += String.valueOf((int) (Math.random() * 10));
+		}
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString("deviceID", id);
+		editor.apply();
+		loadDeviceID();
+	}
 }
