@@ -3,6 +3,7 @@ package de.cineaste.android;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
@@ -158,7 +159,9 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
 
 	@TargetApi(21)
 	private void transparentStatusBar() {
-		getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark_half_translucent));
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark_half_translucent));
+		}
 	}
 
 	private void initSwipeRefresh(final int state) {
