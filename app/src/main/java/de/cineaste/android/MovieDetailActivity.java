@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -151,10 +152,24 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
 			actionBar.setDisplayHomeAsUpEnabled(true);
 
 		final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-		if (collapsingToolbarLayout != null) {
-			collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
-			collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.toolbar_text));
-		}
+		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+		appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+			boolean isShow = true;
+			int scrollRange = -1;
+			@Override
+			public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+				if (scrollRange == -1) {
+					scrollRange = appBarLayout.getTotalScrollRange();
+				}
+				if (scrollRange + verticalOffset == 0) {
+					collapsingToolbarLayout.setTitle(getString(R.string.app_name));
+					isShow = true;
+				} else if (isShow) {
+					collapsingToolbarLayout.setTitle(" ");
+					isShow = false;
+				}
+			}
+		});
 	}
 
 	@TargetApi(21)
