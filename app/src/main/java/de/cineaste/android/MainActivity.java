@@ -3,9 +3,7 @@ package de.cineaste.android;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -23,7 +21,6 @@ import de.cineaste.android.entity.User;
 import de.cineaste.android.fragment.MovieNightFragment;
 import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.ViewPagerFragment;
-import de.cineaste.android.receiver.NetworkChangeReceiver;
 
 public class MainActivity extends AppCompatActivity implements UserInputFragment.UserNameListener {
 
@@ -114,18 +111,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 		if (savedInstanceState == null) {
 			replaceFragment(fm, new ViewPagerFragment());
 		}
-
-		registerNetworkChangeReceiver();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		try {
-			getBaseContext().unregisterReceiver(NetworkChangeReceiver.getInstance());
-		} catch (IllegalArgumentException e) {
-			//die silently
-		}
 	}
 
 	@Override
@@ -177,12 +162,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 					fm.getBackStackEntryCount() > 1
 			);
 		}
-	}
-
-	private void registerNetworkChangeReceiver() {
-		IntentFilter networkFilter = new IntentFilter();
-		networkFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-		getBaseContext().registerReceiver(NetworkChangeReceiver.getInstance(), networkFilter);
 	}
 
 	private static void startDialogFragment(FragmentManager fragmentManager, DialogFragment fragment) {

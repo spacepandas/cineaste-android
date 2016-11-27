@@ -16,14 +16,18 @@ import de.cineaste.android.viewholder.StateWatchedListViewHolder;
 public class DetailViewAdapter extends RecyclerView.Adapter {
 	private final Movie dataset;
 	private final int state;
-	private final Context context;
 	private final OnBackPressedListener onBackPressedListener;
+	private final StateSearchViewHolder.OnAddToListInSearchState addToListInSearchState;
+	private final StateWatchedListViewHolder.OnMovieRemovedFromWatchedList onMovieRemoved;
+	private final StateWatchListViewHolder.OnMovieStateOnWatchListChanged movieStateOnWatchListChanged;
 
-	public DetailViewAdapter(Context context, Movie movie, int state, OnBackPressedListener onBackPressedListener) {
-		this.context = context;
+	public DetailViewAdapter(Movie movie, int state, OnBackPressedListener onBackPressedListener, StateSearchViewHolder.OnAddToListInSearchState addToListInSearchState, StateWatchedListViewHolder.OnMovieRemovedFromWatchedList onMovieRemoved, StateWatchListViewHolder.OnMovieStateOnWatchListChanged movieStateOnWatchListChanged) {
 		dataset = movie;
 		this.state = state;
 		this.onBackPressedListener = onBackPressedListener;
+		this.addToListInSearchState = addToListInSearchState;
+		this.onMovieRemoved = onMovieRemoved;
+		this.movieStateOnWatchListChanged = movieStateOnWatchListChanged;
 	}
 
 	@Override
@@ -33,18 +37,19 @@ public class DetailViewAdapter extends RecyclerView.Adapter {
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		Context context = parent.getContext();
 		if (viewType == 0) {
 			View v;
 			switch (state) {
 				case R.string.searchState:
 					v = LayoutInflater.from(parent.getContext()).inflate(R.layout.state_search, parent, false);
-					return new StateSearchViewHolder(v, context, onBackPressedListener);
+					return new StateSearchViewHolder(v, onBackPressedListener, addToListInSearchState);
 				case R.string.watchedlistState:
 					v = LayoutInflater.from(parent.getContext()).inflate(R.layout.state_watchedlist, parent, false);
-					return new StateWatchedListViewHolder(v, context, onBackPressedListener);
+					return new StateWatchedListViewHolder(v, context, onBackPressedListener, onMovieRemoved);
 				case R.string.watchlistState:
 					v = LayoutInflater.from(parent.getContext()).inflate(R.layout.state_watchlist, parent, false);
-					return new StateWatchListViewHolder(v, context, onBackPressedListener);
+					return new StateWatchListViewHolder(v, context, onBackPressedListener, movieStateOnWatchListChanged);
 			}
 			return null;
 		} else {

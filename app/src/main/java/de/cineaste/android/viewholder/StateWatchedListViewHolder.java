@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.OnBackPressedListener;
-import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
 
 public class StateWatchedListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -18,15 +17,20 @@ public class StateWatchedListViewHolder extends RecyclerView.ViewHolder implemen
 	private Movie currentMovie;
 	private final Context context;
 	private final OnBackPressedListener listener;
+	private final OnMovieRemovedFromWatchedList onMovieRemoved;
 
+	public interface OnMovieRemovedFromWatchedList {
+		void movieRemoved(Movie movie);
+	}
 
-	public StateWatchedListViewHolder(View v, Context context, OnBackPressedListener listener) {
+	public StateWatchedListViewHolder(View v, Context context, OnBackPressedListener listener, OnMovieRemovedFromWatchedList onMovieRemoved) {
 		super(v);
 		this.context = context;
 		movieTitle = (TextView) v.findViewById(R.id.movieTitle);
 		movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
 		ImageButton delete = (ImageButton) v.findViewById(R.id.remove);
 		this.listener = listener;
+		this.onMovieRemoved = onMovieRemoved;
 		delete.setOnClickListener(this);
 	}
 
@@ -39,13 +43,7 @@ public class StateWatchedListViewHolder extends RecyclerView.ViewHolder implemen
 
 	@Override
 	public void onClick(View v) {
-		final MovieDbHelper db = MovieDbHelper.getInstance(context);
-
-		switch (v.getId()) {
-			case R.id.remove:
-				db.deleteMovieFromWatchlist(currentMovie);
-				break;
-		}
+		onMovieRemoved.movieRemoved(currentMovie);
 		listener.onBackPressedListener();
 	}
 }

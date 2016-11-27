@@ -26,7 +26,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
 	private final List<MatchingResult> results;
 	private final OnMovieSelectListener listener;
-	private final Context context;
+	private Context context;
 	private final int rowLayout;
 
 	public interface OnMovieSelectListener {
@@ -35,11 +35,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
 	public ResultAdapter(
 			List<MatchingResult> results,
-			Context context,
 			OnMovieSelectListener listener) {
 		this.results = results;
 		this.rowLayout = R.layout.card_result;
-		this.context = context;
 		this.listener = listener;
 		handler = NearbyMessageHandler.getInstance();
 	}
@@ -51,6 +49,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		context = parent.getContext();
 		View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
 		return new ViewHolder(v);
 	}

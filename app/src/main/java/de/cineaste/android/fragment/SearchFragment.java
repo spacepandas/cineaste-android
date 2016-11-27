@@ -22,6 +22,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +36,18 @@ import de.cineaste.android.MovieDetailActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;
 import de.cineaste.android.database.BaseDao;
+import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.network.TheMovieDb;
-import de.cineaste.android.receiver.NetworkChangeReceiver;
+import de.cineaste.android.network.NetworkCallback;
+import de.cineaste.android.network.NetworkClient;
+import de.cineaste.android.network.NetworkRequest;
+import de.cineaste.android.network.NetworkResponse;
 
-public class SearchFragment extends Fragment implements MovieClickListener {
+public class SearchFragment extends Fragment implements MovieClickListener, SearchQueryAdapter.OnMovieStateChange {
 
-	private final TheMovieDb theMovieDb = new TheMovieDb();
-	private RecyclerView.Adapter movieQueryAdapter;
+	private final Gson gson = new Gson();
+	private final MovieDbHelper db = MovieDbHelper.getInstance(getActivity());
+	private SearchQueryAdapter movieQueryAdapter;
 	private View view;
 	private SearchView searchView;
 	private String searchText;
@@ -62,17 +72,11 @@ public class SearchFragment extends Fragment implements MovieClickListener {
 		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 		RecyclerView movieQueryRecyclerView = (RecyclerView) view.findViewById(R.id.search_recycler_view);
 		RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager(getActivity());
-		movieQueryAdapter = new SearchQueryAdapter(getActivity(), new ArrayList<Movie>(), this);
+		movieQueryAdapter = new SearchQueryAdapter(this, this);
 		movieQueryRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 		movieQueryRecyclerView.setLayoutManager(movieQueryLayoutMgr);
 		movieQueryRecyclerView.setAdapter(movieQueryAdapter);
-
-		if (!NetworkChangeReceiver.getInstance().isConnected) {
-			Snackbar snackbar = Snackbar
-					.make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
-			snackbar.show();
-		}
 
 		return view;
 	}
@@ -114,11 +118,6 @@ public class SearchFragment extends Fragment implements MovieClickListener {
 			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 				@Override
 				public boolean onQueryTextSubmit(String query) {
-					if (!NetworkChangeReceiver.getInstance().isConnected) {
-						Snackbar snackbar = Snackbar
-								.make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
-						snackbar.show();
-					}
 					return false;
 				}
 
@@ -126,21 +125,44 @@ public class SearchFragment extends Fragment implements MovieClickListener {
 				public boolean onQueryTextChange(String query) {
 					if (!query.isEmpty()) {
 						query = query.replace(" ", "+");
-						if (NetworkChangeReceiver.getInstance().isConnected) {
-							progressBar.setVisibility(View.VISIBLE);
-							theMovieDb.searchMoviesAsync(query, new TheMovieDb.OnSearchMoviesResultListener() {
-								@Override
-								public void onSearchMoviesResultListener(List<Movie> movies) {
-									((SearchQueryAdapter) movieQueryAdapter).dataset = movies;
-									movieQueryAdapter.notifyDataSetChanged();
-									progressBar.setVisibility(View.GONE);
-								}
-							}, getResources().getString(R.string.language_tag));
-						}
+						progressBar.setVisibility(View.VISIBLE);
+
+						NetworkClient client = new NetworkClient(new NetworkRequest().search(query));
+						client.sendRequest(new NetworkCallback() {
+							@Override
+							public void onFailure() {
+								getActivity().runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										showNetworkError();
+									}
+								});
+							}
+
+							@Override
+							public void onSuccess(NetworkResponse response) {
+								Gson gson = new Gson();
+								JsonParser parser = new JsonParser();
+								JsonObject responseObject =
+										parser.parse(response.getResponseReader()).getAsJsonObject();
+								String movieListJson = responseObject.get("results").toString();
+								Type listType = new TypeToken<List<Movie>>() {
+								}.getType();
+								final List<Movie> movies = gson.fromJson(movieListJson, listType);
+
+								getActivity().runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										movieQueryAdapter.addMovies(movies);
+										progressBar.setVisibility(View.GONE);
+									}
+								});
+							}
+						});
+
 						searchText = query;
 					} else {
-						((SearchQueryAdapter) movieQueryAdapter).dataset = new ArrayList<>();
-						movieQueryAdapter.notifyDataSetChanged();
+						movieQueryAdapter.addMovies(new ArrayList<Movie>());
 					}
 					return false;
 				}
@@ -151,6 +173,12 @@ public class SearchFragment extends Fragment implements MovieClickListener {
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	private void showNetworkError() {
+		Snackbar snackbar = Snackbar
+				.make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
+		snackbar.show();
 	}
 
 	@Override
@@ -180,5 +208,60 @@ public class SearchFragment extends Fragment implements MovieClickListener {
 			getActivity().startActivity(intent);
 			// getActivity().overridePendingTransition( R.anim.fade_out, R.anim.fade_in );
 		}
+	}
+
+	@Override
+	public void onMovieStateChangeListener(long movieId, int viewId, final int index) {
+		NetworkCallback callback;
+		switch (viewId) {
+			case R.id.to_watchlist_button:
+				callback = new NetworkCallback() {
+					@Override
+					public void onFailure() {
+
+					}
+
+					@Override
+					public void onSuccess(NetworkResponse response) {
+						db.createNewMovieEntry(gson.fromJson(response.getResponseReader(), Movie.class));
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								movieQueryAdapter.removeMovie(index);
+							}
+						});
+					}
+				};
+				break;
+			case R.id.watched_button:
+				callback = new NetworkCallback() {
+					@Override
+					public void onFailure() {
+
+					}
+
+					@Override
+					public void onSuccess(NetworkResponse response) {
+						Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+						movie.setWatched(true);
+						db.createNewMovieEntry(movie);
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								movieQueryAdapter.removeMovie(index);
+							}
+						});
+					}
+				};
+				break;
+			default:
+				callback = null;
+				break;
+		}
+		if (callback != null) {
+			NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+			client.sendRequest(callback);
+		}
+
 	}
 }

@@ -1,6 +1,4 @@
 <resources>
-    <string name="language_tag">de</string>
-
     <string name="search">Suche</string>
     <plurals name="movieCounter">
         <item quantity="one">Film: %d</item>
@@ -9,10 +7,10 @@
     <string name="startMovieNight">Filmnacht starten</string>
 
     <string name="enter_username">Dein Benutzername</string>
-    <string name="username">Username</string>
     <string name="noMoviesOnWatchList">Du hast noch keine Filme auf deiner Watchlist. \nUnten Rechts fügst du neue Titel hinzu!</string>
     <string name="noMoviesOnWatchedList">Du hast noch keine Filme auf deiner Watchedlist. \nZieh dir doch einen Titel rein!</string>
     <string name="searching_for_friends">Suche nach Freunden</string>
+    <string name="no_friends_found_try_again">Keine Freunde gefunden, versuche es erneut!</string>
 
     <string name="watchList">Musst du sehen</string>
     <string name="watchedlist">Schon gesehen</string>

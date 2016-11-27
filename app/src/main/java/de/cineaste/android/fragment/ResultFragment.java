@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,10 @@ import de.cineaste.android.entity.MatchingResult;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.MovieDto;
 import de.cineaste.android.entity.NearbyMessage;
-import de.cineaste.android.network.TheMovieDb;
+import de.cineaste.android.network.NetworkCallback;
+import de.cineaste.android.network.NetworkClient;
+import de.cineaste.android.network.NetworkRequest;
+import de.cineaste.android.network.NetworkResponse;
 
 public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSelectListener {
 
@@ -47,7 +51,6 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 
 		ResultAdapter resultAdapter = new ResultAdapter(
 				getResult(),
-				getActivity(),
 				this);
 		result.setAdapter(resultAdapter);
 
@@ -56,14 +59,21 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 
 	@Override
 	public void onMovieSelectListener(int position) {
-		TheMovieDb theMovieDb = new TheMovieDb();
 
-		theMovieDb.fetchMovie(
-				getResult().get(position).getId(),
-				getActivity().getResources().getString(R.string.language_tag),
-				new TheMovieDb.OnFetchMovieResultListener() {
+		NetworkClient client = new NetworkClient(new NetworkRequest().get(getResult().get(position).getId()));
+		client.sendRequest(new NetworkCallback() {
+			@Override
+			public void onFailure() {
+
+			}
+
+			@Override
+			public void onSuccess(NetworkResponse response) {
+				Gson gson = new Gson();
+				final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+				getActivity().runOnUiThread(new Runnable() {
 					@Override
-					public void onFetchMovieResultListener(Movie movie) {
+					public void run() {
 						MovieDbHelper db = MovieDbHelper.getInstance(getActivity());
 						movie.setWatched(true);
 						if (db.readMovie(movie.getId()) != null) {
@@ -73,6 +83,9 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 						}
 					}
 				});
+			}
+		});
+
 		getFragmentManager().popBackStack();
 	}
 

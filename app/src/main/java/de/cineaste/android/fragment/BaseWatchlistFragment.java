@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.cineaste.android.MovieClickListener;
@@ -96,6 +98,16 @@ public class BaseWatchlistFragment extends Fragment
 				baseWatchlistAdapter.filter(null);
 			}
 		}
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		MenuItem searchViewMenuItem = menu.findItem(R.id.action_search);
+		SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(searchViewMenuItem);
+		int searchImgId = android.support.v7.appcompat.R.id.search_button; // I used the explicit layout ID of searchView's ImageView
+		ImageView v = (ImageView) mSearchView.findViewById(searchImgId);
+		v.setImageResource(R.drawable.ic_filter);
+		super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override

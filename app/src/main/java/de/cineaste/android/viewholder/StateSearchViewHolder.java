@@ -1,6 +1,5 @@
 package de.cineaste.android.viewholder;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
@@ -8,26 +7,27 @@ import android.widget.TextView;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.OnBackPressedListener;
-import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.network.TheMovieDb;
 
 public class StateSearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 	private final TextView movieTitle;
 	private Movie currentMovie;
-	private final Context context;
 	private final OnBackPressedListener listener;
+	private final OnAddToListInSearchState addToListInSearchState;
 
+	public interface OnAddToListInSearchState {
+		void onAddToList(Movie currentMovie, int viewID);
+	}
 
-	public StateSearchViewHolder(View v, Context context, OnBackPressedListener listener) {
+	public StateSearchViewHolder(View v, OnBackPressedListener listener, OnAddToListInSearchState addToListInSearchState) {
 		super(v);
-		this.context = context;
 		movieTitle = (TextView) v.findViewById(R.id.movieTitle);
 		TextView movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
 		movieRuntime.setVisibility(View.GONE);
 		ImageButton addToWatchList = (ImageButton) v.findViewById(R.id.addToWatchList);
 		ImageButton addToWatchedList = (ImageButton) v.findViewById(R.id.addToWatchedList);
 		this.listener = listener;
+		this.addToListInSearchState = addToListInSearchState;
 
 		addToWatchedList.setOnClickListener(this);
 		addToWatchList.setOnClickListener(this);
@@ -40,37 +40,8 @@ public class StateSearchViewHolder extends RecyclerView.ViewHolder implements Vi
 
 	@Override
 	public void onClick(View v) {
-		final MovieDbHelper db = MovieDbHelper.getInstance(context);
-		TheMovieDb theMovieDb = new TheMovieDb();
+		addToListInSearchState.onAddToList(currentMovie, v.getId());
 
-		switch (v.getId()) {
-			case R.id.addToWatchedList:
-				theMovieDb.fetchMovie(
-						currentMovie.getId(),
-						context.getString(R.string.language_tag),
-						new TheMovieDb.OnFetchMovieResultListener() {
-							@Override
-							public void onFetchMovieResultListener(Movie movie) {
-								movie.setWatched(true);
-								db.createNewMovieEntry(movie);
-							}
-						});
-				break;
-			case R.id.remove:
-				db.deleteMovieFromWatchlist(currentMovie);
-				break;
-			case R.id.addToWatchList:
-				theMovieDb.fetchMovie(
-						currentMovie.getId(),
-						context.getString(R.string.language_tag),
-						new TheMovieDb.OnFetchMovieResultListener() {
-							@Override
-							public void onFetchMovieResultListener(Movie movie) {
-								db.createNewMovieEntry(movie);
-							}
-						});
-				break;
-		}
 		listener.onBackPressedListener(currentMovie);
 	}
 }

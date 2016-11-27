@@ -2,11 +2,11 @@ package de.cineaste.android;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import de.cineaste.android.adapter.DetailViewAdapter;
@@ -32,11 +33,19 @@ import de.cineaste.android.adapter.OnBackPressedListener;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.network.TheMovieDb;
-import de.cineaste.android.receiver.NetworkChangeReceiver;
+import de.cineaste.android.network.NetworkCallback;
+import de.cineaste.android.network.NetworkClient;
+import de.cineaste.android.network.NetworkRequest;
+import de.cineaste.android.network.NetworkResponse;
 
-public class MovieDetailActivity extends AppCompatActivity implements OnBackPressedListener {
+import static de.cineaste.android.viewholder.StateSearchViewHolder.OnAddToListInSearchState;
+import static de.cineaste.android.viewholder.StateWatchListViewHolder.OnMovieStateOnWatchListChanged;
+import static de.cineaste.android.viewholder.StateWatchedListViewHolder.OnMovieRemovedFromWatchedList;
 
+
+public class MovieDetailActivity extends AppCompatActivity implements OnBackPressedListener, OnAddToListInSearchState, OnMovieRemovedFromWatchedList, OnMovieStateOnWatchListChanged {
+
+	private final Gson gson = new Gson();
 	private ImageView moviePoster;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private MovieDbHelper movieDbHelper;
@@ -54,6 +63,67 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
 		Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
 				movie.getTitle()), Toast.LENGTH_SHORT).show();
 		onBackPressed();
+	}
+
+	@Override
+	public void onAddToList(Movie currentMovie, int viewID) {
+		NetworkCallback callback = null;
+		switch (viewID) {
+			case R.id.addToWatchedList:
+				callback = new NetworkCallback() {
+					@Override
+					public void onFailure() {
+
+					}
+
+					@Override
+					public void onSuccess(NetworkResponse response) {
+						Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+						movie.setWatched(true);
+						movieDbHelper.createNewMovieEntry(movie);
+					}
+				};
+				break;
+			case R.id.remove:
+				movieDbHelper.deleteMovieFromWatchlist(currentMovie);
+				break;
+			case R.id.addToWatchList:
+				callback = new NetworkCallback() {
+					@Override
+					public void onFailure() {
+
+					}
+
+					@Override
+					public void onSuccess(NetworkResponse response) {
+						movieDbHelper.createNewMovieEntry(gson.fromJson(response.getResponseReader(), Movie.class));
+					}
+				};
+				break;
+		}
+		if (callback != null) {
+			NetworkClient client = new NetworkClient(new NetworkRequest().get(currentMovie.getId()));
+			client.sendRequest(callback);
+		}
+
+	}
+
+	@Override
+	public void movieRemoved(Movie movie) {
+		movieDbHelper.deleteMovieFromWatchlist(movie);
+	}
+
+	@Override
+	public void movieStateOnWatchListChanged(Movie movie, int viewId) {
+		switch (viewId) {
+			case R.id.addToWatchedList:
+				movie.setWatched(true);
+				movieDbHelper.update(movie);
+				break;
+			case R.id.remove:
+				movieDbHelper.deleteMovieFromWatchlist(movie);
+				break;
+		}
 	}
 
 	@Override
@@ -86,16 +156,24 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
 		movieDbHelper = MovieDbHelper.getInstance(this);
 		currentMovie = movieDbHelper.readMovie(movieId);
 		if (currentMovie == null) {
-			if (NetworkChangeReceiver.getInstance().isConnected) {
-				TheMovieDb theMovieDb = new TheMovieDb();
-				theMovieDb.fetchMovie(movieId, getResources().getString(R.string.language_tag),
-						new TheMovieDb.OnFetchMovieResultListener() {
-							@Override
-							public void onFetchMovieResultListener(Movie movie) {
-								assignData(movie, state);
-							}
-						});
-			}
+			NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+			client.sendRequest(new NetworkCallback() {
+				@Override
+				public void onFailure() {
+
+				}
+
+				@Override
+				public void onSuccess(NetworkResponse response) {
+					final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							assignData(movie, state);
+						}
+					});
+				}
+			});
 		} else {
 			assignData(currentMovie, state);
 		}
@@ -116,19 +194,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
 			recyclerView.setItemAnimator(new DefaultItemAnimator());
 		}
 
-		RecyclerView.Adapter adapter = new DetailViewAdapter(this, currentMovie, state, new OnBackPressedListener() {
-			@Override
-			public void onBackPressedListener() {
-				onBackPressed();
-			}
-
-			@Override
-			public void onBackPressedListener(Movie movie) {
-				Toast.makeText(MovieDetailActivity.this, MovieDetailActivity.this.getResources().getString(R.string.movieAdd,
-						movie.getTitle()), Toast.LENGTH_SHORT).show();
-				onBackPressed();
-			}
-		});
+		RecyclerView.Adapter adapter = new DetailViewAdapter(currentMovie, state, this, this, this, this);
 		if (recyclerView != null)
 			recyclerView.setAdapter(adapter);
 
@@ -151,11 +217,16 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
 		if (actionBar != null)
 			actionBar.setDisplayHomeAsUpEnabled(true);
 
+		setTitleIfNeeded();
+	}
+
+	private void setTitleIfNeeded() {
 		final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 		appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 			boolean isShow = true;
 			int scrollRange = -1;
+
 			@Override
 			public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 				if (scrollRange == -1) {
@@ -191,18 +262,34 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
 	}
 
 	private void updateMovie(final int state) {
-		if (NetworkChangeReceiver.getInstance().isConnected && state != R.string.searchState) {
-			TheMovieDb theMovieDb = new TheMovieDb();
-			theMovieDb.fetchMovie(movieId, getResources().getString(R.string.language_tag),
-					new TheMovieDb.OnFetchMovieResultListener() {
+		if (state != R.string.searchState) {
+			NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+			client.sendRequest(new NetworkCallback() {
+				@Override
+				public void onFailure() {
+					runOnUiThread(new Runnable() {
 						@Override
-						public void onFetchMovieResultListener(Movie movie) {
+						public void run() {
+							showNetworkError();
+							swipeRefreshLayout.setRefreshing(false);
+						}
+					});
+				}
+
+				@Override
+				public void onSuccess(NetworkResponse response) {
+					final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
 							assignData(movie, state);
 							updateMovieDetails(movie);
 							movieDbHelper.createOrUpdate(currentMovie);
 							swipeRefreshLayout.setRefreshing(false);
 						}
 					});
+				}
+			});
 		} else {
 			swipeRefreshLayout.setRefreshing(false);
 		}
@@ -227,5 +314,11 @@ public class MovieDetailActivity extends AppCompatActivity implements OnBackPres
 			triangle.startAnimation(fadeIn);
 			layout.startAnimation(fadeIn);
 		}
+	}
+
+	private void showNetworkError() {
+		Snackbar snackbar = Snackbar
+				.make(swipeRefreshLayout, R.string.noInternet, Snackbar.LENGTH_LONG);
+		snackbar.show();
 	}
 }

@@ -2,6 +2,7 @@ package de.cineaste.android.fragment;
 
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -154,6 +155,7 @@ public class MovieNightFragment extends Fragment
 			}
 		};
 
+		timedOut();
 		return view;
 	}
 
@@ -359,5 +361,31 @@ public class MovieNightFragment extends Fragment
 		editor.putString("deviceID", id);
 		editor.apply();
 		loadDeviceID();
+	}
+
+	private void timedOut() {
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... voids) {
+				try {
+					Thread.sleep(45000);
+				} catch (InterruptedException ex) {
+					//do nothing
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+
+				Snackbar snackbar = Snackbar
+						.make(view, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG);
+				snackbar.show();
+
+				getFragmentManager().popBackStack();
+
+			}
+		}.execute();
 	}
 }

@@ -1,6 +1,4 @@
 <resources>
-	<string name="language_tag">en</string>
-
 	<string name="search">Search</string>
 	<plurals name="movieCounter">
 		<item quantity="one">Movie: %d</item>
@@ -9,10 +7,10 @@
 	<string name="startMovieNight">Start Movienight</string>
 
 	<string name="enter_username">Your Username</string>
-	<string name="username">Username</string>
 	<string name="noMoviesOnWatchList">You do not have movies on your Watchlist. \nOn the bottom right you can add new titles!</string>
 	<string name="noMoviesOnWatchedList">You do not have movies on your Watchedlist. \nGo ahead and watch some!</string>
 	<string name="searching_for_friends">Searching for friends</string>
+	<string name="no_friends_found_try_again">No friends found, try again!</string>
 
 	<string name="watchList">To See Movies</string>
 	<string name="watchedlist">Seen Movies</string>

@@ -12,29 +12,39 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.Constants;
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
-import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.network.TheMovieDb;
 
 public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.ViewHolder> {
-	public List<Movie> dataset;
-	private final MovieDbHelper db;
-	private final Context context;
-	private final TheMovieDb theMovieDb;
+	private final List<Movie> dataset = new ArrayList<>();
 	private final MovieClickListener listener;
+	private final OnMovieStateChange movieStateChange;
+
+	public interface OnMovieStateChange {
+		void onMovieStateChangeListener(long movieId, int viewId, int index);
+	}
 
 
-	public SearchQueryAdapter(Context context, List<Movie> movies, MovieClickListener listener) {
-		db = MovieDbHelper.getInstance(context);
-		this.context = context;
-		dataset = movies;
-		theMovieDb = new TheMovieDb();
+	public SearchQueryAdapter(MovieClickListener listener, OnMovieStateChange movieStateChange) {
 		this.listener = listener;
+		this.movieStateChange = movieStateChange;
+
+	}
+
+	public void addMovies(List<Movie> movies) {
+		dataset.clear();
+		dataset.addAll(movies);
+		notifyDataSetChanged();
+	}
+
+	public void removeMovie(int index) {
+		dataset.remove(index);
+		notifyItemRemoved(index);
 	}
 
 	@Override
@@ -42,7 +52,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 		View v = LayoutInflater
 				.from(parent.getContext())
 				.inflate(R.layout.card_movie_search_query, parent, false);
-		return new ViewHolder(v);
+		return new ViewHolder(v, parent.getContext(), movieStateChange);
 	}
 
 	@Override
@@ -63,9 +73,13 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 		final ImageButton addToWatchlistButton;
 		final ImageButton movieWatchedButton;
 		final View view;
+		final OnMovieStateChange movieStateChange;
+		final Context context;
 
-		public ViewHolder(View v) {
+		public ViewHolder(View v, Context context, OnMovieStateChange movieStateChange) {
 			super(v);
+			this.movieStateChange = movieStateChange;
+			this.context = context;
 			movieTitle = (TextView) v.findViewById(R.id.movie_title);
 			movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
 			movieRuntime.setVisibility(View.GONE);
@@ -91,19 +105,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 				@Override
 				public void onClick(View v) {
 					int index = dataset.indexOf(movie);
-
-					theMovieDb.fetchMovie(
-							movie.getId(),
-							context.getResources().getString(R.string.language_tag),
-							new TheMovieDb.OnFetchMovieResultListener() {
-								@Override
-								public void onFetchMovieResultListener(Movie movie) {
-									db.createNewMovieEntry(movie);
-								}
-							});
-
-					dataset.remove(index);
-					notifyItemRemoved(index);
+					movieStateChange.onMovieStateChangeListener(movie.getId(), v.getId(), index);
 				}
 			});
 
@@ -112,20 +114,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 				@Override
 				public void onClick(View v) {
 					int index = dataset.indexOf(movie);
-
-					theMovieDb.fetchMovie(
-							movie.getId(),
-							context.getResources().getString(R.string.language_tag),
-							new TheMovieDb.OnFetchMovieResultListener() {
-								@Override
-								public void onFetchMovieResultListener(Movie movie) {
-									movie.setWatched(true);
-									db.createNewMovieEntry(movie);
-								}
-							});
-
-					dataset.remove(index);
-					notifyItemRemoved(index);
+					movieStateChange.onMovieStateChangeListener(movie.getId(), v.getId(), index);
 				}
 			});
 
