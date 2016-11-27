@@ -26,7 +26,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 	private final OnMovieStateChange movieStateChange;
 
 	public interface OnMovieStateChange {
-		void onMovieStateChangeListener(long movieId, int viewId, int index);
+		void onMovieStateChangeListener(Movie movie, int viewId, int index);
 	}
 
 
@@ -40,6 +40,10 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 		dataset.clear();
 		dataset.addAll(movies);
 		notifyDataSetChanged();
+	}
+
+	public void addMovie(Movie movie, int index) {
+		dataset.add(index, movie);
 	}
 
 	public void removeMovie(int index) {
@@ -105,7 +109,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 				@Override
 				public void onClick(View v) {
 					int index = dataset.indexOf(movie);
-					movieStateChange.onMovieStateChangeListener(movie.getId(), v.getId(), index);
+					movieStateChange.onMovieStateChangeListener(movie, v.getId(), index);
 				}
 			});
 
@@ -114,7 +118,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 				@Override
 				public void onClick(View v) {
 					int index = dataset.indexOf(movie);
-					movieStateChange.onMovieStateChangeListener(movie.getId(), v.getId(), index);
+					movieStateChange.onMovieStateChangeListener(movie, v.getId(), index);
 				}
 			});
 

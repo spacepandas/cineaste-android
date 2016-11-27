@@ -29,6 +29,7 @@
 	<string name="movieTitle">Title</string>
 	<string name="noDescription">No description available</string>
 	<string name="movieAdd">Added %s</string>
+	<string name="could_not_add_movie">Movie could not be added!</string>
 
     <string name="aboutContent">Cineaste is an Open Source project of two computer science students. The main feature of the app is to find easily movies for a shared movie night. Via the "Matching"-Button your mobile phone searches for friends in your surroundings and suggests the movies, which you all would like to watch.\n\n
 The data is transmitted via Bluetooth. This means all your movies are stored securely on your phone and stays there. The data will be only shared in your living room between your friends!\n\n

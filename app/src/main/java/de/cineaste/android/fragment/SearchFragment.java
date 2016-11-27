@@ -211,25 +211,25 @@ public class SearchFragment extends Fragment implements MovieClickListener, Sear
 	}
 
 	@Override
-	public void onMovieStateChangeListener(long movieId, int viewId, final int index) {
+	public void onMovieStateChangeListener(final Movie movie, int viewId, final int index) {
 		NetworkCallback callback;
 		switch (viewId) {
 			case R.id.to_watchlist_button:
 				callback = new NetworkCallback() {
 					@Override
 					public void onFailure() {
-
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								movieAddError(movie, index);
+							}
+						});
 					}
 
 					@Override
 					public void onSuccess(NetworkResponse response) {
 						db.createNewMovieEntry(gson.fromJson(response.getResponseReader(), Movie.class));
-						getActivity().runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								movieQueryAdapter.removeMovie(index);
-							}
-						});
+
 					}
 				};
 				break;
@@ -237,7 +237,12 @@ public class SearchFragment extends Fragment implements MovieClickListener, Sear
 				callback = new NetworkCallback() {
 					@Override
 					public void onFailure() {
-
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								movieAddError(movie, index);
+							}
+						});
 					}
 
 					@Override
@@ -245,12 +250,6 @@ public class SearchFragment extends Fragment implements MovieClickListener, Sear
 						Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
 						movie.setWatched(true);
 						db.createNewMovieEntry(movie);
-						getActivity().runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								movieQueryAdapter.removeMovie(index);
-							}
-						});
 					}
 				};
 				break;
@@ -259,9 +258,17 @@ public class SearchFragment extends Fragment implements MovieClickListener, Sear
 				break;
 		}
 		if (callback != null) {
-			NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+			movieQueryAdapter.removeMovie(index);
+			NetworkClient client = new NetworkClient(new NetworkRequest().get(movie.getId()));
 			client.sendRequest(callback);
 		}
 
+	}
+
+	private void movieAddError(Movie movie, int index) {
+		Snackbar snackbar = Snackbar
+				.make(view, R.string.could_not_add_movie, Snackbar.LENGTH_LONG);
+		snackbar.show();
+		movieQueryAdapter.addMovie(movie, index);
 	}
 }
