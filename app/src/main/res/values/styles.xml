@@ -38,7 +38,7 @@
         <item name="android:background">@drawable/button_grey</item>
     </style>
     <style name="ButtonStyleGreyFixedSize">
-        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_width">70dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:textColor">@color/toolbar_text</item>
         <item name="android:textAllCaps">false</item>

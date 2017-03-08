@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -109,7 +110,6 @@ public class SearchFragment extends Fragment implements MovieClickListener, Sear
 
 		MenuItem searchItem = menu.findItem(R.id.action_search);
 
-
 		if (searchItem != null) {
 			searchView = (SearchView) searchItem.getActionView();
 			searchView.setFocusable(true);
@@ -127,38 +127,7 @@ public class SearchFragment extends Fragment implements MovieClickListener, Sear
 						query = query.replace(" ", "+");
 						progressBar.setVisibility(View.VISIBLE);
 
-						NetworkClient client = new NetworkClient(new NetworkRequest().search(query));
-						client.sendRequest(new NetworkCallback() {
-							@Override
-							public void onFailure() {
-								getActivity().runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										showNetworkError();
-									}
-								});
-							}
-
-							@Override
-							public void onSuccess(NetworkResponse response) {
-								Gson gson = new Gson();
-								JsonParser parser = new JsonParser();
-								JsonObject responseObject =
-										parser.parse(response.getResponseReader()).getAsJsonObject();
-								String movieListJson = responseObject.get("results").toString();
-								Type listType = new TypeToken<List<Movie>>() {
-								}.getType();
-								final List<Movie> movies = gson.fromJson(movieListJson, listType);
-
-								getActivity().runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										movieQueryAdapter.addMovies(movies);
-										progressBar.setVisibility(View.GONE);
-									}
-								});
-							}
-						});
+						scheduleSearchRequest(query);
 
 						searchText = query;
 					} else {
@@ -173,6 +142,56 @@ public class SearchFragment extends Fragment implements MovieClickListener, Sear
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	private void scheduleSearchRequest(String query) {
+		searchView.removeCallbacks(getSearchRunnable(query));
+		searchView.postDelayed(getSearchRunnable(query), 500);
+	}
+
+	@NonNull
+	private Runnable getSearchRunnable(final String searchQuery) {
+		return new Runnable() {
+                                @Override
+                                public void run() {
+                                    searchRequest(searchQuery);
+                                }
+                            };
+	}
+
+	private void searchRequest( String searchQuery) {
+		NetworkClient client = new NetworkClient(new NetworkRequest().search(searchQuery));
+		client.sendRequest(new NetworkCallback() {
+            @Override
+            public void onFailure() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showNetworkError();
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess(NetworkResponse response) {
+                Gson gson = new Gson();
+                JsonParser parser = new JsonParser();
+                JsonObject responseObject =
+                        parser.parse(response.getResponseReader()).getAsJsonObject();
+                String movieListJson = responseObject.get("results").toString();
+                Type listType = new TypeToken<List<Movie>>() {
+                }.getType();
+                final List<Movie> movies = gson.fromJson(movieListJson, listType);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        movieQueryAdapter.addMovies(movies);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
 	}
 
 	private void showNetworkError() {

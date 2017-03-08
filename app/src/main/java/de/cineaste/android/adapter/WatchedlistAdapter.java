@@ -52,7 +52,13 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter implements Observer
 				notifyItemInserted(filterListIndex);
 			}
 		} else if (index != -1 && state == MovieStateType.UPDATE) {
-			filteredDataset.set(index, changedMovie);
+			if (changedMovie.isWatched()) {
+				dataset.add(indexInAlphabeticalOrder(changedMovie, dataset), changedMovie);
+				int filterListIndex = indexInAlphabeticalOrder(changedMovie, filteredDataset);
+				filteredDataset.set(filterListIndex, changedMovie);
+			} else {
+				filteredDataset.set(index, changedMovie);
+			}
 			notifyDataSetChanged();
 		} else if (index != -1 && state == MovieStateType.DELETE) {
 			dataset.remove(index);
