@@ -5,3 +5,4 @@
 build
 gradle.properties
 projectFilesBackup
+.DS_Store

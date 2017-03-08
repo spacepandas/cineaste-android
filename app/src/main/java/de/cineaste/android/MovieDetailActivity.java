@@ -4,32 +4,29 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import de.cineaste.android.adapter.DetailViewAdapter;
-import de.cineaste.android.adapter.OnBackPressedListener;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
@@ -38,287 +35,341 @@ import de.cineaste.android.network.NetworkClient;
 import de.cineaste.android.network.NetworkRequest;
 import de.cineaste.android.network.NetworkResponse;
 
-import static de.cineaste.android.viewholder.StateSearchViewHolder.OnAddToListInSearchState;
-import static de.cineaste.android.viewholder.StateWatchListViewHolder.OnMovieStateOnWatchListChanged;
-import static de.cineaste.android.viewholder.StateWatchedListViewHolder.OnMovieRemovedFromWatchedList;
+public class MovieDetailActivity extends AppCompatActivity {
+
+    private final Gson gson = new Gson();
+    private int state;
+    private ImageView moviePoster;
+    private MovieDbHelper movieDbHelper;
+    private long movieId;
+    private Movie currentMovie;
+    private TextView rating;
+    private TextView movieTitle;
+    private TextView movieRuntime;
+    private NestedScrollView layout;
 
 
-public class MovieDetailActivity extends AppCompatActivity implements OnBackPressedListener, OnAddToListInSearchState, OnMovieRemovedFromWatchedList, OnMovieStateOnWatchListChanged {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.detail_menu, menu);
+        MenuItem toWatchList = menu.findItem(R.id.action_to_watchlist);
+        MenuItem toWatchedList = menu.findItem(R.id.action_to_watchedlist);
+        MenuItem delete = menu.findItem(R.id.action_delete);
 
-	private final Gson gson = new Gson();
-	private ImageView moviePoster;
-	private SwipeRefreshLayout swipeRefreshLayout;
-	private MovieDbHelper movieDbHelper;
-	private long movieId;
-	private Movie currentMovie;
-	private TextView rating;
+        switch (state) {
+            case R.string.searchState:
+                delete.setVisible(false);
+                toWatchedList.setVisible(true);
+                toWatchList.setVisible(true);
+                break;
+            case R.string.watchedlistState:
+                delete.setVisible(true);
+                toWatchedList.setVisible(false);
+                toWatchList.setVisible(false);
+                break;
+            case R.string.watchlistState:
+                delete.setVisible(true);
+                toWatchedList.setVisible(true);
+                toWatchList.setVisible(false);
+                break;
+        }
 
-	@Override
-	public void onBackPressedListener() {
-		onBackPressed();
-	}
 
-	@Override
-	public void onBackPressedListener(Movie movie) {
-		Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
-				movie.getTitle()), Toast.LENGTH_SHORT).show();
-		onBackPressed();
-	}
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	public void onAddToList(Movie currentMovie, int viewID) {
-		NetworkCallback callback = null;
-		switch (viewID) {
-			case R.id.addToWatchedList:
-				callback = new NetworkCallback() {
-					@Override
-					public void onFailure() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                slideOut();
+                return true;
+            case R.id.action_delete:
+                movieDbHelper.deleteMovieFromWatchlist(currentMovie);
+                return true;
+            case R.id.action_to_watchedlist:
+                onAddToWatchedClicked();
+                return true;
+            case R.id.action_to_watchlist:
+                onAddToWatchClicked();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-					}
+    private void onAddToWatchedClicked() {
+        NetworkCallback callback = null;
 
-					@Override
-					public void onSuccess(NetworkResponse response) {
-						Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
-						movie.setWatched(true);
-						movieDbHelper.createNewMovieEntry(movie);
-					}
-				};
-				break;
-			case R.id.remove:
-				movieDbHelper.deleteMovieFromWatchlist(currentMovie);
-				break;
-			case R.id.addToWatchList:
-				callback = new NetworkCallback() {
-					@Override
-					public void onFailure() {
+        switch (state) {
+            case R.string.searchState:
+                callback = new NetworkCallback() {
+                    @Override
+                    public void onFailure() {
 
-					}
+                    }
 
-					@Override
-					public void onSuccess(NetworkResponse response) {
-						movieDbHelper.createNewMovieEntry(gson.fromJson(response.getResponseReader(), Movie.class));
-					}
-				};
-				break;
-		}
-		if (callback != null) {
-			NetworkClient client = new NetworkClient(new NetworkRequest().get(currentMovie.getId()));
-			client.sendRequest(callback);
-		}
+                    @Override
+                    public void onSuccess(NetworkResponse response) {
+                        Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+                        movie.setWatched(true);
+                        movieDbHelper.createNewMovieEntry(movie);
+                    }
+                };
+                break;
+            case R.string.watchlistState:
+                currentMovie.setWatched(true);
+                movieDbHelper.update(currentMovie);
+                break;
+        }
 
-	}
 
-	@Override
-	public void movieRemoved(Movie movie) {
-		movieDbHelper.deleteMovieFromWatchlist(movie);
-	}
+        if (callback != null) {
+            NetworkClient client = new NetworkClient(new NetworkRequest().get(currentMovie.getId()));
+            client.sendRequest(callback);
+        }
 
-	@Override
-	public void movieStateOnWatchListChanged(Movie movie, int viewId) {
-		switch (viewId) {
-			case R.id.addToWatchedList:
-				movie.setWatched(true);
-				movieDbHelper.update(movie);
-				break;
-			case R.id.remove:
-				movieDbHelper.deleteMovieFromWatchlist(movie);
-				break;
-		}
-	}
+        Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
+                currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
+        slideOut();
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				onBackPressed();
-				//overridePendingTransition( R.anim.fade_out, R.anim.fade_in );
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_movie_detail);
+    private void onAddToWatchClicked() {
+        NetworkCallback callback = null;
 
-		Intent intent = getIntent();
-		movieId = intent.getLongExtra(BaseDao.MovieEntry._ID, -1);
-		final int state = intent.getIntExtra(getString(R.string.state), -1);
+        switch (state) {
+            case R.string.searchState:
+                callback = new NetworkCallback() {
+                    @Override
+                    public void onFailure() {
 
-		initToolbar();
+                    }
 
-		moviePoster = (ImageView) findViewById(R.id.movie_poster);
-		rating = (TextView) findViewById(R.id.rating);
+                    @Override
+                    public void onSuccess(NetworkResponse response) {
+                        movieDbHelper.createNewMovieEntry(gson.fromJson(response.getResponseReader(), Movie.class));
+                    }
+                };
+                break;
+        }
 
-		initSwipeRefresh(state);
-		movieDbHelper = MovieDbHelper.getInstance(this);
-		currentMovie = movieDbHelper.readMovie(movieId);
-		if (currentMovie == null) {
-			NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
-			client.sendRequest(new NetworkCallback() {
-				@Override
-				public void onFailure() {
+        if (callback != null) {
+            NetworkClient client = new NetworkClient(new NetworkRequest().get(currentMovie.getId()));
+            client.sendRequest(callback);
+        }
 
-				}
+        Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
+                currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
+        slideOut();
+    }
 
-				@Override
-				public void onSuccess(NetworkResponse response) {
-					final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							assignData(movie, state);
-						}
-					});
-				}
-			});
-		} else {
-			assignData(currentMovie, state);
-		}
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_movie_detail);
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		animateTriangle();
-	}
+        Intent intent = getIntent();
+        movieId = intent.getLongExtra(BaseDao.MovieEntry._ID, -1);
+        state = intent.getIntExtra(getString(R.string.state), -1);
 
-	private void assignData(Movie currentMovie, int state) {
-		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-		LinearLayoutManager llm = new LinearLayoutManager(this);
-		llm.setOrientation(LinearLayoutManager.VERTICAL);
-		if (recyclerView != null) {
-			recyclerView.setLayoutManager(llm);
-			recyclerView.setItemAnimator(new DefaultItemAnimator());
-		}
+        autoUpdateMovie();
 
-		RecyclerView.Adapter adapter = new DetailViewAdapter(currentMovie, state, this, this, this, this);
-		if (recyclerView != null)
-			recyclerView.setAdapter(adapter);
+        moviePoster = (ImageView) findViewById(R.id.movie_poster);
+        rating = (TextView) findViewById(R.id.rating);
+        movieTitle = (TextView) findViewById(R.id.movieTitle);
+        movieRuntime = (TextView) findViewById(R.id.movieRuntime);
+        layout = (NestedScrollView) findViewById(R.id.overlay);
 
-		String posterUri = Constants.POSTER_URI_SMALL
-				.replace("<posterName>", currentMovie.getPosterPath() != null ?
-						currentMovie.getPosterPath() : "/");
-		Picasso.with(this)
-				.load(posterUri)
-				.error(R.drawable.placeholder_poster)
-				.into(moviePoster);
+        movieDbHelper = MovieDbHelper.getInstance(this);
+        currentMovie = movieDbHelper.readMovie(movieId);
+        if (currentMovie == null) {
+            loadRequestedMovie(state);
+        } else {
+            assignData(currentMovie, state);
+        }
 
-		rating.setText(String.valueOf(currentMovie.getVoteAverage()));
-	}
+        initToolbar();
+        slideIn();
+    }
 
-	private void initToolbar() {
-		transparentStatusBar();
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null)
-			actionBar.setDisplayHomeAsUpEnabled(true);
+    private void loadRequestedMovie(final int state) {
+        NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+        client.sendRequest(new NetworkCallback() {
+            @Override
+            public void onFailure() {
 
-		setTitleIfNeeded();
-	}
+            }
 
-	private void setTitleIfNeeded() {
-		final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-		appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-			boolean isShow = true;
-			int scrollRange = -1;
+            @Override
+            public void onSuccess(NetworkResponse response) {
+                final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        currentMovie = movie;
+                        assignData(movie, state);
+                    }
+                });
+            }
+        });
+    }
 
-			@Override
-			public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-				if (scrollRange == -1) {
-					scrollRange = appBarLayout.getTotalScrollRange();
-				}
-				if (scrollRange + verticalOffset == 0) {
-					collapsingToolbarLayout.setTitle(getString(R.string.app_name));
-					isShow = true;
-				} else if (isShow) {
-					collapsingToolbarLayout.setTitle(" ");
-					isShow = false;
-				}
-			}
-		});
-	}
+    private void assignData(Movie currentMovie, int state) {
+        TextView movieDescription = (TextView) findViewById(R.id.movie_description);
 
-	@TargetApi(21)
-	private void transparentStatusBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark_half_translucent));
-		}
-	}
+        String description = currentMovie.getDescription();
+        movieDescription.setText(
+                (description == null || description.isEmpty())
+                        ? getString(R.string.noDescription) : description);
 
-	private void initSwipeRefresh(final int state) {
-		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-		swipeRefreshLayout.setOnRefreshListener(
-				new SwipeRefreshLayout.OnRefreshListener() {
-					@Override
-					public void onRefresh() {
-						updateMovie(state);
-					}
-				});
-	}
+        movieTitle.setText(currentMovie.getTitle());
+        movieRuntime.setText(getString(R.string.runtime, currentMovie.getRuntime()));
+        rating.setText(String.valueOf(currentMovie.getVoteAverage()));
 
-	private void updateMovie(final int state) {
-		if (state != R.string.searchState) {
-			NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
-			client.sendRequest(new NetworkCallback() {
-				@Override
-				public void onFailure() {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							showNetworkError();
-							swipeRefreshLayout.setRefreshing(false);
-						}
-					});
-				}
 
-				@Override
-				public void onSuccess(NetworkResponse response) {
-					final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							assignData(movie, state);
-							updateMovieDetails(movie);
-							movieDbHelper.createOrUpdate(currentMovie);
-							swipeRefreshLayout.setRefreshing(false);
-						}
-					});
-				}
-			});
-		} else {
-			swipeRefreshLayout.setRefreshing(false);
-		}
-	}
+        String posterUri = Constants.POSTER_URI_SMALL
+                .replace("<posterName>", currentMovie.getPosterPath() != null ?
+                        currentMovie.getPosterPath() : "/");
+        Picasso.with(this)
+                .load(posterUri)
+                .error(R.drawable.placeholder_poster)
+                .into(moviePoster);
+    }
 
-	private void updateMovieDetails(Movie movie) {
-		currentMovie.setTitle(movie.getTitle());
-		currentMovie.setRuntime(movie.getRuntime());
-		currentMovie.setVoteAverage(movie.getVoteAverage());
-		currentMovie.setVoteCount(movie.getVoteCount());
-		currentMovie.setDescription(movie.getDescription());
-		currentMovie.setPosterPath(movie.getPosterPath());
-	}
+    private void initToolbar() {
+        transparentStatusBar();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
-	private void animateTriangle() {
-		View triangle = findViewById(R.id.triangle);
-		RelativeLayout layout = (RelativeLayout) findViewById(R.id.count_circle);
-		Animation fadeIn = new AlphaAnimation(0, 1);
-		fadeIn.setInterpolator(new AccelerateDecelerateInterpolator());
-		fadeIn.setDuration(1000);
-		if (triangle != null && layout != null) {
-			triangle.startAnimation(fadeIn);
-			layout.startAnimation(fadeIn);
-		}
-	}
+        setTitleIfNeeded();
+    }
 
-	private void showNetworkError() {
-		Snackbar snackbar = Snackbar
-				.make(swipeRefreshLayout, R.string.noInternet, Snackbar.LENGTH_LONG);
-		snackbar.show();
-	}
+    private void setTitleIfNeeded() {
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle(currentMovie.getTitle());
+                    movieTitle.setVisibility(View.GONE);
+
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbarLayout.setTitle(" ");
+                    movieTitle.setVisibility(View.VISIBLE);
+                    isShow = false;
+                }
+            }
+        });
+    }
+
+    @TargetApi(21)
+    private void transparentStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark_half_translucent));
+        }
+    }
+
+    private void autoUpdateMovie() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateMovie();
+            }
+        };
+
+        Handler handler = new Handler();
+
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable, 1000);
+
+
+    }
+
+
+    private void updateMovie() {
+        if (state != R.string.searchState) {
+            NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+            client.sendRequest(new NetworkCallback() {
+                @Override
+                public void onFailure() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showNetworkError();
+                        }
+                    });
+                }
+
+                @Override
+                public void onSuccess(NetworkResponse response) {
+                    final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            assignData(movie, state);
+                            updateMovieDetails(movie);
+                            movieDbHelper.createOrUpdate(currentMovie);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private void updateMovieDetails(Movie movie) {
+        currentMovie.setTitle(movie.getTitle());
+        currentMovie.setRuntime(movie.getRuntime());
+        currentMovie.setVoteAverage(movie.getVoteAverage());
+        currentMovie.setVoteCount(movie.getVoteCount());
+        currentMovie.setDescription(movie.getDescription());
+        currentMovie.setPosterPath(movie.getPosterPath());
+    }
+
+    private void slideIn() {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.to_top);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        layout.startAnimation(animation);
+
+    }
+
+    private void slideOut() {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.to_bottom);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        layout.startAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                onBackPressed();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    private void showNetworkError() {
+        Snackbar snackbar = Snackbar
+                .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
 }
