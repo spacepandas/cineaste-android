@@ -5,15 +5,15 @@
         android:id="@+id/action_to_watchlist"
         android:icon="@drawable/ic_add_to_watchlist_white"
         app:showAsAction="ifRoom"
-        android:title="@string/search"/>
+        android:title="@string/watchList"/>
     <item
         android:id="@+id/action_to_watchedlist"
         android:icon="@drawable/ic_add_to_watchedlist_white"
         app:showAsAction="ifRoom"
-        android:title="@string/search"/>
+        android:title="@string/watchedlist"/>
     <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_delete_white"
         app:showAsAction="ifRoom"
-        android:title="@string/search"/>
+        android:title="@string/remove"/>
 </menu>
