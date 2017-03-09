@@ -67,8 +67,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginEnd="64dp"
                     android:layout_marginRight="64dp"
+                    android:paddingTop="4dp"
                     android:background="@drawable/circle"
-                    android:drawableTop="@drawable/cinema"
                     android:gravity="center"
                     android:textColor="@android:color/black" />
 
@@ -90,6 +90,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
+                    android:paddingTop="8dp"
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/movieRuntime"
                     android:layout_width="wrap_content"

@@ -83,7 +83,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                slideOut();
+                onBackPressed();
                 return true;
             case R.id.action_delete:
                 movieDbHelper.deleteMovieFromWatchlist(currentMovie);
@@ -132,7 +132,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
                 currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
-        slideOut();
+        onBackPressed();
 
     }
 
@@ -162,7 +162,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
                 currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
-        slideOut();
+        onBackPressed();
     }
 
     @Override
@@ -345,7 +345,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     }
 
-    private void slideOut() {
+    @Override
+    public void onBackPressed() {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.to_bottom);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         layout.startAnimation(animation);
@@ -357,7 +358,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                onBackPressed();
+                MovieDetailActivity.super.onBackPressed();
             }
 
             @Override
@@ -365,6 +366,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void showNetworkError() {
