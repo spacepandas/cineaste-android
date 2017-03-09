@@ -69,6 +69,22 @@ public class MovieDbHelper extends Observable {
         notifyObservers(movieAndState);
     }
 
+    public void justUpdate(Movie movie) {
+        String selection = BaseDao.MovieEntry._ID + " = ?";
+        String[] selectionArgs = {Long.toString( movie.getId() )};
+        List<Movie> movieList = movieDao.read( selection, selectionArgs );
+
+        MovieAndState movieAndState = null;
+        if( !movieList.isEmpty() ) {
+            updateMovieWatched( movie );
+            movieAndState = new MovieAndState(movie, MovieStateType.UPDATE);
+        }
+
+        setChanged();
+        if (movieAndState != null)
+            notifyObservers(movieAndState);
+    }
+
     public void update(Movie movie) {
         updateMovieWatched(movie);
         setChanged();

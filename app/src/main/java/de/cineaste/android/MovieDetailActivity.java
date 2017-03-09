@@ -187,16 +187,16 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         currentMovie = movieDbHelper.readMovie(movieId);
         if (currentMovie == null) {
-            loadRequestedMovie(state);
+            loadRequestedMovie();
         } else {
-            assignData(currentMovie, state);
+            assignData(currentMovie);
         }
 
         initToolbar();
         slideIn();
     }
 
-    private void loadRequestedMovie(final int state) {
+    private void loadRequestedMovie() {
         NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
         client.sendRequest(new NetworkCallback() {
             @Override
@@ -211,14 +211,14 @@ public class MovieDetailActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         currentMovie = movie;
-                        assignData(movie, state);
+                        assignData(movie);
                     }
                 });
             }
         });
     }
 
-    private void assignData(Movie currentMovie, int state) {
+    private void assignData(Movie currentMovie) {
         TextView movieDescription = (TextView) findViewById(R.id.movie_description);
 
         String description = currentMovie.getDescription();
@@ -313,10 +313,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            assignData(movie, state);
+                            assignData(movie);
                             updateMovieDetails(movie);
-                            //movieDbHelper.createOrUpdate(currentMovie);
-                            movieDbHelper.update(currentMovie);
+                            movieDbHelper.justUpdate(currentMovie);
                         }
                     });
                 }
