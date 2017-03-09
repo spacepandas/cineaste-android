@@ -19,8 +19,8 @@ Cineaste is released under the GPL V3 Open Source License. Please se LICENSE fil
 How to
 ------
 
-1. Get a [Nearby][nearbyLink] key and at it to your system variables as `NEARBY_KEY`.
-2. Get a [theMovieDb] [theMovieDb] key and at it to your system variables as `MOVIE_KEY`.
+1. Get a [Nearby][nearbyLink] key and add it to your system variables as `NEARBY_KEY`.
+2. Get a [theMovieDb] [theMovieDb] key and add it to your system variables as `MOVIE_KEY`.
 3. Continue with normal development, or building process.
 
 
