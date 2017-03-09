@@ -8,15 +8,29 @@
     android:fitsSystemWindows="false"
     tools:context="de.cineaste.android.MovieDetailActivity">
 
-    <ImageView
-        android:id="@+id/movie_poster"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/moviePoster"
-        android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_poster"
-        android:transitionName="poster" />
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/movie_poster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/moviePoster"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_poster"
+            android:transitionName="poster" />
+
+        <ImageView
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/gradient"
+            android:src="@drawable/gradient"/>
+    </FrameLayout>
+
+
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -57,7 +71,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/gradient">
+                android:background="@drawable/triangle">
 
                 <TextView
                     android:id="@+id/rating"
@@ -75,6 +89,7 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:paddingTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -103,6 +118,7 @@
 
 
                 <TextView
+                    android:lineSpacingMultiplier="1.4"
                     android:id="@+id/movie_description"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

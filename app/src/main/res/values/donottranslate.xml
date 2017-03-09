@@ -11,4 +11,5 @@
     <string name="githubLogo">GitHub</string>
     <string name="tmdbLogo">tmdb</string>
     <string name="counter">counter</string>
+    <string name="gradient">gradient</string>
 </resources>

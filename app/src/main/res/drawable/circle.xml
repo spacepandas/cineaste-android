@@ -16,6 +16,6 @@
         android:gravity="center_horizontal"
         android:top="10dp"
         android:bottom="34dp"
-        android:right="10dp"
-        android:left="10dp"/>
+        android:right="8dp"
+        android:left="8dp"/>
 </layer-list>
