@@ -1,14 +1,11 @@
 package de.cineaste.android;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +44,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView movieTitle;
     private TextView movieRuntime;
     private NestedScrollView layout;
+    private Runnable updateCallBack;
 
 
     @Override
@@ -85,8 +83,11 @@ public class MovieDetailActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+
             case R.id.action_delete:
                 movieDbHelper.deleteMovieFromWatchlist(currentMovie);
+                layout.removeCallbacks(updateCallBack);
+                onBackPressed();
                 return true;
             case R.id.action_to_watchedlist:
                 onAddToWatchedClicked();
@@ -94,9 +95,8 @@ public class MovieDetailActivity extends AppCompatActivity {
             case R.id.action_to_watchlist:
                 onAddToWatchClicked();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     private void onAddToWatchedClicked() {
@@ -174,8 +174,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieId = intent.getLongExtra(BaseDao.MovieEntry._ID, -1);
         state = intent.getIntExtra(getString(R.string.state), -1);
 
-        autoUpdateMovie();
-
         moviePoster = (ImageView) findViewById(R.id.movie_poster);
         rating = (TextView) findViewById(R.id.rating);
         movieTitle = (TextView) findViewById(R.id.movieTitle);
@@ -183,6 +181,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         layout = (NestedScrollView) findViewById(R.id.overlay);
 
         movieDbHelper = MovieDbHelper.getInstance(this);
+
+        updateCallBack = getUpdateCallback();
+        autoUpdateMovie();
+
         currentMovie = movieDbHelper.readMovie(movieId);
         if (currentMovie == null) {
             loadRequestedMovie(state);
@@ -239,7 +241,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        transparentStatusBar();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -275,33 +276,26 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
     }
 
-    @TargetApi(21)
-    private void transparentStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark_half_translucent));
-        }
+    private void autoUpdateMovie() {
+        layout.removeCallbacks(updateCallBack);
+        layout.postDelayed(updateCallBack, 1000);
+
     }
 
-    private void autoUpdateMovie() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                updateMovie();
-            }
-        };
-
-        Handler handler = new Handler();
-
-        handler.removeCallbacks(runnable);
-        handler.postDelayed(runnable, 1000);
-
-
+    @NonNull
+    private Runnable getUpdateCallback() {
+        return new Runnable() {
+                @Override
+                public void run() {
+                    updateMovie();
+                }
+            };
     }
 
 
     private void updateMovie() {
         if (state != R.string.searchState) {
-            NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+            final NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
             client.sendRequest(new NetworkCallback() {
                 @Override
                 public void onFailure() {
@@ -321,7 +315,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                         public void run() {
                             assignData(movie, state);
                             updateMovieDetails(movie);
-                            movieDbHelper.createOrUpdate(currentMovie);
+                            //movieDbHelper.createOrUpdate(currentMovie);
+                            movieDbHelper.update(currentMovie);
                         }
                     });
                 }

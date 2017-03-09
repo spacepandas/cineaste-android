@@ -2,7 +2,6 @@ package de.cineaste.android.fragment;
 
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -61,6 +60,7 @@ public class MovieNightFragment extends Fragment
 	private ProgressBar progressBar;
 	private RecyclerView nearbyUser_rv;
 	private View view;
+	private Runnable timeOut;
 
 	private NearbyUserAdapter nearbyUserAdapter;
 	private GoogleApiClient googleApiClient;
@@ -87,6 +87,7 @@ public class MovieNightFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
+		initializeTimeout();
 		loadDeviceID();
 
 		MovieDbHelper watchlistDbHelper = MovieDbHelper.getInstance(getActivity());
@@ -95,6 +96,24 @@ public class MovieNightFragment extends Fragment
 		List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(false);
 		final List<MovieDto> localMovies = transFormMovies(localWatchlistMovies);
 		localNearbyMessage = new NearbyMessage(currentUser.getUserName(), deviceID, localMovies);
+
+	}
+
+	private void initializeTimeout() {
+		timeOut = new Runnable() {
+			@Override
+			public void run() {
+				Snackbar snackbar = Snackbar
+						.make(view, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG);
+				snackbar.show();
+			}
+		};
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		view.removeCallbacks(timeOut);
 	}
 
 	@Override
@@ -364,28 +383,7 @@ public class MovieNightFragment extends Fragment
 	}
 
 	private void timedOut() {
-		new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground(Void... voids) {
-				try {
-					Thread.sleep(45000);
-				} catch (InterruptedException ex) {
-					//do nothing
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void aVoid) {
-				super.onPostExecute(aVoid);
-
-				Snackbar snackbar = Snackbar
-						.make(view, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG);
-				snackbar.show();
-
-				getFragmentManager().popBackStack();
-
-			}
-		}.execute();
+		view.removeCallbacks(timeOut);
+		view.postDelayed(timeOut, 45000);
 	}
 }
