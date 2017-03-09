@@ -11,6 +11,7 @@
         android:scrollbars="vertical" />
 
     <TextView
+        android:textColor="@android:color/white"
         android:id="@+id/info_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
