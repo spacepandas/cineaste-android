@@ -54,6 +54,7 @@ public class WatchedlistViewHolder extends RecyclerView.ViewHolder {
 		movieTitle.setText(movie.getTitle());
 		if (movie.getReleaseDate() != null) {
 			movieReleaseDate.setText(convertDate(movie.getReleaseDate()));
+			movieReleaseDate.setVisibility(View.VISIBLE);
 		} else {
 			movieReleaseDate.setVisibility(View.GONE);
 		}
@@ -85,7 +86,7 @@ public class WatchedlistViewHolder extends RecyclerView.ViewHolder {
 	}
 
 	private String convertDate(Date date) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", context.getResources().getConfiguration().locale);
 		return simpleDateFormat.format(date);
 	}
 }

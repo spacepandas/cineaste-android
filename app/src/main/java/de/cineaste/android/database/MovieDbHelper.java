@@ -13,9 +13,11 @@ public class MovieDbHelper {
     private static MovieDbHelper instance;
 
     private final MovieDao movieDao;
+    private final SimpleDateFormat sdf;
 
     private MovieDbHelper( Context context ) {
         this.movieDao = MovieDao.getInstance( context );
+        sdf = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
     }
 
     public static MovieDbHelper getInstance( Context context ) {
@@ -86,7 +88,6 @@ public class MovieDbHelper {
     }
 
     private int updateMovieWatched( Movie movie ) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         ContentValues values = new ContentValues();
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0 );
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate() );

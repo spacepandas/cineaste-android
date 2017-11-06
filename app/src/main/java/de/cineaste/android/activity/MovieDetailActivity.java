@@ -258,8 +258,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         movieTitle.setText(currentMovie.getTitle());
         if (currentMovie.getReleaseDate() != null) {
-            movieReleaseDate.setVisibility(View.VISIBLE);
             movieReleaseDate.setText(convertDate(currentMovie.getReleaseDate()));
+            movieReleaseDate.setVisibility(View.VISIBLE);
         } else {
             movieReleaseDate.setVisibility(View.GONE);
         }
@@ -425,7 +425,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private String convertDate(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", getResources().getConfiguration().locale);
         return simpleDateFormat.format(date);
     }
 }

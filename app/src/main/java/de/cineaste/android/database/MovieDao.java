@@ -13,11 +13,12 @@ import java.util.List;
 import de.cineaste.android.entity.Movie;
 
 class MovieDao extends BaseDao {
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat sdf;
     private static MovieDao mInstance;
 
     private MovieDao(Context context) {
         super(context);
+        sdf = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
     }
 
     public static MovieDao getInstance(Context context) {
