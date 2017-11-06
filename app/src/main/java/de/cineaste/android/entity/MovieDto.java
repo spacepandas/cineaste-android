@@ -12,7 +12,7 @@ public class MovieDto {
 	MovieDto() {
 	}
 
-	MovieDto(long id, String posterPath, String title) {
+	public MovieDto(long id, String posterPath, String title) {
 		this.id = id;
 		this.posterPath = posterPath;
 		this.title = title;

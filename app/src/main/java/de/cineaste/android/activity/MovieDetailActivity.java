@@ -1,4 +1,4 @@
-package de.cineaste.android;
+package de.cineaste.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -24,6 +25,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import de.cineaste.android.Constants;
+import de.cineaste.android.R;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
@@ -42,6 +48,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private Movie currentMovie;
     private TextView rating;
     private TextView movieTitle;
+    private TextView movieReleaseDate;
     private TextView movieRuntime;
     private NestedScrollView layout;
     private Runnable updateCallBack;
@@ -174,11 +181,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieId = intent.getLongExtra(BaseDao.MovieEntry._ID, -1);
         state = intent.getIntExtra(getString(R.string.state), -1);
 
-        moviePoster = (ImageView) findViewById(R.id.movie_poster);
-        rating = (TextView) findViewById(R.id.rating);
-        movieTitle = (TextView) findViewById(R.id.movieTitle);
-        movieRuntime = (TextView) findViewById(R.id.movieRuntime);
-        layout = (NestedScrollView) findViewById(R.id.overlay);
+        movieReleaseDate = findViewById(R.id.movieReleaseDate);
+        moviePoster = findViewById(R.id.movie_poster);
+        rating = findViewById(R.id.rating);
+        movieTitle = findViewById(R.id.movieTitle);
+        movieRuntime = findViewById(R.id.movieRuntime);
+        layout = findViewById(R.id.overlay);
 
         movieDbHelper = MovieDbHelper.getInstance(this);
 
@@ -194,6 +202,28 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         initToolbar();
         slideIn();
+
+
+        moviePoster.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        slideOut();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        layout.setVisibility(View.VISIBLE);
+                        slideIn();
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        layout.setVisibility(View.VISIBLE);
+                        slideIn();
+                        break;
+                }
+                return true;
+            }
+        });
+
     }
 
     private void loadRequestedMovie() {
@@ -219,7 +249,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void assignData(Movie currentMovie) {
-        TextView movieDescription = (TextView) findViewById(R.id.movie_description);
+        TextView movieDescription = findViewById(R.id.movie_description);
 
         String description = currentMovie.getDescription();
         movieDescription.setText(
@@ -227,6 +257,12 @@ public class MovieDetailActivity extends AppCompatActivity {
                         ? getString(R.string.noDescription) : description);
 
         movieTitle.setText(currentMovie.getTitle());
+        if (currentMovie.getReleaseDate() != null) {
+            movieReleaseDate.setVisibility(View.VISIBLE);
+            movieReleaseDate.setText(convertDate(currentMovie.getReleaseDate()));
+        } else {
+            movieReleaseDate.setVisibility(View.GONE);
+        }
         movieRuntime.setText(getString(R.string.runtime, currentMovie.getRuntime()));
         rating.setText(String.valueOf(currentMovie.getVoteAverage()));
 
@@ -241,7 +277,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
@@ -251,8 +287,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void setTitleIfNeeded() {
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = findViewById(R.id.appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
             int scrollRange = -1;
@@ -279,19 +315,17 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void autoUpdateMovie() {
         layout.removeCallbacks(updateCallBack);
         layout.postDelayed(updateCallBack, 1000);
-
     }
 
     @NonNull
     private Runnable getUpdateCallback() {
         return new Runnable() {
-                @Override
-                public void run() {
-                    updateMovie();
-                }
-            };
+            @Override
+            public void run() {
+                updateMovie();
+            }
+        };
     }
-
 
     private void updateMovie() {
         if (state != R.string.searchState) {
@@ -330,13 +364,34 @@ public class MovieDetailActivity extends AppCompatActivity {
         currentMovie.setVoteCount(movie.getVoteCount());
         currentMovie.setDescription(movie.getDescription());
         currentMovie.setPosterPath(movie.getPosterPath());
+        currentMovie.setReleaseDate(movie.getReleaseDate());
     }
 
     private void slideIn() {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.to_top);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         layout.startAnimation(animation);
+    }
 
+    private void slideOut() {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.to_bottom);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        layout.startAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                layout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     @Override
@@ -367,5 +422,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         Snackbar snackbar = Snackbar
                 .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG);
         snackbar.show();
+    }
+
+    private String convertDate(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        return simpleDateFormat.format(date);
     }
 }

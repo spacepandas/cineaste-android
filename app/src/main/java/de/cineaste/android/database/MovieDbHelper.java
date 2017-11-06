@@ -3,14 +3,12 @@ package de.cineaste.android.database;
 import android.content.ContentValues;
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Observable;
 
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.entity.MovieAndState;
-import de.cineaste.android.entity.MovieStateType;
 
-public class MovieDbHelper extends Observable {
+public class MovieDbHelper {
 
     private static MovieDbHelper instance;
 
@@ -56,17 +54,12 @@ public class MovieDbHelper extends Observable {
         String[] selectionArgs = {Long.toString( movie.getId() )};
         List<Movie> movieList = movieDao.read( selection, selectionArgs );
 
-        MovieAndState movieAndState;
         if( !movieList.isEmpty() ) {
             updateMovieWatched( movie );
-            movieAndState = new MovieAndState(movie, MovieStateType.UPDATE);
         } else {
             createNewMovieEntry( movie );
-            movieAndState = new MovieAndState(movie, MovieStateType.INSERT);
         }
 
-        setChanged();
-        notifyObservers(movieAndState);
     }
 
     public void justUpdate(Movie movie) {
@@ -74,28 +67,18 @@ public class MovieDbHelper extends Observable {
         String[] selectionArgs = {Long.toString( movie.getId() )};
         List<Movie> movieList = movieDao.read( selection, selectionArgs );
 
-        MovieAndState movieAndState = null;
         if( !movieList.isEmpty() ) {
             updateMovieWatched( movie );
-            movieAndState = new MovieAndState(movie, MovieStateType.UPDATE);
         }
 
-        setChanged();
-        if (movieAndState != null)
-            notifyObservers(movieAndState);
     }
 
     public void update(Movie movie) {
         updateMovieWatched(movie);
-        setChanged();
-        notifyObservers(new MovieAndState(movie, MovieStateType.STATUS_CHANGED));
     }
 
     public void deleteMovieFromWatchlist( Movie movie ) {
         movieDao.delete(movie.getId());
-
-        setChanged();
-        notifyObservers(new MovieAndState(movie, MovieStateType.DELETE));
     }
 
     public int getMovieCount() {
@@ -103,6 +86,7 @@ public class MovieDbHelper extends Observable {
     }
 
     private int updateMovieWatched( Movie movie ) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         ContentValues values = new ContentValues();
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0 );
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate() );
@@ -112,6 +96,11 @@ public class MovieDbHelper extends Observable {
         values.put( BaseDao.MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount() );
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_DESCRIPTION, movie.getDescription() );
         values.put( BaseDao.MovieEntry.COlUMN_POSTER_PATH, movie.getPosterPath() );
+        if (movie.getReleaseDate() != null) {
+            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, sdf.format(movie.getReleaseDate()));
+        } else {
+            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, "");
+        }
         String selection = BaseDao.MovieEntry._ID + " LIKE ?";
         String[] where = {String.valueOf( movie.getId() )};
 

@@ -2,7 +2,7 @@ package de.cineaste.android;
 
 public interface Constants {
 
-	int DATABASE_VERSION = 1;
+	int DATABASE_VERSION = 2;
 	String DATABASE_NAME = "cineaste.db";
 
 	String API_KEY = BuildConfig.MovieKey;

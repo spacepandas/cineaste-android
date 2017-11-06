@@ -7,73 +7,43 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
 
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.entity.MovieAndState;
-import de.cineaste.android.entity.MovieStateType;
-import de.cineaste.android.fragment.BaseWatchlistFragment;
 import de.cineaste.android.viewholder.WatchlistViewHolder;
 
-public class WatchlistAdapter extends BaseWatchlistAdapter implements Observer {
+public class WatchlistAdapter extends BaseWatchlistAdapter {
 
 	private final MovieDbHelper db;
 	private final Context context;
-	private final BaseWatchlistFragment baseFragment;
 	private final MovieClickListener listener;
 
-	public WatchlistAdapter(Context context, BaseWatchlistFragment baseFragment, MovieClickListener listener) {
+	public WatchlistAdapter(Context context, MovieClickListener listener, DisplayMessage displayMessage) {
+		super(displayMessage);
 		this.db = MovieDbHelper.getInstance(context);
 		this.context = context;
 		this.dataset = db.readMoviesByWatchStatus(false);
 		this.filteredDataset = new LinkedList<>(dataset);
-		this.baseFragment = baseFragment;
-		this.db.addObserver(this);
 		this.listener = listener;
 	}
 
 	@Override
-	public void update(Observable observable, Object o) {
-		MovieAndState movieAndState = (MovieAndState) o;
-		MovieStateType state = movieAndState.getState();
-		Movie changedMovie = movieAndState.getMovie();
+	public void removeMovie(Movie movie) {
+		notifyItemRemoved(filteredDataset.indexOf(movie));
 
-		int index = dataset.indexOf(changedMovie);
+		dataset.remove(movie);
+		filteredDataset.remove(movie);
+		displayMessage.showMessageIfEmptyList(R.string.noMoviesOnWatchList);
+	}
 
-		if (index == -1 && state != MovieStateType.INSERT) {
-			return;
-		}
-
-		if (index == -1 && state == MovieStateType.INSERT) {
-			if (!changedMovie.isWatched()) {
-				dataset.add(indexInAlphabeticalOrder(changedMovie, dataset),
-						changedMovie);
-				int filterListIndex = indexInAlphabeticalOrder(changedMovie, filteredDataset);
-				filteredDataset.add(filterListIndex, changedMovie);
-				notifyItemInserted(filterListIndex);
-				return;
-			}
-		}
-
-		switch (state) {
-			case STATUS_CHANGED:
-			case DELETE:
-				dataset.remove(index);
-				int filterListIndex = filteredDataset.indexOf(changedMovie);
-				filteredDataset.remove(filterListIndex);
-				notifyItemRemoved(filterListIndex);
-				break;
-			case UPDATE:
-				filteredDataset.set(index, changedMovie);
-				notifyDataSetChanged();
-				break;
-		}
-
-		baseFragment.showMessageIfEmptyList(R.string.noMoviesOnWatchList);
+	@Override
+	public void updateDataSet() {
+		this.dataset = db.readMoviesByWatchStatus(false);
+		this.filteredDataset = new LinkedList<>(dataset);
+		displayMessage.showMessageIfEmptyList(R.string.noMoviesOnWatchList);
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -84,7 +54,7 @@ public class WatchlistAdapter extends BaseWatchlistAdapter implements Observer {
 
 	@Override
 	public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-		((WatchlistViewHolder) holder).assignData(filteredDataset.get(position));
+		((WatchlistViewHolder) holder).assignData(filteredDataset.get(position), this);
 	}
 
 	@Override

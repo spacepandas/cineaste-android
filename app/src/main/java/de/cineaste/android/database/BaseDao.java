@@ -28,7 +28,8 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					MovieEntry.COLUMN_VOTE_COUNT + INTEGER_TYPE + COMMA_SEP +
 					MovieEntry.COLUMN_MOVIE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
 					MovieEntry.COLUMN_MOVIE_WATCHED + INTEGER_TYPE + COMMA_SEP +
-					MovieEntry.COLUMN_MOVIE_WATCHED_DATE + INTEGER_TYPE +
+					MovieEntry.COLUMN_MOVIE_WATCHED_DATE + INTEGER_TYPE + COMMA_SEP +
+					MovieEntry.COLUMN_MOVIE_RELEASE_DATE + TEXT_TYPE +
 					" )";
 	private static final String SQL_DELETE_USER_ENTRIES =
 			"DROP TABLE IF EXISTS " + UserEntry.TABLE_NAME;
@@ -58,6 +59,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		static final String COLUMN_MOVIE_DESCRIPTION = "description";
 		static final String COLUMN_MOVIE_WATCHED = "watched";
 		static final String COLUMN_MOVIE_WATCHED_DATE = "watchedDate";
+		static final String COLUMN_MOVIE_RELEASE_DATE = "releaseDate";
 	}
 
 	BaseDao(Context context) {
@@ -73,9 +75,9 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-		db.execSQL(SQL_DELETE_USER_ENTRIES);
-		db.execSQL(SQL_DELETE_MOVIE_ENTRIES);
-		onCreate(db);
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if (newVersion > oldVersion) {
+			db.execSQL("ALTER TABLE " + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.COLUMN_MOVIE_RELEASE_DATE + " " + TEXT_TYPE);
+		}
 	}
 }

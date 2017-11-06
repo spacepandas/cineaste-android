@@ -6,10 +6,21 @@ import java.util.List;
 
 import de.cineaste.android.entity.Movie;
 
-public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public abstract class BaseWatchlistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnMovieRemovedListener {
 
 	List<Movie> dataset;
 	List<Movie> filteredDataset;
+	DisplayMessage displayMessage;
+
+	public BaseWatchlistAdapter(DisplayMessage displayMessage) {
+		this.displayMessage = displayMessage;
+	}
+
+	public abstract void updateDataSet();
+
+	public interface DisplayMessage {
+		public void showMessageIfEmptyList(int messageId);
+	}
 
 	public void filter(String searchTerm) {
 		if (filteredDataset == null)

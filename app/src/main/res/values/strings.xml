@@ -1,35 +1,38 @@
 <resources>
-	<string name="search">Search</string>
-	<plurals name="movieCounter">
-		<item quantity="one">Movie: %d</item>
-		<item quantity="other">Movies: %d</item>
-	</plurals>
-	<string name="startMovieNight">Start Movienight</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="search">Search</string>
+    <plurals name="movieCounter">
+        <item quantity="one">Movie: %d</item>
+        <item quantity="other">Movies: %d</item>
+    </plurals>
+    <string name="startMovieNight">Start Movienight</string>
 
-	<string name="enter_username">Your Username</string>
-	<string name="noMoviesOnWatchList">You do not have movies on your Watchlist. \nOn the bottom right you can add new titles!</string>
-	<string name="noMoviesOnWatchedList">You do not have movies on your Watchedlist. \nGo ahead and watch some!</string>
-	<string name="searching_for_friends">Searching for friends</string>
-	<string name="no_friends_found_try_again">No friends found, try again!</string>
+    <string name="enter_username">Your Username</string>
+    <string name="noMoviesOnWatchList">You do not have movies on your Watchlist. \nOn the bottom right you can add new titles!</string>
+    <string name="noMoviesOnWatchedList">You do not have movies on your Watchedlist. \nGo ahead and watch some!</string>
+    <string name="searching_for_friends">Searching for friends</string>
+    <string name="no_friends_found_try_again">No friends found, try again!</string>
 
-	<string name="watchList">To See Movies</string>
-	<string name="watchedlist">Seen Movies</string>
-	<string name="successfulExport">Successfully Export</string>
-	<string name="successfulImport">Successfully Import</string>
-	<string name="missing_permission">Import/Export Permissions missing</string>
-	<string name="unsuccessfulImport">Import failed</string>
-	<string name="moviePoster">Movie poster</string>
-	<string name="addToWatchlist">Add to Watchlist</string>
-	<string name="addToWatchedlist">Add to Watchedlist</string>
-	<string name="remove">Remove movie</string>
-	<string name="noInternet">No internet-connection!</string>
-	<string name="runtime">%d m</string>
-	<string name="vote">%s</string>
+    <string name="watchList">To See Movies</string>
+    <string name="watchedlist">Seen Movies</string>
+    <string name="successfulExport">Successfully Export</string>
+    <string name="successfulImport">Successfully Import</string>
+    <string name="missing_permission">Import/Export Permissions missing</string>
+    <string name="unsuccessfulImport">Import failed</string>
+    <string name="moviePoster">Movie poster</string>
+    <string name="addToWatchlist">Add to Watchlist</string>
+    <string name="addToWatchedlist">Add to Watchedlist</string>
+    <string name="remove">Remove movie</string>
+    <string name="noInternet">No internet-connection!</string>
+    <string name="runtime">%d min</string>
+    <string name="vote">%s</string>
+    <string name="releaseDate">Release Date</string>
 
-	<string name="movieTitle">Title</string>
-	<string name="noDescription">No description available</string>
-	<string name="movieAdd">Added %s</string>
-	<string name="could_not_add_movie">Movie could not be added!</string>
+    <string name="movieTitle">Title</string>
+    <string name="noDescription">No description available</string>
+    <string name="movieAdd">Added %s</string>
+    <string name="could_not_add_movie">Movie could not be added!</string>
 
     <string name="aboutContent">Cineaste is an Open Source project of two computer science students. The main feature of the app is to find easily movies for a shared movie night. Via the "Matching"-Button your mobile phone searches for friends in your surroundings and suggests the movies, which you all would like to watch.\n\n
 The data is transmitted via Bluetooth. This means all your movies are stored securely on your phone and stays there. The data will be only shared in your living room between your friends!\n\n

@@ -11,9 +11,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import de.cineaste.android.Constants;
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
+import de.cineaste.android.adapter.BaseWatchlistAdapter;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
 
@@ -23,6 +27,7 @@ public class WatchedlistViewHolder extends RecyclerView.ViewHolder {
 	private final MovieClickListener listener;
 
 	private final TextView movieTitle;
+	private final TextView movieReleaseDate;
 	private final TextView movieRuntime;
 	private final TextView movieVote;
 	private final ImageButton removeMovie;
@@ -31,21 +36,27 @@ public class WatchedlistViewHolder extends RecyclerView.ViewHolder {
 
 	public WatchedlistViewHolder(View v, Context context, MovieDbHelper db, MovieClickListener listener) {
 		super(v);
-		movieTitle = (TextView) v.findViewById(R.id.movie_title);
-		movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
-		movieVote = (TextView) v.findViewById(R.id.movie_vote);
-		removeMovie = (ImageButton) v.findViewById(R.id.remove_button);
-		imageView = (ImageView) v.findViewById(R.id.movie_poster_image_view);
+		movieTitle = v.findViewById(R.id.movie_title);
+		movieReleaseDate = v.findViewById(R.id.movieReleaseDate);
+		movieRuntime = v.findViewById(R.id.movieRuntime);
+		movieVote = v.findViewById(R.id.movie_vote);
+		removeMovie = v.findViewById(R.id.remove_button);
+		imageView = v.findViewById(R.id.movie_poster_image_view);
 		view = v;
 		this.context = context;
 		this.db = db;
 		this.listener = listener;
 	}
 
-	public void assignData(final Movie movie) {
+	public void assignData(final Movie movie, final BaseWatchlistAdapter adapter) {
 		Resources resources = context.getResources();
 
 		movieTitle.setText(movie.getTitle());
+		if (movie.getReleaseDate() != null) {
+			movieReleaseDate.setText(convertDate(movie.getReleaseDate()));
+		} else {
+			movieReleaseDate.setVisibility(View.GONE);
+		}
 		movieRuntime.setText(resources.getString(R.string.runtime, movie.getRuntime()));
 		movieVote.setText(resources.getString(R.string.vote, String.valueOf(movie.getVoteAverage())));
 		String posterName = movie.getPosterPath();
@@ -58,6 +69,7 @@ public class WatchedlistViewHolder extends RecyclerView.ViewHolder {
 			@Override
 			public void onClick(View v) {
 				db.deleteMovieFromWatchlist(movie);
+				adapter.removeMovie(movie);
 			}
 		});
 
@@ -70,5 +82,10 @@ public class WatchedlistViewHolder extends RecyclerView.ViewHolder {
 				}
 			}
 		});
+	}
+
+	private String convertDate(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+		return simpleDateFormat.format(date);
 	}
 }

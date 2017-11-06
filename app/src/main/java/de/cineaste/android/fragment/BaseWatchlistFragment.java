@@ -4,8 +4,9 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -19,24 +20,37 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
+import de.cineaste.android.activity.AboutActivity;
+import de.cineaste.android.MainActivity;
 import de.cineaste.android.MovieClickListener;
-import de.cineaste.android.MovieDetailActivity;
+import de.cineaste.android.activity.MovieDetailActivity;
 import de.cineaste.android.R;
+import de.cineaste.android.activity.SearchActivity;
 import de.cineaste.android.adapter.BaseWatchlistAdapter;
 import de.cineaste.android.adapter.WatchedlistAdapter;
 import de.cineaste.android.adapter.WatchlistAdapter;
 import de.cineaste.android.database.BaseDao;
+import de.cineaste.android.database.ExportService;
+import de.cineaste.android.database.ImportService;
+import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.entity.Movie;
 
 import static android.app.ActivityOptions.makeSceneTransitionAnimation;
+import static de.cineaste.android.fragment.BaseWatchlistFragment.WatchlistFragmentType.WATCHED_LIST;
+import static de.cineaste.android.fragment.BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST;
 
 public class BaseWatchlistFragment extends Fragment
-		implements MovieClickListener {
+		implements MovieClickListener, BaseWatchlistAdapter.DisplayMessage {
 
 	private String watchlistType;
 
 	private RecyclerView baseWatchlistRecyclerView;
 	private BaseWatchlistAdapter baseWatchlistAdapter;
 	private TextView emptyListTextView;
+
+	private MovieDbHelper movieDbHelper;
 
 	public interface WatchlistFragmentType {
 		String WATCHLIST_TYPE = "WatchlistType";
@@ -51,14 +65,23 @@ public class BaseWatchlistFragment extends Fragment
 	}
 
 	@Override
+	public void onResume() {
+		baseWatchlistAdapter.updateDataSet();
+
+		super.onResume();
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		View watchlistView = inflater.inflate(R.layout.fragment_base_watchlist, container, false);
 
-		emptyListTextView = (TextView) watchlistView.findViewById(R.id.info_text);
+		movieDbHelper = MovieDbHelper.getInstance(getActivity());
+
+		emptyListTextView = watchlistView.findViewById(R.id.info_text);
 
 		baseWatchlistRecyclerView =
-				(RecyclerView) watchlistView.findViewById(R.id.basewatchlist_recycler_view);
+				watchlistView.findViewById(R.id.basewatchlist_recycler_view);
 		RecyclerView.LayoutManager baseWatchlistLayoutMgr = new LinearLayoutManager(getActivity());
 
 		baseWatchlistRecyclerView.setHasFixedSize(true);
@@ -67,6 +90,15 @@ public class BaseWatchlistFragment extends Fragment
 
 		baseWatchlistRecyclerView.setLayoutManager(baseWatchlistLayoutMgr);
 		baseWatchlistRecyclerView.setAdapter(baseWatchlistAdapter);
+
+		FloatingActionButton fab = watchlistView.findViewById(R.id.fab);
+		fab.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), SearchActivity.class);
+				getActivity().startActivity(intent);
+			}
+		});
 
 		return watchlistView;
 	}
@@ -86,26 +118,20 @@ public class BaseWatchlistFragment extends Fragment
 			this.watchlistType =
 					savedInstanceState.getString(WatchlistFragmentType.WATCHLIST_TYPE);
 		}
-	}
 
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-//        if the fragment is not visible, i have to re-trigger the search to ensure that
-//        the recyclerView of the hidden page will be filled correctly when navigated back
-		if (!isVisibleToUser) {
-			if (baseWatchlistAdapter != null) {
-				baseWatchlistAdapter.filter(null);
-			}
+		if (watchlistType.equals(WATCH_LIST)) {
+			getActivity().setTitle(R.string.watchList);
+		} else if (watchlistType.equals(WATCHED_LIST)) {
+			getActivity().setTitle(R.string.watchedlist);
 		}
 	}
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		MenuItem searchViewMenuItem = menu.findItem(R.id.action_search);
-		SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(searchViewMenuItem);
+		SearchView mSearchView = (SearchView) searchViewMenuItem.getActionView();
 		int searchImgId = android.support.v7.appcompat.R.id.search_button; // I used the explicit layout ID of searchView's ImageView
-		ImageView v = (ImageView) mSearchView.findViewById(searchImgId);
+		ImageView v = mSearchView.findViewById(searchImgId);
 		v.setImageResource(R.drawable.ic_filter);
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -113,7 +139,7 @@ public class BaseWatchlistFragment extends Fragment
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		MenuInflater menuInflater = getActivity().getMenuInflater();
-		menuInflater.inflate(R.menu.search_menu, menu);
+		menuInflater.inflate(R.menu.start_movie_night, menu);
 
 		MenuItem searchItem = menu.findItem(R.id.action_search);
 
@@ -135,6 +161,52 @@ public class BaseWatchlistFragment extends Fragment
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.startMovieNight:
+				MainActivity.startMovieNight(getFragmentManager());
+				break;
+			case R.id.exportMovies:
+				exportMovies();
+				break;
+			case R.id.importMovies:
+				importMovies();
+				break;
+			case R.id.about:
+				Intent intent = new Intent(getActivity(), AboutActivity.class);
+				getActivity().startActivity(intent);
+				break;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void exportMovies() {
+		List<Movie> movies = movieDbHelper.readAllMovies();
+		ExportService.exportMovies(movies);
+		Snackbar snackbar = Snackbar
+				.make(baseWatchlistRecyclerView, R.string.successfulExport, Snackbar.LENGTH_SHORT);
+		snackbar.show();
+	}
+
+	private void importMovies() {
+		List<Movie> movies = ImportService.importMovies();
+		int snackBarMessage;
+		if (movies.size() != 0) {
+			for (Movie current : movies) {
+				movieDbHelper.createOrUpdate(current);
+			}
+			snackBarMessage = R.string.successfulImport;
+		} else {
+			snackBarMessage = R.string.unsuccessfulImport;
+		}
+		Snackbar snackbar = Snackbar
+				.make(baseWatchlistRecyclerView, snackBarMessage, Snackbar.LENGTH_SHORT);
+		snackbar.show();
+	}
+
+	@Override
 	public void showMessageIfEmptyList(int messageId) {
 		if (baseWatchlistAdapter.getDatasetSize() == 0) {
 			baseWatchlistRecyclerView.setVisibility(View.GONE);
@@ -149,7 +221,7 @@ public class BaseWatchlistFragment extends Fragment
 	@Override
 	public void onMovieClickListener(long movieId, View[] views) {
 		int state;
-		if (watchlistType.equals(WatchlistFragmentType.WATCH_LIST)) {
+		if (watchlistType.equals(WATCH_LIST)) {
 			state = R.string.watchlistState;
 		} else {
 			state = R.string.watchedlistState;
@@ -171,7 +243,7 @@ public class BaseWatchlistFragment extends Fragment
 	}
 
 	private void setCorrectWatchlistAdapter() {
-		if (watchlistType.equals(WatchlistFragmentType.WATCH_LIST)) {
+		if (watchlistType.equals(WATCH_LIST)) {
 			baseWatchlistAdapter = new WatchlistAdapter(getActivity(), this, this);
 			showMessageIfEmptyList(R.string.noMoviesOnWatchList);
 		} else {

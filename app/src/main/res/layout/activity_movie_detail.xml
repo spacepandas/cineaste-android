@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:fitsSystemWindows="false"
-    tools:context="de.cineaste.android.MovieDetailActivity">
+    tools:context="de.cineaste.android.activity.MovieDetailActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -106,6 +106,14 @@
 
                 <TextView
                     android:paddingTop="8dp"
+                    android:id="@+id/movieReleaseDate"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/releaseDate"/>
+
+                <TextView
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/movieRuntime"
                     android:layout_width="wrap_content"

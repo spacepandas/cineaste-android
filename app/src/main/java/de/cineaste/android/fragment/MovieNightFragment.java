@@ -122,11 +122,11 @@ public class MovieNightFragment extends Fragment
 
 		view = inflater.inflate(R.layout.fragment_movie_night, container, false);
 
-		nearbyUser_rv = (RecyclerView) view.findViewById(R.id.nearbyUser_rv);
-		startBtn = (Button) view.findViewById(R.id.start_btn);
+		nearbyUser_rv = view.findViewById(R.id.nearbyUser_rv);
+		startBtn = view.findViewById(R.id.start_btn);
 		startBtn.setVisibility(View.GONE);
-		searchingFriends = (TextView) view.findViewById(R.id.searchingFriends);
-		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+		searchingFriends = view.findViewById(R.id.searchingFriends);
+		progressBar = view.findViewById(R.id.progressBar);
 
 		nearbyUserAdapter =
 				new NearbyUserAdapter(
@@ -371,13 +371,13 @@ public class MovieNightFragment extends Fragment
 	}
 
 	private void generateDeviceId() {
-		String id = "";
+		StringBuilder id = new StringBuilder();
 		for (int i = 0; i < 6; i++) {
-			id += String.valueOf((int) (Math.random() * 10));
+			id.append(String.valueOf((int) (Math.random() * 10)));
 		}
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString("deviceID", id);
+		editor.putString("deviceID", id.toString());
 		editor.apply();
 		loadDeviceID();
 	}

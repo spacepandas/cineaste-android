@@ -54,6 +54,14 @@
                 android:maxLines="2"/>
 
             <TextView
+                android:id="@+id/movieReleaseDate"
+                style="@style/cardviewDescriptionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/releaseDate"
+                android:textColor="@color/information"/>
+
+            <TextView
                 android:id="@+id/movieRuntime"
                 style="@style/cardviewDescriptionText"
                 android:layout_width="wrap_content"

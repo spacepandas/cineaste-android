@@ -52,8 +52,8 @@ public class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdapter.Vi
 
         public ViewHolder( final View itemView ) {
             super( itemView );
-            userName = (TextView) itemView.findViewById( R.id.userName_tv );
-            movieCounter = (TextView) itemView.findViewById( R.id.movie_counter_tv );
+            userName = itemView.findViewById( R.id.userName_tv );
+            movieCounter = itemView.findViewById( R.id.movie_counter_tv );
         }
     }
 }

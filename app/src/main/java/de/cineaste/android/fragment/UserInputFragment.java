@@ -26,8 +26,8 @@ public class UserInputFragment extends DialogFragment
 							 Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_user_input, container);
-		TextView textview = (TextView) view.findViewById(R.id.ok_tv);
-		editText = (EditText) view.findViewById(R.id.username_et);
+		TextView textview = view.findViewById(R.id.ok_tv);
+		editText = view.findViewById(R.id.username_et);
 
 		textview.setOnClickListener(this);
 		editText.setOnEditorActionListener(this);

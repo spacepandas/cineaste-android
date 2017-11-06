@@ -84,13 +84,13 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 			super(v);
 			this.movieStateChange = movieStateChange;
 			this.context = context;
-			movieTitle = (TextView) v.findViewById(R.id.movie_title);
-			movieRuntime = (TextView) v.findViewById(R.id.movieRuntime);
+			movieTitle = v.findViewById(R.id.movie_title);
+			movieRuntime = v.findViewById(R.id.movieRuntime);
 			movieRuntime.setVisibility(View.GONE);
-			movieVote = (TextView) v.findViewById(R.id.movie_vote);
-			moviePoster = (ImageView) v.findViewById(R.id.movie_poster_image_view);
-			addToWatchlistButton = (ImageButton) v.findViewById(R.id.to_watchlist_button);
-			movieWatchedButton = (ImageButton) v.findViewById(R.id.watched_button);
+			movieVote = v.findViewById(R.id.movie_vote);
+			moviePoster = v.findViewById(R.id.movie_poster_image_view);
+			addToWatchlistButton = v.findViewById(R.id.to_watchlist_button);
+			movieWatchedButton = v.findViewById(R.id.watched_button);
 			view = v;
 		}
 

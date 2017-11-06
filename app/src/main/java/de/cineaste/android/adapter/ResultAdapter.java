@@ -66,10 +66,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
 		public ViewHolder(final View itemView) {
 			super(itemView);
-			title = (TextView) itemView.findViewById(R.id.movie_title);
-			counter = (TextView) itemView.findViewById(R.id.movie_counter_tv);
-			watchedButton = (ImageButton) itemView.findViewById(R.id.watched_button);
-			moviePoster = (ImageView) itemView.findViewById(R.id.movie_poster_image_view);
+			title = itemView.findViewById(R.id.movie_title);
+			counter = itemView.findViewById(R.id.movie_counter_tv);
+			watchedButton = itemView.findViewById(R.id.watched_button);
+			moviePoster = itemView.findViewById(R.id.movie_poster_image_view);
 		}
 
 		public void assignData(MatchingResult matchingResult, int resultCounter) {

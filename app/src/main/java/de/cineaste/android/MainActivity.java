@@ -6,27 +6,34 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.entity.User;
+import de.cineaste.android.fragment.BaseWatchlistFragment;
 import de.cineaste.android.fragment.MovieNightFragment;
 import de.cineaste.android.fragment.UserInputFragment;
-import de.cineaste.android.fragment.ViewPagerFragment;
 
 public class MainActivity extends AppCompatActivity implements UserInputFragment.UserNameListener {
 
 	private FragmentManager fm;
 	private UserDbHelper userDbHelper;
 	private static User currentUser;
+
+	private DrawerLayout drawerLayout;
 
 	public static void replaceFragment(FragmentManager fm, Fragment fragment) {
 		fm.beginTransaction()
@@ -52,15 +59,23 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
 	@Override
 	public void onBackPressed() {
-		if (fm.getBackStackEntryCount() > 1)
-			super.onBackPressed();
-		else
-			finish();
+		if( drawerLayout.isDrawerOpen( GravityCompat.START ) ) {
+			drawerLayout.closeDrawer( GravityCompat.START );
+		} else {
+			if (fm.getBackStackEntryCount() > 1)
+				super.onBackPressed();
+			else
+				finish();
+		}
+
 	}
 
 	@Override
 	public boolean onSupportNavigateUp() {
-		fm.popBackStack();
+		if (fm.getBackStackEntryCount() > 1)
+			fm.popBackStack();
+		else
+			drawerLayout.openDrawer(GravityCompat.START);
 
 		return false;
 	}
@@ -109,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 		currentUser = userDbHelper.getUser();
 
 		if (savedInstanceState == null) {
-			replaceFragment(fm, new ViewPagerFragment());
+			replaceFragment(fm, getBaseWatchlistFragment(BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST));
 		}
 	}
 
@@ -141,30 +156,55 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 	}
 
 	private void initToolbar() {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		fm.addOnBackStackChangedListener(
-				new FragmentManager.OnBackStackChangedListener() {
-					@Override
-					public void onBackStackChanged() {
-						canBack();
-					}
-				}
-		);
-		canBack();
-	}
-
-	private void canBack() {
 		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(
-					fm.getBackStackEntryCount() > 1
-			);
-		}
+		if (actionBar != null)
+			actionBar.setDisplayHomeAsUpEnabled(true);
+
+		NavigationView navigationView = findViewById(R.id.navigation_view);
+		navigationView.setNavigationItemSelectedListener(new CustomDrawerClickListener());
+
+		drawerLayout = findViewById(R.id.drawer_layout);
+		ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
+				this, drawerLayout, R.string.open, R.string.close
+		);
+		drawerToggle.setDrawerIndicatorEnabled(true);
+		drawerLayout.addDrawerListener(drawerToggle);
+		drawerToggle.syncState();
 	}
 
 	private static void startDialogFragment(FragmentManager fragmentManager, DialogFragment fragment) {
 		fragment.show(fragmentManager, "");
+	}
+
+	private class CustomDrawerClickListener implements NavigationView.OnNavigationItemSelectedListener {
+		@Override
+		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+			switch (item.getItemId()) {
+				case R.id.show_watchlist:
+					BaseWatchlistFragment watchlistFragment = getBaseWatchlistFragment(BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST);
+					replaceFragmentPopBackStack(fm, watchlistFragment);
+					break;
+				case R.id.show_watchedlist:
+					BaseWatchlistFragment watchedlistFragment = getBaseWatchlistFragment(BaseWatchlistFragment.WatchlistFragmentType.WATCHED_LIST);
+					replaceFragmentPopBackStack(fm, watchedlistFragment);
+					break;
+			}
+			drawerLayout.closeDrawer(GravityCompat.START);
+			return true;
+		}
+	}
+
+	@NonNull
+	private BaseWatchlistFragment getBaseWatchlistFragment(String watchList) {
+		BaseWatchlistFragment watchlistFragment = new BaseWatchlistFragment();
+		Bundle bundle = new Bundle();
+		bundle.putString(
+				BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE,
+				watchList);
+		watchlistFragment.setArguments(bundle);
+		return watchlistFragment;
 	}
 }

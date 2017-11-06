@@ -1,4 +1,6 @@
 <resources>
+    <string name="open">Offen</string>
+    <string name="close">Geschlossen</string>
     <string name="search">Suche</string>
     <plurals name="movieCounter">
         <item quantity="one">Film: %d</item>
@@ -23,8 +25,9 @@
     <string name="addToWatchedlist">Zur Watchedlist hinzufügen</string>
     <string name="remove">Film entfernen</string>
     <string name="noInternet">Keine Internetverbindung!</string>
-    <string name="runtime">%d m</string>
+    <string name="runtime">%d min</string>
     <string name="vote">%s</string>
+    <string name="releaseDate">Release Datum</string>
 
     <string name="movieTitle">Titel</string>
     <string name="noDescription">Keine Beschreibung vorhanden</string>

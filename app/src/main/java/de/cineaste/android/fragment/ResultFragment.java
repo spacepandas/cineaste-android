@@ -9,14 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Multisets;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.cineaste.android.MultiList;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.ResultAdapter;
 import de.cineaste.android.database.MovieDbHelper;
@@ -42,7 +40,7 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 		NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
 		nearbyMessages = handler.getMessages();
 
-		RecyclerView result = (RecyclerView) view.findViewById(R.id.result_list);
+		RecyclerView result = view.findViewById(R.id.result_list);
 
 		final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
 		llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -93,23 +91,19 @@ public class ResultFragment extends Fragment implements ResultAdapter.OnMovieSel
 		ArrayList<MovieDto> movies = new ArrayList<>();
 
 		for (NearbyMessage current : nearbyMessages) {
-			for (MovieDto movie : current.getMovies()) {
-				movies.add(movie);
-			}
+			movies.addAll(current.getMovies());
 		}
 
 		return movies;
 	}
 
 	private ArrayList<MatchingResult> getResult() {
-
 		ArrayList<MatchingResult> results = new ArrayList<>();
-		Multiset<MovieDto> movies = HashMultiset.create(getMovies());
+		MultiList multiList = new MultiList();
+		multiList.addAll(getMovies());
 
-		for (Multiset.Entry<MovieDto> entry :
-				Multisets.copyHighestCountFirst(movies).entrySet()) {
-			MovieDto current = entry.getElement();
-			results.add(new MatchingResult(current, movies.count(current)));
+		for (MultiList.MultiListEntry multiListEntry : multiList.getMovieList()) {
+			results.add(new MatchingResult(multiListEntry.getMovieDto(), multiListEntry.getCounter()));
 		}
 
 		return results;
