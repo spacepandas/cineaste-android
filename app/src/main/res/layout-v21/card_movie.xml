@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/view"
-            android:layout_toStartOf="@+id/buttons"
+            android:layout_alignParentEnd="true"
             android:orientation="vertical"
             android:layout_alignBottom="@+id/movie_poster_image_view"
             android:layout_margin="8dp">
@@ -79,40 +79,6 @@
                 android:drawableStart="@drawable/ic_vote"
                 android:text="@string/vote"
                 android:textColor="@color/information" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/buttons"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/movie_poster_image_view"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/watched_button"
-                style="@style/ButtonStyleGrey"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="0.5dp"
-                android:layout_weight="0.5"
-                android:contentDescription="@string/addToWatchedlist"
-                android:src="@drawable/ic_add_watchedlist" />
-
-            <ImageButton
-                android:id="@+id/remove_button"
-                style="@style/ButtonStyleGrey"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="0.5dp"
-                android:layout_weight="0.5"
-                android:contentDescription="@string/remove"
-                android:src="@drawable/ic_remove" />
 
         </LinearLayout>
 

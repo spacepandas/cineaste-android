@@ -38,5 +38,9 @@
         \n\nDie Daten werden dabei über Bluetooth übertragen. Das heißt, dass deine Filmlisten zu jedem Zeitpunkt sicher auf deinem Gerät sind und dort auch bleiben. Daten werden also nur innerhalb deines Wohnzimmers ausgetauscht.
 \n\nCineaste befindet sich noch im Anfangsstadium und könnte manchmal nicht richtig funktionieren. Natürlich geben wir unser Bestes um das Erlebnis so gut wie möglich zu machen, dabei sind wir aber auf dein Feedback angewiesen. Schreib doch einfach ein Kommentar im Play Store oder entwickle einfach gemeinsam mit uns Cineaste weiter! Dazu findest du unten das GitHub Icon. Für die Filme zapfen wir übrigens TheMovieDb an. Auch hier kannst du über das Icon mal vorbeischaun.\n\nBesonderer Dank geht an Philipp Wolf für das Design!
 </string>
+    <string name="undo">Rückgängig machen</string>
+    <string name="movie_deleted">Film gelöscht</string>
+    <string name="move_seen">Schon gesehen</string>
+    <string name="move_not_seen">Muss ich sehen</string>
 
 </resources>

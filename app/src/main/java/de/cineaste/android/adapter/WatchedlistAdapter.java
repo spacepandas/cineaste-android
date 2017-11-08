@@ -12,17 +12,15 @@ import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.viewholder.WatchedlistViewHolder;
+import de.cineaste.android.viewholder.WatchlistViewHolder;
 
 public class WatchedlistAdapter extends BaseWatchlistAdapter {
 
-    private final MovieDbHelper db;
     private final Context context;
     private final MovieClickListener listener;
 
     public WatchedlistAdapter(Context context, MovieClickListener listener, DisplayMessage displayMessage) {
-        super(displayMessage);
-        this.db = MovieDbHelper.getInstance(context);
+        super(displayMessage, MovieDbHelper.getInstance(context));
         this.context = context;
         this.dataset = db.readMoviesByWatchStatus(true);
         this.filteredDataset = new LinkedList<>(dataset);
@@ -46,16 +44,16 @@ public class WatchedlistAdapter extends BaseWatchlistAdapter {
         notifyDataSetChanged();
     }
 
-    public WatchedlistViewHolder onCreateViewHolder(ViewGroup parent, int viewTyp) {
+    public WatchlistViewHolder onCreateViewHolder(ViewGroup parent, int viewTyp) {
         View v = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.card_watchedlist, parent, false);
-        return new WatchedlistViewHolder(v, context, db, listener);
+                .inflate(R.layout.card_movie, parent, false);
+        return new WatchlistViewHolder(v, context, listener);
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        ((WatchedlistViewHolder) holder).assignData(filteredDataset.get(position), this);
+        ((WatchlistViewHolder) holder).assignData(filteredDataset.get(position));
     }
 
     @Override

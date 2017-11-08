@@ -37,9 +37,9 @@
 			android:layout_alignParentTop="true"
 			android:layout_margin="8dp"
 			android:layout_toEndOf="@+id/view"
-			android:layout_toLeftOf="@+id/watched_button"
 			android:layout_toRightOf="@+id/view"
-			android:layout_toStartOf="@+id/watched_button"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentRight="true"
 			android:orientation="vertical">
 
 			<TextView
@@ -82,30 +82,6 @@
 				android:text="@string/vote"
 				android:textColor="@color/information"/>
 		</LinearLayout>
-
-		<ImageButton
-			android:id="@+id/watched_button"
-			style="@style/ButtonStyleGrey"
-			android:layout_width="50dp"
-			android:layout_height="wrap_content"
-			android:layout_alignParentEnd="true"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentTop="true"
-			android:layout_marginBottom="0.5dp"
-			android:contentDescription="@string/addToWatchedlist"
-			android:src="@drawable/ic_add_watchedlist"/>
-
-		<ImageButton
-			android:id="@+id/remove_button"
-			style="@style/ButtonStyleGrey"
-			android:layout_width="50dp"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentEnd="true"
-			android:layout_alignParentRight="true"
-			android:layout_marginTop="0.5dp"
-			android:contentDescription="@string/remove"
-			android:src="@drawable/ic_remove"/>
 
 	</RelativeLayout>
 

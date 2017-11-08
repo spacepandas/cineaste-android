@@ -16,13 +16,11 @@ import de.cineaste.android.viewholder.WatchlistViewHolder;
 
 public class WatchlistAdapter extends BaseWatchlistAdapter {
 
-	private final MovieDbHelper db;
 	private final Context context;
 	private final MovieClickListener listener;
 
 	public WatchlistAdapter(Context context, MovieClickListener listener, DisplayMessage displayMessage) {
-		super(displayMessage);
-		this.db = MovieDbHelper.getInstance(context);
+		super(displayMessage, MovieDbHelper.getInstance(context));
 		this.context = context;
 		this.dataset = db.readMoviesByWatchStatus(false);
 		this.filteredDataset = new LinkedList<>(dataset);
@@ -48,13 +46,13 @@ public class WatchlistAdapter extends BaseWatchlistAdapter {
 
 	@Override
 	public WatchlistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_watchlist, parent, false);
-		return new WatchlistViewHolder(v, db, context, listener);
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_movie, parent, false);
+		return new WatchlistViewHolder(v, context, listener);
 	}
 
 	@Override
 	public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-		((WatchlistViewHolder) holder).assignData(filteredDataset.get(position), this);
+		((WatchlistViewHolder) holder).assignData(filteredDataset.get(position));
 	}
 
 	@Override

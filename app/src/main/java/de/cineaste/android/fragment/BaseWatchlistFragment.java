@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,15 +23,18 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import de.cineaste.android.activity.AboutActivity;
 import de.cineaste.android.MainActivity;
 import de.cineaste.android.MovieClickListener;
-import de.cineaste.android.activity.MovieDetailActivity;
 import de.cineaste.android.R;
+import de.cineaste.android.activity.AboutActivity;
+import de.cineaste.android.activity.MovieDetailActivity;
 import de.cineaste.android.activity.SearchActivity;
 import de.cineaste.android.adapter.BaseWatchlistAdapter;
 import de.cineaste.android.adapter.WatchedlistAdapter;
 import de.cineaste.android.adapter.WatchlistAdapter;
+import de.cineaste.android.controllFlow.BaseItemTouchHelperCallback;
+import de.cineaste.android.controllFlow.WatchedlistItemTouchHelperCallback;
+import de.cineaste.android.controllFlow.WatchlistItemTouchHelperCallback;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.ExportService;
 import de.cineaste.android.database.ImportService;
@@ -47,6 +51,7 @@ public class BaseWatchlistFragment extends Fragment
 	private String watchlistType;
 
 	private RecyclerView baseWatchlistRecyclerView;
+	private LinearLayoutManager baseWatchlistLayoutMgr;
 	private BaseWatchlistAdapter baseWatchlistAdapter;
 	private TextView emptyListTextView;
 
@@ -82,7 +87,7 @@ public class BaseWatchlistFragment extends Fragment
 
 		baseWatchlistRecyclerView =
 				watchlistView.findViewById(R.id.basewatchlist_recycler_view);
-		RecyclerView.LayoutManager baseWatchlistLayoutMgr = new LinearLayoutManager(getActivity());
+		baseWatchlistLayoutMgr = new LinearLayoutManager(getActivity());
 
 		baseWatchlistRecyclerView.setHasFixedSize(true);
 
@@ -99,6 +104,8 @@ public class BaseWatchlistFragment extends Fragment
 				getActivity().startActivity(intent);
 			}
 		});
+
+		initSwipe();
 
 		return watchlistView;
 	}
@@ -249,6 +256,19 @@ public class BaseWatchlistFragment extends Fragment
 		} else {
 			baseWatchlistAdapter = new WatchedlistAdapter(getActivity(), this, this);
 			showMessageIfEmptyList(R.string.noMoviesOnWatchedList);
+		}
+	}
+
+	private void initSwipe(){
+		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(getCorrectCallBack());
+		itemTouchHelper.attachToRecyclerView(baseWatchlistRecyclerView);
+	}
+
+	private BaseItemTouchHelperCallback getCorrectCallBack() {
+		if (watchlistType.equals(WATCH_LIST)) {
+			return new  WatchlistItemTouchHelperCallback(baseWatchlistLayoutMgr, baseWatchlistAdapter, baseWatchlistRecyclerView, getResources());
+		} else {
+			return new WatchedlistItemTouchHelperCallback(baseWatchlistLayoutMgr, baseWatchlistAdapter, baseWatchlistRecyclerView, getResources());
 		}
 	}
 }

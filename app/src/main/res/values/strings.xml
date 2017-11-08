@@ -40,5 +40,9 @@ Cineaste is still at its beginning and there could be some problems sometimes. W
 Please leave a comment at the Play Store or develop Cineaste together with us! Via the GitHub icon you can find the sources of Cineaste. The movie data you see is provided by TMDb. Go ahead and check them out!\n\n
 Special thanks to Philipp Wolf, for the design!
 </string>
+    <string name="undo">Undo</string>
+    <string name="movie_deleted">Movie deleted</string>
+    <string name="move_seen">Movie seen</string>
+    <string name="move_not_seen">Must see</string>
 
 </resources>
