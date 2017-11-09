@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.cineaste.android.Constants;
@@ -24,16 +26,17 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 	private final List<Movie> dataset = new ArrayList<>();
 	private final MovieClickListener listener;
 	private final OnMovieStateChange movieStateChange;
+	private final Resources resources;
 
 	public interface OnMovieStateChange {
 		void onMovieStateChangeListener(Movie movie, int viewId, int index);
 	}
 
 
-	public SearchQueryAdapter(MovieClickListener listener, OnMovieStateChange movieStateChange) {
+	public SearchQueryAdapter(MovieClickListener listener, OnMovieStateChange movieStateChange, Resources resources) {
 		this.listener = listener;
 		this.movieStateChange = movieStateChange;
-
+		this.resources = resources;
 	}
 
 	public void addMovies(List<Movie> movies) {
@@ -72,6 +75,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 	public class ViewHolder extends RecyclerView.ViewHolder {
 		final TextView movieVote;
 		final TextView movieTitle;
+		final TextView movieReleaseDate;
 		final TextView movieRuntime;
 		final ImageView moviePoster;
 		final ImageButton addToWatchlistButton;
@@ -85,6 +89,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 			this.movieStateChange = movieStateChange;
 			this.context = context;
 			movieTitle = v.findViewById(R.id.movie_title);
+			movieReleaseDate = v.findViewById(R.id.movieReleaseDate);
 			movieRuntime = v.findViewById(R.id.movieRuntime);
 			movieRuntime.setVisibility(View.GONE);
 			movieVote = v.findViewById(R.id.movie_vote);
@@ -97,6 +102,12 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 		public void assignData(final Movie movie) {
 			Resources resources = context.getResources();
 			movieTitle.setText(movie.getTitle());
+			if (movie.getReleaseDate() != null) {
+				movieReleaseDate.setVisibility(View.VISIBLE);
+				movieReleaseDate.setText(convertDate(movie.getReleaseDate()));
+			} else {
+				movieReleaseDate.setVisibility(View.GONE);
+			}
 			movieVote.setText(resources.getString(R.string.vote, String.valueOf(movie.getVoteAverage())));
 			String posterName = movie.getPosterPath();
 			String posterUri =
@@ -129,6 +140,11 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 				}
 			});
 		}
+	}
+
+	private String convertDate(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", resources.getConfiguration().locale);
+		return simpleDateFormat.format(date);
 	}
 }
 

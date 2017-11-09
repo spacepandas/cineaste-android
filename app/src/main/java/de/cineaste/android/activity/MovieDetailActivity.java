@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.cineaste.android.Constants;
+import de.cineaste.android.DateAwareGson;
 import de.cineaste.android.R;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
@@ -40,7 +41,7 @@ import de.cineaste.android.network.NetworkResponse;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    private final Gson gson = new Gson();
+    private Gson gson;
     private int state;
     private ImageView moviePoster;
     private MovieDbHelper movieDbHelper;
@@ -176,6 +177,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+
+        gson = new DateAwareGson(getResources().getConfiguration().locale).getGson();
 
         Intent intent = getIntent();
         movieId = intent.getLongExtra(BaseDao.MovieEntry._ID, -1);

@@ -4,11 +4,11 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,14 +24,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import de.cineaste.android.DateAwareGson;
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;
@@ -48,7 +58,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
     private final Gson gson = new Gson();
     private final MovieDbHelper db = MovieDbHelper.getInstance(this);
     private SearchQueryAdapter movieQueryAdapter;
-    private View view;
+    private RecyclerView movieQueryRecyclerView;
     private SearchView searchView;
     private String searchText;
     private ProgressBar progressBar;
@@ -127,7 +137,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
 
     private void movieAddError(Movie movie, int index) {
         Snackbar snackbar = Snackbar
-                .make(view, R.string.could_not_add_movie, Snackbar.LENGTH_LONG);
+                .make(movieQueryRecyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG);
         snackbar.show();
         movieQueryAdapter.addMovie(movie, index);
     }
@@ -144,9 +154,9 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
         }
 
         progressBar = findViewById(R.id.progressBar);
-        RecyclerView movieQueryRecyclerView = findViewById(R.id.search_recycler_view);
+        movieQueryRecyclerView = findViewById(R.id.search_recycler_view);
         RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager(this);
-        movieQueryAdapter = new SearchQueryAdapter(this, this);
+        movieQueryAdapter = new SearchQueryAdapter(this, this, getResources());
         movieQueryRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         movieQueryRecyclerView.setLayoutManager(movieQueryLayoutMgr);
@@ -254,7 +264,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
 
             @Override
             public void onSuccess(NetworkResponse response) {
-                Gson gson = new Gson();
+                Gson gson = new DateAwareGson(getResources().getConfiguration().locale).getGson();
                 JsonParser parser = new JsonParser();
                 JsonObject responseObject =
                         parser.parse(response.getResponseReader()).getAsJsonObject();
@@ -276,7 +286,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
 
     private void showNetworkError() {
         Snackbar snackbar = Snackbar
-                .make(view, R.string.noInternet, Snackbar.LENGTH_LONG);
+                .make(movieQueryRecyclerView, R.string.noInternet, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 
