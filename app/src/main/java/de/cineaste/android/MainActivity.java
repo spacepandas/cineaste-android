@@ -23,9 +23,10 @@ import android.widget.Toast;
 
 import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.entity.User;
-import de.cineaste.android.fragment.BaseWatchlistFragment;
+import de.cineaste.android.fragment.BaseMovieListFragment;
 import de.cineaste.android.fragment.MovieNightFragment;
 import de.cineaste.android.fragment.UserInputFragment;
+import de.cineaste.android.fragment.WatchState;
 
 public class MainActivity extends AppCompatActivity implements UserInputFragment.UserNameListener {
 
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 		currentUser = userDbHelper.getUser();
 
 		if (savedInstanceState == null) {
-			replaceFragment(fm, getBaseWatchlistFragment(BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST));
+			replaceFragment(fm, getBaseWatchlistFragment(WatchState.WATCH_STATE));
 		}
 	}
 
@@ -184,11 +185,11 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 			switch (item.getItemId()) {
 				case R.id.show_watchlist:
-					BaseWatchlistFragment watchlistFragment = getBaseWatchlistFragment(BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST);
+					BaseMovieListFragment watchlistFragment = getBaseWatchlistFragment(WatchState.WATCH_STATE);
 					replaceFragmentPopBackStack(fm, watchlistFragment);
 					break;
 				case R.id.show_watchedlist:
-					BaseWatchlistFragment watchedlistFragment = getBaseWatchlistFragment(BaseWatchlistFragment.WatchlistFragmentType.WATCHED_LIST);
+					BaseMovieListFragment watchedlistFragment = getBaseWatchlistFragment(WatchState.WATCHED_STATE);
 					replaceFragmentPopBackStack(fm, watchedlistFragment);
 					break;
 			}
@@ -198,12 +199,12 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 	}
 
 	@NonNull
-	private BaseWatchlistFragment getBaseWatchlistFragment(String watchList) {
-		BaseWatchlistFragment watchlistFragment = new BaseWatchlistFragment();
+	private BaseMovieListFragment getBaseWatchlistFragment(WatchState state) {
+		BaseMovieListFragment watchlistFragment = new BaseMovieListFragment();
 		Bundle bundle = new Bundle();
 		bundle.putString(
-				BaseWatchlistFragment.WatchlistFragmentType.WATCHLIST_TYPE,
-				watchList);
+				WatchState.WATCH_STATE_TYPE.name(),
+				state.name());
 		watchlistFragment.setArguments(bundle);
 		return watchlistFragment;
 	}

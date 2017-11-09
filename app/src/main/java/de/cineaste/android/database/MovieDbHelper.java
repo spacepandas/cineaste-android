@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import de.cineaste.android.entity.Movie;
+import de.cineaste.android.fragment.WatchState;
 
 public class MovieDbHelper {
 
@@ -44,9 +45,23 @@ public class MovieDbHelper {
         return movieDao.read( null, null );
     }
 
+    @Deprecated
     public List<Movie> readMoviesByWatchStatus( Boolean watched ) {
         String selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
         String[] selectionArgs = {Integer.toString( watched ? 1 : 0 )};
+
+        return movieDao.read( selection, selectionArgs );
+    }
+
+    public List<Movie> readMoviesByWatchStatus( WatchState state ) {
+        String selectionArg;
+        if (state == WatchState.WATCH_STATE) {
+            selectionArg = "0";
+        } else {
+            selectionArg = "1";
+        }
+        String selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
+        String[] selectionArgs = {selectionArg};
 
         return movieDao.read( selection, selectionArgs );
     }
