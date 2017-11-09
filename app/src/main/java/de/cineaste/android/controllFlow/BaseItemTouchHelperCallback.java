@@ -13,7 +13,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.BaseWatchlistAdapter;
+import de.cineaste.android.adapter.MovieListAdapter;
 
 /**
  * Created by marcelgross on 08.11.17.
@@ -24,13 +24,13 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Simple
     private Paint p = new Paint();
     private Resources resources;
     LinearLayoutManager linearLayoutManager;
-    BaseWatchlistAdapter baseWatchlistAdapter;
+    MovieListAdapter movieListAdapter;
     RecyclerView recyclerView;
 
-    public BaseItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, BaseWatchlistAdapter baseWatchlistAdapter, RecyclerView recyclerView, Resources resources) {
+    public BaseItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, MovieListAdapter movieListAdapter, RecyclerView recyclerView, Resources resources) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.linearLayoutManager = linearLayoutManager;
-        this.baseWatchlistAdapter = baseWatchlistAdapter;
+        this.movieListAdapter = movieListAdapter;
         this.recyclerView = recyclerView;
         this.resources = resources;
     }

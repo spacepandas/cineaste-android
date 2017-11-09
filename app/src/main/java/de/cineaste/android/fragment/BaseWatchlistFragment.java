@@ -29,9 +29,7 @@ import de.cineaste.android.R;
 import de.cineaste.android.activity.AboutActivity;
 import de.cineaste.android.activity.MovieDetailActivity;
 import de.cineaste.android.activity.SearchActivity;
-import de.cineaste.android.adapter.BaseWatchlistAdapter;
-import de.cineaste.android.adapter.WatchedlistAdapter;
-import de.cineaste.android.adapter.WatchlistAdapter;
+import de.cineaste.android.adapter.MovieListAdapter;
 import de.cineaste.android.controllFlow.BaseItemTouchHelperCallback;
 import de.cineaste.android.controllFlow.WatchedlistItemTouchHelperCallback;
 import de.cineaste.android.controllFlow.WatchlistItemTouchHelperCallback;
@@ -46,13 +44,13 @@ import static de.cineaste.android.fragment.BaseWatchlistFragment.WatchlistFragme
 import static de.cineaste.android.fragment.BaseWatchlistFragment.WatchlistFragmentType.WATCH_LIST;
 
 public class BaseWatchlistFragment extends Fragment
-		implements MovieClickListener, BaseWatchlistAdapter.DisplayMessage {
+		implements MovieClickListener, MovieListAdapter.DisplayMessage {
 
 	private String watchlistType;
 
 	private RecyclerView baseWatchlistRecyclerView;
 	private LinearLayoutManager baseWatchlistLayoutMgr;
-	private BaseWatchlistAdapter baseWatchlistAdapter;
+	private MovieListAdapter movieListAdapter;
 	private TextView emptyListTextView;
 
 	private MovieDbHelper movieDbHelper;
@@ -71,7 +69,7 @@ public class BaseWatchlistFragment extends Fragment
 
 	@Override
 	public void onResume() {
-		baseWatchlistAdapter.updateDataSet();
+		movieListAdapter.updateDataSet();
 
 		super.onResume();
 	}
@@ -91,10 +89,11 @@ public class BaseWatchlistFragment extends Fragment
 
 		baseWatchlistRecyclerView.setHasFixedSize(true);
 
-		setCorrectWatchlistAdapter();
+		movieListAdapter = new MovieListAdapter(this, getActivity(), this, watchlistType);
+		setCorrectEmptyListMessage();
 
 		baseWatchlistRecyclerView.setLayoutManager(baseWatchlistLayoutMgr);
-		baseWatchlistRecyclerView.setAdapter(baseWatchlistAdapter);
+		baseWatchlistRecyclerView.setAdapter(movieListAdapter);
 
 		FloatingActionButton fab = watchlistView.findViewById(R.id.fab);
 		fab.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +159,7 @@ public class BaseWatchlistFragment extends Fragment
 
 				@Override
 				public boolean onQueryTextChange(String newText) {
-					((BaseWatchlistAdapter) baseWatchlistRecyclerView.getAdapter()).filter(newText);
+					((MovieListAdapter) baseWatchlistRecyclerView.getAdapter()).filter(newText);
 					return false;
 				}
 			});
@@ -215,7 +214,7 @@ public class BaseWatchlistFragment extends Fragment
 
 	@Override
 	public void showMessageIfEmptyList(int messageId) {
-		if (baseWatchlistAdapter.getDatasetSize() == 0) {
+		if (movieListAdapter.getDatasetSize() == 0) {
 			baseWatchlistRecyclerView.setVisibility(View.GONE);
 			emptyListTextView.setVisibility(View.VISIBLE);
 			emptyListTextView.setText(messageId);
@@ -249,12 +248,10 @@ public class BaseWatchlistFragment extends Fragment
 		}
 	}
 
-	private void setCorrectWatchlistAdapter() {
+	private void setCorrectEmptyListMessage() {
 		if (watchlistType.equals(WATCH_LIST)) {
-			baseWatchlistAdapter = new WatchlistAdapter(getActivity(), this, this);
 			showMessageIfEmptyList(R.string.noMoviesOnWatchList);
 		} else {
-			baseWatchlistAdapter = new WatchedlistAdapter(getActivity(), this, this);
 			showMessageIfEmptyList(R.string.noMoviesOnWatchedList);
 		}
 	}
@@ -266,9 +263,9 @@ public class BaseWatchlistFragment extends Fragment
 
 	private BaseItemTouchHelperCallback getCorrectCallBack() {
 		if (watchlistType.equals(WATCH_LIST)) {
-			return new  WatchlistItemTouchHelperCallback(baseWatchlistLayoutMgr, baseWatchlistAdapter, baseWatchlistRecyclerView, getResources());
+			return new  WatchlistItemTouchHelperCallback(baseWatchlistLayoutMgr, movieListAdapter, baseWatchlistRecyclerView, getResources());
 		} else {
-			return new WatchedlistItemTouchHelperCallback(baseWatchlistLayoutMgr, baseWatchlistAdapter, baseWatchlistRecyclerView, getResources());
+			return new WatchedlistItemTouchHelperCallback(baseWatchlistLayoutMgr, movieListAdapter, baseWatchlistRecyclerView, getResources());
 		}
 	}
 }

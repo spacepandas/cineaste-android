@@ -5,8 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.BaseWatchlistAdapter;
-import de.cineaste.android.adapter.WatchlistAdapter;
+import de.cineaste.android.adapter.MovieListAdapter;
 
 /**
  * Created by marcelgross on 08.11.17.
@@ -14,13 +13,13 @@ import de.cineaste.android.adapter.WatchlistAdapter;
 
 public class WatchlistItemTouchHelperCallback extends BaseItemTouchHelperCallback {
 
-    public WatchlistItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, BaseWatchlistAdapter baseWatchlistAdapter, RecyclerView recyclerView, Resources resources) {
-        super(linearLayoutManager, baseWatchlistAdapter, recyclerView, resources);
+    public WatchlistItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, MovieListAdapter movieListAdapter, RecyclerView recyclerView, Resources resources) {
+        super(linearLayoutManager, movieListAdapter, recyclerView, resources);
     }
 
     @Override
     BaseSnackBar getSnackBar() {
-        return new SnackBarWatchList(linearLayoutManager, (WatchlistAdapter) baseWatchlistAdapter, recyclerView);
+        return new SnackBarWatchList(linearLayoutManager, movieListAdapter, recyclerView);
     }
 
     @Override

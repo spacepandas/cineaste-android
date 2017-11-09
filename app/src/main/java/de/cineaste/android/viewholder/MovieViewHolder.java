@@ -15,10 +15,9 @@ import java.util.Date;
 import de.cineaste.android.Constants;
 import de.cineaste.android.MovieClickListener;
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.BaseWatchlistAdapter;
 import de.cineaste.android.entity.Movie;
 
-public class WatchlistViewHolder extends RecyclerView.ViewHolder {
+public class MovieViewHolder extends RecyclerView.ViewHolder {
 
 	private final Context context;
 	private final MovieClickListener listener;
@@ -29,7 +28,7 @@ public class WatchlistViewHolder extends RecyclerView.ViewHolder {
 	private ImageView imageView;
 	private View view;
 
-	public WatchlistViewHolder(View v, Context context, MovieClickListener listener) {
+	public MovieViewHolder(View v, Context context, MovieClickListener listener) {
 		super(v);
 		this.context = context;
 		this.listener = listener;
