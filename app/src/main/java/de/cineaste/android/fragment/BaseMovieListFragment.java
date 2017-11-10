@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,12 +20,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
 import de.cineaste.android.MainActivity;
-import de.cineaste.android.listener.MovieClickListener;
 import de.cineaste.android.R;
-import de.cineaste.android.activity.AboutActivity;
 import de.cineaste.android.activity.MovieDetailActivity;
 import de.cineaste.android.activity.SearchActivity;
 import de.cineaste.android.adapter.MovieListAdapter;
@@ -34,10 +29,8 @@ import de.cineaste.android.controllFlow.BaseItemTouchHelperCallback;
 import de.cineaste.android.controllFlow.WatchedlistItemTouchHelperCallback;
 import de.cineaste.android.controllFlow.WatchlistItemTouchHelperCallback;
 import de.cineaste.android.database.BaseDao;
-import de.cineaste.android.database.ExportService;
-import de.cineaste.android.database.ImportService;
 import de.cineaste.android.database.MovieDbHelper;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.listener.MovieClickListener;
 
 import static android.app.ActivityOptions.makeSceneTransitionAnimation;
 
@@ -52,7 +45,6 @@ public class BaseMovieListFragment extends Fragment
     private TextView emptyListTextView;
 
     private MovieDbHelper movieDbHelper;
-
 
     private WatchState getWatchState(String watchStateString) {
         if (watchStateString.equals(WatchState.WATCH_STATE.name()))
@@ -172,43 +164,9 @@ public class BaseMovieListFragment extends Fragment
             case R.id.startMovieNight:
                 MainActivity.startMovieNight(getFragmentManager());
                 break;
-            case R.id.exportMovies:
-                exportMovies();
-                break;
-            case R.id.importMovies:
-                importMovies();
-                break;
-            case R.id.about:
-                Intent intent = new Intent(getActivity(), AboutActivity.class);
-                getActivity().startActivity(intent);
-                break;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void exportMovies() {
-        List<Movie> movies = movieDbHelper.readAllMovies();
-        ExportService.exportMovies(movies);
-        Snackbar snackbar = Snackbar
-                .make(watchlistRecyclerView, R.string.successfulExport, Snackbar.LENGTH_SHORT);
-        snackbar.show();
-    }
-
-    private void importMovies() {
-        List<Movie> movies = ImportService.importMovies();
-        int snackBarMessage;
-        if (movies.size() != 0) {
-            for (Movie current : movies) {
-                movieDbHelper.createOrUpdate(current);
-            }
-            snackBarMessage = R.string.successfulImport;
-        } else {
-            snackBarMessage = R.string.unsuccessfulImport;
-        }
-        Snackbar snackbar = Snackbar
-                .make(watchlistRecyclerView, snackBarMessage, Snackbar.LENGTH_SHORT);
-        snackbar.show();
     }
 
     @Override
