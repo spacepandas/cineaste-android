@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,10 +27,10 @@ public class UserInputFragment extends DialogFragment
 							 Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_user_input, container);
-		TextView textview = view.findViewById(R.id.ok_tv);
+		Button okBtn = view.findViewById(R.id.ok_tv);
 		editText = view.findViewById(R.id.username_et);
 
-		textview.setOnClickListener(this);
+		okBtn.setOnClickListener(this);
 		editText.setOnEditorActionListener(this);
 		editText.requestFocus();
 		if (getDialog().getWindow() == null) {

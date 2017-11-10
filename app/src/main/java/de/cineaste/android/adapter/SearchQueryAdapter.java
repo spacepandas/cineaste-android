@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -78,8 +79,8 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.
 		final TextView movieReleaseDate;
 		final TextView movieRuntime;
 		final ImageView moviePoster;
-		final ImageButton addToWatchlistButton;
-		final ImageButton movieWatchedButton;
+		final Button addToWatchlistButton;
+		final Button movieWatchedButton;
 		final View view;
 		final OnMovieStateChange movieStateChange;
 		final Context context;

@@ -105,6 +105,12 @@ public class BaseMovieListFragment extends Fragment
 
         initSwipe();
 
+        if (watchState == WatchState.WATCH_STATE) {
+            getActivity().setTitle(R.string.watchList);
+        } else {
+            getActivity().setTitle(R.string.watchedlist);
+        }
+
         return watchlistView;
     }
 
@@ -122,11 +128,6 @@ public class BaseMovieListFragment extends Fragment
         if (savedInstanceState != null) {
             String currentState = savedInstanceState.getString(WatchState.WATCH_STATE_TYPE.name(), WatchState.WATCH_STATE.name());
             this.watchState = getWatchState(currentState);
-            if (watchState == WatchState.WATCH_STATE) {
-                getActivity().setTitle(R.string.watchList);
-            } else {
-                getActivity().setTitle(R.string.watchedlist);
-            }
         }
     }
 

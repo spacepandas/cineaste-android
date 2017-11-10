@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     style="@style/cardView"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_margin="5dp">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/relativeLayout">
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/movie_poster_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/placeholder_poster"
-            android:contentDescription="@string/moviePoster"
-            android:id="@+id/movie_poster_image_view"/>
+            android:contentDescription="@string/moviePoster" />
 
         <View
             android:id="@+id/view"
-            android:layout_width="5dp"
+            android:layout_width="6dp"
             android:layout_height="match_parent"
             android:layout_alignBottom="@+id/movie_poster_image_view"
             android:layout_alignTop="@+id/movie_poster_image_view"
@@ -32,26 +31,29 @@
 
         <LinearLayout
             android:id="@+id/texts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/buttons"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/view"
             android:layout_toRightOf="@+id/view"
-            android:layout_toStartOf="@+id/buttons"
-            android:layout_toLeftOf="@+id/buttons"
             android:orientation="vertical"
-            android:layout_alignBottom="@+id/movie_poster_image_view"
-            android:layout_margin="8dp">
+            android:paddingBottom="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp">
 
             <TextView
                 android:id="@+id/movie_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:maxLines="2"
                 android:text="@string/movieTitle"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black"
-                android:maxLines="2"/>
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/movieReleaseDate"
@@ -59,68 +61,61 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/releaseDate"
-                android:textColor="@color/information"/>
-
-            <TextView
-                style="@style/cardviewDescriptionText"
-                android:id="@+id/movieRuntime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="4dp"
-                android:drawableStart="@drawable/ic_runtime"
-                android:drawableLeft="@drawable/ic_runtime"
-                android:text="@string/runtime"
                 android:textColor="@color/information" />
 
+            <TextView
+                android:id="@+id/movieRuntime"
+                style="@style/cardviewDescriptionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_runtime"
+                android:drawablePadding="4dp"
+                android:drawableStart="@drawable/ic_runtime"
+                android:text="@string/runtime"
+                android:textColor="@color/information" />
 
             <TextView
                 android:id="@+id/movie_vote"
                 style="@style/cardviewDescriptionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_vote"
                 android:drawablePadding="4dp"
                 android:drawableStart="@drawable/ic_vote"
-                android:drawableLeft="@drawable/ic_vote"
                 android:text="@string/vote"
                 android:textColor="@color/information" />
-
-
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/buttons"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/movie_poster_image_view"
             android:layout_alignParentBottom="false"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/view"
+            android:layout_toRightOf="@+id/view"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <ImageButton
+            <Button
                 android:id="@+id/to_watchlist_button"
-                style="@style/ButtonStyleGrey"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:contentDescription="@string/remove"
-                android:src="@drawable/ic_add_watchlist"
-                android:layout_marginBottom="0.5dp" />
+                style="@style/CardActions"
+                android:layout_marginEnd="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/move_not_seen" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/watched_button"
-                style="@style/ButtonStyleGrey"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:contentDescription="@string/addToWatchedlist"
-                android:src="@drawable/ic_add_watchedlist"
-                android:layout_marginTop="0.5dp" />
-
+                style="@style/CardActions"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="4dp"
+                android:text="@string/move_seen" />
         </LinearLayout>
-
     </RelativeLayout>
-
 </android.support.v7.widget.CardView>

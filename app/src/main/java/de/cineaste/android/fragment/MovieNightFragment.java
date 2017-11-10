@@ -119,7 +119,7 @@ public class MovieNightFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-
+		buildGoogleApiClient();
 		view = inflater.inflate(R.layout.fragment_movie_night, container, false);
 
 		nearbyUser_rv = view.findViewById(R.id.nearbyUser_rv);
@@ -178,17 +178,21 @@ public class MovieNightFragment extends Fragment
 		return view;
 	}
 
+	private void buildGoogleApiClient() {
+		if (googleApiClient != null) {
+			return;
+		}
+		googleApiClient = new GoogleApiClient.Builder(getActivity())
+				.addApi(Nearby.MESSAGES_API)
+				.addConnectionCallbacks(this)
+				.enableAutoManage(getActivity(), this)
+				.build();
+	}
+
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		googleApiClient = new GoogleApiClient.Builder(getContext())
-				.addApi(Nearby.MESSAGES_API)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.build();
 		googleApiClient.connect();
-
 
 		startBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
