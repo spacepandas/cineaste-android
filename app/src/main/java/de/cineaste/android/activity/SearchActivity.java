@@ -24,25 +24,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.cineaste.android.DateAwareGson;
-import de.cineaste.android.MovieClickListener;
+import de.cineaste.android.listener.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;
 import de.cineaste.android.database.BaseDao;
@@ -156,7 +147,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
         progressBar = findViewById(R.id.progressBar);
         movieQueryRecyclerView = findViewById(R.id.search_recycler_view);
         RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager(this);
-        movieQueryAdapter = new SearchQueryAdapter(this, this, getResources());
+        movieQueryAdapter = new SearchQueryAdapter(this, this);
         movieQueryRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         movieQueryRecyclerView.setLayoutManager(movieQueryLayoutMgr);

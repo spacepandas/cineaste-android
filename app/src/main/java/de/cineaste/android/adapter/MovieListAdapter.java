@@ -9,11 +9,12 @@ import android.view.ViewGroup;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.cineaste.android.MovieClickListener;
+import de.cineaste.android.listener.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.fragment.WatchState;
+import de.cineaste.android.listener.OnMovieRemovedListener;
 import de.cineaste.android.viewholder.MovieViewHolder;
 
 public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnMovieRemovedListener {

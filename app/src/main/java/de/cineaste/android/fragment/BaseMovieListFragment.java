@@ -24,7 +24,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.cineaste.android.MainActivity;
-import de.cineaste.android.MovieClickListener;
+import de.cineaste.android.listener.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.activity.AboutActivity;
 import de.cineaste.android.activity.MovieDetailActivity;

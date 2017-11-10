@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.listener;
 
 import de.cineaste.android.entity.Movie;
 
@@ -8,5 +8,5 @@ import de.cineaste.android.entity.Movie;
 
 public interface OnMovieRemovedListener {
 
-    public void removeMovie(Movie movie);
+    void removeMovie(Movie movie);
 }

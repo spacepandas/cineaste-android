@@ -1,4 +1,4 @@
-package de.cineaste.android;
+package de.cineaste.android.listener;
 
 import android.view.View;
 
