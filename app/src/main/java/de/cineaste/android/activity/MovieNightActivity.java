@@ -1,6 +1,7 @@
 package de.cineaste.android.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.NearbyUserAdapter;
 import de.cineaste.android.database.MovieDbHelper;
@@ -45,7 +45,6 @@ import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.MovieDto;
 import de.cineaste.android.entity.NearbyMessage;
 import de.cineaste.android.entity.User;
-import de.cineaste.android.fragment.ResultFragment;
 import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.WatchState;
 
@@ -120,7 +119,7 @@ public class MovieNightActivity extends AppCompatActivity
         nearbyUser_rv.setAdapter(nearbyUserAdapter);
         initToolbar();
 
-    //    buildGoogleApiClient();
+        //    buildGoogleApiClient();
     }
 
     private void buildGoogleApiClient() {
@@ -146,10 +145,10 @@ public class MovieNightActivity extends AppCompatActivity
     }
 
     private void buildLocalMessage() {
-            MovieDbHelper watchlistDbHelper = MovieDbHelper.getInstance(this);
-            List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE);
-            final List<MovieDto> localMovies = transFormMovies(localWatchlistMovies);
-            localNearbyMessage = new NearbyMessage(currentUser.getUserName(), getMyUUid(), localMovies);
+        MovieDbHelper watchlistDbHelper = MovieDbHelper.getInstance(this);
+        List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE);
+        final List<MovieDto> localMovies = transFormMovies(localWatchlistMovies);
+        localNearbyMessage = new NearbyMessage(currentUser.getUserName(), getMyUUid(), localMovies);
     }
 
     private void startDialogFragment() {
@@ -189,6 +188,7 @@ public class MovieNightActivity extends AppCompatActivity
         onBackPressed();
         return super.onSupportNavigateUp();
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -201,9 +201,9 @@ public class MovieNightActivity extends AppCompatActivity
                 handler.clearMessages();
                 handler.addMessage(localNearbyMessage);
                 handler.addMessages(nearbyMessagesArrayList);
-                MainActivity.replaceFragmentPopBackStack(
-                        getSupportFragmentManager(),
-                        new ResultFragment());
+                Intent intent = new Intent(MovieNightActivity.this, ResultActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

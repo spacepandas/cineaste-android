@@ -42,7 +42,8 @@
         <activity
             android:name=".activity.MovieNightActivity"
             android:label="@string/title_activity_movie_night"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.ResultActivity"></activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@
         <item quantity="other">Movies: %d</item>
     </plurals>
     <string name="startMovieNight">Start Movienight</string>
+    <string name="result">Result</string>
 
     <string name="enter_username">Your Username</string>
     <string name="noMoviesOnWatchList">You do not have movies on your Watchlist. \nOn the bottom right you can add new titles!</string>
