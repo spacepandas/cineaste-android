@@ -38,7 +38,11 @@
         </activity>
         <activity android:name=".activity.MovieDetailActivity" />
         <activity android:name=".activity.SearchActivity" />
-        <activity android:name=".activity.AboutActivity"></activity>
+        <activity android:name=".activity.AboutActivity" />
+        <activity
+            android:name=".activity.MovieNightActivity"
+            android:label="@string/title_activity_movie_night"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -20,9 +20,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import de.cineaste.android.MainActivity;
 import de.cineaste.android.R;
 import de.cineaste.android.activity.MovieDetailActivity;
+import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.activity.SearchActivity;
 import de.cineaste.android.adapter.MovieListAdapter;
 import de.cineaste.android.controllFlow.BaseItemTouchHelperCallback;
@@ -166,7 +166,9 @@ public class BaseMovieListFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.startMovieNight:
-                MainActivity.startMovieNight(getFragmentManager());
+                Intent intent = new Intent(getActivity(), MovieNightActivity.class);
+                getActivity().startActivity(intent);
+
                 break;
         }
 

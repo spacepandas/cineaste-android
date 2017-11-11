@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/backgroundColor</item>
     </style>
+
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">@color/toolbar_text</item>
     </style>
@@ -31,6 +32,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/button</item>
     </style>
+
     <style name="ButtonStyleGrey">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -38,6 +40,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/button_grey</item>
     </style>
+
     <style name="ButtonStyleGreyFixedSize">
         <item name="android:layout_width">70dp</item>
         <item name="android:layout_height">50dp</item>
@@ -53,4 +56,8 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginTop">8dp</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

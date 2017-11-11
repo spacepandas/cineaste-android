@@ -1,7 +1,6 @@
 package de.cineaste.android;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -10,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -30,20 +28,14 @@ import de.cineaste.android.activity.AboutActivity;
 import de.cineaste.android.database.ExportService;
 import de.cineaste.android.database.ImportService;
 import de.cineaste.android.database.MovieDbHelper;
-import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.entity.User;
 import de.cineaste.android.fragment.BaseMovieListFragment;
-import de.cineaste.android.fragment.MovieNightFragment;
-import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.WatchState;
 
-public class MainActivity extends AppCompatActivity implements UserInputFragment.UserNameListener {
+public class MainActivity extends AppCompatActivity {
 
     private FragmentManager fm;
-    private UserDbHelper userDbHelper;
     private View contentContainer;
-    private static User currentUser;
     private static MovieDbHelper movieDbHelper;
 
     private DrawerLayout drawerLayout;
@@ -60,14 +52,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     public static void replaceFragmentPopBackStack(FragmentManager fm, Fragment fragment) {
         fm.popBackStack();
         replaceFragment(fm, fragment);
-    }
-
-    public static void startMovieNight(FragmentManager fm) {
-        if (currentUser != null) {
-            replaceFragment(fm, new MovieNightFragment());
-        } else {
-            startDialogFragment(fm, new UserInputFragment());
-        }
     }
 
     @Override
@@ -91,15 +75,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
             drawerLayout.openDrawer(GravityCompat.START);
 
         return false;
-    }
-
-    @Override
-    public void onFinishUserDialog(String userName) {
-        if (!userName.isEmpty()) {
-            currentUser = new User(userName);
-            userDbHelper.createUser(currentUser);
-            MainActivity.startMovieNight(fm);
-        }
     }
 
     @Override
@@ -135,30 +110,9 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         initToolbar();
 
         checkPermissions();
-        userDbHelper = UserDbHelper.getInstance(this);
-
-        currentUser = userDbHelper.getUser();
 
         if (savedInstanceState == null) {
             replaceFragment(fm, getBaseWatchlistFragment(WatchState.WATCH_STATE));
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        MovieNightFragment movieNightFragment = (MovieNightFragment) fm.findFragmentByTag(MovieNightFragment.class.getName());
-        movieNightFragment.finishedResolvingNearbyPermissionError();
-        if (requestCode == 1001) {
-            if (resultCode == Activity.RESULT_OK) {
-
-                movieNightFragment.start();
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                movieNightFragment.stop();
-            } else {
-                Toast.makeText(this, "Failed to resolve error with code " + resultCode,
-                        Toast.LENGTH_LONG).show();
-            }
         }
     }
 
@@ -189,10 +143,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-    }
-
-    private static void startDialogFragment(FragmentManager fragmentManager, DialogFragment fragment) {
-        fragment.show(fragmentManager, "");
     }
 
     private class CustomDrawerClickListener implements NavigationView.OnNavigationItemSelectedListener {

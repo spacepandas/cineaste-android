@@ -44,5 +44,6 @@ Special thanks to Philipp Wolf, for the design!
     <string name="movie_deleted">Movie deleted</string>
     <string name="move_seen">Movie seen</string>
     <string name="move_not_seen">Must see</string>
+    <string name="title_activity_movie_night">MovieNightActivity</string>
 
 </resources>
