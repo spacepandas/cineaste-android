@@ -31,10 +31,6 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					MovieEntry.COLUMN_MOVIE_WATCHED_DATE + INTEGER_TYPE + COMMA_SEP +
 					MovieEntry.COLUMN_MOVIE_RELEASE_DATE + TEXT_TYPE +
 					" )";
-	private static final String SQL_DELETE_USER_ENTRIES =
-			"DROP TABLE IF EXISTS " + UserEntry.TABLE_NAME;
-	private static final String SQL_DELETE_MOVIE_ENTRIES =
-			"DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME;
 
 	final SQLiteDatabase readDb;
 	final SQLiteDatabase writeDb;

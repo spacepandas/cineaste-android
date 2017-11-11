@@ -34,7 +34,7 @@ public class NetworkClient {
 					callback.onFailure();
 				}
 				callback.onSuccess(
-						new NetworkResponse(response.body().charStream(), response.headers().toMultimap())
+						new NetworkResponse(response.body().charStream())
 				);
 			}
 		});

@@ -17,23 +17,19 @@ import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.listener.MovieClickListener;
 
-/**
- * Created by marcelgross on 10.11.17.
- */
+abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
 
-public abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
+    final TextView movieRuntime;
+    final TextView movieVote;
+    final MovieClickListener listener;
+    final TextView movieTitle;
+    final ImageView moviePoster;
+    final View view;
+    final Resources resources;
+    private final Context context;
+    private final TextView movieReleaseDate;
 
-    protected final Context context;
-    protected final MovieClickListener listener;
-    protected final TextView movieTitle;
-    protected final TextView movieReleaseDate;
-    protected final TextView movieRuntime;
-    protected final TextView movieVote;
-    protected final ImageView moviePoster;
-    protected final View view;
-    protected final Resources resources;
-
-    public AbstractViewHolder(View itemView, Context context, MovieClickListener listener) {
+    AbstractViewHolder(View itemView, Context context, MovieClickListener listener) {
         super(itemView);
         this.context = context;
         this.listener = listener;
@@ -48,7 +44,7 @@ public abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
 
     public abstract void assignData(final Movie movie);
 
-    protected void setBaseInformation(Movie movie) {
+    void setBaseInformation(Movie movie) {
         movieTitle.setText(movie.getTitle());
         if (movie.getReleaseDate() != null) {
             movieReleaseDate.setText(convertDate(movie.getReleaseDate()));
@@ -68,7 +64,7 @@ public abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
         Picasso.with(context).load(posterUri).resize(222, 334).error(R.drawable.placeholder_poster).into(moviePoster);
     }
 
-    protected String convertDate(Date date) {
+    private String convertDate(Date date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", resources.getConfiguration().locale);
         return simpleDateFormat.format(date);
     }

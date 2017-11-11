@@ -83,6 +83,7 @@ public class MovieNightActivity extends AppCompatActivity
 
     private User currentUser;
     private UserDbHelper userDbHelper;
+    private Runnable timeOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,33 @@ public class MovieNightActivity extends AppCompatActivity
             buildLocalMessage();
         }
         mMessageListener = new MyMessageListener();
+        initializeTimeout();
         buildGoogleApiClient();
+
+        timedOut();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nearbyUser_rv.removeCallbacks(timeOut);
+    }
+
+    private void timedOut() {
+        nearbyUser_rv.removeCallbacks(timeOut);
+        nearbyUser_rv.postDelayed(timeOut, 45000);
+    }
+
+
+    private void initializeTimeout() {
+        timeOut = new Runnable() {
+            @Override
+            public void run() {
+                Snackbar snackbar = Snackbar
+                        .make(nearbyUser_rv, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+        };
     }
 
     private void initViews() {
@@ -119,7 +146,6 @@ public class MovieNightActivity extends AppCompatActivity
         nearbyUser_rv.setAdapter(nearbyUserAdapter);
         initToolbar();
 
-        //    buildGoogleApiClient();
     }
 
     private void buildGoogleApiClient() {
@@ -176,11 +202,6 @@ public class MovieNightActivity extends AppCompatActivity
             movieDtos.add(new MovieDto(movie));
         }
         return movieDtos;
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override

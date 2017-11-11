@@ -15,19 +15,15 @@ import android.view.View;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.MovieListAdapter;
 
-/**
- * Created by marcelgross on 08.11.17.
- */
-
 public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
-    private Paint p = new Paint();
-    private Resources resources;
-    LinearLayoutManager linearLayoutManager;
-    MovieListAdapter movieListAdapter;
-    RecyclerView recyclerView;
+    final private Paint p = new Paint();
+    final private Resources resources;
+    final LinearLayoutManager linearLayoutManager;
+    final MovieListAdapter movieListAdapter;
+    final RecyclerView recyclerView;
 
-    public BaseItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, MovieListAdapter movieListAdapter, RecyclerView recyclerView, Resources resources) {
+    BaseItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, MovieListAdapter movieListAdapter, RecyclerView recyclerView, Resources resources) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.linearLayoutManager = linearLayoutManager;
         this.movieListAdapter = movieListAdapter;
@@ -51,7 +47,7 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Simple
         final int position = viewHolder.getAdapterPosition();
 
         if (direction == ItemTouchHelper.LEFT) {
-            getSnackBar().getSnackBarLeftSwipe(position, R.string.movie_deleted);
+            getSnackBar().getSnackBarLeftSwipe(position);
         } else {
             getSnackBar().getSnackBarRightSwipe(position, getRightSwipeMessage());
         }

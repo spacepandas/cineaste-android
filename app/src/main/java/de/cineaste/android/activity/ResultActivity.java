@@ -1,6 +1,5 @@
 package de.cineaste.android.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -68,11 +67,6 @@ public class ResultActivity extends AppCompatActivity implements ResultAdapter.O
         }
 
         setTitle(R.string.result);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override

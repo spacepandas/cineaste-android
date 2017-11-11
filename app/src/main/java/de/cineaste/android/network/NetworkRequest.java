@@ -17,11 +17,6 @@ public class NetworkRequest {
 		this.requestBuilder = new Request.Builder();
 	}
 
-	public NetworkRequest addHeader(String header, String value) {
-		this.requestBuilder.addHeader(header, value);
-		return this;
-	}
-
 	public NetworkRequest get(long movieID) {
 		this.requestBuilder.url(baseUrl + "/movie/" + movieID + "?" + staticQueryParams);
 		this.requestBuilder.header("accept", "application/json");
@@ -34,7 +29,7 @@ public class NetworkRequest {
 		return this;
 	}
 
-	public Request buildRequest() {
+	Request buildRequest() {
 		return this.requestBuilder.build();
 	}
 }

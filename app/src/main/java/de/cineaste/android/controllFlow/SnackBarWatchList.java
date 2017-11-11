@@ -16,12 +16,12 @@ public class SnackBarWatchList extends BaseSnackBar {
     }
 
     @Override
-    public void getSnackBarLeftSwipe(final int position, final int message) {
+    public void getSnackBarLeftSwipe(final int position) {
         final Movie movieToBeDeleted = adapter.getItem(position);
         adapter.removeItem(position);
 
         final Snackbar mySnackbar = Snackbar.make(view,
-                message, Snackbar.LENGTH_LONG);
+                R.string.movie_deleted, Snackbar.LENGTH_LONG);
         mySnackbar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

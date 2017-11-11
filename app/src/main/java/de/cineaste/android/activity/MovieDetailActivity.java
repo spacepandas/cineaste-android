@@ -210,6 +210,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         moviePoster.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                view.performClick();
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         slideOut();

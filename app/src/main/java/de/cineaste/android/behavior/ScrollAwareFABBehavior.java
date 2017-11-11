@@ -2,12 +2,14 @@ package de.cineaste.android.behavior;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+@SuppressWarnings("unused")
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 
 	public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
@@ -16,10 +18,10 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 
 	@Override
 	public boolean onStartNestedScroll(
-			CoordinatorLayout coordinatorLayout,
-			FloatingActionButton child,
-			View directTargetChild,
-			View target,
+			@NonNull CoordinatorLayout coordinatorLayout,
+			@NonNull FloatingActionButton child,
+			@NonNull View directTargetChild,
+			@NonNull View target,
 			int nestedScrollAxes) {
 
 		return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL ||
@@ -33,9 +35,9 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 
 	@Override
 	public void onNestedScroll(
-			CoordinatorLayout coordinatorLayout,
-			final FloatingActionButton child,
-			View target,
+			@NonNull CoordinatorLayout coordinatorLayout,
+			@NonNull final FloatingActionButton child,
+			@NonNull View target,
 			int dxConsumed,
 			int dyConsumed,
 			int dxUnconsumed,
@@ -51,25 +53,28 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 
 		if (dyConsumed > 0 && child.getVisibility() == View.VISIBLE) {
 			child.hide();
-			new AsyncTask<Void, Void, Void>() {
-				@Override
-				protected Void doInBackground(Void... voids) {
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException ex) {
-						//do nothing
-					}
-					return null;
-				}
-
-				@Override
-				protected void onPostExecute(Void aVoid) {
-					super.onPostExecute(aVoid);
-					child.show();
-				}
-			}.execute();
+			new MyAsyncTask().execute(child);
 		} else if (dyConsumed < 0 && child.getVisibility() != View.VISIBLE) {
 			child.show();
+		}
+	}
+
+	private static class MyAsyncTask extends AsyncTask<FloatingActionButton, Void, FloatingActionButton> {
+
+		@Override
+		protected FloatingActionButton doInBackground(FloatingActionButton... buttons) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException ex) {
+				//do nothing
+			}
+			return buttons[0];
+		}
+
+		@Override
+		protected void onPostExecute(FloatingActionButton button) {
+			super.onPostExecute(button);
+			button.show();
 		}
 	}
 }

@@ -28,10 +28,6 @@ public class NearbyMessageHandler {
 		messages.addAll(message);
 	}
 
-	public void removeMessage(NearbyMessage message) {
-		messages.remove(message);
-	}
-
 	public List<NearbyMessage> getMessages() {
 		return messages;
 	}

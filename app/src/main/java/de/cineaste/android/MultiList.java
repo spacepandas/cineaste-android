@@ -1,25 +1,20 @@
 package de.cineaste.android;
 
 import android.support.annotation.NonNull;
+import android.util.LongSparseArray;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.cineaste.android.entity.MovieDto;
 
-/**
- * Created by marcelgross on 06.11.17.
- */
-
 public class MultiList {
 
-    private Map<Long, MultiListEntry> movies;
+    private final LongSparseArray<MultiListEntry> movies;
 
     public MultiList() {
-        this.movies = new HashMap<>();
+        this.movies = new LongSparseArray<>();
     }
 
     public void add(MovieDto movieDto) {
@@ -41,7 +36,9 @@ public class MultiList {
 
     public List<MultiListEntry> getMovieList() {
         List<MultiListEntry> entries = new ArrayList<>();
-        entries.addAll(movies.values());
+        for (int i = 0; i < movies.size(); i++) {
+            entries.add(movies.valueAt(i));
+        }
 
         Collections.sort(entries);
 
@@ -49,15 +46,15 @@ public class MultiList {
     }
 
     public class MultiListEntry implements Comparable<MultiListEntry> {
-        private MovieDto movieDto;
+        private final MovieDto movieDto;
         private int counter;
 
-        public MultiListEntry(MovieDto movieDto) {
+        private MultiListEntry(MovieDto movieDto) {
             this.movieDto = movieDto;
             this.counter = 1;
         }
 
-        public MultiListEntry increment() {
+        private MultiListEntry increment() {
             this.counter++;
             return this;
         }

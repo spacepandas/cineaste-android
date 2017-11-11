@@ -1,7 +1,5 @@
 package de.cineaste.android;
 
-import android.content.res.Resources;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -16,18 +14,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by marcelgross on 09.11.17.
- */
-
 public class DateAwareGson {
 
-    private Gson gson;
+    private final Gson gson;
 
     public DateAwareGson(final Locale locale) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd", locale);
+            final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", locale);
+
             @Override
             public Date deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
                     throws JsonParseException {

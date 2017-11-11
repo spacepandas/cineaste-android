@@ -12,4 +12,5 @@
     <string name="tmdbLogo">tmdb</string>
     <string name="counter">counter</string>
     <string name="gradient">gradient</string>
+    <string name="banner">Banner</string>
 </resources>

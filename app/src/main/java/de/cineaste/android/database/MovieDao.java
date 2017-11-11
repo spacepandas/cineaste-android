@@ -7,13 +7,12 @@ import android.database.Cursor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.cineaste.android.entity.Movie;
 
 class MovieDao extends BaseDao {
-    private SimpleDateFormat sdf;
+    private final SimpleDateFormat sdf;
     private static MovieDao mInstance;
 
     private MovieDao(Context context) {
@@ -121,14 +120,5 @@ class MovieDao extends BaseDao {
 
     void delete(long id) {
         writeDb.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = ?", new String[]{id + ""});
-    }
-
-    int getRowCount() {
-        String query = "SELECT count(*) FROM " + MovieEntry.TABLE_NAME;
-        Cursor c = readDb.rawQuery(query, null);
-        c.moveToFirst();
-        int rowCount = c.getInt(0);
-        c.close();
-        return rowCount;
     }
 }

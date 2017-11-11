@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:contentDescription="@string/banner"
         android:layout_gravity="top"
         android:adjustViewBounds="true"
         android:layout_width="wrap_content"

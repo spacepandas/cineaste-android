@@ -7,10 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.MovieListAdapter;
 
-/**
- * Created by marcelgross on 08.11.17.
- */
-
 public class WatchlistItemTouchHelperCallback extends BaseItemTouchHelperCallback {
 
     public WatchlistItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, MovieListAdapter movieListAdapter, RecyclerView recyclerView, Resources resources) {
@@ -29,6 +25,6 @@ public class WatchlistItemTouchHelperCallback extends BaseItemTouchHelperCallbac
 
     @Override
     int getRightSwipeMessage() {
-        return R.string.move_not_seen;
+        return R.string.move_seen;
     }
 }

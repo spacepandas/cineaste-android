@@ -22,8 +22,6 @@
     <string name="missing_permission">Import/Export Permissions missing</string>
     <string name="unsuccessfulImport">Import failed</string>
     <string name="moviePoster">Movie poster</string>
-    <string name="addToWatchlist">Add to Watchlist</string>
-    <string name="addToWatchedlist">Add to Watchedlist</string>
     <string name="remove">Remove movie</string>
     <string name="noInternet">No internet-connection!</string>
     <string name="runtime">%d min</string>
@@ -46,6 +44,5 @@ Special thanks to Philipp Wolf, for the design!
     <string name="move_seen">Movie seen</string>
     <string name="move_not_seen">Must see</string>
     <string name="watch_now">Watch now</string>
-    <string name="title_activity_movie_night">MovieNightActivity</string>
 
 </resources>

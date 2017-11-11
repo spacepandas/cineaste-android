@@ -27,24 +27,8 @@ public class NearbyMessage {
 		return userName;
 	}
 
-	private void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
-
 	public List<MovieDto> getMovies() {
 		return movies;
-	}
-
-	private void setMovies(List<MovieDto> movies) {
-		this.movies = movies;
 	}
 
 	public static NearbyMessage fromMessage(Message message) {

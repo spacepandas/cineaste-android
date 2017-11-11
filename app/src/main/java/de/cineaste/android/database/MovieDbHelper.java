@@ -98,10 +98,6 @@ public class MovieDbHelper {
         movieDao.delete(movie.getId());
     }
 
-    public int getMovieCount() {
-        return movieDao.getRowCount();
-    }
-
     private int updateMovieWatched( Movie movie ) {
         ContentValues values = new ContentValues();
         values.put( BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0 );

@@ -40,20 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
 
-    public static void replaceFragment(FragmentManager fm, Fragment fragment) {
-        fm.beginTransaction()
-                .replace(
-                        R.id.content_container,
-                        fragment, fragment.getClass().getName())
-                .addToBackStack(null)
-                .commit();
-    }
-
-    public static void replaceFragmentPopBackStack(FragmentManager fm, Fragment fragment) {
-        fm.popBackStack();
-        replaceFragment(fm, fragment);
-    }
-
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -114,6 +100,20 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             replaceFragment(fm, getBaseWatchlistFragment(WatchState.WATCH_STATE));
         }
+    }
+
+    private void replaceFragment(FragmentManager fm, Fragment fragment) {
+        fm.beginTransaction()
+                .replace(
+                        R.id.content_container,
+                        fragment, fragment.getClass().getName())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void replaceFragmentPopBackStack(FragmentManager fm, Fragment fragment) {
+        fm.popBackStack();
+        replaceFragment(fm, fragment);
     }
 
     private void checkPermissions() {

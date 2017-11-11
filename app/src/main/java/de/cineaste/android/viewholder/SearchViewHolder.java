@@ -9,10 +9,6 @@ import de.cineaste.android.adapter.SearchQueryAdapter;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.listener.MovieClickListener;
 
-/**
- * Created by marcelgross on 10.11.17.
- */
-
 public class SearchViewHolder extends AbstractViewHolder {
 
     private final Button addToWatchlistButton;

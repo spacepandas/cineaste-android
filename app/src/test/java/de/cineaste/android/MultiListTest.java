@@ -11,7 +11,7 @@ import de.cineaste.android.entity.MovieDto;
 import static org.junit.Assert.*;
 
 public class MultiListTest {
-    private List<MovieDto> initialDtos = new ArrayList<>();
+    private final List<MovieDto> initialDtos = new ArrayList<>();
     private MultiList list;
 
     @Before

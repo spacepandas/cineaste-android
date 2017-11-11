@@ -7,10 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.MovieListAdapter;
 
-/**
- * Created by marcelgross on 08.11.17.
- */
-
 public class WatchedlistItemTouchHelperCallback extends BaseItemTouchHelperCallback {
 
     public WatchedlistItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, MovieListAdapter movieListAdapter, RecyclerView recyclerView, Resources resources) {

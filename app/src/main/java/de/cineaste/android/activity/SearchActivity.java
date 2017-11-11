@@ -296,11 +296,6 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();

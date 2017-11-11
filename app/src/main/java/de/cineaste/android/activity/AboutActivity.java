@@ -42,11 +42,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
