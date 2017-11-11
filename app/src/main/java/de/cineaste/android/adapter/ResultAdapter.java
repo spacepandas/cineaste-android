@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,7 +61,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		final ImageView moviePoster;
-		final ImageButton watchedButton;
+		final Button watchedButton;
 		final TextView title, counter;
 
 		public ViewHolder(final View itemView) {

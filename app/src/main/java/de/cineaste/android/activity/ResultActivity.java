@@ -1,8 +1,9 @@
 package de.cineaste.android.activity;
 
+import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.cineaste.android.DateAwareGson;
 import de.cineaste.android.MultiList;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.ResultAdapter;
@@ -30,6 +32,7 @@ import de.cineaste.android.network.NetworkResponse;
 public class ResultActivity extends AppCompatActivity implements ResultAdapter.OnMovieSelectListener {
 
     private List<NearbyMessage> nearbyMessages;
+    private MovieDbHelper movieDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class ResultActivity extends AppCompatActivity implements ResultAdapter.O
 
         NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
         nearbyMessages = handler.getMessages();
+
+        movieDbHelper = MovieDbHelper.getInstance(this);
 
         initToolbar();
 
@@ -79,32 +84,41 @@ public class ResultActivity extends AppCompatActivity implements ResultAdapter.O
     @Override
     public void onMovieSelectListener(int position) {
 
-        NetworkClient client = new NetworkClient(new NetworkRequest().get(getResult().get(position).getId()));
-        client.sendRequest(new NetworkCallback() {
-            @Override
-            public void onFailure() {
+        long selectedMovieId = getResult().get(position).getId();
+        Movie selectedMovie = movieDbHelper.readMovie(selectedMovieId);
 
-            }
+        if (selectedMovie == null) {
+            NetworkClient client = new NetworkClient(new NetworkRequest().get(getResult().get(position).getId()));
+            client.sendRequest(new NetworkCallback() {
+                @Override
+                public void onFailure() {
 
-            @Override
-            public void onSuccess(NetworkResponse response) {
-                Gson gson = new Gson();
-                final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MovieDbHelper db = MovieDbHelper.getInstance(ResultActivity.this);
-                        movie.setWatched(true);
-                        if (db.readMovie(movie.getId()) != null) {
-                            db.update(movie);
-                        } else {
-                            db.createOrUpdate(movie);
+                }
+
+                @Override
+                public void onSuccess(NetworkResponse response) {
+                    Gson gson = new DateAwareGson(getResources().getConfiguration().locale).getGson();
+                    final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateMovie(movie);
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        } else {
+            updateMovie(selectedMovie);
+        }
+    }
 
+    private void updateMovie( Movie movie) {
+        movie.setWatched(true);
+        if (movieDbHelper.readMovie(movie.getId()) != null) {
+            movieDbHelper.update(movie);
+        } else {
+            movieDbHelper.createOrUpdate(movie);
+        }
     }
 
     private ArrayList<MatchingResult> getResult() {

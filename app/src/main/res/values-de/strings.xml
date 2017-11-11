@@ -42,6 +42,7 @@
     <string name="undo">Rückgängig machen</string>
     <string name="movie_deleted">Film gelöscht</string>
     <string name="move_seen">Schon gesehen</string>
+    <string name="watch_now">Jetzt anschauen</string>
     <string name="move_not_seen">Muss ich sehen</string>
 
 </resources>
