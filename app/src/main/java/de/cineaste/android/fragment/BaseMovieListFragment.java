@@ -29,7 +29,6 @@ import de.cineaste.android.controllFlow.BaseItemTouchHelperCallback;
 import de.cineaste.android.controllFlow.WatchedlistItemTouchHelperCallback;
 import de.cineaste.android.controllFlow.WatchlistItemTouchHelperCallback;
 import de.cineaste.android.database.BaseDao;
-import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.listener.MovieClickListener;
 
 import static android.app.ActivityOptions.makeSceneTransitionAnimation;
@@ -44,7 +43,6 @@ public class BaseMovieListFragment extends Fragment
     private MovieListAdapter movieListAdapter;
     private TextView emptyListTextView;
 
-    private MovieDbHelper movieDbHelper;
 
     private WatchState getWatchState(String watchStateString) {
         if (watchStateString.equals(WatchState.WATCH_STATE.name()))
@@ -66,12 +64,18 @@ public class BaseMovieListFragment extends Fragment
         super.onResume();
     }
 
+    public void updateAdapter() {
+        movieListAdapter.updateDataSet();
+    }
+
+    public View getRecyclerView() {
+        return watchlistRecyclerView;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View watchlistView = inflater.inflate(R.layout.fragment_movielist, container, false);
-
-        movieDbHelper = MovieDbHelper.getInstance(getActivity());
 
         emptyListTextView = watchlistView.findViewById(R.id.info_text);
 

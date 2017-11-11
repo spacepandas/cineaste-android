@@ -232,7 +232,8 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     }
 
     private void importMovies() {
-        new AsyncMovieImporter().execute(contentContainer);
+        BaseMovieListFragment baseMovieListFragment = (BaseMovieListFragment) fm.findFragmentByTag(BaseMovieListFragment.class.getName());
+        new AsyncMovieImporter().execute(baseMovieListFragment);
     }
 
     @NonNull
@@ -246,10 +247,10 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         return watchlistFragment;
     }
 
-    private static class AsyncMovieImporter extends AsyncTask<View, Void, Snackbar> {
+    private static class AsyncMovieImporter extends AsyncTask<BaseMovieListFragment, Void, AsyncAttributes> {
 
         @Override
-        protected Snackbar doInBackground(View... views) {
+        protected AsyncAttributes doInBackground(BaseMovieListFragment... fragments) {
             List<Movie> movies = ImportService.importMovies();
             int snackBarMessage;
             if (movies.size() == 0) {
@@ -260,14 +261,35 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
                 }
                 snackBarMessage = R.string.successfulImport;
             }
-            return Snackbar
-                    .make(views[0], snackBarMessage, Snackbar.LENGTH_SHORT);
+            BaseMovieListFragment fragment = fragments[0];
+            Snackbar snackbar = Snackbar.make(fragment.getRecyclerView(), snackBarMessage, Snackbar.LENGTH_SHORT);
+
+            return new AsyncAttributes(snackbar, fragment);
         }
 
         @Override
-        protected void onPostExecute(Snackbar snackbar) {
-            super.onPostExecute(snackbar);
-            snackbar.show();
+        protected void onPostExecute(AsyncAttributes asyncAttributes) {
+            super.onPostExecute(asyncAttributes);
+            asyncAttributes.getSnackbar().show();
+            asyncAttributes.getListFragment().updateAdapter();
+        }
+    }
+
+    private static class AsyncAttributes {
+        private final Snackbar snackbar;
+        private final BaseMovieListFragment listFragment;
+
+        private AsyncAttributes(Snackbar snackbar, BaseMovieListFragment listFragment) {
+            this.snackbar = snackbar;
+            this.listFragment = listFragment;
+        }
+
+        private Snackbar getSnackbar() {
+            return snackbar;
+        }
+
+        private BaseMovieListFragment getListFragment() {
+            return listFragment;
         }
     }
 }
