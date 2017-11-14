@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +102,7 @@ class MovieDao extends BaseDao {
                     currentMovie.setReleaseDate(
                             sdf.parse(c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_RELEASE_DATE)))
                     );
-                } catch (ParseException ex) {
+                } catch (Exception ex) {
                     currentMovie.setReleaseDate(null);
                 }
 

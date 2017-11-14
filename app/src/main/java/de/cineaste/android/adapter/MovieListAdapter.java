@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final DisplayMessage displayMessage;
     private final MovieClickListener listener;
     private final WatchState state;
-    private List<Movie> dataSet;
+    private List<Movie> dataSet = new ArrayList<>();
     private List<Movie> filteredDataSet;
 
     public MovieListAdapter(DisplayMessage displayMessage, Context context, MovieClickListener listener, WatchState state) {
@@ -33,7 +34,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.context = context;
         this.listener = listener;
         this.state = state;
-        this.dataSet = db.readMoviesByWatchStatus(state);
+        this.dataSet.clear();
+        this.dataSet.addAll(db.readMoviesByWatchStatus(state));
         this.filteredDataSet = new LinkedList<>(dataSet);
     }
 
