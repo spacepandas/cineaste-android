@@ -5,11 +5,6 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-
-        buildConfigField("String", "MovieKey", '"' + System.getenv("MOVIE_KEY") + '"')
-        resValue "string", "nearbyKey", System.getenv("NEARBY_KEY")
-
-
         applicationId "de.cineaste.android"
         minSdkVersion 16
         targetSdkVersion 26
@@ -36,11 +31,10 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.android.support:support-v4:26.1.0'
-    compile 'com.google.android.gms:play-services-gcm:11.4.2'
-    compile 'com.google.android.gms:play-services-nearby:11.4.2'
+    compile 'com.google.android.gms:play-services-gcm:11.6.0'
+    compile 'com.google.android.gms:play-services-nearby:11.6.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
-
     testCompile 'junit:junit:4.12'
 }

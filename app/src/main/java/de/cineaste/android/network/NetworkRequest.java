@@ -1,20 +1,24 @@
 package de.cineaste.android.network;
 
+import android.content.res.Resources;
+
 import java.util.Locale;
 
-import de.cineaste.android.Constants;
+import de.cineaste.android.R;
 import okhttp3.Request;
 
 public class NetworkRequest {
 
 	private final String baseUrl = "https://api.themoviedb.org/3";
 
-	private final String staticQueryParams = "language=" + Locale.getDefault().getLanguage() + "&api_key=" + Constants.API_KEY;
+	private final String staticQueryParams;
 
 	private final Request.Builder requestBuilder;
 
-	public NetworkRequest() {
+	public NetworkRequest(Resources resources) {
 		this.requestBuilder = new Request.Builder();
+		staticQueryParams = "language=" + Locale.getDefault().getLanguage() + "&api_key=" + resources.getString(R.string.movieKey);
+
 	}
 
 	public NetworkRequest get(long movieID) {

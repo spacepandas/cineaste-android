@@ -76,7 +76,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 			String posterUri =
 					Constants.POSTER_URI_SMALL
 							.replace("<posterName>", matchingResult.getPosterPath() != null ?
-									matchingResult.getPosterPath() : "/");
+									matchingResult.getPosterPath() : "/")
+							.replace("<API_KEY>", context.getString(R.string.movieKey));
 			Picasso.with(context)
 					.load(Uri.parse(posterUri))
 					.resize(222, 334)

@@ -82,7 +82,7 @@ public class ResultActivity extends AppCompatActivity implements ResultAdapter.O
         Movie selectedMovie = movieDbHelper.readMovie(selectedMovieId);
 
         if (selectedMovie == null) {
-            NetworkClient client = new NetworkClient(new NetworkRequest().get(getResult().get(position).getId()));
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(getResult().get(position).getId()));
             client.sendRequest(new NetworkCallback() {
                 @Override
                 public void onFailure() {

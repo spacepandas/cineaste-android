@@ -120,7 +120,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
         }
         if (callback != null) {
             movieQueryAdapter.removeMovie(index);
-            NetworkClient client = new NetworkClient(new NetworkRequest().get(movie.getId()));
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(movie.getId()));
             client.sendRequest(callback);
         }
 
@@ -241,7 +241,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
     }
 
     private void searchRequest( String searchQuery) {
-        NetworkClient client = new NetworkClient(new NetworkRequest().search(searchQuery));
+        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).search(searchQuery));
         client.sendRequest(new NetworkCallback() {
             @Override
             public void onFailure() {

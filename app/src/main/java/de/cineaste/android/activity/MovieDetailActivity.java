@@ -134,7 +134,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
         if (callback != null) {
-            NetworkClient client = new NetworkClient(new NetworkRequest().get(currentMovie.getId()));
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(currentMovie.getId()));
             client.sendRequest(callback);
         }
 
@@ -164,7 +164,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         if (callback != null) {
-            NetworkClient client = new NetworkClient(new NetworkRequest().get(currentMovie.getId()));
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(currentMovie.getId()));
             client.sendRequest(callback);
         }
 
@@ -231,7 +231,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void loadRequestedMovie() {
-        NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(movieId));
         client.sendRequest(new NetworkCallback() {
             @Override
             public void onFailure() {
@@ -273,7 +273,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         String posterUri = Constants.POSTER_URI_SMALL
                 .replace("<posterName>", currentMovie.getPosterPath() != null ?
-                        currentMovie.getPosterPath() : "/");
+                        currentMovie.getPosterPath() : "/")
+                .replace("<API_KEY>", getString(R.string.movieKey));
         Picasso.with(this)
                 .load(posterUri)
                 .error(R.drawable.placeholder_poster)
@@ -333,7 +334,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void updateMovie() {
         if (state != R.string.searchState) {
-            final NetworkClient client = new NetworkClient(new NetworkRequest().get(movieId));
+            final NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(movieId));
             client.sendRequest(new NetworkCallback() {
                 @Override
                 public void onFailure() {
