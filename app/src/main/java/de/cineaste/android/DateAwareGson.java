@@ -18,10 +18,10 @@ public class DateAwareGson {
 
     private final Gson gson;
 
-    public DateAwareGson(final Locale locale) {
+    public DateAwareGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", locale);
+            final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
             @Override
             public Date deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)

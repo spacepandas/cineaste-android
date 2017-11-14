@@ -178,7 +178,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        gson = new DateAwareGson(getResources().getConfiguration().locale).getGson();
+        gson = new DateAwareGson().getGson();
 
         Intent intent = getIntent();
         movieId = intent.getLongExtra(BaseDao.MovieEntry._ID, -1);

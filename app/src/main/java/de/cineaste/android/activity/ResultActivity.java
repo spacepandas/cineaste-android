@@ -91,7 +91,7 @@ public class ResultActivity extends AppCompatActivity implements ResultAdapter.O
 
                 @Override
                 public void onSuccess(NetworkResponse response) {
-                    Gson gson = new DateAwareGson(getResources().getConfiguration().locale).getGson();
+                    Gson gson = new DateAwareGson().getGson();
                     final Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
                     runOnUiThread(new Runnable() {
                         @Override

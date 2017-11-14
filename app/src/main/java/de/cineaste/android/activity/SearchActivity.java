@@ -255,7 +255,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
 
             @Override
             public void onSuccess(NetworkResponse response) {
-                Gson gson = new DateAwareGson(getResources().getConfiguration().locale).getGson();
+                Gson gson = new DateAwareGson().getGson();
                 JsonParser parser = new JsonParser();
                 JsonObject responseObject =
                         parser.parse(response.getResponseReader()).getAsJsonObject();
