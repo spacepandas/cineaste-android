@@ -15,8 +15,8 @@
     <string name="searching_for_friends">Searching for friends</string>
     <string name="no_friends_found_try_again">No friends found, try again!</string>
 
-    <string name="watchList">To See Movies</string>
-    <string name="watchedlist">Seen Movies</string>
+    <string name="watchList">Watchlist</string>
+    <string name="watchedlist">History</string>
     <string name="successfulExport">Successfully Export</string>
     <string name="successfulImport">Successfully Import</string>
     <string name="missing_permission">Import/Export Permissions missing</string>
@@ -41,7 +41,7 @@ Special thanks to Philipp Wolf, for the design!
 </string>
     <string name="undo">Undo</string>
     <string name="movie_deleted">Movie deleted</string>
-    <string name="move_seen">Movie seen</string>
+    <string name="move_seen">Movie watched</string>
     <string name="move_not_seen">Must see</string>
     <string name="watch_now">Watch now</string>
 

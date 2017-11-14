@@ -29,6 +29,7 @@ import de.cineaste.android.controllFlow.BaseItemTouchHelperCallback;
 import de.cineaste.android.controllFlow.WatchedlistItemTouchHelperCallback;
 import de.cineaste.android.controllFlow.WatchlistItemTouchHelperCallback;
 import de.cineaste.android.database.BaseDao;
+import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.listener.MovieClickListener;
 
 import static android.app.ActivityOptions.makeSceneTransitionAnimation;
@@ -42,6 +43,7 @@ public class BaseMovieListFragment extends Fragment
     private LinearLayoutManager layoutManager;
     private MovieListAdapter movieListAdapter;
     private TextView emptyListTextView;
+    private UserDbHelper userDbHelper;
 
 
     private WatchState getWatchState(String watchStateString) {
@@ -125,6 +127,8 @@ public class BaseMovieListFragment extends Fragment
             String currentState = savedInstanceState.getString(WatchState.WATCH_STATE_TYPE.name(), WatchState.WATCH_STATE.name());
             this.watchState = getWatchState(currentState);
         }
+
+        userDbHelper = UserDbHelper.getInstance(getActivity());
     }
 
     @Override
@@ -166,13 +170,21 @@ public class BaseMovieListFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.startMovieNight:
-                Intent intent = new Intent(getActivity(), MovieNightActivity.class);
-                getActivity().startActivity(intent);
+                if (userDbHelper.getUser() != null) {
+                    startMovieNight();
+                } else {
+                    new UserInputFragment().show(getFragmentManager(), "");
+                }
 
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startMovieNight() {
+        Intent intent = new Intent(getActivity(), MovieNightActivity.class);
+        getActivity().startActivity(intent);
     }
 
     @Override

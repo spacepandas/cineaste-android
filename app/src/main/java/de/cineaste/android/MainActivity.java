@@ -25,17 +25,22 @@ import android.widget.Toast;
 import java.util.List;
 
 import de.cineaste.android.activity.AboutActivity;
+import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.database.ExportService;
 import de.cineaste.android.database.ImportService;
 import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.User;
 import de.cineaste.android.fragment.BaseMovieListFragment;
+import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.WatchState;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UserInputFragment.UserNameListener {
 
     private FragmentManager fm;
     private View contentContainer;
+    private UserDbHelper userDbHelper;
     private static MovieDbHelper movieDbHelper;
 
     private DrawerLayout drawerLayout;
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        userDbHelper = UserDbHelper.getInstance(this);
         movieDbHelper = MovieDbHelper.getInstance(this);
         contentContainer = findViewById(R.id.content_container);
 
@@ -195,6 +201,16 @@ public class MainActivity extends AppCompatActivity {
                 state.name());
         watchlistFragment.setArguments(bundle);
         return watchlistFragment;
+    }
+
+    @Override
+    public void onFinishUserDialog(String userName) {
+        if (!userName.isEmpty()) {
+            userDbHelper.createUser(new User(userName));
+        }
+
+        Intent intent = new Intent(MainActivity.this, MovieNightActivity.class);
+        startActivity(intent);
     }
 
     private static class AsyncMovieImporter extends AsyncTask<BaseMovieListFragment, Void, AsyncAttributes> {
