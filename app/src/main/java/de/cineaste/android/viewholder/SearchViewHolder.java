@@ -22,7 +22,6 @@ public class SearchViewHolder extends AbstractViewHolder {
         movieWatchedButton = itemView.findViewById(R.id.watched_button);
         this.movieStateChange = movieStateChange;
 
-        movieRuntime.setVisibility(View.GONE);
     }
 
     @Override

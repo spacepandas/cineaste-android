@@ -14,14 +14,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
-
-
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'

@@ -430,7 +430,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private String convertDate(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", getResources().getConfiguration().locale);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy", getResources().getConfiguration().locale);
         return simpleDateFormat.format(date);
     }
 }

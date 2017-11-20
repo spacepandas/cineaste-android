@@ -20,7 +20,6 @@ import de.cineaste.android.listener.MovieClickListener;
 abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
 
     final TextView movieRuntime;
-    final TextView movieVote;
     final MovieClickListener listener;
     final TextView movieTitle;
     final ImageView moviePoster;
@@ -37,7 +36,6 @@ abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
         movieTitle = itemView.findViewById(R.id.movie_title);
         movieReleaseDate = itemView.findViewById(R.id.movieReleaseDate);
         movieRuntime = itemView.findViewById(R.id.movieRuntime);
-        movieVote = itemView.findViewById(R.id.movie_vote);
         moviePoster = itemView.findViewById(R.id.movie_poster_image_view);
         view = itemView;
     }
@@ -52,7 +50,6 @@ abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
         } else {
             movieReleaseDate.setVisibility(View.GONE);
         }
-        movieVote.setText(resources.getString(R.string.vote, String.valueOf(movie.getVoteAverage())));
         setMoviePoster(movie);
     }
 
@@ -66,7 +63,7 @@ abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
     }
 
     private String convertDate(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", resources.getConfiguration().locale);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy", resources.getConfiguration().locale);
         return simpleDateFormat.format(date);
     }
 }

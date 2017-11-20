@@ -26,7 +26,7 @@
     <string name="noInternet">Keine Internetverbindung!</string>
     <string name="runtime">%d min</string>
     <string name="vote">%s</string>
-    <string name="releaseDate">Release Datum</string>
+    <string name="releaseDate">Release</string>
 
     <string name="movieTitle">Titel</string>
     <string name="noDescription">Keine Beschreibung vorhanden</string>

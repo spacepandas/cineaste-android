@@ -47,7 +47,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 	public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater
 				.from(parent.getContext())
-				.inflate(R.layout.card_movie, parent, false);
+				.inflate(R.layout.card_movie_search, parent, false);
 		return new SearchViewHolder(v, parent.getContext(), movieStateChange, listener);
 	}
 
