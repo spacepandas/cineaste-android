@@ -206,8 +206,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         initToolbar();
         slideIn();
 
+        moviePoster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MovieDetailActivity.this, MoviePosterActivity.class);
+                intent.putExtra(MoviePosterActivity.POSTER_PATH, currentMovie.getPosterPath());
+                intent.putExtra(MoviePosterActivity.MOVIE_NAME, currentMovie.getTitle());
+                startActivity(intent);
+            }
+        });
 
-        moviePoster.setOnTouchListener(new View.OnTouchListener() {
+
+        /*moviePoster.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 view.performClick();
@@ -226,7 +236,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
                 return true;
             }
-        });
+        });*/
 
     }
 

@@ -39,8 +39,9 @@
         <activity android:name=".activity.MovieDetailActivity" />
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.AboutActivity" />
-        <activity android:name=".activity.MovieNightActivity"/>
-        <activity android:name=".activity.ResultActivity"/>
+        <activity android:name=".activity.MovieNightActivity" />
+        <activity android:name=".activity.ResultActivity" />
+        <activity android:name=".activity.MoviePosterActivity" />
     </application>
 
 </manifest>
