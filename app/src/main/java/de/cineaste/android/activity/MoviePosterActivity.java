@@ -1,11 +1,13 @@
 package de.cineaste.android.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.squareup.picasso.Picasso;
 
@@ -16,26 +18,31 @@ import de.markusfisch.android.scalingimageview.widget.ScalingImageView;
 public class MoviePosterActivity extends AppCompatActivity {
 
     public static String POSTER_PATH = "posterPath";
-    public static String MOVIE_NAME = "movieName";
 
     private ScalingImageView moviePoster;
     private String posterPath;
-    private String movieName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_poster);
-
-        moviePoster = findViewById(R.id.movie_poster);
 
         Intent intent = getIntent();
         posterPath = intent.getStringExtra(POSTER_PATH);
-        movieName = intent.getStringExtra(MOVIE_NAME);
 
-        initToolbar();
+        moviePoster = new ScalingImageView(this);
+        setTransitionNameIfNecessary();
+        moviePoster.setImageDrawable(getResources().getDrawable(R.drawable.placeholder_poster));
+        setContentView(moviePoster);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         loadImage();
+    }
+
+    @TargetApi(21)
+    private void setTransitionNameIfNecessary(){
+        moviePoster.setTransitionName("poster");
     }
 
     @Override
@@ -46,17 +53,6 @@ public class MoviePosterActivity extends AppCompatActivity {
                 return true;
         }
         return true;
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.setDisplayHomeAsUpEnabled(true);
-
-        setTitle(movieName);
-
     }
 
     private void loadImage() {

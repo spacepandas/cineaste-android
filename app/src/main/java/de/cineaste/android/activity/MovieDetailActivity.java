@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -204,40 +203,22 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         initToolbar();
-        slideIn();
 
         moviePoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MovieDetailActivity.this, MoviePosterActivity.class);
                 intent.putExtra(MoviePosterActivity.POSTER_PATH, currentMovie.getPosterPath());
-                intent.putExtra(MoviePosterActivity.MOVIE_NAME, currentMovie.getTitle());
+                slideOut();
                 startActivity(intent);
             }
         });
+    }
 
-
-        /*moviePoster.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                view.performClick();
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        slideOut();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        layout.setVisibility(View.VISIBLE);
-                        slideIn();
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        layout.setVisibility(View.VISIBLE);
-                        slideIn();
-                        break;
-                }
-                return true;
-            }
-        });*/
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        slideIn();
     }
 
     private void loadRequestedMovie() {
@@ -392,21 +373,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.to_bottom);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         layout.startAnimation(animation);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                layout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
     }
 
     @Override
