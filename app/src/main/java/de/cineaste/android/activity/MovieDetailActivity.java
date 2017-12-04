@@ -27,8 +27,8 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.cineaste.android.Constants;
-import de.cineaste.android.DateAwareGson;
+import de.cineaste.android.util.Constants;
+import de.cineaste.android.util.DateAwareGson;
 import de.cineaste.android.R;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;

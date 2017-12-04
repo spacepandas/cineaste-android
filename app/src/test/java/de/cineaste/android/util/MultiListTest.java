@@ -1,4 +1,4 @@
-package de.cineaste.android;
+package de.cineaste.android.util;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.entity.MovieDto;
+import de.cineaste.android.util.MultiList;
 
 import static org.junit.Assert.*;
 

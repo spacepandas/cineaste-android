@@ -1,4 +1,4 @@
-package de.cineaste.android;
+package de.cineaste.android.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

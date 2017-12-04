@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         fm = getSupportFragmentManager();
 
         initToolbar();
+        initNavDrawer();
 
         checkPermissions();
 
@@ -138,9 +140,17 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
+    }
 
+    private void initNavDrawer() {
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new CustomDrawerClickListener());
+
+        User user = userDbHelper.getUser();
+        TextView usernameTv = navigationView.getHeaderView(0).findViewById(R.id.username);
+        if (user != null) {
+            usernameTv.setText(user.getUserName());
+        }
 
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(

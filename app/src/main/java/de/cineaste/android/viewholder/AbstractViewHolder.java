@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.cineaste.android.Constants;
+import de.cineaste.android.util.Constants;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.listener.MovieClickListener;

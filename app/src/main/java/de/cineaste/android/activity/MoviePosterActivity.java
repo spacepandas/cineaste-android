@@ -16,7 +16,7 @@ import android.view.WindowManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import de.cineaste.android.Constants;
+import de.cineaste.android.util.Constants;
 import de.cineaste.android.R;
 import de.markusfisch.android.scalingimageview.widget.ScalingImageView;
 

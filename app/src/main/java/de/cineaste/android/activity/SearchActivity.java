@@ -32,7 +32,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.DateAwareGson;
+import de.cineaste.android.util.DateAwareGson;
 import de.cineaste.android.listener.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SearchQueryAdapter;

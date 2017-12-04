@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Locale;
 
-import de.cineaste.android.Constants;
+import de.cineaste.android.util.Constants;
 import de.cineaste.android.R;
 import de.cineaste.android.database.NearbyMessageHandler;
 import de.cineaste.android.entity.MatchingResult;

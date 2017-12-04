@@ -13,8 +13,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.DateAwareGson;
-import de.cineaste.android.MultiList;
+import de.cineaste.android.util.DateAwareGson;
+import de.cineaste.android.util.MultiList;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.ResultAdapter;
 import de.cineaste.android.database.MovieDbHelper;

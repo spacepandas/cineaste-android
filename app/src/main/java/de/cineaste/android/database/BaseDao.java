@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import de.cineaste.android.Constants;
+import de.cineaste.android.util.Constants;
 
 public abstract class BaseDao extends SQLiteOpenHelper {
 

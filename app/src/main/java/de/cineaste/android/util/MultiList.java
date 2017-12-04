@@ -1,4 +1,4 @@
-package de.cineaste.android;
+package de.cineaste.android.util;
 
 import android.support.annotation.NonNull;
 import android.util.LongSparseArray;
