@@ -60,6 +60,13 @@
                         android:contentDescription="@string/tmdbLogo"
                         android:src="@drawable/themoviedb_logo" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/version" />
             </LinearLayout>
         </ScrollView>
     </android.support.v7.widget.CardView>

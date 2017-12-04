@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import de.cineaste.android.BuildConfig;
 import de.cineaste.android.R;
 
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
@@ -28,6 +30,9 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         githubLogo.setOnClickListener(this);
         movieDbLogo.setOnClickListener(this);
+
+        TextView version = findViewById(R.id.version);
+        version.setText(getResources().getString(R.string.version, String.valueOf(BuildConfig.VERSION_NAME)));
     }
 
     private void initToolbar() {
