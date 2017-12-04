@@ -44,9 +44,4 @@ Special thanks to Philipp Wolf, for the design!
     <string name="move_seen">Movie watched</string>
     <string name="move_not_seen">Must see</string>
     <string name="watch_now">Watch now</string>
-
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-
 </resources>

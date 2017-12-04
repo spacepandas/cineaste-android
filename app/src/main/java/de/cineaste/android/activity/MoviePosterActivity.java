@@ -2,13 +2,18 @@ package de.cineaste.android.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.graphics.Palette;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.cineaste.android.Constants;
@@ -37,7 +42,7 @@ public class MoviePosterActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        loadImage();
+        displayPoster();
     }
 
     @TargetApi(21)
@@ -55,14 +60,51 @@ public class MoviePosterActivity extends AppCompatActivity {
         return true;
     }
 
-    private void loadImage() {
-        String posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", posterPath != null ?
-                        posterPath : "/")
-                .replace("<API_KEY>", getString(R.string.movieKey));
+    private void displayPoster() {
         Picasso.with(this)
-                .load(posterUri)
+                .load(getPosterUrl(Constants.POSTER_URI_SMALL))
                 .error(R.drawable.placeholder_poster)
-                .into(moviePoster);
+                .into(moviePoster, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Drawable placeHolder = moviePoster.getDrawable();
+                        setBackgroundColor(((BitmapDrawable) placeHolder).getBitmap());
+                        Picasso.with(MoviePosterActivity.this)
+                                .load(getPosterUrl(Constants.POSTER_URI_MEDIUM))
+                                .placeholder(placeHolder)
+                                .error(R.drawable.placeholder_poster)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                                .into(moviePoster);
+                    }
+
+                    @Override
+                    public void onError() {
+                        displayPoster();
+                    }
+                });
+    }
+
+    private void setBackgroundColor(Bitmap moviePoster) {
+        Palette.PaletteAsyncListener paletteAsyncListener = new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(@NonNull Palette palette) {
+                Palette.Swatch swatch = palette.getDominantSwatch();
+                if (swatch == null) {
+                    return;
+                }
+
+                getWindow().getDecorView().setBackgroundColor(swatch.getRgb());
+            }
+        };
+
+        Palette.from(moviePoster).generate(paletteAsyncListener);
+    }
+
+
+    private String getPosterUrl(String postUri) {
+        return postUri
+                    .replace("<posterName>", posterPath != null ?
+                            posterPath : "/")
+                    .replace("<API_KEY>", getString(R.string.movieKey));
     }
 }

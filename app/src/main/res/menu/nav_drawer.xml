@@ -13,13 +13,13 @@
 
     <group android:id="@+id/settings">
         <item android:id="@+id/exportMovies"
-            android:icon="@drawable/ic_export_white_48dp"
+            android:icon="@drawable/ic_export"
             android:title="@string/exportMovies"/>
         <item android:id="@+id/importMovies"
-            android:icon="@drawable/ic_import_white_48dp"
+            android:icon="@drawable/ic_import"
             android:title="@string/importMovies"/>
         <item android:id="@+id/about"
-            android:icon="@drawable/ic_alert_circle_outline_white_48dp"
+            android:icon="@drawable/ic_alert"
             android:title="@string/about"/>
     </group>
 
