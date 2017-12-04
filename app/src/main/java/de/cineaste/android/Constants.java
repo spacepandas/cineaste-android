@@ -6,5 +6,5 @@ public interface Constants {
 	String DATABASE_NAME = "cineaste.db";
 
 	String POSTER_URI_SMALL = "https://image.tmdb.org/t/p/w342<posterName>?api_key=<API_KEY>";
-	String POSTER_URI_MEDIUM = "https://image.tmdb.org/t/p/w780<posterName>?api_key=<API_KEY>";
+	String POSTER_URI_ORIGINAL = "https://image.tmdb.org/t/p/original<posterName>?api_key=<API_KEY>";
 }

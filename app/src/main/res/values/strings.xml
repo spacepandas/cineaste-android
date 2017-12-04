@@ -44,4 +44,5 @@ Special thanks to Philipp Wolf, for the design!
     <string name="move_seen">Movie watched</string>
     <string name="move_not_seen">Must see</string>
     <string name="watch_now">Watch now</string>
+    <string name="poster_reloaded">Poster with higher resolution loaded</string>
 </resources>

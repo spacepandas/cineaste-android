@@ -7,13 +7,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.cineaste.android.Constants;
@@ -67,14 +67,22 @@ public class MoviePosterActivity extends AppCompatActivity {
                 .into(moviePoster, new Callback() {
                     @Override
                     public void onSuccess() {
-                        Drawable placeHolder = moviePoster.getDrawable();
+                        final Drawable placeHolder = moviePoster.getDrawable();
                         setBackgroundColor(((BitmapDrawable) placeHolder).getBitmap());
                         Picasso.with(MoviePosterActivity.this)
-                                .load(getPosterUrl(Constants.POSTER_URI_MEDIUM))
+                                .load(getPosterUrl(Constants.POSTER_URI_ORIGINAL))
                                 .placeholder(placeHolder)
-                                .error(R.drawable.placeholder_poster)
-                                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                                .into(moviePoster);
+                                .into(moviePoster, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Snackbar.make(moviePoster, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        moviePoster.setImageDrawable(placeHolder);
+                                    }
+                                });
                     }
 
                     @Override
