@@ -1,6 +1,7 @@
 package de.cineaste.android.viewholder;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
@@ -33,5 +34,13 @@ public class MovieViewHolder extends AbstractViewHolder {
                             new View[]{view, moviePoster, movieTitle, movieRuntime, movieVote});
             }
         });
+    }
+
+    public void onItemSelected() {
+        itemView.setBackgroundColor(Color.LTGRAY);
+    }
+
+    public void onItemClear() {
+        itemView.setBackgroundColor(Color.WHITE);
     }
 }

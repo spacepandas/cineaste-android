@@ -11,4 +11,8 @@
           android:title="@string/startMovieNight"
           android:icon="@drawable/ic_start_movienight"
           app:showAsAction="ifRoom"/>
+    <item android:id="@+id/filter"
+        android:title="Alphabetisch Sortieren"
+        android:checkable="true"
+        app:showAsAction="never"/>
 </menu>

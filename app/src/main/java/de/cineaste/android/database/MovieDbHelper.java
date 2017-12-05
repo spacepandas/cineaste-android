@@ -45,14 +45,6 @@ public class MovieDbHelper {
         return movieDao.read( null, null );
     }
 
-    @Deprecated
-    public List<Movie> readMoviesByWatchStatus( Boolean watched ) {
-        String selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
-        String[] selectionArgs = {Integer.toString( watched ? 1 : 0 )};
-
-        return movieDao.read( selection, selectionArgs );
-    }
-
     public List<Movie> readMoviesByWatchStatus( WatchState state ) {
         String selectionArg;
         if (state == WatchState.WATCH_STATE) {
