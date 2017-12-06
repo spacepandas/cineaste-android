@@ -158,7 +158,7 @@ public class BaseMovieListFragment extends Fragment
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    ((MovieListAdapter) watchlistRecyclerView.getAdapter()).filter(newText);
+                    ((MovieListAdapter) watchlistRecyclerView.getAdapter()).getFilter().filter(newText);
                     return false;
                 }
             });

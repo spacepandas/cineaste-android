@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.entity.Movie;
+import de.cineaste.android.fragment.WatchState;
 
 class MovieDao extends BaseDao {
     private final SimpleDateFormat sdf;
@@ -45,6 +46,8 @@ class MovieDao extends BaseDao {
         }
 
 
+        values.put(MovieEntry.COLUMN_MOVIE_LIST_POSITION, getHighestListPosition(movie.isWatched()) + 1);
+
         long newRowId;
         newRowId = writeDb.insert(MovieEntry.TABLE_NAME, null, values);
 
@@ -64,7 +67,8 @@ class MovieDao extends BaseDao {
                 MovieEntry.COLUMN_MOVIE_DESCRIPTION,
                 MovieEntry.COLUMN_MOVIE_WATCHED,
                 MovieEntry.COLUMN_MOVIE_WATCHED_DATE,
-                MovieEntry.COLUMN_MOVIE_RELEASE_DATE
+                MovieEntry.COLUMN_MOVIE_RELEASE_DATE,
+                MovieEntry.COLUMN_MOVIE_LIST_POSITION
         };
 
         Cursor c = readDb.query(
@@ -106,6 +110,8 @@ class MovieDao extends BaseDao {
                     currentMovie.setReleaseDate(null);
                 }
 
+                currentMovie.setListPosition(c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_LIST_POSITION)));
+
                 movies.add(currentMovie);
             } while (c.moveToNext());
         }
@@ -119,5 +125,39 @@ class MovieDao extends BaseDao {
 
     void delete(long id) {
         writeDb.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = ?", new String[]{id + ""});
+    }
+
+    int getHighestListPosition(boolean watchState) {
+        int highestPos = 0;
+
+        String[] projection = {
+                "MAX(" + MovieEntry.COLUMN_MOVIE_LIST_POSITION + ") AS POS"
+        };
+
+        String selection = MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
+
+        String selectionArg;
+        if (watchState) {
+            selectionArg = "1";
+        } else {
+            selectionArg = "0";
+        }
+
+        Cursor c = writeDb.query(
+                MovieEntry.TABLE_NAME,
+                projection,
+                selection,
+                new String[]{selectionArg},
+                null,
+                null,
+                null);
+        if (c.moveToFirst()) {
+            do {
+                highestPos = c.getInt(c.getColumnIndex("POS"));
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        return highestPos;
     }
 }

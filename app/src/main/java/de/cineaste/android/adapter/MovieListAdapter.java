@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,7 +20,7 @@ import de.cineaste.android.fragment.WatchState;
 import de.cineaste.android.listener.OnMovieRemovedListener;
 import de.cineaste.android.viewholder.MovieViewHolder;
 
-public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnMovieRemovedListener {
+public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnMovieRemovedListener, Filterable {
 
     private final Context context;
     private final MovieDbHelper db;
@@ -43,32 +45,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void showMessageIfEmptyList();
     }
 
-    public void filter(String searchTerm) {
-        if (filteredDataSet == null)
-            return;
-
-        if (searchTerm != null && !searchTerm.isEmpty()) {
-            for (Movie currentMovie : dataSet) {
-                String movieTitle = currentMovie.getTitle().toLowerCase();
-                int index = filteredDataSet.indexOf(currentMovie);
-                if (!movieTitle.contains(searchTerm.toLowerCase())) {
-                    if (index != -1) {
-                        filteredDataSet.remove(index);
-                        notifyItemRemoved(index);
-                    }
-                } else {
-                    if (index == -1) {
-                        int location = indexInAlphabeticalOrder(currentMovie, filteredDataSet);
-                        filteredDataSet.add(location, currentMovie);
-                        notifyItemInserted(location);
-                    }
-                }
-            }
-        } else {
-            filteredDataSet.clear();
-            filteredDataSet.addAll(dataSet);
-            notifyDataSetChanged();
-        }
+    @Override
+    public Filter getFilter() {
+        return new FilterMovies(this, dataSet);
     }
 
     private int indexInAlphabeticalOrder(Movie movie, List<Movie> movies) {
@@ -91,7 +70,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void restoreDeletedItem(Movie item, int position) {
-        db.createNewMovieEntry(item);
+        db.createOrUpdate(item);
         filteredDataSet.add(position, item);
         dataSet.add(indexInAlphabeticalOrder(item, dataSet), item);
         notifyItemInserted(position);
@@ -147,5 +126,48 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.filteredDataSet = new LinkedList<>(dataSet);
         displayMessage.showMessageIfEmptyList();
         notifyDataSetChanged();
+    }
+
+    public class FilterMovies extends Filter {
+
+        private final MovieListAdapter adapter;
+        List<Movie> movieList;
+        List<Movie> filteredMovieList;
+
+        public FilterMovies(MovieListAdapter adapter, List<Movie> movieList) {
+            this.adapter = adapter;
+            this.movieList = movieList;
+            this.filteredMovieList = new ArrayList<>();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filteredMovieList.clear();
+            final FilterResults results = new FilterResults();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredMovieList.addAll(movieList);
+            } else {
+                final String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Movie movie : movieList) {
+                    if (movie.getTitle().toLowerCase().contains(filterPattern)) {
+                        filteredMovieList.add(movie);
+                    }
+                }
+            }
+
+            results.values = filteredMovieList;
+            results.count = filteredMovieList.size();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults results) {
+            adapter.filteredDataSet.clear();
+            adapter.filteredDataSet.addAll((List<Movie>)results.values);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

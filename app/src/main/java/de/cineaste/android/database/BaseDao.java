@@ -29,7 +29,8 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					MovieEntry.COLUMN_MOVIE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
 					MovieEntry.COLUMN_MOVIE_WATCHED + INTEGER_TYPE + COMMA_SEP +
 					MovieEntry.COLUMN_MOVIE_WATCHED_DATE + INTEGER_TYPE + COMMA_SEP +
-					MovieEntry.COLUMN_MOVIE_RELEASE_DATE + TEXT_TYPE +
+					MovieEntry.COLUMN_MOVIE_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
+					MovieEntry.COLUMN_MOVIE_LIST_POSITION + INTEGER_TYPE +
 					" )";
 
 	final SQLiteDatabase readDb;
@@ -56,6 +57,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		static final String COLUMN_MOVIE_WATCHED = "watched";
 		static final String COLUMN_MOVIE_WATCHED_DATE = "watchedDate";
 		static final String COLUMN_MOVIE_RELEASE_DATE = "releaseDate";
+		static final String COLUMN_MOVIE_LIST_POSITION = "listPosition";
 	}
 
 	BaseDao(Context context) {
@@ -74,6 +76,10 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if (oldVersion < 2) {
 			db.execSQL("ALTER TABLE " + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.COLUMN_MOVIE_RELEASE_DATE + " " + TEXT_TYPE + ";");
+		}
+
+		if (oldVersion < 3) {
+			db.execSQL("ALTER TABLE " + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.COLUMN_MOVIE_LIST_POSITION + " " + INTEGER_TYPE + ";");
 		}
 	}
 }

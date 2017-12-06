@@ -89,7 +89,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
 
                     @Override
                     public void onSuccess(NetworkResponse response) {
-                        db.createNewMovieEntry(gson.fromJson(response.getResponseReader(), Movie.class));
+                        db.createOrUpdate(gson.fromJson(response.getResponseReader(), Movie.class));
 
                     }
                 };
@@ -110,7 +110,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
                     public void onSuccess(NetworkResponse response) {
                         Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
                         movie.setWatched(true);
-                        db.createNewMovieEntry(movie);
+                        db.createOrUpdate(movie);
                     }
                 };
                 break;

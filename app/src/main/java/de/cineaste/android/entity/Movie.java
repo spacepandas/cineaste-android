@@ -19,6 +19,7 @@ public class Movie extends MovieDto implements Comparable<Movie> {
 	private long watchedDate;
 	@SerializedName("release_date")
 	private Date releaseDate;
+	private int listPosition;
 
 	public Movie() {
 		this.watched = false;
@@ -97,6 +98,14 @@ public class Movie extends MovieDto implements Comparable<Movie> {
 
 	public void setReleaseDate(Date releaseDate) {
 		this.releaseDate = releaseDate;
+	}
+
+	public int getListPosition() {
+		return listPosition;
+	}
+
+	public void setListPosition(int listPosition) {
+		this.listPosition = listPosition;
 	}
 
 	@Override

@@ -121,13 +121,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                     public void onSuccess(NetworkResponse response) {
                         Movie movie = gson.fromJson(response.getResponseReader(), Movie.class);
                         movie.setWatched(true);
-                        movieDbHelper.createNewMovieEntry(movie);
+                        movieDbHelper.createOrUpdate(movie);
                     }
                 };
                 break;
             case R.string.watchlistState:
                 currentMovie.setWatched(true);
-                movieDbHelper.update(currentMovie);
+                movieDbHelper.createOrUpdate(currentMovie);
                 break;
         }
 
@@ -156,7 +156,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(NetworkResponse response) {
-                        movieDbHelper.createNewMovieEntry(gson.fromJson(response.getResponseReader(), Movie.class));
+                        movieDbHelper.createOrUpdate(gson.fromJson(response.getResponseReader(), Movie.class));
                     }
                 };
                 break;
@@ -345,7 +345,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                         public void run() {
                             assignData(movie);
                             updateMovieDetails(movie);
-                            movieDbHelper.justUpdate(currentMovie);
+                            movieDbHelper.createOrUpdate(currentMovie);
                         }
                     });
                 }

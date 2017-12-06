@@ -108,11 +108,7 @@ public class ResultActivity extends AppCompatActivity implements ResultAdapter.O
 
     private void updateMovie( Movie movie) {
         movie.setWatched(true);
-        if (movieDbHelper.readMovie(movie.getId()) != null) {
-            movieDbHelper.update(movie);
-        } else {
-            movieDbHelper.createOrUpdate(movie);
-        }
+        movieDbHelper.createOrUpdate(movie);
     }
 
     private ArrayList<MatchingResult> getResult() {
