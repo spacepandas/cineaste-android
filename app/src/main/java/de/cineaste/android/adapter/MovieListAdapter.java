@@ -90,6 +90,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyItemInserted(position);
     }
 
+    public void onItemMove(int fromPosition, int toPosition) {
+        Movie prev = filteredDataSet.remove(fromPosition);
+        filteredDataSet.add(toPosition > fromPosition ? toPosition - 1 : toPosition, prev);
+        notifyItemMoved(fromPosition, toPosition);
+
+        //todo save new pos in db
+    }
+
     public int getDataSetSize() {
         return dataSet.size();
     }

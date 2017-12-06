@@ -14,8 +14,9 @@ import android.view.View;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.MovieListAdapter;
+import de.cineaste.android.viewholder.MovieViewHolder;
 
-public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
+public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     final private Paint p = new Paint();
     final private Resources resources;
@@ -24,7 +25,6 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Simple
     final RecyclerView recyclerView;
 
     BaseItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, MovieListAdapter movieListAdapter, RecyclerView recyclerView, Resources resources) {
-        super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.linearLayoutManager = linearLayoutManager;
         this.movieListAdapter = movieListAdapter;
         this.recyclerView = recyclerView;
@@ -33,13 +33,30 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Simple
 
     abstract BaseSnackBar getSnackBar();
     abstract int getRightSwipeMessage();
-
-
     abstract int getIcon();
 
     @Override
+    public boolean isLongPressDragEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isItemViewSwipeEnabled() {
+        return true;
+    }
+
+    @Override
+    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+
+        final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+        final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+        return makeMovementFlags(dragFlags, swipeFlags);
+    }
+
+    @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        return false;
+        movieListAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        return true;
     }
 
     @Override
@@ -80,6 +97,24 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Simple
             drawBackgroundForSwipe(color, c, background, icon_dest, iconId);
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    }
+
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+            MovieViewHolder movieViewHolder = (MovieViewHolder) viewHolder;
+            movieViewHolder.onItemSelected();
+        }
+
+        super.onSelectedChanged(viewHolder, actionState);
+    }
+
+    @Override
+    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+
+        MovieViewHolder movieViewHolder = (MovieViewHolder) viewHolder;
+        movieViewHolder.onItemClear();
     }
 
     private void drawBackgroundForSwipe(int color, Canvas c, RectF background, RectF icon_dest, int iconId) {
