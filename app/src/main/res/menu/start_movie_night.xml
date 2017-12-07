@@ -11,8 +11,11 @@
           android:title="@string/startMovieNight"
           android:icon="@drawable/ic_start_movienight"
           app:showAsAction="ifRoom"/>
-    <item android:id="@+id/filter"
+    <item android:id="@+id/filterAlphabetical"
         android:title="@string/sort_by_alpha"
         android:icon="@drawable/ic_sort_by_alpha"
+        app:showAsAction="never"/>
+    <item android:id="@+id/filterReleaseDate"
+        android:title="@string/sort_by_release"
         app:showAsAction="never"/>
 </menu>

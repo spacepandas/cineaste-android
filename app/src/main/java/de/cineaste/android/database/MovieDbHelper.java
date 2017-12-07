@@ -51,16 +51,26 @@ public class MovieDbHelper {
     }
 
     public List<Movie> reorderAlphabetical(WatchState state) {
+        return reorder(state, BaseDao.MovieEntry.COLUMN_MOVIE_TITLE + " ASC");
+    }
+
+    public List<Movie> reorderByReleaseDate(WatchState state) {
+        return reorder(state, BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE + " ASC");
+    }
+
+    private List<Movie> reorder(WatchState state, String orderBy) {
         String selectionArg = getSelectionArgs(state);
         String selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
         String[] selectionArgs = {selectionArg};
 
-        List<Movie> movies = movieDao.read(selection, selectionArgs, BaseDao.MovieEntry.COLUMN_MOVIE_TITLE + " ASC");
+        List<Movie> movies = movieDao.read(selection, selectionArgs, orderBy);
 
         for (int i = 0; i < movies.size(); i++) {
             Movie current = movies.get(i);
-            current.setListPosition(i);
-            updatePosition(current);
+            if (current.getListPosition() != i) {
+                current.setListPosition(i);
+                updatePosition(current);
+            }
         }
 
         return movies;

@@ -43,6 +43,7 @@
     <string name="watch_now">Jetzt anschauen</string>
     <string name="move_not_seen">Muss ich sehen</string>
     <string name="poster_reloaded">Poster mit höherer Auflösung geladen.</string>
-    <string name="sort_by_alpha">Alphabetisch sortieren</string>
+    <string name="sort_by_alpha">Sortieren nach Alphabet</string>
+    <string name="sort_by_release">Sortieren nach Erscheinungsdatum</string>
 
 </resources>

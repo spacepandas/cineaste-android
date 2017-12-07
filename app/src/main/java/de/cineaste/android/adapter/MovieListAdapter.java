@@ -94,6 +94,12 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         filteredDataSet = movies;
     }
 
+    public void orderByReleaseDate() {
+        List<Movie> movies = db.reorderByReleaseDate(state);
+        dataSet = movies;
+        filteredDataSet = movies;
+    }
+
     private Movie updatePositionsInDb(int fromPosition, int toPosition) {
         Movie passiveMovedMovie = filteredDataSet.get(toPosition);
 

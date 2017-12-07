@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -207,14 +208,21 @@ public class BaseMovieListFragment extends Fragment
                 }
 
                 break;
-            case R.id.filter:
-                movieListProgressbar.setVisibility(View.VISIBLE);
-                watchlistRecyclerView.enableScrolling(false);
-                new MovieSorterAsyncTask().execute(new AsyncTaskAttributes(movieListAdapter, movieListProgressbar, watchlistRecyclerView));
+            case R.id.filterAlphabetical:
+                reorderLists(FilterType.ALPHABETICAL);
+                break;
+            case R.id.filterReleaseDate:
+                reorderLists(FilterType.RELEASE_DATE);
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void reorderLists(FilterType filterType) {
+        movieListProgressbar.setVisibility(View.VISIBLE);
+        watchlistRecyclerView.enableScrolling(false);
+        new MovieSorterAsyncTask().execute(new AsyncTaskAttributes(movieListAdapter, movieListProgressbar, watchlistRecyclerView, filterType));
     }
 
     private void startMovieNight() {
@@ -294,8 +302,12 @@ public class BaseMovieListFragment extends Fragment
 
         @Override
         protected AsyncTaskAttributes doInBackground(AsyncTaskAttributes... asyncTaskAttributes) {
-            asyncTaskAttributes[0].getMovieListAdapter().orderAlphabetical();
-            return asyncTaskAttributes[0];
+            AsyncTaskAttributes asyncTaskAttribute = asyncTaskAttributes[0];
+            if (asyncTaskAttribute.getFilterType() == FilterType.ALPHABETICAL)
+                asyncTaskAttribute.getMovieListAdapter().orderAlphabetical();
+            else
+                asyncTaskAttribute.getMovieListAdapter().orderByReleaseDate();
+            return asyncTaskAttribute;
         }
 
         @Override
@@ -312,11 +324,13 @@ public class BaseMovieListFragment extends Fragment
         private MovieListAdapter movieListAdapter;
         private RelativeLayout progressBar;
         private CustomRecyclerView recyclerView;
+        private FilterType filterType;
 
-        AsyncTaskAttributes(MovieListAdapter movieListAdapter, RelativeLayout progressBar, CustomRecyclerView recyclerView) {
+        public AsyncTaskAttributes(MovieListAdapter movieListAdapter, RelativeLayout progressBar, CustomRecyclerView recyclerView, FilterType filterType) {
             this.movieListAdapter = movieListAdapter;
             this.progressBar = progressBar;
             this.recyclerView = recyclerView;
+            this.filterType = filterType;
         }
 
         MovieListAdapter getMovieListAdapter() {
@@ -330,5 +344,13 @@ public class BaseMovieListFragment extends Fragment
         CustomRecyclerView getRecyclerView() {
             return recyclerView;
         }
+
+        public FilterType getFilterType() {
+            return filterType;
+        }
+    }
+
+    private enum FilterType {
+        ALPHABETICAL, RELEASE_DATE
     }
 }

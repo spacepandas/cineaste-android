@@ -46,4 +46,5 @@ Special thanks to Philipp Wolf, for the design!
     <string name="watch_now">Watch now</string>
     <string name="poster_reloaded">Poster with higher resolution loaded</string>
     <string name="sort_by_alpha">Sort alphabetically</string>
+    <string name="sort_by_release">Sort by release date</string>
 </resources>
