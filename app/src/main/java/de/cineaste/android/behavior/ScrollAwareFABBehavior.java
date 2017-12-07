@@ -22,7 +22,8 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 			@NonNull FloatingActionButton child,
 			@NonNull View directTargetChild,
 			@NonNull View target,
-			int nestedScrollAxes) {
+			int nestedScrollAxes,
+			int type) {
 
 		return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL ||
 				super.onStartNestedScroll(
@@ -30,7 +31,8 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 						child,
 						directTargetChild,
 						target,
-						nestedScrollAxes);
+						nestedScrollAxes,
+						type);
 	}
 
 	@Override
@@ -41,7 +43,8 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 			int dxConsumed,
 			int dyConsumed,
 			int dxUnconsumed,
-			int dyUnconsumed) {
+			int dyUnconsumed,
+			int type) {
 		super.onNestedScroll(
 				coordinatorLayout,
 				child,
@@ -49,7 +52,8 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 				dxConsumed,
 				dyConsumed,
 				dxUnconsumed,
-				dyUnconsumed);
+				dyUnconsumed,
+				type);
 
 		if (dyConsumed > 0 && child.getVisibility() == View.VISIBLE) {
 			child.hide();
