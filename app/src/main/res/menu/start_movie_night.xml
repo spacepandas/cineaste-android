@@ -12,7 +12,7 @@
           android:icon="@drawable/ic_start_movienight"
           app:showAsAction="ifRoom"/>
     <item android:id="@+id/filter"
-        android:title="Alphabetisch Sortieren"
-        android:checkable="true"
+        android:title="@string/sort_by_alpha"
+        android:icon="@drawable/ic_sort_by_alpha"
         app:showAsAction="never"/>
 </menu>

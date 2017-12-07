@@ -54,7 +54,7 @@ class MovieDao extends BaseDao {
         return newRowId;
     }
 
-    List<Movie> read(String selection, String[] selectionArgs) {
+    List<Movie> read(String selection, String[] selectionArgs, String orderBy) {
         List<Movie> movies = new ArrayList<>();
 
         String[] projection = {
@@ -78,7 +78,7 @@ class MovieDao extends BaseDao {
                 selectionArgs,
                 null,
                 null,
-                MovieEntry.COLUMN_MOVIE_TITLE + " ASC",
+                orderBy,
                 null);
 
         if (c.moveToFirst()) {

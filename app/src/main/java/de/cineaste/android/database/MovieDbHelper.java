@@ -2,6 +2,7 @@ package de.cineaste.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -32,63 +33,88 @@ public class MovieDbHelper {
         String selection = BaseDao.MovieEntry._ID + " = ?";
         String[] selectionArgs = {Long.toString(movieId)};
 
-        List<Movie> movies = movieDao.read(selection, selectionArgs);
+        List<Movie> movies = movieDao.read(selection, selectionArgs, null);
 
         return movies.size() == 0 ? null : movies.get(0);
     }
 
     public List<Movie> readAllMovies() {
-        return movieDao.read(null, null);
+        return movieDao.read(null, null, null);
     }
 
     public List<Movie> readMoviesByWatchStatus(WatchState state) {
+        String selectionArg = getSelectionArgs(state);
+        String selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
+        String[] selectionArgs = {selectionArg};
+
+        return movieDao.read(selection, selectionArgs, BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION + " ASC");
+    }
+
+    public List<Movie> reorderAlphabetical(WatchState state) {
+        String selectionArg = getSelectionArgs(state);
+        String selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
+        String[] selectionArgs = {selectionArg};
+
+        List<Movie> movies = movieDao.read(selection, selectionArgs, BaseDao.MovieEntry.COLUMN_MOVIE_TITLE + " ASC");
+
+        for (int i = 0; i < movies.size(); i++) {
+            Movie current = movies.get(i);
+            current.setListPosition(i);
+            updatePosition(current);
+        }
+
+        return movies;
+    }
+
+    @NonNull
+    private String getSelectionArgs(WatchState state) {
         String selectionArg;
         if (state == WatchState.WATCH_STATE) {
             selectionArg = "0";
         } else {
             selectionArg = "1";
         }
-        String selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
-        String[] selectionArgs = {selectionArg};
-
-        return movieDao.read(selection, selectionArgs);
+        return selectionArg;
     }
 
     public void createOrUpdate(Movie movie) {
         String selection = BaseDao.MovieEntry._ID + " = ?";
         String[] selectionArgs = {Long.toString(movie.getId())};
-        List<Movie> movieList = movieDao.read(selection, selectionArgs);
+        List<Movie> movieList = movieDao.read(selection, selectionArgs, null);
 
         if (!movieList.isEmpty()) {
-            update(movie, movieList.get(0));
+            update(movie, getNewPosition(movie, movieList.get(0)));
         } else {
             movieDao.create(movie);
         }
+    }
 
+    public void updatePosition(Movie movie) {
+        update(movie, movie.getListPosition());
     }
 
     public void deleteMovieFromWatchlist(Movie movie) {
         movieDao.delete(movie.getId());
     }
 
-    private void update(Movie updatedMovie, Movie oldMovie) {
+    private void update(Movie movie, int listPosition) {
         ContentValues values = new ContentValues();
-        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, updatedMovie.isWatched() ? 1 : 0);
-        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, updatedMovie.getWatchedDate());
-        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_TITLE, updatedMovie.getTitle());
-        values.put(BaseDao.MovieEntry.COLUMN_RUNTIME, updatedMovie.getRuntime());
-        values.put(BaseDao.MovieEntry.COLUMN_VOTE_AVERAGE, updatedMovie.getVoteAverage());
-        values.put(BaseDao.MovieEntry.COLUMN_VOTE_COUNT, updatedMovie.getVoteCount());
-        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_DESCRIPTION, updatedMovie.getDescription());
-        values.put(BaseDao.MovieEntry.COlUMN_POSTER_PATH, updatedMovie.getPosterPath());
-        if (updatedMovie.getReleaseDate() != null) {
-            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, sdf.format(updatedMovie.getReleaseDate()));
+        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0);
+        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate());
+        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
+        values.put(BaseDao.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
+        values.put(BaseDao.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage());
+        values.put(BaseDao.MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount());
+        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_DESCRIPTION, movie.getDescription());
+        values.put(BaseDao.MovieEntry.COlUMN_POSTER_PATH, movie.getPosterPath());
+        if (movie.getReleaseDate() != null) {
+            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, sdf.format(movie.getReleaseDate()));
         } else {
             values.put(BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, "");
         }
-        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION, getNewPosition(updatedMovie, oldMovie));
+        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION, listPosition);
         String selection = BaseDao.MovieEntry._ID + " LIKE ?";
-        String[] where = {String.valueOf(updatedMovie.getId())};
+        String[] where = {String.valueOf(movie.getId())};
 
         movieDao.update(values, selection, where);
     }

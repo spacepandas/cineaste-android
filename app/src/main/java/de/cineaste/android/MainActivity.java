@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
     private void importMovies() {
         BaseMovieListFragment baseMovieListFragment = (BaseMovieListFragment) fm.findFragmentByTag(BaseMovieListFragment.class.getName());
+        baseMovieListFragment.getMovieListProgressbar().setVisibility(View.VISIBLE);
         new AsyncMovieImporter().execute(baseMovieListFragment);
     }
 
@@ -248,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
             super.onPostExecute(asyncAttributes);
             asyncAttributes.getSnackbar().show();
             asyncAttributes.getListFragment().updateAdapter();
+            asyncAttributes.getListFragment().getMovieListProgressbar().setVisibility(View.GONE);
         }
     }
 
