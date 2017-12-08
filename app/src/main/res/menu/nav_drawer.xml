@@ -3,7 +3,7 @@
     <group android:id="@+id/movie_lists">
         <item
             android:id="@+id/show_watchlist"
-            android:icon="@drawable/ic_eye_outline_white_48dp"
+            android:icon="@drawable/ic_add_to_watchlist_white"
             android:title="@string/watchList"/>
         <item
             android:id="@+id/show_watchedlist"

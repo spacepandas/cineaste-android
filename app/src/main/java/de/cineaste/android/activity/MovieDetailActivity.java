@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView movieRuntime;
     private NestedScrollView layout;
     private Runnable updateCallBack;
+    private Button deleteBtn;
+    private Button watchListBtn;
+    private Button watchedListBtn;
 
 
     @Override
@@ -71,7 +75,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             case R.string.watchedlistState:
                 delete.setVisible(true);
                 toWatchedList.setVisible(false);
-                toWatchList.setVisible(false);
+                toWatchList.setVisible(true);
                 break;
             case R.string.watchlistState:
                 delete.setVisible(true);
@@ -92,9 +96,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_delete:
-                movieDbHelper.deleteMovieFromWatchlist(currentMovie);
-                layout.removeCallbacks(updateCallBack);
-                onBackPressed();
+                onDeleteClicked();
                 return true;
             case R.id.action_to_watchedlist:
                 onAddToWatchedClicked();
@@ -104,6 +106,12 @@ public class MovieDetailActivity extends AppCompatActivity {
                 return true;
         }
         return true;
+    }
+
+    private void onDeleteClicked() {
+        movieDbHelper.deleteMovieFromWatchlist(currentMovie);
+        layout.removeCallbacks(updateCallBack);
+        onBackPressed();
     }
 
     private void onAddToWatchedClicked() {
@@ -135,10 +143,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (callback != null) {
             NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(currentMovie.getId()));
             client.sendRequest(callback);
+            Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
+                    currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
         }
 
-        Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
-                currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
         onBackPressed();
 
     }
@@ -160,15 +168,19 @@ public class MovieDetailActivity extends AppCompatActivity {
                     }
                 };
                 break;
+            case R.string.watchedlistState:
+                currentMovie.setWatched(false);
+                movieDbHelper.createOrUpdate(currentMovie);
+                break;
         }
 
         if (callback != null) {
             NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(currentMovie.getId()));
             client.sendRequest(callback);
+            Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
+                    currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
         }
 
-        Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
-                currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
 
@@ -183,12 +195,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieId = intent.getLongExtra(BaseDao.MovieEntry._ID, -1);
         state = intent.getIntExtra(getString(R.string.state), -1);
 
-        movieReleaseDate = findViewById(R.id.movieReleaseDate);
-        moviePoster = findViewById(R.id.movie_poster);
-        rating = findViewById(R.id.rating);
-        movieTitle = findViewById(R.id.movieTitle);
-        movieRuntime = findViewById(R.id.movieRuntime);
-        layout = findViewById(R.id.overlay);
+        initViews();
 
         movieDbHelper = MovieDbHelper.getInstance(this);
 
@@ -213,6 +220,59 @@ public class MovieDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void initViews() {
+        movieReleaseDate = findViewById(R.id.movieReleaseDate);
+        moviePoster = findViewById(R.id.movie_poster);
+        rating = findViewById(R.id.rating);
+        movieTitle = findViewById(R.id.movieTitle);
+        movieRuntime = findViewById(R.id.movieRuntime);
+        layout = findViewById(R.id.overlay);
+
+        deleteBtn = findViewById(R.id.delete_button);
+        watchedListBtn = findViewById(R.id.watched_button);
+        watchListBtn = findViewById(R.id.to_watchlist_button);
+
+        switch (state) {
+            case R.string.searchState:
+                deleteBtn.setVisibility(View.GONE);
+                watchedListBtn.setVisibility(View.VISIBLE);
+                watchListBtn.setVisibility(View.VISIBLE);
+                break;
+            case R.string.watchedlistState:
+                deleteBtn.setVisibility(View.VISIBLE);
+                watchedListBtn.setVisibility(View.GONE);
+                watchListBtn.setVisibility(View.VISIBLE);
+                break;
+            case R.string.watchlistState:
+                deleteBtn.setVisibility(View.VISIBLE);
+                watchedListBtn.setVisibility(View.VISIBLE);
+                watchListBtn.setVisibility(View.GONE);
+                break;
+        }
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onDeleteClicked();
+            }
+        });
+
+        watchedListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddToWatchedClicked();
+            }
+        });
+
+        watchListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddToWatchClicked();
+            }
+        });
+
     }
 
     @Override

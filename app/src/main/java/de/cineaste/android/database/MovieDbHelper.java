@@ -51,29 +51,24 @@ public class MovieDbHelper {
     }
 
     public List<Movie> reorderAlphabetical(WatchState state) {
-        return reorder(state, BaseDao.MovieEntry.COLUMN_MOVIE_TITLE + " ASC");
+        return reorder(state, BaseDao.MovieEntry.COLUMN_MOVIE_TITLE);
     }
 
     public List<Movie> reorderByReleaseDate(WatchState state) {
-        return reorder(state, BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE + " ASC");
+        return reorder(state, BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE);
     }
 
     private List<Movie> reorder(WatchState state, String orderBy) {
-        String selectionArg = getSelectionArgs(state);
-        String selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?";
-        String[] selectionArgs = {selectionArg};
+        String sql = "UPDATE " + BaseDao.MovieEntry.TABLE_NAME +
+                " SET " + BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION + " = ( " +
+                    "SELECT COUNT(*) " +
+                    "FROM " + BaseDao.MovieEntry.TABLE_NAME + " AS t2 " +
+                    "WHERE t2." + orderBy + " <= " + BaseDao.MovieEntry.TABLE_NAME + "." + orderBy +
+                    " ) " +
+                "WHERE " + BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = " + getSelectionArgs(state);
+        movieDao.reorder(sql);
 
-        List<Movie> movies = movieDao.read(selection, selectionArgs, orderBy);
-
-        for (int i = 0; i < movies.size(); i++) {
-            Movie current = movies.get(i);
-            if (current.getListPosition() != i) {
-                current.setListPosition(i);
-                updatePosition(current);
-            }
-        }
-
-        return movies;
+        return readMoviesByWatchStatus(state);
     }
 
     @NonNull

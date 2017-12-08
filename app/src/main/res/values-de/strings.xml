@@ -45,5 +45,6 @@
     <string name="poster_reloaded">Poster mit höherer Auflösung geladen.</string>
     <string name="sort_by_alpha">Sortieren nach Alphabet</string>
     <string name="sort_by_release">Sortieren nach Erscheinungsdatum</string>
+    <string name="delete">Löschen</string>
 
 </resources>

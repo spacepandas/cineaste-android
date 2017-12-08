@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     private View contentContainer;
     private UserDbHelper userDbHelper;
     private static MovieDbHelper movieDbHelper;
+    private TextView userName;
+    private User user;
 
     private DrawerLayout drawerLayout;
 
@@ -110,6 +112,16 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        user = userDbHelper.getUser();
+        if (user != null && userName != null) {
+            userName.setText(user.getUserName());
+        }
+    }
+
     private void replaceFragment(FragmentManager fm, Fragment fragment) {
         fm.beginTransaction()
                 .replace(
@@ -146,11 +158,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new CustomDrawerClickListener());
 
-        User user = userDbHelper.getUser();
-        TextView usernameTv = navigationView.getHeaderView(0).findViewById(R.id.username);
-        if (user != null) {
-            usernameTv.setText(user.getUserName());
-        }
+        userName = navigationView.getHeaderView(0).findViewById(R.id.username);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(

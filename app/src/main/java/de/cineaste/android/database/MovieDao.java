@@ -28,6 +28,10 @@ class MovieDao extends BaseDao {
         return mInstance;
     }
 
+    void reorder(String statement) {
+        writeDb.execSQL(statement);
+    }
+
     long create(Movie movie) {
         ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, movie.getId());

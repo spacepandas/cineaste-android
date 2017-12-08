@@ -220,6 +220,8 @@ public class BaseMovieListFragment extends Fragment
     }
 
     private void reorderLists(FilterType filterType) {
+//        watchlistRecyclerView.smoothScrollToPosition(0);
+
         movieListProgressbar.setVisibility(View.VISIBLE);
         watchlistRecyclerView.enableScrolling(false);
         new MovieSorterAsyncTask().execute(new AsyncTaskAttributes(movieListAdapter, movieListProgressbar, watchlistRecyclerView, filterType));

@@ -1,12 +1,11 @@
 package de.cineaste.android.controllFlow;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -18,7 +17,6 @@ import de.cineaste.android.viewholder.MovieViewHolder;
 
 public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    final private Paint p = new Paint();
     final private Resources resources;
     final LinearLayoutManager linearLayoutManager;
     final MovieListAdapter movieListAdapter;
@@ -32,7 +30,9 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callba
     }
 
     abstract BaseSnackBar getSnackBar();
+
     abstract int getRightSwipeMessage();
+
     abstract int getIcon();
 
     @Override
@@ -76,25 +76,45 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callba
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
 
             View itemView = viewHolder.itemView;
-            float height = (float) itemView.getBottom() - (float) itemView.getTop();
-            float width = height / 3;
 
-            int color;
-            RectF background;
-            RectF icon_dest;
-            int iconId;
+            Drawable icon;
+            Drawable background;
+
+            int iconMargin = 48;
+            int iconLeft;
+            int iconRight;
+            int intrinsicWidth;
             if (dX > 0) {
-                color = Color.parseColor("green");
-                background = getBackground(itemView, itemView.getLeft(), dX);
-                icon_dest = getIconDest(itemView, width, (float) itemView.getLeft() + width, (float) itemView.getLeft() + 2 * width);
-                iconId = getIcon();
+                icon = resources.getDrawable(getIcon());
+                background = new ColorDrawable(resources.getColor(R.color.colorAccent));
+
+                intrinsicWidth = icon.getIntrinsicWidth();
+
+                iconLeft = itemView.getLeft() + iconMargin;
+                iconRight = itemView.getLeft() + iconMargin + intrinsicWidth;
+                icon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
             } else {
-                color = Color.parseColor("red");
-                background = getBackground(itemView, (float) itemView.getRight() + dX, (float) itemView.getRight());
-                icon_dest = getIconDest(itemView, width, (float) itemView.getRight() - 2 * width, (float) itemView.getRight() - width);
-                iconId = R.drawable.ic_delete_white;
+                icon = resources.getDrawable(R.drawable.ic_delete_white);
+                background = new ColorDrawable(resources.getColor(R.color.colorPrimary));
+
+                intrinsicWidth = icon.getIntrinsicWidth();
+
+                iconLeft = itemView.getRight() - iconMargin - intrinsicWidth;
+                iconRight = itemView.getRight() - iconMargin;
+                icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
             }
-            drawBackgroundForSwipe(color, c, background, icon_dest, iconId);
+
+            int itemHeight = itemView.getBottom() - itemView.getTop();
+            int intrinsicHeight = icon.getIntrinsicHeight();
+            int iconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+            int iconBottom = iconTop + intrinsicHeight;
+
+            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+
+            background.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getRight(), itemView.getBottom());
+
+            background.draw(c);
+            icon.draw(c);
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
@@ -115,21 +135,5 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callba
 
         MovieViewHolder movieViewHolder = (MovieViewHolder) viewHolder;
         movieViewHolder.onItemClear();
-    }
-
-    private void drawBackgroundForSwipe(int color, Canvas c, RectF background, RectF icon_dest, int iconId) {
-        Bitmap icon;
-        p.setColor(color);
-        c.drawRect(background, p);
-        icon = BitmapFactory.decodeResource(resources, iconId);
-        c.drawBitmap(icon, null, icon_dest, p);
-    }
-
-    private RectF getBackground(View itemView, float left, float right) {
-        return new RectF(left, (float) itemView.getTop(), right, (float) itemView.getBottom());
-    }
-
-    private RectF getIconDest(View itemView, float width, float left, float right) {
-        return new RectF(left, (float) itemView.getTop() + width, right, (float) itemView.getBottom() - width);
     }
 }
