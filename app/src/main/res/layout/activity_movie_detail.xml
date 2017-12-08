@@ -19,7 +19,8 @@
             android:contentDescription="@string/moviePoster"
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder_poster"
-            android:transitionName="poster" />
+            android:transitionName="poster"
+            tools:targetApi="lollipop" />
 
         <ImageView
             android:scaleType="fitXY"

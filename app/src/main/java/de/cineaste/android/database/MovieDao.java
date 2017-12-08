@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.fragment.WatchState;
 
 class MovieDao extends BaseDao {
     private final SimpleDateFormat sdf;
@@ -32,7 +31,7 @@ class MovieDao extends BaseDao {
         writeDb.execSQL(statement);
     }
 
-    long create(Movie movie) {
+    void create(Movie movie) {
         ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, movie.getId());
         values.put(MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
@@ -49,13 +48,9 @@ class MovieDao extends BaseDao {
             values.put(MovieEntry.COLUMN_MOVIE_RELEASE_DATE, "");
         }
 
-
         values.put(MovieEntry.COLUMN_MOVIE_LIST_POSITION, getHighestListPosition(movie.isWatched()) + 1);
 
-        long newRowId;
-        newRowId = writeDb.insert(MovieEntry.TABLE_NAME, null, values);
-
-        return newRowId;
+        writeDb.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
     List<Movie> read(String selection, String[] selectionArgs, String orderBy) {
@@ -123,8 +118,8 @@ class MovieDao extends BaseDao {
         return movies;
     }
 
-    int update(ContentValues values, String selection, String[] selectionArgs) {
-        return writeDb.update(MovieEntry.TABLE_NAME, values, selection, selectionArgs);
+    void update(ContentValues values, String selection, String[] selectionArgs) {
+        writeDb.update(MovieEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     void delete(long id) {

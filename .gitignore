@@ -4,7 +4,4 @@
 /.idea/
 build
 gradle.properties
-projectFilesBackup
-.DS_Store
 app/src/main/res/values/secrets.xml
-app/build

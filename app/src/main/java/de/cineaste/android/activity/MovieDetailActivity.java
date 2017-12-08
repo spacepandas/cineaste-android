@@ -1,6 +1,9 @@
 package de.cineaste.android.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -53,9 +56,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView movieRuntime;
     private NestedScrollView layout;
     private Runnable updateCallBack;
-    private Button deleteBtn;
-    private Button watchListBtn;
-    private Button watchedListBtn;
 
 
     @Override
@@ -65,6 +65,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         MenuItem toWatchList = menu.findItem(R.id.action_to_watchlist);
         MenuItem toWatchedList = menu.findItem(R.id.action_to_watchedlist);
         MenuItem delete = menu.findItem(R.id.action_delete);
+
+        for(int i = 0; i < menu.size(); i++){
+            Drawable drawable = menu.getItem(i).getIcon();
+            if(drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
 
         switch (state) {
             case R.string.searchState:
@@ -230,9 +238,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieRuntime = findViewById(R.id.movieRuntime);
         layout = findViewById(R.id.overlay);
 
-        deleteBtn = findViewById(R.id.delete_button);
-        watchedListBtn = findViewById(R.id.watched_button);
-        watchListBtn = findViewById(R.id.to_watchlist_button);
+        Button deleteBtn = findViewById(R.id.delete_button);
+        Button watchedListBtn = findViewById(R.id.watched_button);
+        Button watchListBtn = findViewById(R.id.to_watchlist_button);
 
         switch (state) {
             case R.string.searchState:

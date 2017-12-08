@@ -156,8 +156,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class FilterMovies extends Filter {
 
         private final MovieListAdapter adapter;
-        List<Movie> movieList;
-        List<Movie> filteredMovieList;
+        final List<Movie> movieList;
+        final List<Movie> filteredMovieList;
 
         FilterMovies(MovieListAdapter adapter, List<Movie> movieList) {
             this.adapter = adapter;

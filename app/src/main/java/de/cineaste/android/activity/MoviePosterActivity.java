@@ -22,7 +22,7 @@ import de.markusfisch.android.scalingimageview.widget.ScalingImageView;
 
 public class MoviePosterActivity extends AppCompatActivity {
 
-    public static String POSTER_PATH = "posterPath";
+    public final static String POSTER_PATH = "posterPath";
 
     private ScalingImageView moviePoster;
     private String posterPath;

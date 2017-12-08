@@ -40,6 +40,7 @@ abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
         view = itemView;
     }
 
+    @SuppressWarnings("unused")
     public abstract void assignData(final Movie movie);
 
     void setBaseInformation(Movie movie) {

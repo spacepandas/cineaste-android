@@ -3,6 +3,8 @@ package de.cineaste.android;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +20,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -44,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     private UserDbHelper userDbHelper;
     private static MovieDbHelper movieDbHelper;
     private TextView userName;
-    private User user;
 
     private DrawerLayout drawerLayout;
 
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     protected void onResume() {
         super.onResume();
 
-        user = userDbHelper.getUser();
+        User user = userDbHelper.getUser();
         if (user != null && userName != null) {
             userName.setText(user.getUserName());
         }
@@ -157,6 +159,15 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     private void initNavDrawer() {
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new CustomDrawerClickListener());
+
+        Menu menu = navigationView.getMenu();
+        for(int i = 0; i < menu.size(); i++){
+            Drawable drawable = menu.getItem(i).getIcon();
+            if(drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
 
         userName = navigationView.getHeaderView(0).findViewById(R.id.username);
 

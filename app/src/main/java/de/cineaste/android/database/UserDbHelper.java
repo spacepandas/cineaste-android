@@ -23,11 +23,11 @@ public class UserDbHelper extends BaseDao {
 	}
 
 
-	public long createUser(User user) {
+	public void createUser(User user) {
 		ContentValues values = new ContentValues();
 		values.put(UserEntry.COLUMN_USER_NAME, user.getUserName());
 
-		return writeDb.insert(UserEntry.TABLE_NAME, null, values);
+		writeDb.insert(UserEntry.TABLE_NAME, null, values);
 	}
 
 	public User getUser() {

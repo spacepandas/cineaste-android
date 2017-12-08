@@ -3,7 +3,6 @@ package de.cineaste.android.fragment;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -220,11 +218,22 @@ public class BaseMovieListFragment extends Fragment
     }
 
     private void reorderLists(FilterType filterType) {
-//        watchlistRecyclerView.smoothScrollToPosition(0);
-
         movieListProgressbar.setVisibility(View.VISIBLE);
         watchlistRecyclerView.enableScrolling(false);
-        new MovieSorterAsyncTask().execute(new AsyncTaskAttributes(movieListAdapter, movieListProgressbar, watchlistRecyclerView, filterType));
+
+        switch (filterType) {
+            case ALPHABETICAL:
+                movieListAdapter.orderAlphabetical();
+                break;
+            case RELEASE_DATE:
+                movieListAdapter.orderByReleaseDate();
+                break;
+        }
+
+        movieListAdapter.notifyDataSetChanged();
+        movieListProgressbar.setVisibility(View.GONE);
+        watchlistRecyclerView.enableScrolling(true);
+
     }
 
     private void startMovieNight() {
@@ -297,58 +306,6 @@ public class BaseMovieListFragment extends Fragment
             return new WatchlistItemTouchHelperCallback(layoutManager, movieListAdapter, watchlistRecyclerView, getResources());
         } else {
             return new WatchedlistItemTouchHelperCallback(layoutManager, movieListAdapter, watchlistRecyclerView, getResources());
-        }
-    }
-
-    private static class MovieSorterAsyncTask extends AsyncTask<AsyncTaskAttributes, Void, AsyncTaskAttributes> {
-
-        @Override
-        protected AsyncTaskAttributes doInBackground(AsyncTaskAttributes... asyncTaskAttributes) {
-            AsyncTaskAttributes asyncTaskAttribute = asyncTaskAttributes[0];
-            if (asyncTaskAttribute.getFilterType() == FilterType.ALPHABETICAL)
-                asyncTaskAttribute.getMovieListAdapter().orderAlphabetical();
-            else
-                asyncTaskAttribute.getMovieListAdapter().orderByReleaseDate();
-            return asyncTaskAttribute;
-        }
-
-        @Override
-        protected void onPostExecute(AsyncTaskAttributes asyncTaskAttributes) {
-            super.onPostExecute(asyncTaskAttributes);
-
-            asyncTaskAttributes.getProgressBar().setVisibility(View.GONE);
-            asyncTaskAttributes.getMovieListAdapter().notifyDataSetChanged();
-            asyncTaskAttributes.getRecyclerView().enableScrolling(true);
-        }
-    }
-
-    private class AsyncTaskAttributes {
-        private MovieListAdapter movieListAdapter;
-        private RelativeLayout progressBar;
-        private CustomRecyclerView recyclerView;
-        private FilterType filterType;
-
-        public AsyncTaskAttributes(MovieListAdapter movieListAdapter, RelativeLayout progressBar, CustomRecyclerView recyclerView, FilterType filterType) {
-            this.movieListAdapter = movieListAdapter;
-            this.progressBar = progressBar;
-            this.recyclerView = recyclerView;
-            this.filterType = filterType;
-        }
-
-        MovieListAdapter getMovieListAdapter() {
-            return movieListAdapter;
-        }
-
-        RelativeLayout getProgressBar() {
-            return progressBar;
-        }
-
-        CustomRecyclerView getRecyclerView() {
-            return recyclerView;
-        }
-
-        public FilterType getFilterType() {
-            return filterType;
         }
     }
 

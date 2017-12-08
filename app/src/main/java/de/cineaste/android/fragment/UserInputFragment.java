@@ -1,6 +1,7 @@
 package de.cineaste.android.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ public class UserInputFragment extends DialogFragment
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_user_input, container);
@@ -61,6 +62,9 @@ public class UserInputFragment extends DialogFragment
 
 		if (!input.isEmpty()) {
 			UserNameListener activity = (UserNameListener) getActivity();
+			if (activity == null) {
+				return;
+			}
 			activity.onFinishUserDialog(input);
 			this.dismiss();
 		}

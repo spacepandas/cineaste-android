@@ -9,7 +9,7 @@
         android:title="@string/search"/>
     <item android:id="@+id/startMovieNight"
           android:title="@string/startMovieNight"
-          android:icon="@drawable/ic_start_movienight"
+          android:icon="@drawable/ic_tap_and_play"
           app:showAsAction="ifRoom"/>
     <item android:id="@+id/filterAlphabetical"
         android:title="@string/sort_by_alpha"
