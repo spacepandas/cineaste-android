@@ -9,14 +9,17 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-import de.cineaste.android.listener.MovieClickListener;
 import de.cineaste.android.R;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.fragment.WatchState;
+import de.cineaste.android.listener.MovieClickListener;
 import de.cineaste.android.listener.OnMovieRemovedListener;
 import de.cineaste.android.viewholder.MovieViewHolder;
 
@@ -29,6 +32,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final WatchState state;
     private List<Movie> dataSet = new ArrayList<>();
     private List<Movie> filteredDataSet;
+
+    private final Queue<UpdatedMovies> updatedMovies = new LinkedBlockingQueue<>();
 
     public MovieListAdapter(DisplayMessage displayMessage, Context context, MovieClickListener listener, WatchState state) {
         this.displayMessage = displayMessage;
@@ -82,10 +87,21 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void onItemMove(int fromPosition, int toPosition) {
-        Movie prev = updatePositionsInDb(fromPosition, toPosition);
+        updateMoviePositionsAndAddToQueue(fromPosition, toPosition);
 
-        filteredDataSet.add(toPosition > fromPosition ? toPosition - 1 : toPosition, prev);
+        Collections.swap(filteredDataSet, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    private void updateMoviePositionsAndAddToQueue(int fromPosition, int toPosition) {
+        Movie passiveMovedMovie = filteredDataSet.remove(toPosition);
+        passiveMovedMovie.setListPosition(fromPosition);
+        filteredDataSet.add(toPosition, passiveMovedMovie);
+
+        Movie prev = filteredDataSet.remove(fromPosition);
+        prev.setListPosition(toPosition);
+        filteredDataSet.add(fromPosition, prev);
+        updatedMovies.add(new UpdatedMovies(prev, passiveMovedMovie));
     }
 
     public void orderAlphabetical() {
@@ -100,19 +116,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         filteredDataSet = movies;
     }
 
-    private Movie updatePositionsInDb(int fromPosition, int toPosition) {
-        Movie passiveMovedMovie = filteredDataSet.get(toPosition);
+    public void updatePositionsInDb() {
+        while (updatedMovies.iterator().hasNext()) {
+            UpdatedMovies movies = updatedMovies.poll();
+            db.updatePosition(movies.getPrev());
+            db.updatePosition(movies.getPassiveMovie());
+        }
 
-        int tempListPos = passiveMovedMovie.getListPosition();
-
-        Movie prev = filteredDataSet.remove(fromPosition);
-        passiveMovedMovie.setListPosition(prev.getListPosition());
-        prev.setListPosition(tempListPos);
-
-        db.updatePosition(passiveMovedMovie);
-        db.updatePosition(prev);
-
-        return prev;
     }
 
     public int getDataSetSize() {
@@ -196,4 +206,23 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             adapter.notifyDataSetChanged();
         }
     }
+
+    public class UpdatedMovies {
+        private Movie prev;
+        private Movie passiveMovie;
+
+        public UpdatedMovies(Movie prev, Movie passiveMovie) {
+            this.prev = prev;
+            this.passiveMovie = passiveMovie;
+        }
+
+        public Movie getPrev() {
+            return prev;
+        }
+
+        public Movie getPassiveMovie() {
+            return passiveMovie;
+        }
+    }
+
 }

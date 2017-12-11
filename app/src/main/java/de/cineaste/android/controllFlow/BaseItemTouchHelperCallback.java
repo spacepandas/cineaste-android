@@ -135,5 +135,7 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callba
 
         MovieViewHolder movieViewHolder = (MovieViewHolder) viewHolder;
         movieViewHolder.onItemClear();
+
+        movieListAdapter.updatePositionsInDb();
     }
 }
