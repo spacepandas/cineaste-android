@@ -15,12 +15,12 @@ import java.util.Date;
 import de.cineaste.android.util.Constants;
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.listener.MovieClickListener;
+import de.cineaste.android.listener.ItemClickListener;
 
-abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
+abstract class AbstractMovieViewHolder extends RecyclerView.ViewHolder {
 
     final TextView movieRuntime;
-    final MovieClickListener listener;
+    final ItemClickListener listener;
     final TextView movieTitle;
     final ImageView moviePoster;
     final View view;
@@ -28,7 +28,7 @@ abstract class AbstractViewHolder extends RecyclerView.ViewHolder {
     private final Context context;
     private final TextView movieReleaseDate;
 
-    AbstractViewHolder(View itemView, Context context, MovieClickListener listener) {
+    AbstractMovieViewHolder(View itemView, Context context, ItemClickListener listener) {
         super(itemView);
         this.context = context;
         this.listener = listener;

@@ -2,11 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/movie_lists">
         <item
-            android:id="@+id/show_watchlist"
+            android:title="@string/movies"/>
+        <item
+            android:id="@+id/show_movie_watchlist"
             android:icon="@drawable/ic_add_to_watchlist_white"
             android:title="@string/watchList"/>
         <item
-            android:id="@+id/show_watchedlist"
+            android:id="@+id/show_movie_watchedlist"
+            android:icon="@drawable/ic_add_to_watchedlist_white"
+            android:title="@string/watchedlist"/>
+    </group>
+
+    <group android:id="@+id/series_lists">
+        <item
+            android:title="@string/series"/>
+        <item
+            android:id="@+id/show_series_watchlist"
+            android:icon="@drawable/ic_add_to_watchlist_white"
+            android:title="@string/watchList"/>
+        <item
+            android:id="@+id/show_series_watchedlist"
             android:icon="@drawable/ic_add_to_watchedlist_white"
             android:title="@string/watchedlist"/>
     </group>

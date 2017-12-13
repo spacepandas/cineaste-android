@@ -149,7 +149,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
         if (callback != null) {
-            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(currentMovie.getId()));
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getMovie(currentMovie.getId()));
             client.sendRequest(callback);
             Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
                     currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
@@ -183,7 +183,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         if (callback != null) {
-            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(currentMovie.getId()));
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getMovie(currentMovie.getId()));
             client.sendRequest(callback);
             Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
                     currentMovie.getTitle()), Toast.LENGTH_SHORT).show();
@@ -290,7 +290,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void loadRequestedMovie() {
-        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(movieId));
+        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getMovie(movieId));
         client.sendRequest(new NetworkCallback() {
             @Override
             public void onFailure() {
@@ -393,7 +393,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void updateMovie() {
         if (state != R.string.searchState) {
-            final NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(movieId));
+            final NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getMovie(movieId));
             client.sendRequest(new NetworkCallback() {
                 @Override
                 public void onFailure() {

@@ -46,5 +46,9 @@
     <string name="sort_by_alpha">Sortieren nach Alphabet</string>
     <string name="sort_by_release">Sortieren nach Erscheinungsdatum</string>
     <string name="delete">Löschen</string>
+    <string name="movies">Filme</string>
+    <string name="series">Serien</string>
+    <string name="seasons">Staffeln: %s</string>
+    <string name="currentStatus">Mein Stand: Staffel %s, Episode %s</string>
 
 </resources>

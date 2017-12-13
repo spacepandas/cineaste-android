@@ -7,13 +7,13 @@ import android.widget.TextView;
 
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.listener.MovieClickListener;
+import de.cineaste.android.listener.ItemClickListener;
 
-public class MovieViewHolder extends AbstractViewHolder {
+public class MovieViewHolder extends AbstractMovieViewHolder {
 
     private final TextView movieVote;
 
-    public MovieViewHolder(View itemView, Context context, MovieClickListener listener) {
+    public MovieViewHolder(View itemView, Context context, ItemClickListener listener) {
         super(itemView, context, listener);
 
         movieVote = itemView.findViewById(R.id.movie_vote);
@@ -30,7 +30,7 @@ public class MovieViewHolder extends AbstractViewHolder {
             @Override
             public void onClick(View v) {
                 if (listener != null)
-                    listener.onMovieClickListener(movie.getId(),
+                    listener.onItemClickListener(movie.getId(),
                             new View[]{view, moviePoster, movieTitle, movieRuntime, movieVote});
             }
         });

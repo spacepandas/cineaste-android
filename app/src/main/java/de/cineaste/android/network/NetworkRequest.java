@@ -21,14 +21,38 @@ public class NetworkRequest {
 
 	}
 
-	public NetworkRequest get(long movieID) {
+	public NetworkRequest getMovie(long movieID) {
 		this.requestBuilder.url(baseUrl + "/movie/" + movieID + "?" + staticQueryParams);
 		this.requestBuilder.header("accept", "application/json");
 		return this;
 	}
 
-	public NetworkRequest search(String query) {
+	public NetworkRequest searchMovie(String query) {
 		this.requestBuilder.url(baseUrl + "/search/movie?query=" + query + "&" + staticQueryParams);
+		this.requestBuilder.header("accept", "application/json");
+		return this;
+	}
+
+	public NetworkRequest getUpcomingMovies() {
+		this.requestBuilder.url(baseUrl + "/movie/upcoming?" + staticQueryParams);
+		this.requestBuilder.header("accept", "application/json");
+		return this;
+	}
+
+	public NetworkRequest getSeries(long seriesId) {
+		this.requestBuilder.url(baseUrl + "/tv/" + seriesId + "?" + staticQueryParams);
+		this.requestBuilder.header("accept", "application/json");
+		return this;
+	}
+
+	public NetworkRequest searchSeries(String query) {
+		this.requestBuilder.url(baseUrl + "/search/tv?query=" + query + "&" + staticQueryParams);
+		this.requestBuilder.header("accept", "application/json");
+		return this;
+	}
+
+	public NetworkRequest getPopularSeries() {
+		this.requestBuilder.url(baseUrl + "/tv/popular?" + staticQueryParams);
 		this.requestBuilder.header("accept", "application/json");
 		return this;
 	}

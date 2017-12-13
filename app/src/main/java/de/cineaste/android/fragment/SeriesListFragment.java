@@ -1,11 +1,11 @@
 package de.cineaste.android.fragment;
 
+
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,8 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,31 +24,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.cineaste.android.R;
-import de.cineaste.android.activity.MovieDetailActivity;
 import de.cineaste.android.activity.MovieNightActivity;
-import de.cineaste.android.activity.MovieSearchActivity;
-import de.cineaste.android.adapter.MovieListAdapter;
-import de.cineaste.android.controllFlow.BaseItemTouchHelperCallback;
-import de.cineaste.android.controllFlow.WatchedlistItemTouchHelperCallback;
-import de.cineaste.android.controllFlow.WatchlistItemTouchHelperCallback;
-import de.cineaste.android.database.BaseDao;
+import de.cineaste.android.activity.SeriesSearchActivity;
+import de.cineaste.android.adapter.SeriesListAdapter;
 import de.cineaste.android.database.UserDbHelper;
-import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.util.CustomRecyclerView;
 
-import static android.app.ActivityOptions.makeSceneTransitionAnimation;
-
-public class BaseMovieListFragment extends Fragment
-        implements ItemClickListener, MovieListAdapter.DisplayMessage {
+public class SeriesListFragment extends Fragment implements SeriesListAdapter.DisplayMessage {
 
     private WatchState watchState;
-
-    private CustomRecyclerView watchlistRecyclerView;
+    private CustomRecyclerView customRecyclerView;
     private LinearLayoutManager layoutManager;
-    private MovieListAdapter movieListAdapter;
     private TextView emptyListTextView;
     private UserDbHelper userDbHelper;
-    private RelativeLayout movieListProgressbar;
+    private RelativeLayout progressbar;
+    private SeriesListAdapter seriesListAdapter;
 
     @Override
     public void setArguments(Bundle args) {
@@ -73,36 +61,38 @@ public class BaseMovieListFragment extends Fragment
     }
 
     public void updateAdapter() {
-        movieListAdapter.updateDataSet();
+        seriesListAdapter.updateDataSet();
     }
 
     public View getRecyclerView() {
-        return watchlistRecyclerView;
+        return customRecyclerView;
     }
 
     public RelativeLayout getMovieListProgressbar() {
-        return movieListProgressbar;
+        return progressbar;
     }
 
+
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final Activity activity = getActivity();
 
         View watchlistView = initViews(inflater, container);
 
         if (activity != null) {
-            movieListAdapter = new MovieListAdapter(this, activity, this, watchState);
+            seriesListAdapter = new SeriesListAdapter(this, activity, null, watchState);
             showMessageIfEmptyList();
 
-            watchlistRecyclerView.setLayoutManager(layoutManager);
-            watchlistRecyclerView.setAdapter(movieListAdapter);
+            customRecyclerView.setLayoutManager(layoutManager);
+            customRecyclerView.setAdapter(seriesListAdapter);
 
             FloatingActionButton fab = watchlistView.findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), MovieSearchActivity.class);
+                    Intent intent = new Intent(getActivity(), SeriesSearchActivity.class);
                     activity.startActivity(intent);
                 }
             });
@@ -116,28 +106,27 @@ public class BaseMovieListFragment extends Fragment
             }
             ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
             if (actionBar != null)
-                actionBar.setSubtitle(R.string.movies);
+                actionBar.setSubtitle(R.string.series);
         }
-
 
         return watchlistView;
     }
 
     private View initViews(@NonNull LayoutInflater inflater, ViewGroup container) {
-        View watchlistView = inflater.inflate(R.layout.fragment_movielist, container, false);
+        View watchListView = inflater.inflate(R.layout.fragment_series_list, container, false);
 
-        movieListProgressbar = watchlistView.findViewById(R.id.movieListProgressBar);
-        movieListProgressbar.setVisibility(View.GONE);
+        progressbar = watchListView.findViewById(R.id.progressBar);
+        progressbar.setVisibility(View.GONE);
 
-        emptyListTextView = watchlistView.findViewById(R.id.info_text);
+        emptyListTextView = watchListView.findViewById(R.id.info_text);
 
-        watchlistRecyclerView = watchlistView.findViewById(R.id.recycler_view);
+        customRecyclerView = watchListView.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
 
-        watchlistRecyclerView.setHasFixedSize(true);
-        return watchlistView;
-    }
+        customRecyclerView.setHasFixedSize(true);
 
+        return watchListView;
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -146,15 +135,15 @@ public class BaseMovieListFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (savedInstanceState != null) {
             String currentState = savedInstanceState.getString(WatchState.WATCH_STATE_TYPE.name(), WatchState.WATCH_STATE.name());
             this.watchState = getWatchState(currentState);
-        }
 
-        userDbHelper = UserDbHelper.getInstance(getActivity());
+            userDbHelper = UserDbHelper.getInstance(getActivity());
+        }
     }
 
     @Override
@@ -176,6 +165,9 @@ public class BaseMovieListFragment extends Fragment
         MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.start_movie_night, menu);
 
+        MenuItem movieNight = menu.findItem(R.id.startMovieNight);
+        movieNight.setVisible(false);
+
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         if (searchItem != null) {
@@ -188,7 +180,7 @@ public class BaseMovieListFragment extends Fragment
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    ((MovieListAdapter) watchlistRecyclerView.getAdapter()).getFilter().filter(newText);
+                    ((SeriesListAdapter) customRecyclerView.getAdapter()).getFilter().filter(newText);
                     return false;
                 }
             });
@@ -222,22 +214,21 @@ public class BaseMovieListFragment extends Fragment
     }
 
     private void reorderLists(FilterType filterType) {
-        movieListProgressbar.setVisibility(View.VISIBLE);
-        watchlistRecyclerView.enableScrolling(false);
+        progressbar.setVisibility(View.VISIBLE);
+        customRecyclerView.enableScrolling(false);
 
         switch (filterType) {
             case ALPHABETICAL:
-                movieListAdapter.orderAlphabetical();
+                seriesListAdapter.orderAlphabetical();
                 break;
             case RELEASE_DATE:
-                movieListAdapter.orderByReleaseDate();
+                seriesListAdapter.orderByReleaseDate();
                 break;
         }
 
-        movieListAdapter.notifyDataSetChanged();
-        movieListProgressbar.setVisibility(View.GONE);
-        watchlistRecyclerView.enableScrolling(true);
-
+        seriesListAdapter.notifyDataSetChanged();
+        progressbar.setVisibility(View.GONE);
+        customRecyclerView.enableScrolling(true);
     }
 
     private void startMovieNight() {
@@ -251,12 +242,12 @@ public class BaseMovieListFragment extends Fragment
 
     @Override
     public void showMessageIfEmptyList() {
-        if (movieListAdapter.getDataSetSize() == 0) {
-            watchlistRecyclerView.setVisibility(View.GONE);
+        if (seriesListAdapter.getDataSetSize() == 0) {
+            customRecyclerView.setVisibility(View.GONE);
             emptyListTextView.setVisibility(View.VISIBLE);
             emptyListTextView.setText(getEmptyListMessageByState());
         } else {
-            watchlistRecyclerView.setVisibility(View.VISIBLE);
+            customRecyclerView.setVisibility(View.VISIBLE);
             emptyListTextView.setVisibility(View.GONE);
         }
     }
@@ -269,48 +260,8 @@ public class BaseMovieListFragment extends Fragment
         }
     }
 
-    @Override
-    public void onItemClickListener(long itemId, View[] views) {
-        if (!watchlistRecyclerView.isScrollingEnabled()) {
-            return;
-        }
-        int state;
-        if (watchState == WatchState.WATCH_STATE) {
-            state = R.string.watchlistState;
-        } else {
-            state = R.string.watchedlistState;
-        }
-        Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-        Intent intent = new Intent(activity, MovieDetailActivity.class);
-        intent.putExtra(BaseDao.MovieEntry._ID, itemId);
-        intent.putExtra(getString(R.string.state), state);
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptions options = makeSceneTransitionAnimation(activity,
-                    Pair.create(views[0], "card"),
-                    Pair.create(views[1], "poster")
-            );
-            activity.startActivity(intent, options.toBundle());
-        } else {
-            activity.startActivity(intent);
-            // getActivity().overridePendingTransition( R.anim.fade_out, R.anim.fade_in );
-        }
-    }
-
     private void initSwipe() {
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(getCorrectCallBack());
-        itemTouchHelper.attachToRecyclerView(watchlistRecyclerView);
-    }
-
-    private BaseItemTouchHelperCallback getCorrectCallBack() {
-        if (watchState == WatchState.WATCH_STATE) {
-            return new WatchlistItemTouchHelperCallback(layoutManager, movieListAdapter, watchlistRecyclerView, getResources());
-        } else {
-            return new WatchedlistItemTouchHelperCallback(layoutManager, movieListAdapter, watchlistRecyclerView, getResources());
-        }
+        //todo;
     }
 
     private enum FilterType {

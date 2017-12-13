@@ -10,12 +10,12 @@ import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.listener.MovieClickListener;
-import de.cineaste.android.viewholder.SearchViewHolder;
+import de.cineaste.android.listener.ItemClickListener;
+import de.cineaste.android.viewholder.MovieSearchViewHolder;
 
-public class SearchQueryAdapter extends RecyclerView.Adapter<SearchViewHolder> {
+public class MovieSearchQueryAdapter extends RecyclerView.Adapter<MovieSearchViewHolder> {
 	private final List<Movie> dataset = new ArrayList<>();
-	private final MovieClickListener listener;
+	private final ItemClickListener listener;
 	private final OnMovieStateChange movieStateChange;
 
 	public interface OnMovieStateChange {
@@ -23,7 +23,7 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 	}
 
 
-	public SearchQueryAdapter(MovieClickListener listener, OnMovieStateChange movieStateChange) {
+	public MovieSearchQueryAdapter(ItemClickListener listener, OnMovieStateChange movieStateChange) {
 		this.listener = listener;
 		this.movieStateChange = movieStateChange;
 	}
@@ -44,15 +44,15 @@ public class SearchQueryAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 	}
 
 	@Override
-	public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public MovieSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater
 				.from(parent.getContext())
 				.inflate(R.layout.card_movie_search, parent, false);
-		return new SearchViewHolder(v, parent.getContext(), movieStateChange, listener);
+		return new MovieSearchViewHolder(v, parent.getContext(), movieStateChange, listener);
 	}
 
 	@Override
-	public void onBindViewHolder(final SearchViewHolder holder, final int position) {
+	public void onBindViewHolder(final MovieSearchViewHolder holder, final int position) {
 		holder.assignData(dataset.get(position));
 	}
 

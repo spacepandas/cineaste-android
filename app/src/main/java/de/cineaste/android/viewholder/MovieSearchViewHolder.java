@@ -5,17 +5,17 @@ import android.view.View;
 import android.widget.Button;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.SearchQueryAdapter;
+import de.cineaste.android.adapter.MovieSearchQueryAdapter;
 import de.cineaste.android.entity.Movie;
-import de.cineaste.android.listener.MovieClickListener;
+import de.cineaste.android.listener.ItemClickListener;
 
-public class SearchViewHolder extends AbstractViewHolder {
+public class MovieSearchViewHolder extends AbstractMovieViewHolder {
 
     private final Button addToWatchlistButton;
     private final Button movieWatchedButton;
-    private final SearchQueryAdapter.OnMovieStateChange movieStateChange;
+    private final MovieSearchQueryAdapter.OnMovieStateChange movieStateChange;
 
-    public SearchViewHolder(View itemView, Context context, SearchQueryAdapter.OnMovieStateChange movieStateChange, MovieClickListener listener) {
+    public MovieSearchViewHolder(View itemView, Context context, MovieSearchQueryAdapter.OnMovieStateChange movieStateChange, ItemClickListener listener) {
         super(itemView, context, listener);
 
         addToWatchlistButton = itemView.findViewById(R.id.to_watchlist_button);
@@ -32,7 +32,7 @@ public class SearchViewHolder extends AbstractViewHolder {
 
             @Override
             public void onClick(View v) {
-                int index = SearchViewHolder.this.getAdapterPosition();
+                int index = MovieSearchViewHolder.this.getAdapterPosition();
                 movieStateChange.onMovieStateChangeListener(movie, v.getId(), index);
             }
         });
@@ -41,7 +41,7 @@ public class SearchViewHolder extends AbstractViewHolder {
 
             @Override
             public void onClick(View v) {
-                int index = SearchViewHolder.this.getAdapterPosition();
+                int index = MovieSearchViewHolder.this.getAdapterPosition();
                 movieStateChange.onMovieStateChangeListener(movie, v.getId(), index);
             }
         });
@@ -49,7 +49,7 @@ public class SearchViewHolder extends AbstractViewHolder {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onMovieClickListener(movie.getId(), new View[]{view, moviePoster});
+                listener.onItemClickListener(movie.getId(), new View[]{view, moviePoster});
             }
         });
     }

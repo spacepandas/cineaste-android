@@ -33,10 +33,12 @@ import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.database.ExportService;
 import de.cineaste.android.database.ImportService;
 import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.entity.User;
 import de.cineaste.android.fragment.BaseMovieListFragment;
+import de.cineaste.android.fragment.SeriesListFragment;
 import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.WatchState;
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     private View contentContainer;
     private UserDbHelper userDbHelper;
     private static MovieDbHelper movieDbHelper;
+    private static SeriesDbHelper seriesDbHelper;
     private TextView userName;
 
     private DrawerLayout drawerLayout;
@@ -100,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
         userDbHelper = UserDbHelper.getInstance(this);
         movieDbHelper = MovieDbHelper.getInstance(this);
+        seriesDbHelper = SeriesDbHelper.getInstance(this);
         contentContainer = findViewById(R.id.content_container);
 
         fm = getSupportFragmentManager();
@@ -184,13 +188,21 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.show_watchlist:
+                case R.id.show_movie_watchlist:
                     BaseMovieListFragment watchlistFragment = getBaseWatchlistFragment(WatchState.WATCH_STATE);
                     replaceFragmentPopBackStack(fm, watchlistFragment);
                     break;
-                case R.id.show_watchedlist:
+                case R.id.show_movie_watchedlist:
                     BaseMovieListFragment watchedlistFragment = getBaseWatchlistFragment(WatchState.WATCHED_STATE);
                     replaceFragmentPopBackStack(fm, watchedlistFragment);
+                    break;
+                case R.id.show_series_watchlist:
+                    SeriesListFragment seriesWatchlistFragment = getSeriesListFragment(WatchState.WATCH_STATE);
+                    replaceFragmentPopBackStack(fm, seriesWatchlistFragment);
+                    break;
+                case R.id.show_series_watchedlist:
+                    SeriesListFragment seriesWatchedlistFragment = getSeriesListFragment(WatchState.WATCHED_STATE);
+                    replaceFragmentPopBackStack(fm, seriesWatchedlistFragment);
                     break;
                 case R.id.exportMovies:
                     exportMovies();
@@ -231,6 +243,17 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
                 state.name());
         watchlistFragment.setArguments(bundle);
         return watchlistFragment;
+    }
+
+    @NonNull
+    private SeriesListFragment getSeriesListFragment(WatchState state) {
+        SeriesListFragment seriesListFragment = new SeriesListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(
+                WatchState.WATCH_STATE_TYPE.name(),
+                state.name());
+        seriesListFragment.setArguments(bundle);
+        return seriesListFragment;
     }
 
     @Override

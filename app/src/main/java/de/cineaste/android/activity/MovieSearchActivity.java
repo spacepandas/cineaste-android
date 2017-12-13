@@ -33,9 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.util.DateAwareGson;
-import de.cineaste.android.listener.MovieClickListener;
+import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.SearchQueryAdapter;
+import de.cineaste.android.adapter.MovieSearchQueryAdapter;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
@@ -44,20 +44,20 @@ import de.cineaste.android.network.NetworkClient;
 import de.cineaste.android.network.NetworkRequest;
 import de.cineaste.android.network.NetworkResponse;
 
-public class SearchActivity extends AppCompatActivity implements MovieClickListener, SearchQueryAdapter.OnMovieStateChange {
+public class MovieSearchActivity extends AppCompatActivity implements ItemClickListener, MovieSearchQueryAdapter.OnMovieStateChange {
 
     private final Gson gson = new Gson();
     private final MovieDbHelper db = MovieDbHelper.getInstance(this);
-    private SearchQueryAdapter movieQueryAdapter;
+    private MovieSearchQueryAdapter movieQueryAdapter;
     private RecyclerView movieQueryRecyclerView;
     private SearchView searchView;
     private String searchText;
     private ProgressBar progressBar;
 
     @Override
-    public void onMovieClickListener(long movieId, View[] views) {
+    public void onItemClickListener(long itemId, View[] views) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(BaseDao.MovieEntry._ID, movieId);
+        intent.putExtra(BaseDao.MovieEntry._ID, itemId);
         intent.putExtra(this.getString(R.string.state), R.string.searchState);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -120,7 +120,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
         }
         if (callback != null) {
             movieQueryAdapter.removeMovie(index);
-            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).get(movie.getId()));
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getMovie(movie.getId()));
             client.sendRequest(callback);
         }
 
@@ -147,11 +147,13 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
         progressBar = findViewById(R.id.progressBar);
         movieQueryRecyclerView = findViewById(R.id.search_recycler_view);
         RecyclerView.LayoutManager movieQueryLayoutMgr = new LinearLayoutManager(this);
-        movieQueryAdapter = new SearchQueryAdapter(this, this);
+        movieQueryAdapter = new MovieSearchQueryAdapter(this, this);
         movieQueryRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         movieQueryRecyclerView.setLayoutManager(movieQueryLayoutMgr);
         movieQueryRecyclerView.setAdapter(movieQueryAdapter);
+
+        getUpcomingMovies();
     }
 
     private void initToolbar() {
@@ -212,7 +214,7 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
 
                         searchText = query;
                     } else {
-                        movieQueryAdapter.addMovies(new ArrayList<Movie>());
+                        getUpcomingMovies();
                     }
                     return false;
                 }
@@ -225,24 +227,14 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void scheduleSearchRequest(String query) {
-        searchView.removeCallbacks(getSearchRunnable(query));
-        searchView.postDelayed(getSearchRunnable(query), 500);
+    private void getUpcomingMovies() {
+        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getUpcomingMovies());
+        client.sendRequest(getNetworkCallback());
     }
 
     @NonNull
-    private Runnable getSearchRunnable(final String searchQuery) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                searchRequest(searchQuery);
-            }
-        };
-    }
-
-    private void searchRequest( String searchQuery) {
-        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).search(searchQuery));
-        client.sendRequest(new NetworkCallback() {
+    private NetworkCallback getNetworkCallback() {
+        return new NetworkCallback() {
             @Override
             public void onFailure() {
                 runOnUiThread(new Runnable() {
@@ -272,7 +264,27 @@ public class SearchActivity extends AppCompatActivity implements MovieClickListe
                     }
                 });
             }
-        });
+        };
+    }
+
+    private void scheduleSearchRequest(String query) {
+        searchView.removeCallbacks(getSearchRunnable(query));
+        searchView.postDelayed(getSearchRunnable(query), 500);
+    }
+
+    @NonNull
+    private Runnable getSearchRunnable(final String searchQuery) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                searchRequest(searchQuery);
+            }
+        };
+    }
+
+    private void searchRequest( String searchQuery) {
+        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).searchMovie(searchQuery));
+        client.sendRequest(getNetworkCallback());
     }
 
     private void showNetworkError() {

@@ -48,4 +48,9 @@ Special thanks to Philipp Wolf, for the design!
     <string name="sort_by_alpha">Sort alphabetically</string>
     <string name="sort_by_release">Sort by release date</string>
     <string name="delete">Delete</string>
+
+    <string name="movies">Movies</string>
+    <string name="series">Series</string>
+    <string name="seasons">Seasons %s</string>
+    <string name="currentStatus">My status: Season %s, Episode %s</string>
 </resources>

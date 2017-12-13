@@ -19,7 +19,7 @@ import de.cineaste.android.R;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.Movie;
 import de.cineaste.android.fragment.WatchState;
-import de.cineaste.android.listener.MovieClickListener;
+import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.listener.OnMovieRemovedListener;
 import de.cineaste.android.viewholder.MovieViewHolder;
 
@@ -28,14 +28,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final Context context;
     private final MovieDbHelper db;
     private final DisplayMessage displayMessage;
-    private final MovieClickListener listener;
+    private final ItemClickListener listener;
     private final WatchState state;
     private List<Movie> dataSet = new ArrayList<>();
     private List<Movie> filteredDataSet;
 
     private final Queue<UpdatedMovies> updatedMovies = new LinkedBlockingQueue<>();
 
-    public MovieListAdapter(DisplayMessage displayMessage, Context context, MovieClickListener listener, WatchState state) {
+    public MovieListAdapter(DisplayMessage displayMessage, Context context, ItemClickListener listener, WatchState state) {
         this.displayMessage = displayMessage;
         this.db = MovieDbHelper.getInstance(context);
         this.context = context;
@@ -211,16 +211,16 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private Movie prev;
         private Movie passiveMovie;
 
-        public UpdatedMovies(Movie prev, Movie passiveMovie) {
+        UpdatedMovies(Movie prev, Movie passiveMovie) {
             this.prev = prev;
             this.passiveMovie = passiveMovie;
         }
 
-        public Movie getPrev() {
+        Movie getPrev() {
             return prev;
         }
 
-        public Movie getPassiveMovie() {
+        Movie getPassiveMovie() {
             return passiveMovie;
         }
     }
