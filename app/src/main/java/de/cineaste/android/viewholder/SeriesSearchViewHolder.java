@@ -27,7 +27,7 @@ public class SeriesSearchViewHolder extends AbstractSeriesViewHolder {
     }
 
     @Override
-    public void assignData(final Series series) {
+    public void assignData(final Series series, int position) {
         setBaseInformation(series);
         if (series.getReleaseDate() != null) {
             releaseDate.setText(convertDate(series.getReleaseDate()));

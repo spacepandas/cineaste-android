@@ -3,6 +3,7 @@ package de.cineaste.android.viewholder;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ public abstract class AbstractSeriesViewHolder extends RecyclerView.ViewHolder {
         this.view = itemView;
     }
 
-    public abstract void assignData(final Series series);
+    public abstract void assignData(final Series series, final int position);
 
     void setBaseInformation(Series series) {
         title.setText(series.getName());
@@ -50,7 +51,10 @@ public abstract class AbstractSeriesViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void setMoviePoster(Series series) {
-        String posterName = series.getPosterPath();
+        String posterName = series.getCurrentPosterPath();
+        if (TextUtils.isEmpty(posterName)) {
+            posterName = series.getPosterPath();
+        }
         String posterUri =
                 Constants.POSTER_URI_SMALL
                         .replace("<posterName>", posterName != null ? posterName : "/")

@@ -52,7 +52,7 @@ public class SeriesSearchQueryAdapter extends RecyclerView.Adapter<SeriesSearchV
 
     @Override
     public void onBindViewHolder(SeriesSearchViewHolder holder, int position) {
-        holder.assignData(dataSet.get(position));
+        holder.assignData(dataSet.get(position), position);
     }
 
     @Override

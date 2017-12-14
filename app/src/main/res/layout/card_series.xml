@@ -37,12 +37,12 @@
             android:id="@+id/texts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@+id/poster_image_view"
             android:layout_toEndOf="@+id/view"
             android:layout_toRightOf="@+id/view"
+            android:layout_toStartOf="@+id/episode_seen"
+            android:layout_toLeftOf="@+id/episode_seen"
             android:orientation="vertical"
             android:paddingBottom="8dp"
             android:paddingEnd="16dp"
@@ -105,11 +105,23 @@
             <TextView
                 android:id="@+id/current"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="0.5"
                 android:text="@string/currentStatus" />
 
         </LinearLayout>
+
+        <ImageButton
+        android:id="@+id/episode_seen"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/poster_image_view"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/remove"
+        android:src="@drawable/ic_add" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

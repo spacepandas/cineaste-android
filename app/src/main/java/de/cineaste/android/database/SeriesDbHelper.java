@@ -1,8 +1,8 @@
 package de.cineaste.android.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -11,9 +11,6 @@ import de.cineaste.android.entity.Season;
 import de.cineaste.android.entity.Series;
 import de.cineaste.android.fragment.WatchState;
 
-/**
- * Created by marcelgross on 12.12.17.
- */
 
 public class SeriesDbHelper {
 
@@ -54,6 +51,44 @@ public class SeriesDbHelper {
         String[] selectionArgs = {selectionArg};
 
         return seriesDao.read(selection, selectionArgs, BaseDao.SeriesEntry.COLUMN_SERIES_LIST_POSITION + " ASC");
+    }
+
+    public void episodeWatched(Series series) {
+        series = readSeries(series.getId());
+        Season currentSeason = getCurrentSeason(series.getCurrentNumberOfSeason(), series);
+        int updatedEpisodeIndex = series.getCurrentNumberOfEpisode() + 1;
+        if (currentSeason == null) {
+            return;
+        }
+        if (updatedEpisodeIndex > currentSeason.getEpisodeCount()) {
+            int updatedSeasonIndex = series.getCurrentNumberOfSeason() + 1;
+            Season newSeason = getCurrentSeason(updatedSeasonIndex, series);
+
+            if (newSeason != null) {
+                series.setCurrentNumberOfEpisode(1);
+                series.setCurrentNumberOfSeason(updatedSeasonIndex);
+                series.setCurrentPosterPath(newSeason.getPosterPath());
+            } else {
+                if (!series.isInProduction()) {
+                    series.setWatched(true);
+                }
+            }
+
+        } else {
+            series.setCurrentNumberOfEpisode(updatedEpisodeIndex);
+        }
+
+        createOrUpdate(series);
+    }
+
+    private Season getCurrentSeason(int currentSeasonIndex, Series series) {
+        for (Season season : series.getSeasons()) {
+            if (season.getSeasonNumber() == currentSeasonIndex) {
+                return season;
+            }
+        }
+
+        return null;
     }
 
     public List<Series> reorderAlphabetical(WatchState state) {
@@ -98,8 +133,23 @@ public class SeriesDbHelper {
         if (!seriesList.isEmpty()) {
             update(series, getNewPosition(series, seriesList.get(0)));
         } else {
+            series = initSeries(series);
             seriesDao.create(series);
         }
+    }
+
+    private Series initSeries(Series series) {
+        if (TextUtils.isEmpty(series.getCurrentPosterPath())) {
+            series.setCurrentPosterPath(series.getPosterPath());
+        }
+        if (series.getCurrentNumberOfSeason() == 0) {
+            series.setCurrentNumberOfSeason(1);
+        }
+        if (series.getCurrentNumberOfEpisode() == 0) {
+            series.setCurrentNumberOfEpisode(1);
+        }
+
+        return series;
     }
 
     public void updatePosition(Series series) {

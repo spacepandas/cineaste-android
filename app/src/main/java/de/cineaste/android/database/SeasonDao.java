@@ -11,10 +11,6 @@ import java.util.List;
 
 import de.cineaste.android.entity.Season;
 
-/**
- * Created by marcelgross on 12.12.17.
- */
-
 public class SeasonDao extends BaseDao {
     private final SimpleDateFormat sdf;
     private static SeasonDao instance;
@@ -33,9 +29,16 @@ public class SeasonDao extends BaseDao {
     }
 
     void create(Season season, long seriesId) {
+        if (season.getSeasonNumber() == 0) {
+            return;
+        }
         ContentValues values = new ContentValues();
         values.put(SeasonEntry._ID, season.getId());
-        values.put(SeasonEntry.COLUMN_SEASON_RELEASE_DATE, sdf.format(season.getReleaseDate()));
+        if (season.getReleaseDate() == null) {
+            values.put(SeasonEntry.COLUMN_SEASON_RELEASE_DATE, "");
+        } else {
+            values.put(SeasonEntry.COLUMN_SEASON_RELEASE_DATE, sdf.format(season.getReleaseDate()));
+        }
         values.put(SeasonEntry.COLUMN_SEASON_EPISODE_COUNT, season.getEpisodeCount());
         values.put(SeasonEntry.COLUMN_SEASON_POSTER_PATH, season.getPosterPath());
         values.put(SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, season.getSeasonNumber());
@@ -89,13 +92,21 @@ public class SeasonDao extends BaseDao {
     }
 
     void update(Season season) {
+        if (season.getSeasonNumber() == 0) {
+            return;
+        }
         ContentValues values = new ContentValues();
         values.put(BaseDao.SeasonEntry._ID, season.getId());
-        values.put(BaseDao.SeasonEntry.COLUMN_SEASON_RELEASE_DATE, sdf.format(season.getReleaseDate()));
+
+        if (season.getReleaseDate() == null) {
+            values.put(SeasonEntry.COLUMN_SEASON_RELEASE_DATE, "");
+        } else {
+            values.put(SeasonEntry.COLUMN_SEASON_RELEASE_DATE, sdf.format(season.getReleaseDate()));
+        }
         values.put(BaseDao.SeasonEntry.COLUMN_SEASON_EPISODE_COUNT, season.getEpisodeCount());
         values.put(BaseDao.SeasonEntry.COLUMN_SEASON_POSTER_PATH, season.getPosterPath());
         values.put(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, season.getSeasonNumber());
-        values.put(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, season.getId());
+        values.put(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, season.getSeriesId());
 
         String selection = BaseDao.SeasonEntry._ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(season.getId())};

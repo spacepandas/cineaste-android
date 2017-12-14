@@ -42,7 +42,11 @@ public class SeriesDao extends BaseDao {
         values.put(SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE, series.getVoteAverage());
         values.put(SeriesEntry.COLUMN_SERIES_VOTE_COUNT, series.getVoteCount());
         values.put(SeriesEntry.COLUMN_SERIES_DESCRIPTION, series.getDescription());
-        values.put(SeriesEntry.COLUMN_SERIES_RELEASE_DATE, sdf.format(series.getReleaseDate()));
+        if (series.getReleaseDate() == null) {
+            values.put(BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE, "");
+        } else {
+            values.put(BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE, sdf.format(series.getReleaseDate()));
+        }
         values.put(SeriesEntry.COLUMN_SERIES_IN_PRODUCTION, series.isInProduction() ? 1 : 0);
         values.put(SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES, series.getNumberOfEpisodes());
         values.put(SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS, series.getNumberOfSeasons());
@@ -139,7 +143,7 @@ public class SeriesDao extends BaseDao {
     }
 
     private List<Season> addSeasons(long seriesId) {
-        String selection = SeasonEntry._ID + " = ?";
+        String selection = SeasonEntry.COLUMN_SEASON_SERIES_ID + " = ?";
         String[] selectionArgs = {Long.toString(seriesId)};
 
         return seasonDao.read(selection, selectionArgs);
@@ -152,7 +156,11 @@ public class SeriesDao extends BaseDao {
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE, series.getVoteAverage());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_VOTE_COUNT, series.getVoteCount());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_DESCRIPTION, series.getDescription());
-        values.put(BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE, sdf.format(series.getReleaseDate()));
+        if (series.getReleaseDate() == null) {
+            values.put(BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE, "");
+        } else {
+            values.put(BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE, sdf.format(series.getReleaseDate()));
+        }
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_IN_PRODUCTION, series.isInProduction() ? 1 : 0);
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES, series.getNumberOfEpisodes());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS, series.getNumberOfSeasons());
@@ -166,11 +174,11 @@ public class SeriesDao extends BaseDao {
         String selection = BaseDao.SeriesEntry._ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(series.getId())};
 
-        writeDb.update(SeriesEntry.TABLE_NAME, values, selection, selectionArgs);
-
         for (Season season : series.getSeasons()) {
             seasonDao.update(season);
         }
+
+        writeDb.update(SeriesEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     void delete(long id) {

@@ -1,6 +1,5 @@
 package de.cineaste.android.fragment;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,10 +26,12 @@ import de.cineaste.android.R;
 import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.activity.SeriesSearchActivity;
 import de.cineaste.android.adapter.SeriesListAdapter;
+import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.database.UserDbHelper;
+import de.cineaste.android.entity.Series;
 import de.cineaste.android.util.CustomRecyclerView;
 
-public class SeriesListFragment extends Fragment implements SeriesListAdapter.DisplayMessage {
+public class SeriesListFragment extends Fragment implements SeriesListAdapter.DisplayMessage, SeriesListAdapter.OnEpisodeWatchedClickListener {
 
     private WatchState watchState;
     private CustomRecyclerView customRecyclerView;
@@ -51,6 +52,12 @@ public class SeriesListFragment extends Fragment implements SeriesListAdapter.Di
             return WatchState.WATCH_STATE;
         else
             return WatchState.WATCHED_STATE;
+    }
+
+    @Override
+    public void onEpisodeWatchedClick(Series series, int position) {
+        SeriesDbHelper.getInstance(getActivity()).episodeWatched(series);
+        seriesListAdapter.updateSeries(series, position);
     }
 
     @Override
@@ -82,7 +89,7 @@ public class SeriesListFragment extends Fragment implements SeriesListAdapter.Di
         View watchlistView = initViews(inflater, container);
 
         if (activity != null) {
-            seriesListAdapter = new SeriesListAdapter(this, activity, null, watchState);
+            seriesListAdapter = new SeriesListAdapter(this, activity, null, watchState, this);
             showMessageIfEmptyList();
 
             customRecyclerView.setLayoutManager(layoutManager);

@@ -32,14 +32,16 @@ public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final DisplayMessage displayMessage;
     private List<Series> dataSet = new ArrayList<>();
     private List<Series> filteredDataSet;
+    private OnEpisodeWatchedClickListener onEpisodeWatchedClickListener;
 
     private final Queue<UpdatedSeries> updatedSeries = new LinkedBlockingQueue<>();
 
-    public SeriesListAdapter(DisplayMessage displayMessage, Context context, ItemClickListener listener, WatchState state) {
+    public SeriesListAdapter(DisplayMessage displayMessage, Context context, ItemClickListener listener, WatchState state, OnEpisodeWatchedClickListener onEpisodeWatchedClickListener) {
         this.context = context;
         this.listener = listener;
         this.state = state;
         this.displayMessage = displayMessage;
+        this.onEpisodeWatchedClickListener = onEpisodeWatchedClickListener;
         this.dataSet.clear();
         this.db = SeriesDbHelper.getInstance(context);
         this.dataSet.addAll(db.readSeriesByWatchStatus(state));
@@ -48,6 +50,10 @@ public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public interface DisplayMessage {
         void showMessageIfEmptyList();
+    }
+
+    public interface OnEpisodeWatchedClickListener {
+        void onEpisodeWatchedClick(Series series, int position);
     }
 
     @Override
@@ -63,6 +69,19 @@ public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public Series getItem(int position) {
         return filteredDataSet.get(position);
+    }
+
+    public void updateSeries(Series series, int pos) {
+        series = db.readSeries(series.getId());
+        dataSet.remove(pos);
+        filteredDataSet.remove(pos);
+        if (state == WatchState.WATCH_STATE && !series.isWatched()) {
+            dataSet.add(pos, series);
+            filteredDataSet.add(pos, series);
+            notifyItemChanged(pos);
+        } else {
+            notifyItemRemoved(pos);
+        }
     }
 
     public void restoreDeletedItem(Series item, int position) {
@@ -141,12 +160,12 @@ public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 .from(parent.getContext())
                 .inflate(R.layout.card_series, parent, false);
 
-        return new SeriesViewHolder(v, listener, context);
+        return new SeriesViewHolder(v, listener, context, state, onEpisodeWatchedClickListener);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((SeriesViewHolder) holder).assignData(filteredDataSet.get(position));
+        ((SeriesViewHolder) holder).assignData(filteredDataSet.get(position), position);
     }
 
     public void removeSeries(Series series) {
