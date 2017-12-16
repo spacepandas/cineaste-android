@@ -20,10 +20,11 @@ release:
 		-Pandroid.injected.signing.key.password=$(ANDROID_KEY_PASSWORD)
 
 install:
-	adb $(TARGET) install -rk $(APK)
+	adb $(TARGET) install -r $(APK)
 
 installRelease:
-	 adb $(TARGET) install -rk $(APKRELEASE)
+	adb $(TARGET) install -r $(APKRELEASE)
+
 start:
 	adb $(TARGET) shell 'am start -n $(PACKAGE)/.MainActivity'
 
