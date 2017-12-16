@@ -1,27 +1,25 @@
-Cineaste
-==============
+# Cineaste
 
-An Android Application to manage movies you would like to see and movies you have seen. 
-You can also start movienights with your friends.
+An Android application to manage movies you would like to see and movies you have seen.
+You can also start movie nights with your friends.
 
 No need for registration!
-No need for adding friends!
+No need to add friends!
 
-Start a Movienight via [Nearby][nearbyLink].
+Start a movie night via [Nearby][nearbyLink].
 
-Nearby searches for people nearby and matches their watchlist entries with yours.
-As a result you can see which movie is the most interested one by your friends.
+Nearby searches for nearby devices and matches their watchlist with yours.
+As a result you can see which movie is the most interested one by you and your friends.
 
 We are using [theMovieDb][theMovieDb].
 
-Cineaste is released under the GPL V3 Open Source License. Please se LICENSE file for more information.
+Cineaste is released under the GPL V3 Open Source License. Please see the LICENSE file for more information.
 
-How to
-------
+## How to build
 
 1. Get a [Nearby][nearbyLink] key.
 2. Get a [theMovieDb] [theMovieDb] key.
-3. Create a `secrets.xml` in `res/values` and place your nearby and moviedb key inside it.
+3. Create `secrets.xml` in `res/values` and place your nearby and moviedb key inside it.
 ```
     <?xml version="1.0" encoding="utf-8"?>
     <resources>
