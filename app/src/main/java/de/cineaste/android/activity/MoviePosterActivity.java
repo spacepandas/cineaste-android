@@ -36,7 +36,7 @@ public class MoviePosterActivity extends AppCompatActivity {
 
         moviePoster = new ScalingImageView(this);
         setTransitionNameIfNecessary();
-        moviePoster.setImageDrawable(getResources().getDrawable(R.drawable.placeholder_poster));
+        moviePoster.setImageResource(drawable.placeholder_poster);
         setContentView(moviePoster);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
