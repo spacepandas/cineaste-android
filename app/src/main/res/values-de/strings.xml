@@ -50,5 +50,6 @@
     <string name="series">Serien</string>
     <string name="seasons">Staffeln: %s</string>
     <string name="currentStatus">Mein Stand: Staffel %s, Episode %s</string>
+    <string name="currentSeason">Staffel %s</string>
 
 </resources>

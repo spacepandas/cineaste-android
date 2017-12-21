@@ -66,7 +66,7 @@ public class SeasonDao extends BaseDao {
                 selectionArgs,
                 null,
                 null,
-                null,
+                SeasonEntry.COLUMN_SEASON_SEASON_NUMBER + " ASC",
                 null);
 
         if (c.moveToFirst()) {

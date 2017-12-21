@@ -57,6 +57,12 @@ public class NetworkRequest {
 		return this;
 	}
 
+	public NetworkRequest getSeason(long seriesId, int seasonNumber) {
+		this.requestBuilder.url(baseUrl + "/tv/" + seriesId + "/season/" + seasonNumber + "?" + staticQueryParams);
+		this.requestBuilder.header("accept", "application/json");
+		return this;
+	}
+
 	Request buildRequest() {
 		return this.requestBuilder.build();
 	}

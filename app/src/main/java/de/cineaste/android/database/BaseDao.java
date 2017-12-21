@@ -62,6 +62,16 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					" FOREIGN KEY (" + SeasonEntry.COLUMN_SEASON_SERIES_ID + ") REFERENCES " +
 						SeasonEntry.TABLE_NAME + "(" + SeasonEntry._ID + "))"*/;
 
+	private static final String SQL_CREATE_EPISODE_ENTRIES =
+			"CREATE TABLE IF NOT EXISTS " + EpisodeEntry.TABLE_NAME + " (" +
+					EpisodeEntry._ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
+					EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER + INTEGER_TYPE + COMMA_SEP +
+					EpisodeEntry.COLUMN_EPISODE_NAME + TEXT_TYPE + COMMA_SEP +
+					EpisodeEntry.COLUMN_EPISODE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+					EpisodeEntry.COLUMN_EPISODE_SEASON_ID + INTEGER_TYPE + COMMA_SEP +
+					EpisodeEntry.COLUMN_EPISODE_WATCHED + INTEGER_TYPE +
+					" )";
+
 	final SQLiteDatabase readDb;
 	final SQLiteDatabase writeDb;
 
@@ -118,6 +128,16 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		static final String COLUMN_SEASON_SERIES_ID = "seriesId";
 	}
 
+	public static abstract class EpisodeEntry implements BaseColumns {
+		static final String TABLE_NAME = "episode";
+		static final String COLUMN_EPISODE_EPISODE_NUMBER = "episodeNumber";
+		static final String COLUMN_EPISODE_NAME = "name";
+		static final String COLUMN_EPISODE_DESCRIPTION = "description";
+		static final String COLUMN_EPISODE_SEASON_ID = "seasonId";
+		static final String COLUMN_EPISODE_WATCHED = "watched";
+
+	}
+
 	BaseDao(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.readDb = getReadableDatabase();
@@ -130,6 +150,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_MOVIE_ENTRIES);
 		db.execSQL(SQL_CREATE_SERIES_ENTRIES);
 		db.execSQL(SQL_CREATE_SEASON_ENTRIES);
+		db.execSQL(SQL_CREATE_EPISODE_ENTRIES);
 	}
 
 	@Override
@@ -145,6 +166,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		if (oldVersion < 4) {
 			db.execSQL(SQL_CREATE_SERIES_ENTRIES);
 			db.execSQL(SQL_CREATE_SEASON_ENTRIES);
+			db.execSQL(SQL_CREATE_EPISODE_ENTRIES);
 		}
 	}
 }

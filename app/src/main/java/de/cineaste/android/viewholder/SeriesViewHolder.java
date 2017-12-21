@@ -46,5 +46,14 @@ public class SeriesViewHolder extends AbstractSeriesViewHolder {
                 onEpisodeWatchedClickListener.onEpisodeWatchedClick(series, position);
             }
         });
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onItemClickListener(series.getId(), new View[]{view, poster, title});
+                }
+            }
+        });
     }
 }

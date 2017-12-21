@@ -117,7 +117,6 @@ public class MovieNightActivity extends AppCompatActivity
         nearbyUser_rv.postDelayed(timeOut, 45000);
     }
 
-
     private void initializeTimeout() {
         timeOut = new Runnable() {
             @Override

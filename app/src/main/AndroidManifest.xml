@@ -42,7 +42,8 @@
         <activity android:name=".activity.MovieNightActivity" />
         <activity android:name=".activity.ResultActivity" />
         <activity android:name=".activity.MoviePosterActivity" />
-        <activity android:name=".activity.SeriesSearchActivity"></activity>
+        <activity android:name=".activity.SeriesSearchActivity" />
+        <activity android:name=".activity.SeriesDetailActivity"></activity>
     </application>
 
 </manifest>

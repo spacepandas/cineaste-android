@@ -1,6 +1,9 @@
 package de.cineaste.android.activity;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -12,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,12 +29,14 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SeriesSearchQueryAdapter;
+import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.SeriesDbHelper;
+import de.cineaste.android.entity.Episode;
+import de.cineaste.android.entity.Season;
 import de.cineaste.android.entity.Series;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.network.NetworkCallback;
@@ -51,7 +57,7 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
 
     @Override
     public void onItemClickListener(long itemId, View[] views) {
-        /*Intent intent = new Intent(this, SeriesDetailActivity.class);
+        Intent intent = new Intent(this, SeriesDetailActivity.class);
         intent.putExtra(BaseDao.SeriesEntry._ID, itemId);
         intent.putExtra(this.getString(R.string.state), R.string.searchState);
 
@@ -62,7 +68,7 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
             this.startActivity(intent, options.toBundle());
         } else {
             this.startActivity(intent);
-        }*/
+        }
     }
 
     @Override
@@ -116,6 +122,7 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
             NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(series.getId()));
             client.sendRequest(callback);
         }
+
     }
 
     private void seriesAddError(Series series, int index) {

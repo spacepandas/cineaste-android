@@ -1,7 +1,9 @@
 package de.cineaste.android.fragment;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,14 +27,19 @@ import android.widget.TextView;
 
 import de.cineaste.android.R;
 import de.cineaste.android.activity.MovieNightActivity;
+import de.cineaste.android.activity.SeriesDetailActivity;
 import de.cineaste.android.activity.SeriesSearchActivity;
 import de.cineaste.android.adapter.SeriesListAdapter;
+import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.entity.Series;
+import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.util.CustomRecyclerView;
 
-public class SeriesListFragment extends Fragment implements SeriesListAdapter.DisplayMessage, SeriesListAdapter.OnEpisodeWatchedClickListener {
+import static android.app.ActivityOptions.makeSceneTransitionAnimation;
+
+public class SeriesListFragment extends Fragment implements ItemClickListener, SeriesListAdapter.DisplayMessage, SeriesListAdapter.OnEpisodeWatchedClickListener {
 
     private WatchState watchState;
     private CustomRecyclerView customRecyclerView;
@@ -89,7 +97,7 @@ public class SeriesListFragment extends Fragment implements SeriesListAdapter.Di
         View watchlistView = initViews(inflater, container);
 
         if (activity != null) {
-            seriesListAdapter = new SeriesListAdapter(this, activity, null, watchState, this);
+            seriesListAdapter = new SeriesListAdapter(this, activity, this, watchState, this);
             showMessageIfEmptyList();
 
             customRecyclerView.setLayoutManager(layoutManager);
@@ -264,6 +272,34 @@ public class SeriesListFragment extends Fragment implements SeriesListAdapter.Di
             return R.string.noMoviesOnWatchList;
         } else {
             return R.string.noMoviesOnWatchedList;
+        }
+    }
+
+    @Override
+    public void onItemClickListener(long itemId, View[] views) {
+        int state;
+        if (watchState == WatchState.WATCH_STATE) {
+            state = R.string.watchlistState;
+        } else {
+            state = R.string.watchedlistState;
+        }
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        Intent intent = new Intent(activity, SeriesDetailActivity.class);
+        intent.putExtra(BaseDao.SeriesEntry._ID, itemId);
+        intent.putExtra(getString(R.string.state), state);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = makeSceneTransitionAnimation(activity,
+                    Pair.create(views[0], "card"),
+                    Pair.create(views[1], "poster")
+            );
+            activity.startActivity(intent, options.toBundle());
+        } else {
+            activity.startActivity(intent);
+            // getActivity().overridePendingTransition( R.anim.fade_out, R.anim.fade_in );
         }
     }
 
