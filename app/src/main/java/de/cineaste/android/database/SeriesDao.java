@@ -51,6 +51,7 @@ public class SeriesDao extends BaseDao {
         values.put(SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES, series.getNumberOfEpisodes());
         values.put(SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS, series.getNumberOfSeasons());
         values.put(SeriesEntry.COLUMN_SERIES_POSTER_PATH, series.getPosterPath());
+        values.put(SeriesEntry.COLUMN_SERIES_BACKDROP_PATH, series.getBackdropPath());
         values.put(SeriesEntry.COLUMN_SERIES_CURRENT_POSTER_PATH, series.getCurrentPosterPath());
         values.put(SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_EPISODE, series.getCurrentNumberOfEpisode());
         values.put(SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_SEASON, series.getCurrentNumberOfSeason());
@@ -78,6 +79,7 @@ public class SeriesDao extends BaseDao {
                 SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES,
                 SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS,
                 SeriesEntry.COLUMN_SERIES_POSTER_PATH,
+                SeriesEntry.COLUMN_SERIES_BACKDROP_PATH,
                 SeriesEntry.COLUMN_SERIES_CURRENT_POSTER_PATH,
                 SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_EPISODE,
                 SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_SEASON,
@@ -122,6 +124,8 @@ public class SeriesDao extends BaseDao {
                         c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS)));
                 currentSeries.setPosterPath(
                         c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_POSTER_PATH)));
+                currentSeries.setBackdropPath(
+                        c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_BACKDROP_PATH)));
                 currentSeries.setCurrentPosterPath(
                         c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_CURRENT_POSTER_PATH)));
                 currentSeries.setCurrentNumberOfEpisode(
@@ -165,6 +169,7 @@ public class SeriesDao extends BaseDao {
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES, series.getNumberOfEpisodes());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS, series.getNumberOfSeasons());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_POSTER_PATH, series.getPosterPath());
+        values.put(BaseDao.SeriesEntry.COLUMN_SERIES_BACKDROP_PATH, series.getBackdropPath());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_CURRENT_POSTER_PATH, series.getCurrentPosterPath());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_EPISODE, series.getCurrentNumberOfEpisode());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_SEASON, series.getCurrentNumberOfSeason());

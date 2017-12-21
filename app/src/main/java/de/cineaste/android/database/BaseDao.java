@@ -45,6 +45,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES + INTEGER_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS + INTEGER_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
+					SeriesEntry.COLUMN_SERIES_BACKDROP_PATH + TEXT_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_CURRENT_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_EPISODE + INTEGER_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_SEASON + INTEGER_TYPE + COMMA_SEP +
@@ -116,6 +117,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		static final String COLUMN_SERIES_CURRENT_NUMBER_OF_SEASON = "currentNumberOfSeason";
 		static final String COLUMN_SERIES_SERIES_WATCHED = "seriesWatched";
 		static final String COLUMN_SERIES_LIST_POSITION = "listPosition";
+		static final String COLUMN_SERIES_BACKDROP_PATH = "backdropPath";
 	}
 
 	public static abstract class SeasonEntry implements BaseColumns {

@@ -34,6 +34,7 @@ import java.util.List;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SeriesSearchQueryAdapter;
 import de.cineaste.android.database.BaseDao;
+import de.cineaste.android.database.EpisodeDbHelper;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.entity.Episode;
 import de.cineaste.android.entity.Season;
@@ -49,6 +50,7 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
 
     private final Gson gson = new Gson();
     private final SeriesDbHelper db = SeriesDbHelper.getInstance(this);
+    private EpisodeDbHelper episodeDbHelper;
     private SeriesSearchQueryAdapter seriesQueryAdapter;
     private RecyclerView seriesQueryRecyclerView;
     private SearchView searchView;
@@ -89,7 +91,9 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
 
                     @Override
                     public void onSuccess(NetworkResponse response) {
-                        db.createOrUpdate(gson.fromJson(response.getResponseReader(), Series.class));
+                        Series series = gson.fromJson(response.getResponseReader(), Series.class);
+                        db.createOrUpdate(series);
+                        loadSeasons(series);
                     }
                 };
                 break;
@@ -110,6 +114,7 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
                         Series series = gson.fromJson(response.getResponseReader(), Series.class);
                         series.setWatched(true);
                         db.createOrUpdate(series);
+                        loadSeasons(series);
                     }
                 };
                 break;
@@ -125,6 +130,39 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
 
     }
 
+    private void loadSeasons(Series series) {
+        for (final Season season : series.getSeasons()) {
+            if (season.getSeasonNumber() == 0) {
+                continue;
+            }
+
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeason(series.getId(), season.getSeasonNumber()));
+            client.sendRequest(new NetworkCallback() {
+                @Override
+                public void onFailure() {
+                    android.util.Log.d("mgr", "faild to load season { "+ season.getSeasonNumber() +" }");
+                }
+
+                @Override
+                public void onSuccess(NetworkResponse response) {
+
+                    Gson gson = new DateAwareGson().getGson();
+                    JsonParser parser = new JsonParser();
+                    JsonObject responseObject =
+                            parser.parse(response.getResponseReader()).getAsJsonObject();
+                    String episodesListJson = responseObject.get("episodes").toString();
+                    Type listType = new TypeToken<List<Episode>>(){}.getType();
+                    final List<Episode> episodes = gson.fromJson(episodesListJson, listType);
+                    for (Episode episode : episodes) {
+                        episode.setSeasonId(season.getId());
+                        episodeDbHelper.createOrUpdate(episode);
+                    }
+                }
+            });
+        }
+
+    }
+
     private void seriesAddError(Series series, int index) {
         Snackbar snackbar = Snackbar
                 .make(seriesQueryRecyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG);
@@ -136,6 +174,8 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_search);
+
+        episodeDbHelper = EpisodeDbHelper.getInstance(this);
 
         initToolbar();
 

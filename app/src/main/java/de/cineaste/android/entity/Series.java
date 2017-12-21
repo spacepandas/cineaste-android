@@ -26,6 +26,8 @@ public class Series {
     private int numberOfSeasons;
     @SerializedName("poster_path")
     private String posterPath;
+    @SerializedName("backdrop_path")
+    private String backdropPath;
     private List<Season> seasons;
 
     private String currentPosterPath;
@@ -156,6 +158,14 @@ public class Series {
 
     public void setWatched(boolean watched) {
         this.watched = watched;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
     public int getListPosition() {
