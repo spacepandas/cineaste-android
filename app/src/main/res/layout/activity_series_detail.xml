@@ -33,7 +33,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:background="@android:color/transparent"
         android:theme="@style/ToolbarTheme">
 
@@ -53,178 +53,12 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-
-   <!-- <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v4.view.PagerTitleStrip
-            android:id="@+id/pager_title_strip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="#33b5e5"
-            android:textColor="#fff"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp" />
-
-    </android.support.v4.view.ViewPager>-->
-
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
-        android:layout_marginTop="-58dp"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
-            android:layout_gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/triangle">
-
-                <TextView
-                    android:id="@+id/rating"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginEnd="64dp"
-                    android:layout_marginRight="64dp"
-                    android:paddingTop="4dp"
-                    android:background="@drawable/circle"
-                    android:gravity="center"
-                    android:textColor="@android:color/black" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:paddingTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@android:color/white">
-
-                <TextView
-                    android:id="@+id/movieTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:maxLines="2"
-                    android:text="@string/movieTitle"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:paddingBottom="8dp"/>
-
-                <LinearLayout
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_marginRight="4dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center_horizontal"
-                        android:id="@+id/seasons"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/seasons"
-                        />
-
-                    <TextView
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center_horizontal"
-                        android:id="@+id/episodes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/episodes" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/currentStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
-                    android:text="@string/currentStatus" />
-
-                <TextView
-                    android:id="@+id/movieReleaseDate"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:drawableLeft="@drawable/ic_release"
-                    android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_release"
-                    android:text="@string/releaseDate"/>
-
-                <LinearLayout
-                    android:id="@+id/buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/to_watchlist_button"
-                        style="@style/CardActions"
-                        android:text="@string/move_not_seen" />
-
-                    <Button
-                        android:id="@+id/watched_button"
-                        style="@style/CardActions"
-                        android:text="@string/move_seen" />
-
-                    <Button
-                        android:id="@+id/delete_button"
-                        style="@style/CardActions"
-                        android:text="@string/delete" />
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:lineSpacingMultiplier="1.4"
-                    android:id="@+id/movie_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="24dp"
-                    android:text="@string/noDescription"
-                    android:textSize="17sp" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:layout_gravity="center_horizontal"
-                    android:paddingLeft="24dp"
-                    android:paddingStart="24dp"
-                    android:paddingRight="24dp"
-                    android:paddingEnd="24dp"
-                    android:paddingBottom="24dp"
-                    android:id="@+id/seasonPoster"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

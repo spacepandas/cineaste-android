@@ -52,5 +52,8 @@
     <string name="episodes">Folgen: %s</string>
     <string name="currentStatus">Mein Stand: Staffel %s, Episode %s</string>
     <string name="currentSeason">Staffel %s</string>
+    <string name="season_description">Staffeln:</string>
+    <string name="description">Beschreibung:</string>
+    <string name="more">mehr</string>
 
 </resources>

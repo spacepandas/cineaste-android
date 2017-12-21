@@ -1,20 +1,15 @@
 package de.cineaste.android.activity;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,17 +17,12 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.SeasonAdapter;
-import de.cineaste.android.adapter.SeasonPagerAdapter;
+import de.cineaste.android.adapter.SeriesDetailAdapter;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.entity.Series;
@@ -48,19 +38,10 @@ public class SeriesDetailActivity extends AppCompatActivity {
     private int state;
     private long seriesId;
     private SeriesDbHelper dbHelper;
-    private SeasonPagerAdapter adapter;
-    private ViewPager viewPager;
     private Series currentSeries;
     private Gson gson;
     private ImageView poster;
-    private TextView rating;
-    private TextView title;
-    private TextView releaseDate;
-    private TextView seasons;
-    private TextView episodes;
-    private TextView currentStatus;
-    private RecyclerView seasonsRv;
-    private NestedScrollView layout;
+    private RecyclerView layout;
     private Runnable updateCallBack;
 
 
@@ -114,31 +95,10 @@ public class SeriesDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        releaseDate = findViewById(R.id.movieReleaseDate);
         poster = findViewById(R.id.movie_poster);
-        rating = findViewById(R.id.rating);
-        title = findViewById(R.id.movieTitle);
         layout = findViewById(R.id.overlay);
-        episodes = findViewById(R.id.episodes);
-        seasons = findViewById(R.id.seasons);
-        currentStatus = findViewById(R.id.currentStatus);
-        seasonsRv = findViewById(R.id.seasonPoster);
-
-        int numberOfColumns = determineNumberOfColumns();
-
-       /* StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(
-                numberOfColumns,
-                StaggeredGridLayoutManager.VERTICAL);*/
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-
-        seasonsRv.setLayoutManager(layoutManager);
-        seasonsRv.setItemAnimator(new DefaultItemAnimator());
-        seasonsRv.setNestedScrollingEnabled(false);
-
-        //todo remove null
-        SeasonAdapter adapter = new SeasonAdapter(this, null, seriesId);
-        seasonsRv.setAdapter(adapter);
-
+        layout.setLayoutManager(new LinearLayoutManager(this));
+        layout.setHasFixedSize(true);
     }
 
     private void initToolbar() {
@@ -158,6 +118,7 @@ public class SeriesDetailActivity extends AppCompatActivity {
             boolean isShow = true;
             int scrollRange = -1;
 
+            //todo title;
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (scrollRange == -1) {
@@ -165,12 +126,12 @@ public class SeriesDetailActivity extends AppCompatActivity {
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbarLayout.setTitle(currentSeries.getName());
-                    title.setVisibility(View.GONE);
+                 //   title.setVisibility(View.GONE);
 
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbarLayout.setTitle(" ");
-                    title.setVisibility(View.VISIBLE);
+                  //  title.setVisibility(View.VISIBLE);
                     isShow = false;
                 }
             }
@@ -224,29 +185,6 @@ public class SeriesDetailActivity extends AppCompatActivity {
     }
 
     private void assignData(Series series) {
-        TextView descriptionTv = findViewById(R.id.movie_description);
-
-        String description = series.getDescription();
-        descriptionTv.setText(
-                (description == null || description.isEmpty())
-                        ? getString(R.string.noDescription) : description);
-
-        title.setText(series.getName());
-        if (series.getReleaseDate() != null) {
-            releaseDate.setText(convertDate(series.getReleaseDate()));
-            releaseDate.setVisibility(View.VISIBLE);
-        } else {
-            releaseDate.setVisibility(View.GONE);
-        }
-
-        rating.setText(String.valueOf(series.getVoteAverage()));
-        episodes.setText(getString(R.string.episodes, String.valueOf(series.getNumberOfEpisodes())));
-        seasons.setText(getString(R.string.seasons, String.valueOf(series.getNumberOfSeasons())));
-        currentStatus.setText(getString(R.string.currentStatus,
-                String.valueOf(series.getCurrentNumberOfSeason()),
-                String.valueOf(series.getCurrentNumberOfEpisode())));
-
-
         String posterUri = Constants.POSTER_URI_ORIGINAL
                 .replace("<posterName>", series.getBackdropPath() != null ?
                         series.getBackdropPath() : "/")
@@ -255,6 +193,9 @@ public class SeriesDetailActivity extends AppCompatActivity {
                 .load(posterUri)
                 .error(R.drawable.placeholder_poster)
                 .into(poster);
+
+        //todo replace null
+        layout.setAdapter(new SeriesDetailAdapter(series, null));
     }
 
     private void loadRequestedSeries() {
@@ -342,17 +283,4 @@ public class SeriesDetailActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private String convertDate(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy", getResources().getConfiguration().locale);
-        return simpleDateFormat.format(date);
-    }
-
-    private int determineNumberOfColumns() {
-        int numberOfColumns = 2;
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            numberOfColumns = 4;
-        }
-        return numberOfColumns;
-    }
 }

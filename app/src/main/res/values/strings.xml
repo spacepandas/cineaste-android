@@ -55,5 +55,8 @@ Special thanks to Philipp Wolf, for the design!
     <string name="episodes">Episodes: %s</string>
     <string name="currentStatus">My status: Season %s, Episode %s</string>
     <string name="currentSeason">Season %s</string>
+    <string name="season_description">Seasons:</string>
+    <string name="description">Description:</string>
+    <string name="more">more</string>
 
 </resources>
