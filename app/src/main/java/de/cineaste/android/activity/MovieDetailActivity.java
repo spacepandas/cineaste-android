@@ -457,6 +457,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 MovieDetailActivity.super.onBackPressed();
+                layout.setVisibility(View.GONE);
             }
 
             @Override

@@ -180,6 +180,7 @@ public class SeriesDao extends BaseDao {
         String[] selectionArgs = {String.valueOf(series.getId())};
 
         for (Season season : series.getSeasons()) {
+            season.setSeriesId(series.getId());
             seasonDao.update(season);
         }
 
