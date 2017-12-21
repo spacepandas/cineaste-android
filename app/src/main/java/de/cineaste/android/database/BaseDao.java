@@ -123,11 +123,11 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 	public static abstract class SeasonEntry implements BaseColumns {
 
 		static final String TABLE_NAME = "season";
+		public static final String COLUMN_SEASON_SERIES_ID = "seriesId";
+		public static final String COLUMN_SEASON_SEASON_NUMBER = "seasonNumber";
 		static final String COLUMN_SEASON_RELEASE_DATE = "releaseDate";
 		static final String COLUMN_SEASON_EPISODE_COUNT = "episodenCount";
 		static final String COLUMN_SEASON_POSTER_PATH = "posterPath";
-		static final String COLUMN_SEASON_SEASON_NUMBER = "seasonNumber";
-		static final String COLUMN_SEASON_SERIES_ID = "seriesId";
 	}
 
 	public static abstract class EpisodeEntry implements BaseColumns {

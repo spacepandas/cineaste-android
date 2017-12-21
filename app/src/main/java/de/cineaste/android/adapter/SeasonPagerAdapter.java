@@ -1,7 +1,5 @@
 package de.cineaste.android.adapter;
 
-
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

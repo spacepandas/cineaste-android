@@ -26,6 +26,7 @@ import de.cineaste.android.adapter.SeriesDetailAdapter;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.entity.Series;
+import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.network.NetworkCallback;
 import de.cineaste.android.network.NetworkClient;
 import de.cineaste.android.network.NetworkRequest;
@@ -33,7 +34,7 @@ import de.cineaste.android.network.NetworkResponse;
 import de.cineaste.android.util.Constants;
 import de.cineaste.android.util.DateAwareGson;
 
-public class SeriesDetailActivity extends AppCompatActivity {
+public class SeriesDetailActivity extends AppCompatActivity implements ItemClickListener {
 
     private int state;
     private long seriesId;
@@ -44,6 +45,14 @@ public class SeriesDetailActivity extends AppCompatActivity {
     private RecyclerView layout;
     private Runnable updateCallBack;
 
+    @Override
+    public void onItemClickListener(long itemId, View[] views) {
+        Intent intent = new Intent(SeriesDetailActivity.this, SeasonDetailActivity.class);
+        intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, currentSeries.getId());
+        intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, itemId);
+
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +77,6 @@ public class SeriesDetailActivity extends AppCompatActivity {
         } else {
             assignData(currentSeries);
         }
-
-
-        // adapter = new SeasonPagerAdapter(getSupportFragmentManager(), currentSeries, getResources());
-        //  viewPager = findViewById(R.id.pager);
-
-        //  viewPager.setAdapter(adapter);
 
         initToolbar();
 
@@ -118,7 +121,6 @@ public class SeriesDetailActivity extends AppCompatActivity {
             boolean isShow = true;
             int scrollRange = -1;
 
-            //todo title;
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (scrollRange == -1) {
@@ -126,12 +128,10 @@ public class SeriesDetailActivity extends AppCompatActivity {
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbarLayout.setTitle(currentSeries.getName());
-                 //   title.setVisibility(View.GONE);
 
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbarLayout.setTitle(" ");
-                  //  title.setVisibility(View.VISIBLE);
                     isShow = false;
                 }
             }
@@ -176,6 +176,9 @@ public class SeriesDetailActivity extends AppCompatActivity {
                         public void run() {
                             assignData(series);
                             series.setWatched(currentSeries.isWatched());
+                            series.setCurrentNumberOfSeason(currentSeries.getCurrentNumberOfSeason());
+                            series.setCurrentNumberOfEpisode(currentSeries.getCurrentNumberOfEpisode());
+                            series.setCurrentPosterPath(currentSeries.getCurrentPosterPath());
                             dbHelper.createOrUpdate(series);
                         }
                     });
@@ -194,8 +197,7 @@ public class SeriesDetailActivity extends AppCompatActivity {
                 .error(R.drawable.placeholder_poster)
                 .into(poster);
 
-        //todo replace null
-        layout.setAdapter(new SeriesDetailAdapter(series, null));
+        layout.setAdapter(new SeriesDetailAdapter(series, this));
     }
 
     private void loadRequestedSeries() {

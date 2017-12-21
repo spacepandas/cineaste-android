@@ -43,7 +43,7 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
                 return new DescriptionViewHolder(v, parent.getContext());
             case 3:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.series_detail_seasons, parent, false);
-                return new SeasonsListViewHolder(v, parent.getContext());
+                return new SeasonsListViewHolder(v, parent.getContext(), clickListener);
         }
 
         return null;
@@ -190,12 +190,14 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
     private class SeasonsListViewHolder extends RecyclerView.ViewHolder {
         private RecyclerView recyclerView;
         private Context context;
+        private ItemClickListener itemClickListener;
 
-        SeasonsListViewHolder(View itemView, Context context) {
+        SeasonsListViewHolder(View itemView, Context context, ItemClickListener itemClickListener) {
             super(itemView);
 
             this.recyclerView = itemView.findViewById(R.id.seasonPoster);
             this.context = context;
+            this.itemClickListener = itemClickListener;
         }
 
         void assignData(Series series) {
@@ -203,11 +205,10 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
 
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            //todo
-//            recyclerView.setNestedScrollingEnabled(false);
+            recyclerView.setNestedScrollingEnabled(false);
 
             //todo remove null
-            SeasonAdapter adapter = new SeasonAdapter(context, null, series.getId());
+            SeasonAdapter adapter = new SeasonAdapter(context, itemClickListener, series.getId());
             recyclerView.setAdapter(adapter);
         }
     }
