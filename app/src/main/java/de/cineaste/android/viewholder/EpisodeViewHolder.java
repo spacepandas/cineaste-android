@@ -13,18 +13,31 @@ public class EpisodeViewHolder extends RecyclerView.ViewHolder {
     private TextView episodeNumber;
     private TextView episodeTitle;
     private CheckBox checkBox;
+    private OnEpisodeWatchStateChangeListener onEpisodeWatchStateChangeListener;
 
-    public EpisodeViewHolder(View itemView) {
+    public interface OnEpisodeWatchStateChangeListener {
+        void watchStateChanged(Episode episode);
+    }
+
+    public EpisodeViewHolder(View itemView, OnEpisodeWatchStateChangeListener onEpisodeWatchStateChangeListener) {
         super(itemView);
 
+        this.onEpisodeWatchStateChangeListener = onEpisodeWatchStateChangeListener;
         episodeNumber = itemView.findViewById(R.id.episodeNumber);
         episodeTitle = itemView.findViewById(R.id.episodeTitle);
         checkBox = itemView.findViewById(R.id.checkBox);
     }
 
-    public void assignData(Episode episode) {
+    public void assignData(final Episode episode) {
         episodeNumber.setText(String.valueOf(episode.getEpisodeNumber()));
         episodeTitle.setText(episode.getName());
         checkBox.setChecked(episode.isWatched());
+
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onEpisodeWatchStateChangeListener.watchStateChanged(episode);
+            }
+        });
     }
 }

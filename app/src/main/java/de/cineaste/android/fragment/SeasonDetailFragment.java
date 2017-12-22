@@ -23,22 +23,48 @@ import java.util.List;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.EpisodeAdapter;
 import de.cineaste.android.database.EpisodeDbHelper;
+import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.entity.Episode;
+import de.cineaste.android.entity.Season;
+import de.cineaste.android.entity.Series;
 import de.cineaste.android.network.NetworkCallback;
 import de.cineaste.android.network.NetworkClient;
 import de.cineaste.android.network.NetworkRequest;
 import de.cineaste.android.network.NetworkResponse;
 import de.cineaste.android.util.DateAwareGson;
+import de.cineaste.android.viewholder.EpisodeViewHolder;
 
-public class SeasonDetailFragment extends Fragment {
+public class SeasonDetailFragment extends Fragment implements EpisodeViewHolder.OnEpisodeWatchStateChangeListener {
 
     private int seasonNr;
     private long seriesId;
     private long seasonId;
     private EpisodeDbHelper db;
+    private SeriesDbHelper seriesDbHelper;
     private RecyclerView recyclerView;
     private EpisodeAdapter adapter;
     private Runnable updateCallback;
+
+    @Override
+    public void watchStateChanged(Episode episode) {
+        episode.setWatched(!episode.isWatched());
+        db.updateWatchState(episode);
+        Series currentSeries = seriesDbHelper.readSeries(seriesId);
+        if (!episode.isWatched()) {
+            currentSeries.setWatched(false);
+        }
+
+        Episode firstUnwatched = seriesDbHelper.findFirstUnWatchedEpisode(currentSeries);
+        if (firstUnwatched != null) {
+            Season currentSeason = seriesDbHelper.getSeasonFromId(currentSeries, firstUnwatched.getSeasonId());
+            if (currentSeason != null) {
+                currentSeries.setCurrentNumberOfSeason(currentSeason.getSeasonNumber());
+                currentSeries.setCurrentNumberOfEpisode(firstUnwatched.getEpisodeNumber());
+            }
+        }
+
+        seriesDbHelper.createOrUpdate(currentSeries);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +79,7 @@ public class SeasonDetailFragment extends Fragment {
         seriesId = args.getLong("seriesId", -1);
 
         db = EpisodeDbHelper.getInstance(getContext());
+        seriesDbHelper = SeriesDbHelper.getInstance(getContext());
 
         updateCallback = getUpdateCallback();
     }
@@ -70,7 +97,7 @@ public class SeasonDetailFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
 
-        adapter = new EpisodeAdapter(db.readAllEpisodesOfSeason(seasonId));
+        adapter = new EpisodeAdapter(db.readAllEpisodesOfSeason(seasonId), this);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

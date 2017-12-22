@@ -11,7 +11,6 @@ import de.cineaste.android.entity.Season;
 import de.cineaste.android.entity.Series;
 import de.cineaste.android.fragment.WatchState;
 
-
 public class SeriesDbHelper {
 
     private static SeriesDbHelper instance;
@@ -55,38 +54,6 @@ public class SeriesDbHelper {
         return seriesDao.read(selection, selectionArgs, BaseDao.SeriesEntry.COLUMN_SERIES_LIST_POSITION + " ASC");
     }
 
-/*    public void episodeWatched(Series series) {
-        series = readSeries(series.getId());
-        Season currentSeason = getCurrentSeason(series.getCurrentNumberOfSeason(), series);
-        if (currentSeason == null) {
-            return;
-        }
-
-        List<Episode> currentEpisodes = episodeDbHelper.readAllEpisodesOfSeason(currentSeason.getId());
-        boolean seasonWatched = false;
-        for (int i = 0; i < currentEpisodes.size(); i++) {
-            Episode currentEpisode = currentEpisodes.get(i);
-            if (!currentEpisode.isWatched()) {
-                currentEpisode.setWatched(true);
-                episodeDbHelper.updateWatchState(currentEpisode);
-                series.setCurrentNumberOfEpisode(currentEpisode.getEpisodeNumber());
-                if (i == currentEpisodes.size() - 1) {
-                    seasonWatched = true;
-                }
-                break;
-            }
-        }
-        if (seasonWatched) {
-            int updatedSeasonNumber = series.getCurrentNumberOfSeason() + 1;
-            if (getCurrentSeason(updatedSeasonNumber, series) != null) {
-                series.setCurrentNumberOfEpisode(1);
-                series.setCurrentNumberOfSeason(updatedSeasonNumber);
-            }
-        }
-
-        createOrUpdate(series);
-    }*/
-
     public void episodeWatched(Series series) {
         Episode firstUnWatchedEpisode = findFirstUnWatchedEpisode(series);
         if (firstUnWatchedEpisode != null) {
@@ -106,18 +73,25 @@ public class SeriesDbHelper {
                     if (!series.isInProduction()) {
                         series.setWatched(true);
                     }
+                    series.setCurrentNumberOfSeason(series.getNumberOfSeasons());
+                    Season season  = series.getSeasons().get(series.getNumberOfSeasons()-1);
+                    series.setCurrentNumberOfEpisode(season.getEpisodeCount());
+
                 }
             }
         } else {
             if (!series.isInProduction()) {
                 series.setWatched(true);
             }
+            series.setCurrentNumberOfSeason(series.getNumberOfSeasons());
+            Season season  = series.getSeasons().get(series.getNumberOfSeasons()-1);
+            series.setCurrentNumberOfEpisode(season.getEpisodeCount());
         }
 
         createOrUpdate(series);
     }
 
-    private Episode findFirstUnWatchedEpisode(Series series) {
+    public Episode findFirstUnWatchedEpisode(Series series) {
         for (Season season : series.getSeasons()) {
             List<Episode> episodes = episodeDbHelper.readAllEpisodesOfSeason(season.getId());
             for (Episode episode : episodes) {
@@ -129,7 +103,7 @@ public class SeriesDbHelper {
         return null;
     }
 
-    private Season getSeasonFromId(Series series, long seasonId) {
+    public Season getSeasonFromId(Series series, long seasonId) {
         for (Season season : series.getSeasons()) {
             if (season.getId() == seasonId) {
                 return season;

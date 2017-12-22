@@ -16,10 +16,12 @@ import de.cineaste.android.viewholder.EpisodeViewHolder;
 public class EpisodeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Episode> episodes = new ArrayList<>();
+    private final EpisodeViewHolder.OnEpisodeWatchStateChangeListener onEpisodeWatchStateChangeListener;
 
-    public EpisodeAdapter(List<Episode> episodes) {
+    public EpisodeAdapter(List<Episode> episodes, EpisodeViewHolder.OnEpisodeWatchStateChangeListener onEpisodeWatchStateChangeListener) {
         this.episodes.clear();
         this.episodes.addAll(episodes);
+        this.onEpisodeWatchStateChangeListener = onEpisodeWatchStateChangeListener;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .from(parent.getContext())
                 .inflate(R.layout.card_episode, parent, false);
 
-        return new EpisodeViewHolder(view);
+        return new EpisodeViewHolder(view, onEpisodeWatchStateChangeListener);
     }
 
     @Override
