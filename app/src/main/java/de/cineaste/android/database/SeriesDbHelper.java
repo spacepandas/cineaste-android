@@ -2,11 +2,11 @@ package de.cineaste.android.database;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import de.cineaste.android.entity.Episode;
 import de.cineaste.android.entity.Season;
 import de.cineaste.android.entity.Series;
 import de.cineaste.android.fragment.WatchState;
@@ -17,10 +17,12 @@ public class SeriesDbHelper {
     private static SeriesDbHelper instance;
 
     private final SeriesDao seriesDao;
+    private final EpisodeDbHelper episodeDbHelper;
     private final SimpleDateFormat sdf;
 
     private SeriesDbHelper(Context context) {
         this.seriesDao = SeriesDao.getInstance(context);
+        this.episodeDbHelper = EpisodeDbHelper.getInstance(context);
         sdf = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
     }
 
@@ -53,32 +55,88 @@ public class SeriesDbHelper {
         return seriesDao.read(selection, selectionArgs, BaseDao.SeriesEntry.COLUMN_SERIES_LIST_POSITION + " ASC");
     }
 
-    public void episodeWatched(Series series) {
+/*    public void episodeWatched(Series series) {
         series = readSeries(series.getId());
         Season currentSeason = getCurrentSeason(series.getCurrentNumberOfSeason(), series);
-        int updatedEpisodeIndex = series.getCurrentNumberOfEpisode() + 1;
         if (currentSeason == null) {
             return;
         }
-        if (updatedEpisodeIndex > currentSeason.getEpisodeCount()) {
-            int updatedSeasonIndex = series.getCurrentNumberOfSeason() + 1;
-            Season newSeason = getCurrentSeason(updatedSeasonIndex, series);
 
-            if (newSeason != null) {
-                series.setCurrentNumberOfEpisode(1);
-                series.setCurrentNumberOfSeason(updatedSeasonIndex);
-                series.setCurrentPosterPath(newSeason.getPosterPath());
-            } else {
-                if (!series.isInProduction()) {
-                    series.setWatched(true);
+        List<Episode> currentEpisodes = episodeDbHelper.readAllEpisodesOfSeason(currentSeason.getId());
+        boolean seasonWatched = false;
+        for (int i = 0; i < currentEpisodes.size(); i++) {
+            Episode currentEpisode = currentEpisodes.get(i);
+            if (!currentEpisode.isWatched()) {
+                currentEpisode.setWatched(true);
+                episodeDbHelper.updateWatchState(currentEpisode);
+                series.setCurrentNumberOfEpisode(currentEpisode.getEpisodeNumber());
+                if (i == currentEpisodes.size() - 1) {
+                    seasonWatched = true;
                 }
+                break;
             }
-
-        } else {
-            series.setCurrentNumberOfEpisode(updatedEpisodeIndex);
+        }
+        if (seasonWatched) {
+            int updatedSeasonNumber = series.getCurrentNumberOfSeason() + 1;
+            if (getCurrentSeason(updatedSeasonNumber, series) != null) {
+                series.setCurrentNumberOfEpisode(1);
+                series.setCurrentNumberOfSeason(updatedSeasonNumber);
+            }
         }
 
         createOrUpdate(series);
+    }*/
+
+    public void episodeWatched(Series series) {
+        Episode firstUnWatchedEpisode = findFirstUnWatchedEpisode(series);
+        if (firstUnWatchedEpisode != null) {
+            Season currentSeason = getSeasonFromId(series, firstUnWatchedEpisode.getSeasonId());
+            if (currentSeason != null) {
+                firstUnWatchedEpisode.setWatched(true);
+                episodeDbHelper.updateWatchState(firstUnWatchedEpisode);
+
+                Episode updatedFirstUnWatchedEpisode = findFirstUnWatchedEpisode(series);
+                if (updatedFirstUnWatchedEpisode != null) {
+                    Season updatedCurrentSeason = getSeasonFromId(series, updatedFirstUnWatchedEpisode.getSeasonId());
+                    if (updatedCurrentSeason != null) {
+                        series.setCurrentNumberOfEpisode(updatedFirstUnWatchedEpisode.getEpisodeNumber());
+                        series.setCurrentNumberOfSeason(updatedCurrentSeason.getSeasonNumber());
+                    }
+                } else {
+                    if (!series.isInProduction()) {
+                        series.setWatched(true);
+                    }
+                }
+            }
+        } else {
+            if (!series.isInProduction()) {
+                series.setWatched(true);
+            }
+        }
+
+        createOrUpdate(series);
+    }
+
+    private Episode findFirstUnWatchedEpisode(Series series) {
+        for (Season season : series.getSeasons()) {
+            List<Episode> episodes = episodeDbHelper.readAllEpisodesOfSeason(season.getId());
+            for (Episode episode : episodes) {
+                if (!episode.isWatched()) {
+                    return episode;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Season getSeasonFromId(Series series, long seasonId) {
+        for (Season season : series.getSeasons()) {
+            if (season.getId() == seasonId) {
+                return season;
+            }
+        }
+
+        return null;
     }
 
     private Season getCurrentSeason(int currentSeasonIndex, Series series) {
@@ -94,7 +152,6 @@ public class SeriesDbHelper {
     public List<Series> reorderAlphabetical(WatchState state) {
         return reorder(state, BaseDao.SeriesEntry.COLUMN_SERIES_NAME);
     }
-
 
     public List<Series> reorderByReleaseDate(WatchState state) {
         return reorder(state, BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE);
@@ -139,9 +196,6 @@ public class SeriesDbHelper {
     }
 
     private Series initSeries(Series series) {
-        if (TextUtils.isEmpty(series.getCurrentPosterPath())) {
-            series.setCurrentPosterPath(series.getPosterPath());
-        }
         if (series.getCurrentNumberOfSeason() == 0) {
             series.setCurrentNumberOfSeason(1);
         }

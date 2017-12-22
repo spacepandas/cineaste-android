@@ -37,12 +37,24 @@ public class EpisodeDbHelper {
         List<Episode> episodeList = episodeDao.read(selection, selectionArgs);
 
         if (!episodeList.isEmpty()) {
+            episode.setWatched(episodeList.get(0).isWatched());
             update(episode);
         } else {
             episodeDao.create(episode);
         }
     }
 
+    public void updateWatchState(Episode episode) {
+        String selection = BaseDao.EpisodeEntry._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(episode.getId())};
+        List<Episode> episodeList = episodeDao.read(selection, selectionArgs);
+
+        if (!episodeList.isEmpty()) {
+            update(episode);
+        } else {
+            episodeDao.create(episode);
+        }
+    }
     public void delete(Episode episode) {
         episodeDao.delete(episode.getId());
     }

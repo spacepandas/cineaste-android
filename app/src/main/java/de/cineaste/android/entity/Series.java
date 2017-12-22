@@ -30,7 +30,6 @@ public class Series {
     private String backdropPath;
     private List<Season> seasons;
 
-    private String currentPosterPath;
     private int currentNumberOfEpisode;
     private int currentNumberOfSeason;
     private boolean watched;
@@ -126,14 +125,6 @@ public class Series {
 
     public void setSeasons(List<Season> seasons) {
         this.seasons = seasons;
-    }
-
-    public String getCurrentPosterPath() {
-        return currentPosterPath;
-    }
-
-    public void setCurrentPosterPath(String currentPosterPath) {
-        this.currentPosterPath = currentPosterPath;
     }
 
     public int getCurrentNumberOfEpisode() {

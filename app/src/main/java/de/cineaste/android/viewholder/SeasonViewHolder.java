@@ -44,7 +44,11 @@ public class SeasonViewHolder extends RecyclerView.ViewHolder {
     public void assignData(final Season season) {
         seasonNumber.setText(resources.getString(R.string.currentSeason, String.valueOf(season.getSeasonNumber())));
         numberOfEpisodes.setText(resources.getString(R.string.episodes, String.valueOf(season.getEpisodeCount())));
-        releaseDate.setText(convertDate(season.getReleaseDate()));
+        if (season.getReleaseDate() == null) {
+            releaseDate.setVisibility(View.GONE);
+        } else {
+            releaseDate.setText(convertDate(season.getReleaseDate()));
+        }
 
         setMoviePoster(season);
 

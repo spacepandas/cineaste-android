@@ -51,7 +51,7 @@ public abstract class AbstractSeriesViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void setMoviePoster(Series series) {
-        String posterName = series.getCurrentPosterPath();
+        String posterName = series.getPosterPath();
         if (TextUtils.isEmpty(posterName)) {
             posterName = series.getPosterPath();
         }

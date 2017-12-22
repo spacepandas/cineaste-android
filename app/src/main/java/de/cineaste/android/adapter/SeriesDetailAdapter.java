@@ -85,6 +85,7 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
         private TextView episodes;
         private TextView currentStatus;
         private TextView releaseDate;
+        private TextView toBeContinued;
         private Resources resources;
 
         BaseViewHolder(View itemView, Context context) {
@@ -95,6 +96,7 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
             this.episodes = itemView.findViewById(R.id.episodes);
             this.currentStatus = itemView.findViewById(R.id.currentStatus);
             this.releaseDate = itemView.findViewById(R.id.releaseDate);
+            this.toBeContinued = itemView.findViewById(R.id.toBeContinued);
             this.resources = context.getResources();
         }
 
@@ -113,13 +115,10 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
             currentStatus.setText(resources.getString(R.string.currentStatus,
                     String.valueOf(series.getCurrentNumberOfSeason()),
                     String.valueOf(series.getCurrentNumberOfEpisode())));
-        }
-
-        void displayTitle(boolean display) {
-            if (display) {
-                title.setVisibility(View.VISIBLE);
+            if (series.isInProduction()) {
+                toBeContinued.setVisibility(View.VISIBLE);
             } else {
-                title.setVisibility(View.GONE);
+                toBeContinued.setVisibility(View.GONE);
             }
         }
 
@@ -207,7 +206,6 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setNestedScrollingEnabled(false);
 
-            //todo remove null
             SeasonAdapter adapter = new SeasonAdapter(context, itemClickListener, series.getId());
             recyclerView.setAdapter(adapter);
         }

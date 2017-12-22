@@ -1,6 +1,5 @@
 package de.cineaste.android.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,24 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.database.EpisodeDbHelper;
 import de.cineaste.android.entity.Episode;
 import de.cineaste.android.viewholder.EpisodeViewHolder;
 
 
 public class EpisodeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final long seasonId;
-    private final Context context;
-    private final EpisodeDbHelper db;
     private List<Episode> episodes = new ArrayList<>();
 
-    public EpisodeAdapter(long seasonId, Context context) {
-        this.seasonId = seasonId;
-        this.context = context;
-        this.db = EpisodeDbHelper.getInstance(context);
+    public EpisodeAdapter(List<Episode> episodes) {
         this.episodes.clear();
-        this.episodes.addAll(db.readAllEpisodesOfSeason(seasonId));
+        this.episodes.addAll(episodes);
     }
 
     @Override
@@ -49,8 +41,8 @@ public class EpisodeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return episodes.size();
     }
 
-    public void update() {
+    public void update(List<Episode> episodes) {
         this.episodes.clear();
-        this.episodes.addAll(db.readAllEpisodesOfSeason(seasonId));
+        this.episodes.addAll(episodes);
     }
 }

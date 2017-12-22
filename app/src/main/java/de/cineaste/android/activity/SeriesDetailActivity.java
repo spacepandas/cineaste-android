@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SeriesDetailAdapter;
 import de.cineaste.android.database.BaseDao;
+import de.cineaste.android.database.EpisodeDbHelper;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.entity.Series;
 import de.cineaste.android.listener.ItemClickListener;
@@ -44,6 +46,7 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
     private ImageView poster;
     private RecyclerView layout;
     private Runnable updateCallBack;
+    private FloatingActionButton fab;
 
     @Override
     public void onItemClickListener(long itemId, View[] views) {
@@ -98,10 +101,25 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
     }
 
     private void initViews() {
+        fab = findViewById(R.id.fab);
         poster = findViewById(R.id.movie_poster);
         layout = findViewById(R.id.overlay);
         layout.setLayoutManager(new LinearLayoutManager(this));
         layout.setHasFixedSize(true);
+
+        if (state != R.string.searchState) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dbHelper.episodeWatched(currentSeries);
+                    currentSeries = dbHelper.readSeries(currentSeries.getId());
+                    assignData(currentSeries);
+                }
+            });
+        } else {
+            fab.setVisibility(View.GONE);
+        }
     }
 
     private void initToolbar() {
@@ -178,7 +196,6 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
                             series.setWatched(currentSeries.isWatched());
                             series.setCurrentNumberOfSeason(currentSeries.getCurrentNumberOfSeason());
                             series.setCurrentNumberOfEpisode(currentSeries.getCurrentNumberOfEpisode());
-                            series.setCurrentPosterPath(currentSeries.getCurrentPosterPath());
                             dbHelper.createOrUpdate(series);
                         }
                     });
@@ -186,7 +203,6 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
             });
         }
     }
-
     private void assignData(Series series) {
         String posterUri = Constants.POSTER_URI_ORIGINAL
                 .replace("<posterName>", series.getBackdropPath() != null ?

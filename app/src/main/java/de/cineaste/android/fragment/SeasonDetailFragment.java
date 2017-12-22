@@ -3,6 +3,7 @@ package de.cineaste.android.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,8 +37,8 @@ public class SeasonDetailFragment extends Fragment {
     private long seasonId;
     private EpisodeDbHelper db;
     private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
     private EpisodeAdapter adapter;
+    private Runnable updateCallback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,10 +53,12 @@ public class SeasonDetailFragment extends Fragment {
         seriesId = args.getLong("seriesId", -1);
 
         db = EpisodeDbHelper.getInstance(getContext());
+
+        updateCallback = getUpdateCallback();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final Activity activity = getActivity();
         if (activity == null) {
@@ -65,16 +68,33 @@ public class SeasonDetailFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.episodeRecyclerView);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(activity);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
 
-        adapter = new EpisodeAdapter(seasonId, activity);
+        adapter = new EpisodeAdapter(db.readAllEpisodesOfSeason(seasonId));
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        loadSeason();
+        autoUpdate();
 
         return view;
+    }
+
+    private void autoUpdate() {
+        recyclerView.removeCallbacks(updateCallback);
+        recyclerView.postDelayed(updateCallback, 1000);
+    }
+
+    private Runnable getUpdateCallback() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                if (SeasonDetailFragment.this.isAdded()) {
+                    loadSeason();
+                }
+
+            }
+        };
     }
 
     private void loadSeason() {
@@ -94,14 +114,21 @@ public class SeasonDetailFragment extends Fragment {
                 Type listType = new TypeToken<List<Episode>>(){}.getType();
                 final List<Episode> episodes = gson.fromJson(episodesListJson, listType);
 
-                getActivity().runOnUiThread(new Runnable() {
+                Activity activity = getActivity();
+                if (activity == null) {
+                    return;
+                }
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         for (Episode episode : episodes) {
                             episode.setSeasonId(seasonId);
                             db.createOrUpdate(episode);
                         }
-                        adapter.update();
+                        adapter.update(episodes);
+                        if (SeasonDetailFragment.this.isAdded()) {
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 });
             }
