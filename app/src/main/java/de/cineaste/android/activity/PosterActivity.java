@@ -20,11 +20,11 @@ import de.cineaste.android.util.Constants;
 import de.cineaste.android.R;
 import de.markusfisch.android.scalingimageview.widget.ScalingImageView;
 
-public class MoviePosterActivity extends AppCompatActivity {
+public class PosterActivity extends AppCompatActivity {
 
     public final static String POSTER_PATH = "posterPath";
 
-    private ScalingImageView moviePoster;
+    private ScalingImageView poster;
     private String posterPath;
 
     @Override
@@ -34,10 +34,10 @@ public class MoviePosterActivity extends AppCompatActivity {
         Intent intent = getIntent();
         posterPath = intent.getStringExtra(POSTER_PATH);
 
-        moviePoster = new ScalingImageView(this);
+        poster = new ScalingImageView(this);
         setTransitionNameIfNecessary();
-        moviePoster.setImageResource(R.drawable.placeholder_poster);
-        setContentView(moviePoster);
+        poster.setImageResource(R.drawable.placeholder_poster);
+        setContentView(poster);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -47,7 +47,7 @@ public class MoviePosterActivity extends AppCompatActivity {
 
     @TargetApi(21)
     private void setTransitionNameIfNecessary(){
-        moviePoster.setTransitionName("poster");
+        poster.setTransitionName("poster");
     }
 
     @Override
@@ -64,23 +64,23 @@ public class MoviePosterActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(getPosterUrl(Constants.POSTER_URI_SMALL))
                 .error(R.drawable.placeholder_poster)
-                .into(moviePoster, new Callback() {
+                .into(poster, new Callback() {
                     @Override
                     public void onSuccess() {
-                        final Drawable placeHolder = moviePoster.getDrawable();
+                        final Drawable placeHolder = poster.getDrawable();
                         setBackgroundColor(((BitmapDrawable) placeHolder).getBitmap());
-                        Picasso.with(MoviePosterActivity.this)
+                        Picasso.with(PosterActivity.this)
                                 .load(getPosterUrl(Constants.POSTER_URI_ORIGINAL))
                                 .placeholder(placeHolder)
-                                .into(moviePoster, new Callback() {
+                                .into(poster, new Callback() {
                                     @Override
                                     public void onSuccess() {
-                                        Snackbar.make(moviePoster, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(poster, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show();
                                     }
 
                                     @Override
                                     public void onError() {
-                                        moviePoster.setImageDrawable(placeHolder);
+                                        poster.setImageDrawable(placeHolder);
                                     }
                                 });
                     }

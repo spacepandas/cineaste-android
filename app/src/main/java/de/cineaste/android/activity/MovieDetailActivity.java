@@ -222,8 +222,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         moviePoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MovieDetailActivity.this, MoviePosterActivity.class);
-                intent.putExtra(MoviePosterActivity.POSTER_PATH, currentMovie.getPosterPath());
+                Intent intent = new Intent(MovieDetailActivity.this, PosterActivity.class);
+                intent.putExtra(PosterActivity.POSTER_PATH, currentMovie.getPosterPath());
                 slideOut();
                 startActivity(intent);
             }

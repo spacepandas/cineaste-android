@@ -25,7 +25,6 @@ import com.squareup.picasso.Picasso;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.SeriesDetailAdapter;
 import de.cineaste.android.database.BaseDao;
-import de.cineaste.android.database.EpisodeDbHelper;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.entity.Series;
 import de.cineaste.android.listener.ItemClickListener;
@@ -86,8 +85,8 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
         poster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SeriesDetailActivity.this, MoviePosterActivity.class);
-                intent.putExtra(MoviePosterActivity.POSTER_PATH, currentSeries.getBackdropPath());
+                Intent intent = new Intent(SeriesDetailActivity.this, PosterActivity.class);
+                intent.putExtra(PosterActivity.POSTER_PATH, currentSeries.getBackdropPath());
                 slideOut();
                 startActivity(intent);
             }
