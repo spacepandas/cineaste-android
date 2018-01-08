@@ -1,41 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:id="@+id/movie_lists">
-        <item
-            android:title="@string/movies"/>
-        <item
-            android:id="@+id/show_movie_watchlist"
-            android:icon="@drawable/ic_add_to_watchlist_white"
-            android:title="@string/watchList"/>
-        <item
-            android:id="@+id/show_movie_watchedlist"
-            android:icon="@drawable/ic_add_to_watchedlist_white"
-            android:title="@string/watchedlist"/>
-    </group>
 
-    <group android:id="@+id/series_lists">
-        <item
-            android:title="@string/series"/>
-        <item
-            android:id="@+id/show_series_watchlist"
-            android:icon="@drawable/ic_add_to_watchlist_white"
-            android:title="@string/watchList"/>
-        <item
-            android:id="@+id/show_series_watchedlist"
-            android:icon="@drawable/ic_add_to_watchedlist_white"
-            android:title="@string/watchedlist"/>
-    </group>
+    <item android:title="@string/movies"
+        android:id="@+id/movies">
+        <menu>
+            <group android:id="@+id/movie_lists">
+                <item
+                    android:id="@+id/show_movie_watchlist"
+                    android:icon="@drawable/ic_add_to_watchlist_white"
+                    android:title="@string/watchList" />
+                <item
+                    android:id="@+id/show_movie_watchedlist"
+                    android:icon="@drawable/ic_add_to_watchedlist_white"
+                    android:title="@string/watchedlist" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/series" android:id="@+id/series">
+        <menu>
+            <group android:id="@+id/series_lists">
+                <item
+                    android:id="@+id/show_series_watchlist"
+                    android:icon="@drawable/ic_add_to_watchlist_white"
+                    android:title="@string/watchList" />
+                <item
+                    android:id="@+id/show_series_watchedlist"
+                    android:icon="@drawable/ic_add_to_watchedlist_white"
+                    android:title="@string/watchedlist" />
+            </group>
+        </menu>
+    </item>
 
     <group android:id="@+id/settings">
-        <item android:id="@+id/exportMovies"
+        <item
+            android:id="@+id/exportMovies"
             android:icon="@drawable/ic_export"
-            android:title="@string/exportMovies"/>
-        <item android:id="@+id/importMovies"
+            android:title="@string/exportMovies" />
+        <item
+            android:id="@+id/importMovies"
             android:icon="@drawable/ic_import"
-            android:title="@string/importMovies"/>
-        <item android:id="@+id/about"
+            android:title="@string/importMovies" />
+        <item
+            android:id="@+id/about"
             android:icon="@drawable/ic_alert"
-            android:title="@string/about"/>
+            android:title="@string/about" />
     </group>
 
 </menu>

@@ -20,6 +20,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -164,14 +166,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new CustomDrawerClickListener());
 
-        Menu menu = navigationView.getMenu();
-        for(int i = 0; i < menu.size(); i++){
-            Drawable drawable = menu.getItem(i).getIcon();
-            if(drawable != null) {
-                drawable.mutate();
-                drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
-            }
-        }
+        colorMenu(navigationView.getMenu());
 
         userName = navigationView.getHeaderView(0).findViewById(R.id.username);
 
@@ -182,6 +177,29 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+    }
+
+    private void colorMenu(Menu menu) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem menuItem = menu.getItem(i);
+
+            if (menuItem.getTitle() != null)  {
+                SpannableString spanString = new SpannableString(menuItem.getTitle().toString());
+                spanString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.toolbar_text)), 0, spanString.length(), 0);
+                menuItem.setTitle(spanString);
+            }
+
+            Drawable drawable = menuItem.getIcon();
+            if(drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+            }
+
+            Menu subMenu = menuItem.getSubMenu();
+            if (subMenu != null) {
+                colorMenu(subMenu);
+            }
+        }
     }
 
     private class CustomDrawerClickListener implements NavigationView.OnNavigationItemSelectedListener {
