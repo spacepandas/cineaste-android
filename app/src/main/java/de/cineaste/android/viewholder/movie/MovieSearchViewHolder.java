@@ -1,12 +1,12 @@
-package de.cineaste.android.viewholder;
+package de.cineaste.android.viewholder.movie;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.MovieSearchQueryAdapter;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.adapter.movie.MovieSearchQueryAdapter;
+import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.listener.ItemClickListener;
 
 public class MovieSearchViewHolder extends AbstractMovieViewHolder {
@@ -19,7 +19,7 @@ public class MovieSearchViewHolder extends AbstractMovieViewHolder {
         super(itemView, context, listener);
 
         addToWatchlistButton = itemView.findViewById(R.id.to_watchlist_button);
-        movieWatchedButton = itemView.findViewById(R.id.watched_button);
+        movieWatchedButton = itemView.findViewById(R.id.history_button);
         this.movieStateChange = movieStateChange;
 
     }

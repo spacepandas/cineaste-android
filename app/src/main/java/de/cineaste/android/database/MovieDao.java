@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 
 class MovieDao extends BaseDao {
     private final SimpleDateFormat sdf;

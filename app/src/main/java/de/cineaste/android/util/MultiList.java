@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.cineaste.android.entity.MovieDto;
+import de.cineaste.android.entity.movie.MovieDto;
 
 public class MultiList {
 

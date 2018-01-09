@@ -32,13 +32,13 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.SeriesSearchQueryAdapter;
+import de.cineaste.android.adapter.series.SeriesSearchQueryAdapter;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.EpisodeDbHelper;
 import de.cineaste.android.database.SeriesDbHelper;
-import de.cineaste.android.entity.Episode;
-import de.cineaste.android.entity.Season;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Episode;
+import de.cineaste.android.entity.series.Season;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.network.NetworkCallback;
 import de.cineaste.android.network.NetworkClient;
@@ -97,7 +97,7 @@ public class SeriesSearchActivity extends AppCompatActivity implements ItemClick
                     }
                 };
                 break;
-            case R.id.watched_button:
+            case R.id.history_button:
                 callback = new NetworkCallback() {
                     @Override
                     public void onFailure() {

@@ -29,10 +29,10 @@ import de.cineaste.android.R;
 import de.cineaste.android.activity.MovieDetailActivity;
 import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.activity.MovieSearchActivity;
-import de.cineaste.android.adapter.MovieListAdapter;
-import de.cineaste.android.controllFlow.BaseItemTouchHelperCallback;
-import de.cineaste.android.controllFlow.WatchedlistItemTouchHelperCallback;
-import de.cineaste.android.controllFlow.WatchlistItemTouchHelperCallback;
+import de.cineaste.android.adapter.movie.MovieListAdapter;
+import de.cineaste.android.controllFlow.movie.BaseMovieTouchHelperCallback;
+import de.cineaste.android.controllFlow.movie.HistorylistMovieTouchHelperCallback;
+import de.cineaste.android.controllFlow.movie.WatchlistMovieTouchHelperCallback;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.UserDbHelper;
 import de.cineaste.android.listener.ItemClickListener;
@@ -278,7 +278,7 @@ public class BaseMovieListFragment extends Fragment
         if (watchState == WatchState.WATCH_STATE) {
             state = R.string.watchlistState;
         } else {
-            state = R.string.watchedlistState;
+            state = R.string.historyState;
         }
         Activity activity = getActivity();
         if (activity == null) {
@@ -305,11 +305,11 @@ public class BaseMovieListFragment extends Fragment
         itemTouchHelper.attachToRecyclerView(watchlistRecyclerView);
     }
 
-    private BaseItemTouchHelperCallback getCorrectCallBack() {
+    private BaseMovieTouchHelperCallback getCorrectCallBack() {
         if (watchState == WatchState.WATCH_STATE) {
-            return new WatchlistItemTouchHelperCallback(layoutManager, movieListAdapter, watchlistRecyclerView, getResources());
+            return new WatchlistMovieTouchHelperCallback(layoutManager, movieListAdapter, watchlistRecyclerView, getResources());
         } else {
-            return new WatchedlistItemTouchHelperCallback(layoutManager, movieListAdapter, watchlistRecyclerView, getResources());
+            return new HistorylistMovieTouchHelperCallback(layoutManager, movieListAdapter, watchlistRecyclerView, getResources());
         }
     }
 

@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.entity.Season;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Season;
+import de.cineaste.android.entity.series.Series;
 
 public class SeriesDao extends BaseDao {
 

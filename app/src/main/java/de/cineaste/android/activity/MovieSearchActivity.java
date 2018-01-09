@@ -29,16 +29,15 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.util.DateAwareGson;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.MovieSearchQueryAdapter;
+import de.cineaste.android.adapter.movie.MovieSearchQueryAdapter;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.network.NetworkCallback;
 import de.cineaste.android.network.NetworkClient;
 import de.cineaste.android.network.NetworkRequest;
@@ -94,7 +93,7 @@ public class MovieSearchActivity extends AppCompatActivity implements ItemClickL
                     }
                 };
                 break;
-            case R.id.watched_button:
+            case R.id.history_button:
                 callback = new NetworkCallback() {
                     @Override
                     public void onFailure() {

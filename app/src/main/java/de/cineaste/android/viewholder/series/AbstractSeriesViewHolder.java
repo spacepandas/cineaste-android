@@ -1,4 +1,4 @@
-package de.cineaste.android.viewholder;
+package de.cineaste.android.viewholder.series;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,8 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.Movie;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.util.Constants;
 

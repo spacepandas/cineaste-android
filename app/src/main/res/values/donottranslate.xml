@@ -5,7 +5,7 @@
     <string name="about">About</string>
     <string name="state">state</string>
     <string name="watchlistState">watchlist</string>
-    <string name="watchedlistState">watchedlist</string>
+    <string name="historyState">history</string>
     <string name="searchState">search</string>
     <string name="githubLogo">GitHub</string>
     <string name="tmdbLogo">tmdb</string>

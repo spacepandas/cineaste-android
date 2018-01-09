@@ -3,7 +3,7 @@ package de.cineaste.android.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.entity.NearbyMessage;
+import de.cineaste.android.entity.movie.NearbyMessage;
 
 public class NearbyMessageHandler {
 

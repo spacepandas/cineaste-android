@@ -6,9 +6,9 @@ import android.support.annotation.NonNull;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import de.cineaste.android.entity.Episode;
-import de.cineaste.android.entity.Season;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Episode;
+import de.cineaste.android.entity.series.Season;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.WatchState;
 
 public class SeriesDbHelper {

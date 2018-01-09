@@ -18,7 +18,7 @@ import java.util.Locale;
 import de.cineaste.android.util.Constants;
 import de.cineaste.android.R;
 import de.cineaste.android.database.NearbyMessageHandler;
-import de.cineaste.android.entity.MatchingResult;
+import de.cineaste.android.entity.movie.MatchingResult;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
 
@@ -68,7 +68,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 			super(itemView);
 			title = itemView.findViewById(R.id.movie_title);
 			counter = itemView.findViewById(R.id.movie_counter_tv);
-			watchedButton = itemView.findViewById(R.id.watched_button);
+			watchedButton = itemView.findViewById(R.id.history_button);
 			moviePoster = itemView.findViewById(R.id.movie_poster_image_view);
 		}
 

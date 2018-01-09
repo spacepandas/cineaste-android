@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
-import de.cineaste.android.entity.Episode;
+import de.cineaste.android.entity.series.Episode;
 
 public class EpisodeDbHelper {
 

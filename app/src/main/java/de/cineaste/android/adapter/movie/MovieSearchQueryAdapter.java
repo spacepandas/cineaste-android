@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.adapter.movie;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.listener.ItemClickListener;
-import de.cineaste.android.viewholder.MovieSearchViewHolder;
+import de.cineaste.android.viewholder.movie.MovieSearchViewHolder;
 
 public class MovieSearchQueryAdapter extends RecyclerView.Adapter<MovieSearchViewHolder> {
 	private final List<Movie> dataset = new ArrayList<>();

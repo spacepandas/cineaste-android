@@ -1,6 +1,6 @@
 package de.cineaste.android.listener;
 
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 
 public interface OnMovieRemovedListener {
 

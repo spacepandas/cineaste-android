@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.adapter.series;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
-import de.cineaste.android.viewholder.SeriesSearchViewHolder;
+import de.cineaste.android.viewholder.series.SeriesSearchViewHolder;
 
 public class SeriesSearchQueryAdapter extends RecyclerView.Adapter<SeriesSearchViewHolder> {
     private final List<Series> dataSet = new ArrayList<>();

@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.entity.Season;
+import de.cineaste.android.entity.series.Season;
 
 public class SeasonDao extends BaseDao {
     private final SimpleDateFormat sdf;

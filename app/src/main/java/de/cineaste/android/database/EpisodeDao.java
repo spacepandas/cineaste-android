@@ -7,7 +7,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.entity.Episode;
+import de.cineaste.android.entity.series.Episode;
 
 public class EpisodeDao extends BaseDao {
 

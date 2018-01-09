@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.NearbyMessage;
+import de.cineaste.android.entity.movie.NearbyMessage;
 
 public class NearbyUserAdapter extends RecyclerView.Adapter<NearbyUserAdapter.ViewHolder> {
 

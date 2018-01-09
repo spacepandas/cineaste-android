@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.adapter.series;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.Episode;
-import de.cineaste.android.viewholder.EpisodeViewHolder;
+import de.cineaste.android.entity.series.Episode;
+import de.cineaste.android.viewholder.series.EpisodeViewHolder;
 
 
 public class EpisodeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

@@ -36,7 +36,7 @@ import de.cineaste.android.util.DateAwareGson;
 import de.cineaste.android.R;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.MovieDbHelper;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.network.NetworkCallback;
 import de.cineaste.android.network.NetworkClient;
 import de.cineaste.android.network.NetworkRequest;
@@ -63,7 +63,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.detail_menu, menu);
         MenuItem toWatchList = menu.findItem(R.id.action_to_watchlist);
-        MenuItem toWatchedList = menu.findItem(R.id.action_to_watchedlist);
+        MenuItem toHistory = menu.findItem(R.id.action_to_history);
         MenuItem delete = menu.findItem(R.id.action_delete);
 
         for(int i = 0; i < menu.size(); i++){
@@ -77,17 +77,17 @@ public class MovieDetailActivity extends AppCompatActivity {
         switch (state) {
             case R.string.searchState:
                 delete.setVisible(false);
-                toWatchedList.setVisible(true);
+                toHistory.setVisible(true);
                 toWatchList.setVisible(true);
                 break;
-            case R.string.watchedlistState:
+            case R.string.historyState:
                 delete.setVisible(true);
-                toWatchedList.setVisible(false);
+                toHistory.setVisible(false);
                 toWatchList.setVisible(true);
                 break;
             case R.string.watchlistState:
                 delete.setVisible(true);
-                toWatchedList.setVisible(true);
+                toHistory.setVisible(true);
                 toWatchList.setVisible(false);
                 break;
         }
@@ -106,8 +106,8 @@ public class MovieDetailActivity extends AppCompatActivity {
             case R.id.action_delete:
                 onDeleteClicked();
                 return true;
-            case R.id.action_to_watchedlist:
-                onAddToWatchedClicked();
+            case R.id.action_to_history:
+                onAddToHistoryClicked();
                 return true;
             case R.id.action_to_watchlist:
                 onAddToWatchClicked();
@@ -122,7 +122,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         onBackPressed();
     }
 
-    private void onAddToWatchedClicked() {
+    private void onAddToHistoryClicked() {
         NetworkCallback callback = null;
 
         switch (state) {
@@ -176,7 +176,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     }
                 };
                 break;
-            case R.string.watchedlistState:
+            case R.string.historyState:
                 currentMovie.setWatched(false);
                 movieDbHelper.createOrUpdate(currentMovie);
                 break;
@@ -239,23 +239,23 @@ public class MovieDetailActivity extends AppCompatActivity {
         layout = findViewById(R.id.overlay);
 
         Button deleteBtn = findViewById(R.id.delete_button);
-        Button watchedListBtn = findViewById(R.id.watched_button);
+        Button historyBtn = findViewById(R.id.history_button);
         Button watchListBtn = findViewById(R.id.to_watchlist_button);
 
         switch (state) {
             case R.string.searchState:
                 deleteBtn.setVisibility(View.GONE);
-                watchedListBtn.setVisibility(View.VISIBLE);
+                historyBtn.setVisibility(View.VISIBLE);
                 watchListBtn.setVisibility(View.VISIBLE);
                 break;
-            case R.string.watchedlistState:
+            case R.string.historyState:
                 deleteBtn.setVisibility(View.VISIBLE);
-                watchedListBtn.setVisibility(View.GONE);
+                historyBtn.setVisibility(View.GONE);
                 watchListBtn.setVisibility(View.VISIBLE);
                 break;
             case R.string.watchlistState:
                 deleteBtn.setVisibility(View.VISIBLE);
-                watchedListBtn.setVisibility(View.VISIBLE);
+                historyBtn.setVisibility(View.VISIBLE);
                 watchListBtn.setVisibility(View.GONE);
                 break;
         }
@@ -267,10 +267,10 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-        watchedListBtn.setOnClickListener(new View.OnClickListener() {
+        historyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onAddToWatchedClicked();
+                onAddToHistoryClicked();
             }
         });
 

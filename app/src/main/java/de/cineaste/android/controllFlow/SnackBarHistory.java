@@ -6,12 +6,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.MovieListAdapter;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.adapter.movie.MovieListAdapter;
+import de.cineaste.android.entity.movie.Movie;
 
-public class SnackBarWatchedList extends BaseSnackBar {
+public class SnackBarHistory extends BaseSnackBar {
 
-    public SnackBarWatchedList(LinearLayoutManager linearLayoutManager, MovieListAdapter adapter, View view) {
+    public SnackBarHistory(LinearLayoutManager linearLayoutManager, MovieListAdapter adapter, View view) {
         super(linearLayoutManager, adapter, view);
     }
 

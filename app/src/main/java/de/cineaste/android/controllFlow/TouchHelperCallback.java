@@ -12,28 +12,25 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.MovieListAdapter;
-import de.cineaste.android.viewholder.MovieViewHolder;
 
-public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    final private Resources resources;
-    final LinearLayoutManager linearLayoutManager;
-    final MovieListAdapter movieListAdapter;
-    final RecyclerView recyclerView;
+public abstract class TouchHelperCallback extends ItemTouchHelper.Callback {
 
-    BaseItemTouchHelperCallback(LinearLayoutManager linearLayoutManager, MovieListAdapter movieListAdapter, RecyclerView recyclerView, Resources resources) {
-        this.linearLayoutManager = linearLayoutManager;
-        this.movieListAdapter = movieListAdapter;
-        this.recyclerView = recyclerView;
+    private final Resources resources;
+    protected final LinearLayoutManager linearLayoutManager;
+    protected final RecyclerView recyclerView;
+
+    public TouchHelperCallback(Resources resources, LinearLayoutManager linearLayoutManager, RecyclerView recyclerView) {
         this.resources = resources;
+        this.linearLayoutManager = linearLayoutManager;
+        this.recyclerView = recyclerView;
     }
 
-    abstract BaseSnackBar getSnackBar();
+    abstract protected BaseSnackBar getSnackBar();
 
-    abstract int getRightSwipeMessage();
+    abstract protected int getRightSwipeMessage();
 
-    abstract int getIcon();
+    abstract protected int getIcon();
 
     @Override
     public boolean isLongPressDragEnabled() {
@@ -51,12 +48,6 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callba
         final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
         return makeMovementFlags(dragFlags, swipeFlags);
-    }
-
-    @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        movieListAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        return true;
     }
 
     @Override
@@ -117,25 +108,5 @@ public abstract class BaseItemTouchHelperCallback extends ItemTouchHelper.Callba
             icon.draw(c);
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-    }
-
-    @Override
-    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            MovieViewHolder movieViewHolder = (MovieViewHolder) viewHolder;
-            movieViewHolder.onItemSelected();
-        }
-
-        super.onSelectedChanged(viewHolder, actionState);
-    }
-
-    @Override
-    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        super.clearView(recyclerView, viewHolder);
-
-        MovieViewHolder movieViewHolder = (MovieViewHolder) viewHolder;
-        movieViewHolder.onItemClear();
-
-        movieListAdapter.updatePositionsInDb();
     }
 }

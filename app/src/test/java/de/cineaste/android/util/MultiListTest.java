@@ -6,8 +6,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.entity.MovieDto;
-import de.cineaste.android.util.MultiList;
+import de.cineaste.android.entity.movie.MovieDto;
 
 import static org.junit.Assert.*;
 

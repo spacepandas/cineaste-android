@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 
 public class ImportService {
 

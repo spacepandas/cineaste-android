@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.adapter.series;
 
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.Season;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Season;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.SeasonDetailFragment;
 
 public class SeasonPagerAdapter extends FragmentStatePagerAdapter {

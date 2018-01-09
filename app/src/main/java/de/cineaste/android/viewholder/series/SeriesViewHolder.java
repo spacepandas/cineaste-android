@@ -1,13 +1,14 @@
-package de.cineaste.android.viewholder;
+package de.cineaste.android.viewholder.series;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.SeriesListAdapter;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.adapter.series.SeriesListAdapter;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.WatchState;
 import de.cineaste.android.listener.ItemClickListener;
 
@@ -55,5 +56,13 @@ public class SeriesViewHolder extends AbstractSeriesViewHolder {
                 }
             }
         });
+    }
+
+    public void onItemSelected() {
+        itemView.setBackgroundColor(Color.LTGRAY);
+    }
+
+    public void onItemClear() {
+        itemView.setBackgroundColor(Color.WHITE);
     }
 }

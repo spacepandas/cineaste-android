@@ -1,4 +1,4 @@
-package de.cineaste.android.viewholder;
+package de.cineaste.android.viewholder.series;
 
 import android.content.Context;
 import android.view.View;
@@ -6,8 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.SeriesSearchQueryAdapter;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.adapter.series.SeriesSearchQueryAdapter;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 
 public class SeriesSearchViewHolder extends AbstractSeriesViewHolder {
@@ -23,7 +23,7 @@ public class SeriesSearchViewHolder extends AbstractSeriesViewHolder {
 
         this.releaseDate = itemView.findViewById(R.id.releaseDate);
         this.addToWatchlistButton = itemView.findViewById(R.id.to_watchlist_button);
-        this.watchedButton = itemView.findViewById(R.id.watched_button);
+        this.watchedButton = itemView.findViewById(R.id.history_button);
     }
 
     @Override

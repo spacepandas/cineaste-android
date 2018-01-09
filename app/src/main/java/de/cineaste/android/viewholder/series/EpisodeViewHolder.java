@@ -1,4 +1,4 @@
-package de.cineaste.android.viewholder;
+package de.cineaste.android.viewholder.series;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.Episode;
+import de.cineaste.android.entity.series.Episode;
 
 public class EpisodeViewHolder extends RecyclerView.ViewHolder {
 

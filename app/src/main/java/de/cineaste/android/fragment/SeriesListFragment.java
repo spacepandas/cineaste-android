@@ -29,11 +29,11 @@ import de.cineaste.android.R;
 import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.activity.SeriesDetailActivity;
 import de.cineaste.android.activity.SeriesSearchActivity;
-import de.cineaste.android.adapter.SeriesListAdapter;
+import de.cineaste.android.adapter.series.SeriesListAdapter;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.database.UserDbHelper;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.util.CustomRecyclerView;
 
@@ -281,7 +281,7 @@ public class SeriesListFragment extends Fragment implements ItemClickListener, S
         if (watchState == WatchState.WATCH_STATE) {
             state = R.string.watchlistState;
         } else {
-            state = R.string.watchedlistState;
+            state = R.string.historyState;
         }
         Activity activity = getActivity();
         if (activity == null) {

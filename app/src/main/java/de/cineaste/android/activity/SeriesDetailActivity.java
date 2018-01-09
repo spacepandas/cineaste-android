@@ -23,10 +23,10 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.SeriesDetailAdapter;
+import de.cineaste.android.adapter.series.SeriesDetailAdapter;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.SeriesDbHelper;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.network.NetworkCallback;
 import de.cineaste.android.network.NetworkClient;

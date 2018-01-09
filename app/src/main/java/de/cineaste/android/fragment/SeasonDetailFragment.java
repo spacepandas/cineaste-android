@@ -21,18 +21,18 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.adapter.EpisodeAdapter;
+import de.cineaste.android.adapter.series.EpisodeAdapter;
 import de.cineaste.android.database.EpisodeDbHelper;
 import de.cineaste.android.database.SeriesDbHelper;
-import de.cineaste.android.entity.Episode;
-import de.cineaste.android.entity.Season;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Episode;
+import de.cineaste.android.entity.series.Season;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.network.NetworkCallback;
 import de.cineaste.android.network.NetworkClient;
 import de.cineaste.android.network.NetworkRequest;
 import de.cineaste.android.network.NetworkResponse;
 import de.cineaste.android.util.DateAwareGson;
-import de.cineaste.android.viewholder.EpisodeViewHolder;
+import de.cineaste.android.viewholder.series.EpisodeViewHolder;
 
 public class SeasonDetailFragment extends Fragment implements EpisodeViewHolder.OnEpisodeWatchStateChangeListener {
 

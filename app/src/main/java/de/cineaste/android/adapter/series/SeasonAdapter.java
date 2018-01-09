@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.adapter.series;
 
 
 import android.content.Context;
@@ -12,10 +12,10 @@ import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.database.SeriesDbHelper;
-import de.cineaste.android.entity.Season;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Season;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
-import de.cineaste.android.viewholder.SeasonViewHolder;
+import de.cineaste.android.viewholder.series.SeasonViewHolder;
 
 public class SeasonAdapter extends RecyclerView.Adapter<SeasonViewHolder> {
 

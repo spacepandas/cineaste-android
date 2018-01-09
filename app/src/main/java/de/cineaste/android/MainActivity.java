@@ -37,7 +37,7 @@ import de.cineaste.android.database.ImportService;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.database.UserDbHelper;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.entity.User;
 import de.cineaste.android.fragment.BaseMovieListFragment;
 import de.cineaste.android.fragment.SeriesListFragment;

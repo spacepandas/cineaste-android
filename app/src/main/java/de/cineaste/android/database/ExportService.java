@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 
 public class ExportService {
 

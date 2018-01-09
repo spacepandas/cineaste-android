@@ -1,4 +1,4 @@
-package de.cineaste.android.entity;
+package de.cineaste.android.entity.movie;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.adapter.movie;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -17,11 +17,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.cineaste.android.R;
 import de.cineaste.android.database.MovieDbHelper;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.fragment.WatchState;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.listener.OnMovieRemovedListener;
-import de.cineaste.android.viewholder.MovieViewHolder;
+import de.cineaste.android.viewholder.movie.MovieViewHolder;
 
 public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnMovieRemovedListener, Filterable {
 

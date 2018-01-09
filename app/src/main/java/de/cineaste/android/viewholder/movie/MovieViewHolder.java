@@ -1,4 +1,4 @@
-package de.cineaste.android.viewholder;
+package de.cineaste.android.viewholder.movie;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.Movie;
+import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.listener.ItemClickListener;
 
 public class MovieViewHolder extends AbstractMovieViewHolder {

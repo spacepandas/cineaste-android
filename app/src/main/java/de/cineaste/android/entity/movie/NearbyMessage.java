@@ -1,4 +1,4 @@
-package de.cineaste.android.entity;
+package de.cineaste.android.entity.movie;
 
 import com.google.android.gms.nearby.messages.Message;
 import com.google.gson.Gson;

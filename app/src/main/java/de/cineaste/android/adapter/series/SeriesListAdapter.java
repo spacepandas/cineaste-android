@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.adapter.series;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +17,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.cineaste.android.R;
 import de.cineaste.android.database.SeriesDbHelper;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.WatchState;
 import de.cineaste.android.listener.ItemClickListener;
-import de.cineaste.android.viewholder.SeriesViewHolder;
+import de.cineaste.android.viewholder.series.SeriesViewHolder;
 
 
 public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {

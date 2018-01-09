@@ -1,4 +1,4 @@
-package de.cineaste.android.adapter;
+package de.cineaste.android.adapter.series;
 
 
 import android.content.Context;
@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.cineaste.android.R;
-import de.cineaste.android.entity.Series;
+import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 
 public class SeriesDetailAdapter extends RecyclerView.Adapter {
