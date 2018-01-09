@@ -14,10 +14,12 @@ import de.cineaste.android.entity.series.Season;
 public class SeasonDao extends BaseDao {
     private final SimpleDateFormat sdf;
     private static SeasonDao instance;
+    private EpisodeDao episodeDao;
 
     private SeasonDao(Context context) {
         super(context);
         sdf = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
+        episodeDao = EpisodeDao.getInstance(context);
     }
 
     public static SeasonDao getInstance(Context context) {
@@ -119,6 +121,14 @@ public class SeasonDao extends BaseDao {
     }
 
     void deleteBySeriesId(long id) {
+        String selection = SeasonEntry.COLUMN_SEASON_SERIES_ID + " = ?";
+        String[] selectionArgs = {Long.toString(id)};
+
+        List<Season> seasons = read(selection, selectionArgs);
+        for (Season season : seasons) {
+            episodeDao.deleteBySeasonId(season.getId());
+        }
+
         writeDb.delete(SeasonEntry.TABLE_NAME, SeasonEntry.COLUMN_SEASON_SERIES_ID + " = ?", new String[]{id + ""});
     }
 }

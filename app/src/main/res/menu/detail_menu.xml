@@ -8,7 +8,7 @@
         android:title="@string/watchList"/>
     <item
         android:id="@+id/action_to_history"
-        android:icon="@drawable/ic_add_to_watchedlist_white"
+        android:icon="@drawable/ic_add_to_history_white"
         app:showAsAction="ifRoom"
         android:title="@string/watchedlist"/>
     <item

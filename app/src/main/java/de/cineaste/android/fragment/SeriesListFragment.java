@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +31,9 @@ import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.activity.SeriesDetailActivity;
 import de.cineaste.android.activity.SeriesSearchActivity;
 import de.cineaste.android.adapter.series.SeriesListAdapter;
+import de.cineaste.android.controllFlow.series.BaseSeriesTouchHelperCallback;
+import de.cineaste.android.controllFlow.series.HistoryListSeriesTouchHelperCallback;
+import de.cineaste.android.controllFlow.series.WatchlistSeriesTouchHelperCallback;
 import de.cineaste.android.database.BaseDao;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.database.UserDbHelper;
@@ -304,7 +308,16 @@ public class SeriesListFragment extends Fragment implements ItemClickListener, S
     }
 
     private void initSwipe() {
-        //todo;
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(getCorrectCallBack());
+        itemTouchHelper.attachToRecyclerView(customRecyclerView);
+    }
+
+    private BaseSeriesTouchHelperCallback getCorrectCallBack() {
+        if (watchState == WatchState.WATCH_STATE) {
+            return new WatchlistSeriesTouchHelperCallback(getResources(), layoutManager, customRecyclerView, seriesListAdapter);
+        } else {
+            return new HistoryListSeriesTouchHelperCallback(getResources(), layoutManager, customRecyclerView, seriesListAdapter);
+        }
     }
 
     private enum FilterType {

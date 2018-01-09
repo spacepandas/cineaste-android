@@ -1,4 +1,4 @@
-package de.cineaste.android.controllFlow;
+package de.cineaste.android.controllFlow.movie;
 
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
@@ -7,12 +7,16 @@ import android.view.View;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.movie.MovieListAdapter;
+import de.cineaste.android.controllFlow.BaseSnackBar;
 import de.cineaste.android.entity.movie.Movie;
 
-public class SnackBarHistory extends BaseSnackBar {
+public class MovieSnackBarHistory extends BaseSnackBar {
 
-    public SnackBarHistory(LinearLayoutManager linearLayoutManager, MovieListAdapter adapter, View view) {
-        super(linearLayoutManager, adapter, view);
+    private MovieListAdapter adapter;
+
+    MovieSnackBarHistory(LinearLayoutManager linearLayoutManager, MovieListAdapter adapter, View view) {
+        super(linearLayoutManager, view);
+        this.adapter = adapter;
     }
 
     @Override

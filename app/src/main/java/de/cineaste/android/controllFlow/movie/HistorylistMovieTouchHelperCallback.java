@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.movie.MovieListAdapter;
 import de.cineaste.android.controllFlow.BaseSnackBar;
-import de.cineaste.android.controllFlow.SnackBarHistory;
 
 public class HistorylistMovieTouchHelperCallback extends BaseMovieTouchHelperCallback {
 
@@ -22,11 +21,11 @@ public class HistorylistMovieTouchHelperCallback extends BaseMovieTouchHelperCal
 
     @Override
     protected BaseSnackBar getSnackBar() {
-        return new SnackBarHistory(linearLayoutManager, movieListAdapter, recyclerView);
+        return new MovieSnackBarHistory(linearLayoutManager, movieListAdapter, recyclerView);
     }
 
     @Override
     protected int getRightSwipeMessage() {
-        return R.string.move_not_seen;
+        return R.string.not_seen;
     }
 }

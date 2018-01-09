@@ -63,7 +63,7 @@ public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void removeItem(int position) {
         Series series = filteredDataSet.get(position);
-        //todo delte db
+        db.delete(series.getId());
         removeSeries(series);
     }
 

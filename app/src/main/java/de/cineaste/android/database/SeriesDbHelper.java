@@ -131,6 +131,10 @@ public class SeriesDbHelper {
         return reorder(state, BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE);
     }
 
+    public void delete(long id) {
+        seriesDao.delete(id);
+    }
+
     private List<Series> reorder(WatchState state, String orderBy) {
         String sql = "UPDATE " + BaseDao.SeriesEntry.TABLE_NAME +
                 " SET " + BaseDao.SeriesEntry.COLUMN_SERIES_LIST_POSITION + " = ( " +
@@ -195,4 +199,5 @@ public class SeriesDbHelper {
 
         return seriesDao.getHighestListPosition(updatedSeries.isWatched());
     }
+
 }

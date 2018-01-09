@@ -183,6 +183,7 @@ public class SeriesDao extends BaseDao {
     }
 
     void delete(long id) {
+        seasonDao.deleteBySeriesId(id);
         writeDb.delete(SeriesEntry.TABLE_NAME, SeriesEntry._ID + " = ?", new String[]{id + ""});
     }
 

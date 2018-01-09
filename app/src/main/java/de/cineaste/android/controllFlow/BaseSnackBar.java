@@ -8,13 +8,11 @@ import de.cineaste.android.adapter.movie.MovieListAdapter;
 
 public abstract class BaseSnackBar {
 
-    final LinearLayoutManager linearLayoutManager;
-    final MovieListAdapter adapter;
-    final View view;
+    protected final LinearLayoutManager linearLayoutManager;
+    protected final View view;
 
-    BaseSnackBar(LinearLayoutManager linearLayoutManager, MovieListAdapter adapter, View view) {
+    protected BaseSnackBar(LinearLayoutManager linearLayoutManager, View view) {
         this.linearLayoutManager = linearLayoutManager;
-        this.adapter = adapter;
         this.view = view;
     }
 

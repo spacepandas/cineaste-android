@@ -15,12 +15,12 @@
         <Button
             android:id="@+id/to_watchlist_button"
             style="@style/CardActions"
-            android:text="@string/move_not_seen" />
+            android:text="@string/not_seen" />
 
         <Button
             android:id="@+id/history_button"
             style="@style/CardActions"
-            android:text="@string/move_seen" />
+            android:text="@string/movie_seen" />
 
         <Button
             android:id="@+id/delete_button"

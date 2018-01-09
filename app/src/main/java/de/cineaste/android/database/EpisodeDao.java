@@ -100,4 +100,8 @@ public class EpisodeDao extends BaseDao {
     void delete(long id) {
         writeDb.delete(EpisodeEntry.TABLE_NAME, EpisodeEntry._ID + " = ?", new String[]{id + ""});
     }
+
+    void deleteBySeasonId(long id) {
+        writeDb.delete(EpisodeEntry.TABLE_NAME, EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = ?", new String[]{id + ""});
+    }
 }
