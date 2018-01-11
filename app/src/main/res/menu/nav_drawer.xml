@@ -12,7 +12,7 @@
                 <item
                     android:id="@+id/show_movie_watchedlist"
                     android:icon="@drawable/ic_add_to_history_white"
-                    android:title="@string/watchedlist" />
+                    android:title="@string/history" />
             </group>
         </menu>
     </item>
@@ -27,7 +27,7 @@
                 <item
                     android:id="@+id/show_series_watchedlist"
                     android:icon="@drawable/ic_add_to_history_white"
-                    android:title="@string/watchedlist" />
+                    android:title="@string/history" />
             </group>
         </menu>
     </item>

@@ -16,7 +16,7 @@
     <string name="no_friends_found_try_again">No friends found, try again!</string>
 
     <string name="watchList">Watchlist</string>
-    <string name="watchedlist">History</string>
+    <string name="history">History</string>
     <string name="successfulExport">Successfully Export</string>
     <string name="successfulImport">Successfully Import</string>
     <string name="missing_permission">Import/Export Permissions missing</string>

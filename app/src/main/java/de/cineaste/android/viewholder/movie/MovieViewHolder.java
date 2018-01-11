@@ -31,7 +31,7 @@ public class MovieViewHolder extends AbstractMovieViewHolder {
             public void onClick(View v) {
                 if (listener != null)
                     listener.onItemClickListener(movie.getId(),
-                            new View[]{view, moviePoster, movieTitle, movieRuntime, movieVote});
+                            new View[]{view, poster, title, movieRuntime, movieVote});
             }
         });
     }

@@ -45,7 +45,7 @@ public class SeasonDetailActivity extends AppCompatActivity {
         seriesDbHelper = SeriesDbHelper.getInstance(this);
         episodeDbHelper = EpisodeDbHelper.getInstance(this);
 
-        poster = findViewById(R.id.poster);
+        poster = findViewById(R.id.poster_image_view);
 
         Intent intent = getIntent();
         seriesId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, -1);

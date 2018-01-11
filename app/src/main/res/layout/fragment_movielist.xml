@@ -24,7 +24,7 @@
             android:textColor="@android:color/white" />
 
         <RelativeLayout
-            android:id="@+id/movieListProgressBar"
+            android:id="@+id/progressBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/backgroundColor_half_translucent">

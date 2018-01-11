@@ -1,6 +1,7 @@
 package de.cineaste.android.adapter.series;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import de.cineaste.android.R;
+import de.cineaste.android.adapter.BaseListAdapter;
 import de.cineaste.android.database.SeriesDbHelper;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.WatchState;
@@ -23,13 +25,9 @@ import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.viewholder.series.SeriesViewHolder;
 
 
-public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
+public class SeriesListAdapter extends BaseListAdapter {
 
-    private final Context context;
     private final SeriesDbHelper db;
-    private final ItemClickListener listener;
-    private final WatchState state;
-    private final DisplayMessage displayMessage;
     private List<Series> dataSet = new ArrayList<>();
     private List<Series> filteredDataSet;
     private OnEpisodeWatchedClickListener onEpisodeWatchedClickListener;
@@ -37,10 +35,7 @@ public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final Queue<UpdatedSeries> updatedSeries = new LinkedBlockingQueue<>();
 
     public SeriesListAdapter(DisplayMessage displayMessage, Context context, ItemClickListener listener, WatchState state, OnEpisodeWatchedClickListener onEpisodeWatchedClickListener) {
-        this.context = context;
-        this.listener = listener;
-        this.state = state;
-        this.displayMessage = displayMessage;
+        super(context, displayMessage, listener, state);
         this.onEpisodeWatchedClickListener = onEpisodeWatchedClickListener;
         this.dataSet.clear();
         this.db = SeriesDbHelper.getInstance(context);
@@ -48,16 +43,13 @@ public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.filteredDataSet = new LinkedList<>(dataSet);
     }
 
-    public interface DisplayMessage {
-        void showMessageIfEmptyList();
-    }
-
     public interface OnEpisodeWatchedClickListener {
         void onEpisodeWatchedClick(Series series, int position);
     }
 
     @Override
-    public Filter getFilter() {
+    @NonNull
+    protected Filter getInternalFilter() {
         return new FilerSeries(this, dataSet);
     }
 
@@ -155,16 +147,17 @@ public class SeriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public SeriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.card_series, parent, false);
-
+    @NonNull
+    protected RecyclerView.ViewHolder createViewHolder(View v) {
         return new SeriesViewHolder(v, listener, context, state, onEpisodeWatchedClickListener);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    protected int getLayout() {
+        return R.layout.card_series;
+    }
+
+    protected void assignDataToViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((SeriesViewHolder) holder).assignData(filteredDataSet.get(position), position);
     }
 

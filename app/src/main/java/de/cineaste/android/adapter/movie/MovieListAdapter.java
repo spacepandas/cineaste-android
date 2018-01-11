@@ -1,6 +1,7 @@
 package de.cineaste.android.adapter.movie;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import de.cineaste.android.R;
+import de.cineaste.android.adapter.BaseListAdapter;
 import de.cineaste.android.database.MovieDbHelper;
 import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.fragment.WatchState;
@@ -23,35 +25,26 @@ import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.listener.OnMovieRemovedListener;
 import de.cineaste.android.viewholder.movie.MovieViewHolder;
 
-public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnMovieRemovedListener, Filterable {
+public class MovieListAdapter extends BaseListAdapter implements OnMovieRemovedListener {
 
-    private final Context context;
+
     private final MovieDbHelper db;
-    private final DisplayMessage displayMessage;
-    private final ItemClickListener listener;
-    private final WatchState state;
     private List<Movie> dataSet = new ArrayList<>();
     private List<Movie> filteredDataSet;
 
     private final Queue<UpdatedMovies> updatedMovies = new LinkedBlockingQueue<>();
 
     public MovieListAdapter(DisplayMessage displayMessage, Context context, ItemClickListener listener, WatchState state) {
-        this.displayMessage = displayMessage;
+        super(context, displayMessage, listener, state);
         this.db = MovieDbHelper.getInstance(context);
-        this.context = context;
-        this.listener = listener;
-        this.state = state;
         this.dataSet.clear();
         this.dataSet.addAll(db.readMoviesByWatchStatus(state));
         this.filteredDataSet = new LinkedList<>(dataSet);
     }
 
-    public interface DisplayMessage {
-        void showMessageIfEmptyList();
-    }
-
     @Override
-    public Filter getFilter() {
+    @NonNull
+    protected Filter getInternalFilter() {
         return new FilterMovies(this, dataSet);
     }
 
@@ -135,15 +128,18 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.card_movie, parent, false);
+    @NonNull
+    protected RecyclerView.ViewHolder createViewHolder(View v) {
         return new MovieViewHolder(v, context, listener);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    protected int getLayout() {
+        return R.layout.card_movie;
+    }
+
+    @Override
+    protected void assignDataToViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((MovieViewHolder) holder).assignData(filteredDataSet.get(position));
     }
 

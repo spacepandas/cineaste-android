@@ -49,7 +49,7 @@ public class MovieSearchViewHolder extends AbstractMovieViewHolder {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClickListener(movie.getId(), new View[]{view, moviePoster});
+                listener.onItemClickListener(movie.getId(), new View[]{view, poster});
             }
         });
     }
