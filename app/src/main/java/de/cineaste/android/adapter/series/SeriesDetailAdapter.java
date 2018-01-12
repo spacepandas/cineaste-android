@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -20,12 +21,22 @@ import de.cineaste.android.listener.ItemClickListener;
 
 public class SeriesDetailAdapter extends RecyclerView.Adapter {
 
+    public interface SeriesStateManipulationClickListener {
+        void onDeleteClicked();
+        void onAddToHistoryClicked();
+        void onAddToWatchClicked();
+    }
+
     private Series series;
     private ItemClickListener clickListener;
+    private int state;
+    private SeriesStateManipulationClickListener listener;
 
-    public SeriesDetailAdapter(Series series, ItemClickListener clickListener) {
+    public SeriesDetailAdapter(Series series, ItemClickListener clickListener, int state, SeriesStateManipulationClickListener listener) {
         this.series = series;
         this.clickListener = clickListener;
+        this.state = state;
+        this.listener = listener;
     }
 
     @Override
@@ -37,7 +48,7 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
                 return new BaseViewHolder(v, parent.getContext());
             case 1:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.series_detail_buttons, parent, false);
-                return new ButtonsViewHolder(v);
+                return new ButtonsViewHolder(v, state, listener);
             case 2:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.series_detail_description, parent, false);
                 return new DescriptionViewHolder(v, parent.getContext());
@@ -56,8 +67,7 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
                 ((BaseViewHolder) holder).assignData(series);
                 break;
             case 1:
-                ButtonsViewHolder buttonsViewHolder = (ButtonsViewHolder) holder;
-                //todo
+                ((ButtonsViewHolder) holder).assignData();
                 break;
             case 2:
                 ((DescriptionViewHolder) holder).assignData(series);
@@ -70,6 +80,8 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
+//        if (state == R.string.searchState)
+//            return 3;
         return 4;
     }
 
@@ -130,8 +142,58 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
     }
 
     private class ButtonsViewHolder extends RecyclerView.ViewHolder {
-        ButtonsViewHolder(View itemView) {
+        private Button deleteBtn;
+        private Button historyBtn;
+        private Button watchListBtn;
+        private SeriesStateManipulationClickListener listener;
+
+        ButtonsViewHolder(View itemView, int state, SeriesStateManipulationClickListener listener) {
             super(itemView);
+            deleteBtn = itemView.findViewById(R.id.delete_button);
+            historyBtn = itemView.findViewById(R.id.history_button);
+            watchListBtn = itemView.findViewById(R.id.to_watchlist_button);
+            this.listener = listener;
+
+            switch (state) {
+                case R.string.searchState:
+                    deleteBtn.setVisibility(View.GONE);
+                    historyBtn.setVisibility(View.VISIBLE);
+                    watchListBtn.setVisibility(View.VISIBLE);
+                    break;
+                case R.string.historyState:
+                    deleteBtn.setVisibility(View.VISIBLE);
+                    historyBtn.setVisibility(View.GONE);
+                    watchListBtn.setVisibility(View.VISIBLE);
+                    break;
+                case R.string.watchlistState:
+                    deleteBtn.setVisibility(View.VISIBLE);
+                    historyBtn.setVisibility(View.VISIBLE);
+                    watchListBtn.setVisibility(View.GONE);
+                    break;
+            }
+        }
+
+        public void assignData() {
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onDeleteClicked();
+                }
+            });
+
+            historyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onAddToHistoryClicked();
+                }
+            });
+
+            watchListBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onAddToWatchClicked();
+                }
+            });
         }
     }
 
@@ -206,7 +268,7 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setNestedScrollingEnabled(false);
 
-            SeasonAdapter adapter = new SeasonAdapter(context, itemClickListener, series.getId());
+            SeasonAdapter adapter = new SeasonAdapter(context, itemClickListener, series);
             recyclerView.setAdapter(adapter);
         }
     }

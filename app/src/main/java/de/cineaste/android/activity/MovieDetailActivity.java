@@ -46,7 +46,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private Gson gson;
     private int state;
-    private ImageView moviePoster;
+    private ImageView poster;
+
     private MovieDbHelper movieDbHelper;
     private long movieId;
     private Movie currentMovie;
@@ -219,7 +220,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         initToolbar();
 
-        moviePoster.setOnClickListener(new View.OnClickListener() {
+        poster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MovieDetailActivity.this, PosterActivity.class);
@@ -232,7 +233,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void initViews() {
         movieReleaseDate = findViewById(R.id.movieReleaseDate);
-        moviePoster = findViewById(R.id.movie_poster);
+        poster = findViewById(R.id.movie_poster);
         rating = findViewById(R.id.rating);
         movieTitle = findViewById(R.id.movieTitle);
         movieRuntime = findViewById(R.id.movieRuntime);
@@ -337,7 +338,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(posterUri)
                 .error(R.drawable.placeholder_poster)
-                .into(moviePoster);
+                .into(poster);
     }
 
     private void initToolbar() {

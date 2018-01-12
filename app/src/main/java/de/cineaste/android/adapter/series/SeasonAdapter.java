@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
@@ -19,18 +18,16 @@ import de.cineaste.android.viewholder.series.SeasonViewHolder;
 
 public class SeasonAdapter extends RecyclerView.Adapter<SeasonViewHolder> {
 
-    private SeriesDbHelper dbHelper;
     private List<Season> seasons = new ArrayList<>();
     private final Context context;
     private final ItemClickListener listener;
 
-    public SeasonAdapter(Context context, ItemClickListener listener, long seriesId) {
-        this.dbHelper = SeriesDbHelper.getInstance(context);
+    SeasonAdapter(Context context, ItemClickListener listener, Series series) {
         this.context = context;
         this.listener = listener;
-        Series series = dbHelper.readSeries(seriesId);
         this.seasons.clear();
-        this.seasons.addAll(series.getSeasons());
+        if (series != null)
+            this.seasons.addAll(series.getSeasons());
     }
 
     @Override

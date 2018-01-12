@@ -1,6 +1,9 @@
 package de.cineaste.android.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -12,20 +15,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.series.SeriesDetailAdapter;
 import de.cineaste.android.database.dao.BaseDao;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
+import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.network.NetworkCallback;
@@ -35,17 +44,153 @@ import de.cineaste.android.network.NetworkResponse;
 import de.cineaste.android.util.Constants;
 import de.cineaste.android.util.DateAwareGson;
 
-public class SeriesDetailActivity extends AppCompatActivity implements ItemClickListener {
+public class SeriesDetailActivity extends AppCompatActivity implements ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener {
 
+    private Gson gson;
     private int state;
+    private ImageView poster;
+
     private long seriesId;
     private SeriesDbHelper dbHelper;
     private Series currentSeries;
-    private Gson gson;
-    private ImageView poster;
     private RecyclerView layout;
     private Runnable updateCallBack;
-    private FloatingActionButton fab;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.detail_menu, menu);
+        MenuItem toWatchList = menu.findItem(R.id.action_to_watchlist);
+        MenuItem toHistory = menu.findItem(R.id.action_to_history);
+        MenuItem delete = menu.findItem(R.id.action_delete);
+
+        for(int i = 0; i < menu.size(); i++){
+            Drawable drawable = menu.getItem(i).getIcon();
+            if(drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+
+        switch (state) {
+            case R.string.searchState:
+                delete.setVisible(false);
+                toHistory.setVisible(true);
+                toWatchList.setVisible(true);
+                break;
+            case R.string.historyState:
+                delete.setVisible(true);
+                toHistory.setVisible(false);
+                toWatchList.setVisible(true);
+                break;
+            case R.string.watchlistState:
+                delete.setVisible(true);
+                toHistory.setVisible(true);
+                toWatchList.setVisible(false);
+                break;
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.action_delete:
+                onDeleteClicked();
+                return true;
+            case R.id.action_to_history:
+                onAddToHistoryClicked();
+                return true;
+            case R.id.action_to_watchlist:
+                onAddToWatchClicked();
+                return true;
+        }
+        return true;
+    }
+
+    @Override
+    public void onDeleteClicked() {
+        dbHelper.delete(seriesId);
+        layout.removeCallbacks(updateCallBack);
+        onBackPressed();
+    }
+
+    //todo do not forget about seasons and episodes;
+    @Override
+    public void onAddToHistoryClicked() {
+        NetworkCallback callback = null;
+
+        switch (state) {
+            case R.string.searchState:
+                callback = new NetworkCallback() {
+                    @Override
+                    public void onFailure() {
+
+                    }
+
+                    @Override
+                    public void onSuccess(NetworkResponse response) {
+                        Series series = gson.fromJson(response.getResponseReader(), Series.class);
+                        series.setWatched(true);
+                        dbHelper.createOrUpdate(series);
+                    }
+                };
+                break;
+            case R.string.watchlistState:
+                currentSeries.setWatched(true);
+                dbHelper.createOrUpdate(currentSeries);
+        }
+
+        if (callback != null) {
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(currentSeries.getId()));
+            client.sendRequest(callback);
+            Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
+                    currentSeries.getName()), Toast.LENGTH_SHORT).show();
+        }
+
+        onBackPressed();
+    }
+
+    //todo do not forget about seasons and episodes;
+    @Override
+    public void onAddToWatchClicked() {
+        NetworkCallback callback = null;
+
+        switch (state) {
+            case R.string.searchState:
+                callback = new NetworkCallback() {
+                    @Override
+                    public void onFailure() {
+
+                    }
+
+                    @Override
+                    public void onSuccess(NetworkResponse response) {
+                        dbHelper.createOrUpdate(gson.fromJson(response.getResponseReader(), Series.class));
+                    }
+                };
+                break;
+            case R.string.historyState:
+                currentSeries.setWatched(false);
+                dbHelper.createOrUpdate(currentSeries);
+                break;
+        }
+
+        if (callback != null) {
+            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(currentSeries.getId()));
+            client.sendRequest(callback);
+            Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
+                    currentSeries.getName()), Toast.LENGTH_SHORT).show();
+        }
+
+        onBackPressed();
+    }
+
 
     @Override
     public void onItemClickListener(long itemId, View[] views) {
@@ -100,13 +245,13 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
     }
 
     private void initViews() {
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         poster = findViewById(R.id.movie_poster);
         layout = findViewById(R.id.overlay);
         layout.setLayoutManager(new LinearLayoutManager(this));
         layout.setHasFixedSize(true);
 
-        if (state != R.string.searchState) {
+        if (state == R.string.watchlistState) {
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -212,7 +357,7 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
                 .error(R.drawable.placeholder_poster)
                 .into(poster);
 
-        layout.setAdapter(new SeriesDetailAdapter(series, this));
+        layout.setAdapter(new SeriesDetailAdapter(series, this, state, this));
     }
 
     private void loadRequestedSeries() {
@@ -229,32 +374,20 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        List<Season> seasons = series.getSeasons();
+                        for (Season season : seasons) {
+                            //remove season which contains only special episodes
+                            if (season.getSeasonNumber() == 0) {
+                                seasons.remove(season);
+                                break;
+                            }
+                        }
                         currentSeries = series;
                         assignData(series);
                     }
                 });
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
-           /* case R.id.action_delete:
-                onDeleteClicked();
-                return true;
-            case R.id.action_to_watchedlist:
-                onAddToWatchedClicked();
-                return true;
-            case R.id.action_to_watchlist:
-                onAddToWatchClicked();
-                return true;*/
-        }
-        return true;
     }
 
     private void slideIn() {

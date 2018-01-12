@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,19 +20,19 @@ import java.util.List;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.series.SeasonPagerAdapter;
 import de.cineaste.android.database.dao.BaseDao;
-import de.cineaste.android.database.dbHelper.EpisodeDbHelper;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
+import de.cineaste.android.network.NetworkCallback;
+import de.cineaste.android.network.NetworkClient;
+import de.cineaste.android.network.NetworkRequest;
+import de.cineaste.android.network.NetworkResponse;
 import de.cineaste.android.util.Constants;
+import de.cineaste.android.util.DateAwareGson;
 
 public class SeasonDetailActivity extends AppCompatActivity {
 
-    private SeasonPagerAdapter adapter;
-    private ViewPager viewPager;
     private Series currentSeries;
-    private SeriesDbHelper seriesDbHelper;
-    private EpisodeDbHelper episodeDbHelper;
     private ImageView poster;
 
     private long seriesId;
@@ -42,8 +43,7 @@ public class SeasonDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_season_detail);
 
-        seriesDbHelper = SeriesDbHelper.getInstance(this);
-        episodeDbHelper = EpisodeDbHelper.getInstance(this);
+        SeriesDbHelper seriesDbHelper = SeriesDbHelper.getInstance(this);
 
         poster = findViewById(R.id.poster_image_view);
 
@@ -52,9 +52,19 @@ public class SeasonDetailActivity extends AppCompatActivity {
         seasonId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, -1);
 
         currentSeries = seriesDbHelper.readSeries(seriesId);
+        if (currentSeries == null) {
+            loadSeries();
+        } else {
+            assignData(currentSeries);
+        }
 
-        adapter = new SeasonPagerAdapter(getSupportFragmentManager(), currentSeries, getResources());
-        viewPager = findViewById(R.id.pager);
+        initToolbar();
+
+    }
+
+    private void assignData(Series series) {
+        SeasonPagerAdapter adapter = new SeasonPagerAdapter(getSupportFragmentManager(), series, getResources());
+        ViewPager viewPager = findViewById(R.id.pager);
 
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(currentSeasonIndex());
@@ -76,8 +86,37 @@ public class SeasonDetailActivity extends AppCompatActivity {
         });
 
         setPoster(currentSeasonIndex());
-        initToolbar();
+    }
 
+    private void loadSeries() {
+        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(seriesId));
+        client.sendRequest(new NetworkCallback() {
+            @Override
+            public void onFailure() {
+
+            }
+
+            @Override
+            public void onSuccess(NetworkResponse response) {
+                Gson gson = new DateAwareGson().getGson();
+                final Series series = gson.fromJson(response.getResponseReader(), Series.class);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Season> seasons = series.getSeasons();
+                        for (Season season : seasons) {
+                            //remove season which contains only special episodes
+                            if (season.getSeasonNumber() == 0) {
+                                seasons.remove(season);
+                                break;
+                            }
+                        }
+                        currentSeries = series;
+                        assignData(series);
+                    }
+                });
+            }
+        });
     }
 
     public void setPoster(int position) {
