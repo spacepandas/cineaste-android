@@ -74,6 +74,9 @@ public class SeriesListFragment extends BaseListFragment implements SeriesListAd
 
         MenuItem movieNight = menu.findItem(R.id.startMovieNight);
         movieNight.setVisible(false);
+
+        MenuItem sortByRuntime = menu.findItem(R.id.filterRunTime);
+        sortByRuntime.setVisible(false);
     }
 
     @Override

@@ -18,4 +18,7 @@
     <item android:id="@+id/filterReleaseDate"
         android:title="@string/sort_by_release"
         app:showAsAction="never"/>
+    <item android:id="@+id/filterRunTime"
+        android:title="@string/sort_by_runtime"
+        app:showAsAction="never" />
 </menu>

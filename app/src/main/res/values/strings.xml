@@ -59,6 +59,7 @@ Special thanks to Philipp Wolf, for the design!
     <string name="poster_reloaded">Poster with higher resolution loaded</string>
     <string name="sort_by_alpha">Sort alphabetically</string>
     <string name="sort_by_release">Sort by release date</string>
+    <string name="sort_by_runtime">Sort by runtime</string>
     <string name="delete">Delete</string>
 
     <string name="movies">Movies</string>

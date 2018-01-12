@@ -106,6 +106,12 @@ public class MovieListAdapter extends BaseListAdapter implements OnMovieRemovedL
         filteredDataSet = movies;
     }
 
+    public void orderByRuntime() {
+        List<Movie> movies = db.reorderByRuntime(state);
+        dataSet = movies;
+        filteredDataSet = movies;
+    }
+
     public void updatePositionsInDb() {
         while (updatedMovies.iterator().hasNext()) {
             UpdatedMovies movies = updatedMovies.poll();

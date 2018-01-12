@@ -60,6 +60,10 @@ public class MovieDbHelper {
         return reorder(state, BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE);
     }
 
+    public List<Movie> reorderByRuntime(WatchState state) {
+        return reorder(state, BaseDao.MovieEntry.COLUMN_RUNTIME);
+    }
+
     private List<Movie> reorder(WatchState state, String orderBy) {
         String sql = "UPDATE " + BaseDao.MovieEntry.TABLE_NAME +
                 " SET " + BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION + " = ( " +

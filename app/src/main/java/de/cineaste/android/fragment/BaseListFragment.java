@@ -56,7 +56,7 @@ public abstract class BaseListFragment extends Fragment implements ItemClickList
     protected abstract ItemTouchHelper.Callback getCorrectCallBack();
 
     protected enum FilterType {
-        ALPHABETICAL, RELEASE_DATE
+        ALPHABETICAL, RELEASE_DATE, RUNTIME
     }
 
     @Override
@@ -209,6 +209,9 @@ public abstract class BaseListFragment extends Fragment implements ItemClickList
                 break;
             case R.id.filterReleaseDate:
                 reorderLists(BaseMovieListFragment.FilterType.RELEASE_DATE);
+                break;
+            case R.id.filterRunTime:
+                reorderLists(FilterType.RUNTIME);
                 break;
         }
 

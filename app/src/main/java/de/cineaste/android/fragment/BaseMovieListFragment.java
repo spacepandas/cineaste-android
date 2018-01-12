@@ -72,6 +72,9 @@ public class BaseMovieListFragment extends BaseListFragment {
             case RELEASE_DATE:
                 movieListAdapter.orderByReleaseDate();
                 break;
+            case RUNTIME:
+                movieListAdapter.orderByRuntime();
+                break;
         }
 
         movieListAdapter.notifyDataSetChanged();
