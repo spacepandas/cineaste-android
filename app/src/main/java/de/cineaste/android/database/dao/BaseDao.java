@@ -1,4 +1,4 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -71,49 +71,49 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					EpisodeEntry.COLUMN_EPISODE_WATCHED + INTEGER_TYPE +
 					" )";
 
-	final SQLiteDatabase readDb;
-	final SQLiteDatabase writeDb;
+	protected final SQLiteDatabase readDb;
+	protected final SQLiteDatabase writeDb;
 
 	private static final int DATABASE_VERSION = Constants.DATABASE_VERSION;
 	private static final String DATABASE_NAME = Constants.DATABASE_NAME;
 
-	static abstract class UserEntry implements BaseColumns {
+	public static abstract class UserEntry implements BaseColumns {
 
-		static final String TABLE_NAME = "user";
-		static final String COLUMN_USER_NAME = "userName";
+		public static final String TABLE_NAME = "user";
+		public static final String COLUMN_USER_NAME = "userName";
 	}
 
 	public static abstract class MovieEntry implements BaseColumns {
 
-		static final String TABLE_NAME = "movie";
-		static final String COlUMN_POSTER_PATH = "posterPath";
-		static final String COLUMN_RUNTIME = "runtime";
-		static final String COLUMN_VOTE_AVERAGE = "voteAverage";
-		static final String COLUMN_VOTE_COUNT = "voteCount";
-		static final String COLUMN_MOVIE_TITLE = "title";
-		static final String COLUMN_MOVIE_DESCRIPTION = "description";
-		static final String COLUMN_MOVIE_WATCHED = "watched";
-		static final String COLUMN_MOVIE_WATCHED_DATE = "watchedDate";
-		static final String COLUMN_MOVIE_RELEASE_DATE = "releaseDate";
-		static final String COLUMN_MOVIE_LIST_POSITION = "listPosition";
+		public static final String TABLE_NAME = "movie";
+		public static final String COlUMN_POSTER_PATH = "posterPath";
+		public static final String COLUMN_RUNTIME = "runtime";
+		public static final String COLUMN_VOTE_AVERAGE = "voteAverage";
+		public static final String COLUMN_VOTE_COUNT = "voteCount";
+		public static final String COLUMN_MOVIE_TITLE = "title";
+		public static final String COLUMN_MOVIE_DESCRIPTION = "description";
+		public static final String COLUMN_MOVIE_WATCHED = "watched";
+		public static final String COLUMN_MOVIE_WATCHED_DATE = "watchedDate";
+		public static final String COLUMN_MOVIE_RELEASE_DATE = "releaseDate";
+		public static final String COLUMN_MOVIE_LIST_POSITION = "listPosition";
 	}
 
 	public static abstract class SeriesEntry implements BaseColumns {
 
-		static final String TABLE_NAME = "series";
-		static final String COLUMN_SERIES_NAME = "seriesName";
+		public static final String TABLE_NAME = "series";
+		public static final String COLUMN_SERIES_NAME = "seriesName";
 		static final String COLUMN_SERIES_VOTE_AVERAGE = "voteAverage";
 		static final String COLUMN_SERIES_VOTE_COUNT = "voteCount";
 		static final String COLUMN_SERIES_DESCRIPTION = "description";
-		static final String COLUMN_SERIES_RELEASE_DATE = "releaseDate";
+		public static final String COLUMN_SERIES_RELEASE_DATE = "releaseDate";
 		static final String COLUMN_SERIES_IN_PRODUCTION = "inProduction";
 		static final String COLUMN_SERIES_NUMBER_OF_EPISODES = "numberOfEpisodes";
 		static final String COLUMN_SERIES_NUMBER_OF_SEASONS = "numberOfSeasons";
 		static final String COLUMN_SERIES_POSTER_PATH = "posterPath";
 		static final String COLUMN_SERIES_CURRENT_NUMBER_OF_EPISODE = "currentNumberOfEpisode";
 		static final String COLUMN_SERIES_CURRENT_NUMBER_OF_SEASON = "currentNumberOfSeason";
-		static final String COLUMN_SERIES_SERIES_WATCHED = "seriesWatched";
-		static final String COLUMN_SERIES_LIST_POSITION = "listPosition";
+		public static final String COLUMN_SERIES_SERIES_WATCHED = "seriesWatched";
+		public static final String COLUMN_SERIES_LIST_POSITION = "listPosition";
 		static final String COLUMN_SERIES_BACKDROP_PATH = "backdropPath";
 	}
 
@@ -132,12 +132,12 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		static final String COLUMN_EPISODE_EPISODE_NUMBER = "episodeNumber";
 		static final String COLUMN_EPISODE_NAME = "name";
 		static final String COLUMN_EPISODE_DESCRIPTION = "description";
-		static final String COLUMN_EPISODE_SEASON_ID = "seasonId";
+		public static final String COLUMN_EPISODE_SEASON_ID = "seasonId";
 		static final String COLUMN_EPISODE_WATCHED = "watched";
 
 	}
 
-	BaseDao(Context context) {
+	public BaseDao(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.readDb = getReadableDatabase();
 		this.writeDb = getWritableDatabase();

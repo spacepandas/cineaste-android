@@ -13,7 +13,7 @@ import de.cineaste.android.activity.MovieSearchActivity;
 import de.cineaste.android.adapter.movie.MovieListAdapter;
 import de.cineaste.android.controllFlow.movie.HistorylistMovieTouchHelperCallback;
 import de.cineaste.android.controllFlow.movie.WatchlistMovieTouchHelperCallback;
-import de.cineaste.android.database.BaseDao;
+import de.cineaste.android.database.dao.BaseDao;
 
 public class BaseMovieListFragment extends BaseListFragment {
 

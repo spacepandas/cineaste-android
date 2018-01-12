@@ -1,11 +1,12 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dbHelper;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
+import de.cineaste.android.database.dao.BaseDao;
+import de.cineaste.android.database.dao.SeriesDao;
 import de.cineaste.android.entity.series.Episode;
 import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
@@ -17,12 +18,10 @@ public class SeriesDbHelper {
 
     private final SeriesDao seriesDao;
     private final EpisodeDbHelper episodeDbHelper;
-    private final SimpleDateFormat sdf;
 
     private SeriesDbHelper(Context context) {
         this.seriesDao = SeriesDao.getInstance(context);
         this.episodeDbHelper = EpisodeDbHelper.getInstance(context);
-        sdf = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
     }
 
     public static SeriesDbHelper getInstance(Context context) {

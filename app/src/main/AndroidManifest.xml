@@ -49,7 +49,7 @@
         <activity android:name=".activity.PosterActivity" />
         <activity android:name=".activity.SeriesSearchActivity" />
         <activity android:name=".activity.SeriesDetailActivity" />
-        <activity android:name=".activity.SeasonDetailActivity"></activity>
+        <activity android:name=".activity.SeasonDetailActivity" />
     </application>
 
 </manifest>

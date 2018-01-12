@@ -28,21 +28,29 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 import de.cineaste.android.activity.AboutActivity;
 import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.database.ExportService;
 import de.cineaste.android.database.ImportService;
-import de.cineaste.android.database.MovieDbHelper;
-import de.cineaste.android.database.SeriesDbHelper;
-import de.cineaste.android.database.UserDbHelper;
-import de.cineaste.android.entity.movie.Movie;
+import de.cineaste.android.database.dbHelper.EpisodeDbHelper;
+import de.cineaste.android.database.dbHelper.MovieDbHelper;
+import de.cineaste.android.database.dbHelper.SeriesDbHelper;
+import de.cineaste.android.database.dbHelper.UserDbHelper;
+import de.cineaste.android.entity.ImportExportObject;
 import de.cineaste.android.entity.User;
+import de.cineaste.android.entity.movie.Movie;
+import de.cineaste.android.entity.series.Episode;
+import de.cineaste.android.entity.series.Series;
+import de.cineaste.android.fragment.BaseListFragment;
 import de.cineaste.android.fragment.BaseMovieListFragment;
+import de.cineaste.android.fragment.ImportFinishedDialogFragment;
 import de.cineaste.android.fragment.SeriesListFragment;
 import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.WatchState;
+
+import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.EPISODES_COUNT;
+import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.MOVIE_COUNT;
+import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.SERIES_COUNT;
 
 public class MainActivity extends AppCompatActivity implements UserInputFragment.UserNameListener {
 
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     private UserDbHelper userDbHelper;
     private static MovieDbHelper movieDbHelper;
     private static SeriesDbHelper seriesDbHelper;
+    private static EpisodeDbHelper episodeDbHelper;
     private TextView userName;
 
     private DrawerLayout drawerLayout;
@@ -65,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
             else
                 finish();
         }
-
     }
 
     @Override
@@ -106,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         userDbHelper = UserDbHelper.getInstance(this);
         movieDbHelper = MovieDbHelper.getInstance(this);
         seriesDbHelper = SeriesDbHelper.getInstance(this);
+        episodeDbHelper = EpisodeDbHelper.getInstance(this);
         contentContainer = findViewById(R.id.content_container);
 
         fm = getSupportFragmentManager();
@@ -183,14 +192,14 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         for (int i = 0; i < menu.size(); i++) {
             MenuItem menuItem = menu.getItem(i);
 
-            if (menuItem.getTitle() != null)  {
+            if (menuItem.getTitle() != null) {
                 SpannableString spanString = new SpannableString(menuItem.getTitle().toString());
                 spanString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.toolbar_text)), 0, spanString.length(), 0);
                 menuItem.setTitle(spanString);
             }
 
             Drawable drawable = menuItem.getIcon();
-            if(drawable != null) {
+            if (drawable != null) {
                 drawable.mutate();
                 drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
             }
@@ -239,17 +248,44 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     }
 
     private void exportMovies() {
-        List<Movie> movies = movieDbHelper.readAllMovies();
-        ExportService.exportMovies(movies);
+        ImportExportObject importExportObject = new ImportExportObject();
+        importExportObject.setMovies(movieDbHelper.readAllMovies());
+        importExportObject.setSeries(seriesDbHelper.readAllSeries());
+        importExportObject.setEpisodes(episodeDbHelper.readAllEpisodes());
+        importExportObject = ExportService.export(importExportObject);
+
+        int snackBarMessage = R.string.exportFailed;
+
+        if (importExportObject.isSuccessfullyImported()) {
+            snackBarMessage = R.string.exportSucceeded;
+        }
+
         Snackbar snackbar = Snackbar
-                .make(contentContainer, R.string.successfulExport, Snackbar.LENGTH_SHORT);
+                .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
     private void importMovies() {
-        BaseMovieListFragment baseMovieListFragment = (BaseMovieListFragment) fm.findFragmentByTag(BaseMovieListFragment.class.getName());
-        baseMovieListFragment.getProgressbar().setVisibility(View.VISIBLE);
-        new AsyncMovieImporter().execute(baseMovieListFragment);
+        BaseListFragment baseListFragment;
+        try {
+            baseListFragment = (BaseListFragment) fm.findFragmentByTag(BaseMovieListFragment.class.getName());
+        } catch (Exception ex) {
+            baseListFragment = null;
+        }
+
+        if (baseListFragment == null) {
+            try {
+                baseListFragment = (BaseListFragment) fm.findFragmentByTag(SeriesListFragment.class.getName());
+            } catch (Exception ex) {
+                baseListFragment = null;
+            }
+        }
+
+        if (baseListFragment == null) {
+            return;
+        }
+        baseListFragment.getProgressbar().setVisibility(View.VISIBLE);
+        new AsyncImporter().execute(new AsyncInputAttribute(getSupportFragmentManager(), baseListFragment));
     }
 
     @NonNull
@@ -284,50 +320,86 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         startActivity(intent);
     }
 
-    private static class AsyncMovieImporter extends AsyncTask<BaseMovieListFragment, Void, AsyncAttributes> {
+
+    private static class AsyncImporter extends AsyncTask<AsyncInputAttribute, Void, AsyncOutputAttributes> {
 
         @Override
-        protected AsyncAttributes doInBackground(BaseMovieListFragment... fragments) {
-            List<Movie> movies = ImportService.importMovies();
-            int snackBarMessage;
-            if (movies.size() == 0) {
-                snackBarMessage = R.string.unsuccessfulImport;
-            } else {
-                for (Movie current : movies) {
-                    movieDbHelper.createOrUpdate(current);
-                }
-                snackBarMessage = R.string.successfulImport;
+        protected AsyncOutputAttributes doInBackground(AsyncInputAttribute... asyncInputAttributes) {
+            ImportExportObject importExportObject = ImportService.importFiles();
+
+            for (Movie movie : importExportObject.getMovies()) {
+                movieDbHelper.createOrUpdate(movie);
             }
-            BaseMovieListFragment fragment = fragments[0];
-            Snackbar snackbar = Snackbar.make(fragment.getRecyclerView(), snackBarMessage, Snackbar.LENGTH_SHORT);
 
-            return new AsyncAttributes(snackbar, fragment);
+            for (Series series : importExportObject.getSeries()) {
+                seriesDbHelper.createOrUpdate(series);
+            }
+
+            for (Episode episode : importExportObject.getEpisodes()) {
+                episodeDbHelper.createOrUpdate(episode);
+            }
+
+            return new AsyncOutputAttributes(importExportObject, asyncInputAttributes[0]);
         }
 
         @Override
-        protected void onPostExecute(AsyncAttributes asyncAttributes) {
-            super.onPostExecute(asyncAttributes);
-            asyncAttributes.getSnackbar().show();
-            asyncAttributes.getListFragment().updateAdapter();
-            asyncAttributes.getListFragment().getProgressbar().setVisibility(View.GONE);
+        protected void onPostExecute(AsyncOutputAttributes asyncOutputAttributes) {
+            super.onPostExecute(asyncOutputAttributes);
+
+            ImportExportObject importExportObject = asyncOutputAttributes.getImportExportObject();
+
+            BaseListFragment fragment = asyncOutputAttributes.getAsyncInputAttribute().getBaseListFragment();
+            fragment.getProgressbar().setVisibility(View.GONE);
+            fragment.updateAdapter();
+
+            ImportFinishedDialogFragment finishedDialogFragment = new ImportFinishedDialogFragment();
+
+            Bundle args = new Bundle();
+
+            args.putInt(MOVIE_COUNT, importExportObject.isMoviesSuccessfullyImported() ? importExportObject.getMovies().size() : -1);
+            args.putInt(SERIES_COUNT, importExportObject.isSeriesSuccessfullyImported() ? importExportObject.getSeries().size() : -1);
+            args.putInt(EPISODES_COUNT, importExportObject.isEpisodesSuccessfullyImported() ? importExportObject.getEpisodes().size() : -1);
+
+            finishedDialogFragment.setArguments(args);
+
+            finishedDialogFragment.show(asyncOutputAttributes.getAsyncInputAttribute().getFragmentManager(), "");
         }
     }
 
-    private static class AsyncAttributes {
-        private final Snackbar snackbar;
-        private final BaseMovieListFragment listFragment;
+    private static class AsyncInputAttribute {
+        private final FragmentManager fragmentManager;
+        private final BaseListFragment baseListFragment;
 
-        private AsyncAttributes(Snackbar snackbar, BaseMovieListFragment listFragment) {
-            this.snackbar = snackbar;
-            this.listFragment = listFragment;
+        AsyncInputAttribute(FragmentManager fragmentManager, BaseListFragment baseListFragment) {
+            this.fragmentManager = fragmentManager;
+            this.baseListFragment = baseListFragment;
         }
 
-        private Snackbar getSnackbar() {
-            return snackbar;
+        FragmentManager getFragmentManager() {
+            return fragmentManager;
         }
 
-        private BaseMovieListFragment getListFragment() {
-            return listFragment;
+        BaseListFragment getBaseListFragment() {
+            return baseListFragment;
         }
     }
+
+    private static class AsyncOutputAttributes {
+        private final ImportExportObject importExportObject;
+        private final AsyncInputAttribute asyncInputAttribute;
+
+        AsyncOutputAttributes(ImportExportObject importExportObject, AsyncInputAttribute asyncInputAttribute) {
+            this.importExportObject = importExportObject;
+            this.asyncInputAttribute = asyncInputAttribute;
+        }
+
+        ImportExportObject getImportExportObject() {
+            return importExportObject;
+        }
+
+        AsyncInputAttribute getAsyncInputAttribute() {
+            return asyncInputAttribute;
+        }
+    }
+
 }

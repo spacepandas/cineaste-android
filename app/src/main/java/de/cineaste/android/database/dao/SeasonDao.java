@@ -1,4 +1,4 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,7 +30,7 @@ public class SeasonDao extends BaseDao {
         return instance;
     }
 
-    void create(Season season, long seriesId) {
+    public void create(Season season, long seriesId) {
         if (season.getSeasonNumber() == 0) {
             return;
         }
@@ -116,7 +116,7 @@ public class SeasonDao extends BaseDao {
         writeDb.update(SeasonEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    void delete(long id) {
+    public void delete(long id) {
         writeDb.delete(SeasonEntry.TABLE_NAME, SeasonEntry._ID + " = ?", new String[]{id + ""});
     }
 

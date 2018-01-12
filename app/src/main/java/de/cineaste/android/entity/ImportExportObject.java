@@ -10,20 +10,18 @@ import de.cineaste.android.entity.series.Series;
 
 public class ImportExportObject {
 
-    private List<Movie> movies;
-    private List<Series> series;
-    private List<Episode> episodes;
+    private List<Movie> movies = new ArrayList<>();
+    private boolean moviesSuccessfullyImported = true;
+    private List<Series> series = new ArrayList<>();
+    private boolean seriesSuccessfullyImported = true;
+    private List<Episode> episodes = new ArrayList<>();
+    private boolean episodesSuccessfullyImported = true;
 
     public ImportExportObject() {
-        this.movies = new ArrayList<>();
-        this.series = new ArrayList<>();
-        this.episodes = new ArrayList<>();
     }
 
-    public ImportExportObject(List<Movie> movies, List<Series> series, List<Episode> episodes) {
-        this.movies = movies;
-        this.series = series;
-        this.episodes = episodes;
+    public boolean isSuccessfullyImported() {
+        return moviesSuccessfullyImported && seriesSuccessfullyImported && episodesSuccessfullyImported;
     }
 
     public List<Movie> getMovies() {
@@ -31,7 +29,8 @@ public class ImportExportObject {
     }
 
     public void setMovies(List<Movie> movies) {
-        this.movies = movies;
+        this.movies.clear();
+        this.movies.addAll(movies);
     }
 
     public List<Series> getSeries() {
@@ -39,7 +38,8 @@ public class ImportExportObject {
     }
 
     public void setSeries(List<Series> series) {
-        this.series = series;
+        this.series.clear();
+        this.series.addAll(series);
     }
 
     public List<Episode> getEpisodes() {
@@ -47,6 +47,31 @@ public class ImportExportObject {
     }
 
     public void setEpisodes(List<Episode> episodes) {
-        this.episodes = episodes;
+        this.episodes.clear();
+        this.episodes.addAll(episodes);
+    }
+
+    public boolean isMoviesSuccessfullyImported() {
+        return moviesSuccessfullyImported;
+    }
+
+    public void setMoviesSuccessfullyImported(boolean moviesSuccessfullyImported) {
+        this.moviesSuccessfullyImported = moviesSuccessfullyImported;
+    }
+
+    public boolean isSeriesSuccessfullyImported() {
+        return seriesSuccessfullyImported;
+    }
+
+    public void setSeriesSuccessfullyImported(boolean seriesSuccessfullyImported) {
+        this.seriesSuccessfullyImported = seriesSuccessfullyImported;
+    }
+
+    public boolean isEpisodesSuccessfullyImported() {
+        return episodesSuccessfullyImported;
+    }
+
+    public void setEpisodesSuccessfullyImported(boolean episodesSuccessfullyImported) {
+        this.episodesSuccessfullyImported = episodesSuccessfullyImported;
     }
 }

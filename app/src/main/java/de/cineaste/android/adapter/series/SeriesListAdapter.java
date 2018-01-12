@@ -3,11 +3,8 @@ package de.cineaste.android.adapter.series;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Filter;
-import android.widget.Filterable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.BaseListAdapter;
-import de.cineaste.android.database.SeriesDbHelper;
+import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.WatchState;
 import de.cineaste.android.listener.ItemClickListener;

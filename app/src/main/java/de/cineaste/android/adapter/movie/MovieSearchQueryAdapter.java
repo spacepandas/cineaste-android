@@ -14,7 +14,7 @@ import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.viewholder.movie.MovieSearchViewHolder;
 
 public class MovieSearchQueryAdapter extends RecyclerView.Adapter<MovieSearchViewHolder> {
-	private final List<Movie> dataset = new ArrayList<>();
+	private final List<Movie> dataSet = new ArrayList<>();
 	private final ItemClickListener listener;
 	private final OnMovieStateChange movieStateChange;
 
@@ -29,17 +29,17 @@ public class MovieSearchQueryAdapter extends RecyclerView.Adapter<MovieSearchVie
 	}
 
 	public void addMovies(List<Movie> movies) {
-		dataset.clear();
-		dataset.addAll(movies);
+		dataSet.clear();
+		dataSet.addAll(movies);
 		notifyDataSetChanged();
 	}
 
 	public void addMovie(Movie movie, int index) {
-		dataset.add(index, movie);
+		dataSet.add(index, movie);
 	}
 
 	public void removeMovie(int index) {
-		dataset.remove(index);
+		dataSet.remove(index);
 		notifyItemRemoved(index);
 	}
 
@@ -53,12 +53,12 @@ public class MovieSearchQueryAdapter extends RecyclerView.Adapter<MovieSearchVie
 
 	@Override
 	public void onBindViewHolder(final MovieSearchViewHolder holder, final int position) {
-		holder.assignData(dataset.get(position));
+		holder.assignData(dataSet.get(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return dataset.size();
+		return dataSet.size();
 	}
 
 }

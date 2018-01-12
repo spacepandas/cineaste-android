@@ -1,4 +1,4 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dbHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import de.cineaste.android.database.dao.BaseDao;
+import de.cineaste.android.database.dao.MovieDao;
 import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.fragment.WatchState;
 

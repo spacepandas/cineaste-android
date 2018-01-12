@@ -1,9 +1,11 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dbHelper;
 
 import android.content.Context;
 
 import java.util.List;
 
+import de.cineaste.android.database.dao.BaseDao;
+import de.cineaste.android.database.dao.EpisodeDao;
 import de.cineaste.android.entity.series.Episode;
 
 public class EpisodeDbHelper {
@@ -22,6 +24,10 @@ public class EpisodeDbHelper {
         }
 
         return instance;
+    }
+
+    public List<Episode> readAllEpisodes() {
+        return episodeDao.read(null, null);
     }
 
     public List<Episode> readAllEpisodesOfSeason(long seasonId) {

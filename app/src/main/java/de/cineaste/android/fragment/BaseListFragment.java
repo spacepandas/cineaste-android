@@ -27,7 +27,7 @@ import android.widget.TextView;
 import de.cineaste.android.R;
 import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.adapter.BaseListAdapter;
-import de.cineaste.android.database.UserDbHelper;
+import de.cineaste.android.database.dbHelper.UserDbHelper;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.util.CustomRecyclerView;
 

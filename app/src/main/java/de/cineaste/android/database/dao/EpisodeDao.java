@@ -1,4 +1,4 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,7 +25,7 @@ public class EpisodeDao extends BaseDao {
         return instance;
     }
 
-    void create(Episode episode) {
+    public void create(Episode episode) {
         ContentValues values = new ContentValues();
         values.put(EpisodeEntry._ID, episode.getId());
         values.put(EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER, episode.getEpisodeNumber());
@@ -37,7 +37,7 @@ public class EpisodeDao extends BaseDao {
         writeDb.insert(EpisodeEntry.TABLE_NAME, null, values);
     }
 
-    List<Episode> read(String selection, String[] selectionArgs) {
+    public List<Episode> read(String selection, String[] selectionArgs) {
         List<Episode> episodes = new ArrayList<>();
 
         String[] projection = {
@@ -82,7 +82,7 @@ public class EpisodeDao extends BaseDao {
         return episodes;
     }
 
-    void update(Episode episode) {
+    public void update(Episode episode) {
         ContentValues values = new ContentValues();
         values.put(EpisodeEntry._ID, episode.getId());
         values.put(EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER, episode.getEpisodeNumber());
@@ -97,7 +97,7 @@ public class EpisodeDao extends BaseDao {
         writeDb.update(EpisodeEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    void delete(long id) {
+    public void delete(long id) {
         writeDb.delete(EpisodeEntry.TABLE_NAME, EpisodeEntry._ID + " = ?", new String[]{id + ""});
     }
 

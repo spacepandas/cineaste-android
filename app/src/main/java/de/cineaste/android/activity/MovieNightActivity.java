@@ -38,9 +38,9 @@ import java.util.UUID;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.NearbyUserAdapter;
-import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.database.dbHelper.MovieDbHelper;
 import de.cineaste.android.database.NearbyMessageHandler;
-import de.cineaste.android.database.UserDbHelper;
+import de.cineaste.android.database.dbHelper.UserDbHelper;
 import de.cineaste.android.entity.movie.Movie;
 import de.cineaste.android.entity.movie.MovieDto;
 import de.cineaste.android.entity.movie.NearbyMessage;

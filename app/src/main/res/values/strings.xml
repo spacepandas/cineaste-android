@@ -17,10 +17,20 @@
 
     <string name="watchList">Watchlist</string>
     <string name="history">History</string>
-    <string name="successfulExport">Successfully Export</string>
-    <string name="successfulImport">Successfully Import</string>
+
+    <string name="exportSucceeded">Export succeeded</string>
+    <string name="exportFailed">Export failed</string>
+
+    <string name="importHeadline">Import</string>
+    <string name="importedMovies">%d movies imported</string>
+    <string name="importedMoviesFailed">Movie import failed</string>
+    <string name="importedSeries">%d series imported</string>
+    <string name="importedSeriesFailed">Series import failed</string>
+    <string name="importedEpisodes">%d episodes imported</string>
+    <string name="importedEpisodesFailed">Episode import failed</string>
+
+
     <string name="missing_permission">Import/Export Permissions missing</string>
-    <string name="unsuccessfulImport">Import failed</string>
     <string name="moviePoster">Movie poster</string>
     <string name="remove">Remove movie</string>
     <string name="noInternet">No internet-connection!</string>

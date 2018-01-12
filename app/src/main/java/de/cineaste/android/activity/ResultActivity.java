@@ -17,7 +17,7 @@ import de.cineaste.android.util.DateAwareGson;
 import de.cineaste.android.util.MultiList;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.ResultAdapter;
-import de.cineaste.android.database.MovieDbHelper;
+import de.cineaste.android.database.dbHelper.MovieDbHelper;
 import de.cineaste.android.database.NearbyMessageHandler;
 import de.cineaste.android.entity.movie.MatchingResult;
 import de.cineaste.android.entity.movie.Movie;

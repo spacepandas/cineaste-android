@@ -1,4 +1,4 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import de.cineaste.android.entity.movie.Movie;
 
-class MovieDao extends BaseDao {
+public class MovieDao extends BaseDao {
     private final SimpleDateFormat sdf;
     private static MovieDao mInstance;
 
@@ -27,11 +27,11 @@ class MovieDao extends BaseDao {
         return mInstance;
     }
 
-    void reorder(String statement) {
+    public void reorder(String statement) {
         writeDb.execSQL(statement);
     }
 
-    void create(Movie movie) {
+    public void create(Movie movie) {
         ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, movie.getId());
         values.put(MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
@@ -53,7 +53,7 @@ class MovieDao extends BaseDao {
         writeDb.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
-    List<Movie> read(String selection, String[] selectionArgs, String orderBy) {
+    public List<Movie> read(String selection, String[] selectionArgs, String orderBy) {
         List<Movie> movies = new ArrayList<>();
 
         String[] projection = {
@@ -118,15 +118,15 @@ class MovieDao extends BaseDao {
         return movies;
     }
 
-    void update(ContentValues values, String selection, String[] selectionArgs) {
+    public void update(ContentValues values, String selection, String[] selectionArgs) {
         writeDb.update(MovieEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    void delete(long id) {
+    public void delete(long id) {
         writeDb.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = ?", new String[]{id + ""});
     }
 
-    int getHighestListPosition(boolean watchState) {
+    public int getHighestListPosition(boolean watchState) {
         int highestPos = 0;
 
         String[] projection = {

@@ -18,9 +18,9 @@ import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.series.SeasonPagerAdapter;
-import de.cineaste.android.database.BaseDao;
-import de.cineaste.android.database.EpisodeDbHelper;
-import de.cineaste.android.database.SeriesDbHelper;
+import de.cineaste.android.database.dao.BaseDao;
+import de.cineaste.android.database.dbHelper.EpisodeDbHelper;
+import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.util.Constants;

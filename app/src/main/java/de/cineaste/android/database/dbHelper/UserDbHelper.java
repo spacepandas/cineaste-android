@@ -1,9 +1,10 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dbHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import de.cineaste.android.database.dao.BaseDao;
 import de.cineaste.android.entity.User;
 
 public class UserDbHelper extends BaseDao {

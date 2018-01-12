@@ -1,4 +1,4 @@
-package de.cineaste.android.database;
+package de.cineaste.android.database.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,11 +31,11 @@ public class SeriesDao extends BaseDao {
         return instance;
     }
 
-    void reorder(String statement) {
+    public void reorder(String statement) {
         writeDb.execSQL(statement);
     }
 
-    void create(Series series) {
+    public void create(Series series) {
         ContentValues values = new ContentValues();
         values.put(SeriesEntry._ID, series.getId());
         values.put(SeriesEntry.COLUMN_SERIES_NAME, series.getName());
@@ -64,7 +64,7 @@ public class SeriesDao extends BaseDao {
         }
     }
 
-    List<Series> read(String selection, String[] selectionArgs, String orderBy) {
+    public List<Series> read(String selection, String[] selectionArgs, String orderBy) {
         List<Series> series = new ArrayList<>();
 
         String[] projection = {
@@ -149,7 +149,7 @@ public class SeriesDao extends BaseDao {
         return seasonDao.read(selection, selectionArgs);
     }
 
-    void update(Series series, int listPosition) {
+    public void update(Series series, int listPosition) {
         ContentValues values = new ContentValues();
         values.put(BaseDao.SeriesEntry._ID, series.getId());
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_NAME, series.getName());
@@ -182,12 +182,12 @@ public class SeriesDao extends BaseDao {
         writeDb.update(SeriesEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    void delete(long id) {
+    public void delete(long id) {
         seasonDao.deleteBySeriesId(id);
         writeDb.delete(SeriesEntry.TABLE_NAME, SeriesEntry._ID + " = ?", new String[]{id + ""});
     }
 
-    int getHighestListPosition(boolean watchState) {
+    public int getHighestListPosition(boolean watchState) {
         int highestPos = 0;
 
         String[] projection = {

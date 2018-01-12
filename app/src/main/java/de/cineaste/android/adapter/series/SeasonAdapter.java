@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.R;
-import de.cineaste.android.database.SeriesDbHelper;
+import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;

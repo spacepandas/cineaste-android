@@ -16,8 +16,8 @@ import de.cineaste.android.activity.SeriesSearchActivity;
 import de.cineaste.android.adapter.series.SeriesListAdapter;
 import de.cineaste.android.controllFlow.series.HistoryListSeriesTouchHelperCallback;
 import de.cineaste.android.controllFlow.series.WatchlistSeriesTouchHelperCallback;
-import de.cineaste.android.database.BaseDao;
-import de.cineaste.android.database.SeriesDbHelper;
+import de.cineaste.android.database.dao.BaseDao;
+import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Series;
 
 public class SeriesListFragment extends BaseListFragment implements SeriesListAdapter.OnEpisodeWatchedClickListener {
