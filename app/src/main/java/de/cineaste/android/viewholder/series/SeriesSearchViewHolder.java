@@ -53,5 +53,12 @@ public class SeriesSearchViewHolder extends AbstractSeriesViewHolder {
                 seriesStateChange.onSeriesStateChangeListener(series, v.getId(), index);
             }
         });
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClickListener(series.getId(), new View[]{view, poster});
+            }
+        });
     }
 }
