@@ -27,7 +27,7 @@ public abstract class BaseListAdapter  extends RecyclerView.Adapter<RecyclerView
     protected final ItemClickListener listener;
     protected final WatchState state;
 
-    public BaseListAdapter(Context context, DisplayMessage displayMessage, ItemClickListener listener, WatchState state) {
+    protected BaseListAdapter(Context context, DisplayMessage displayMessage, ItemClickListener listener, WatchState state) {
         this.context = context;
         this.displayMessage = displayMessage;
         this.listener = listener;

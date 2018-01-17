@@ -9,7 +9,7 @@ import de.cineaste.android.adapter.movie.MovieListAdapter;
 import de.cineaste.android.controllFlow.TouchHelperCallback;
 import de.cineaste.android.viewholder.movie.MovieViewHolder;
 
-public abstract class BaseMovieTouchHelperCallback extends TouchHelperCallback {
+abstract class BaseMovieTouchHelperCallback extends TouchHelperCallback {
 
     final MovieListAdapter movieListAdapter;
 

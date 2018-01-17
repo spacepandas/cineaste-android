@@ -35,12 +35,12 @@ import static android.app.ActivityOptions.makeSceneTransitionAnimation;
 
 public abstract class BaseListFragment extends Fragment implements ItemClickListener, BaseListAdapter.DisplayMessage {
 
-    protected WatchState watchState;
-    protected CustomRecyclerView customRecyclerView;
-    protected LinearLayoutManager layoutManager;
-    protected TextView emptyListTextView;
-    protected UserDbHelper userDbHelper;
-    protected RelativeLayout progressbar;
+    WatchState watchState;
+    CustomRecyclerView customRecyclerView;
+    LinearLayoutManager layoutManager;
+    private TextView emptyListTextView;
+    private UserDbHelper userDbHelper;
+    private RelativeLayout progressbar;
 
     public abstract void updateAdapter();
     protected abstract void initAdapter(Activity activity);
@@ -65,7 +65,7 @@ public abstract class BaseListFragment extends Fragment implements ItemClickList
         watchState = getWatchState(args.getString(WatchState.WATCH_STATE_TYPE.name(), WatchState.WATCH_STATE.name()));
     }
 
-    protected WatchState getWatchState(String watchStateString) {
+    private WatchState getWatchState(String watchStateString) {
         if (watchStateString.equals(WatchState.WATCH_STATE.name()))
             return WatchState.WATCH_STATE;
         else
@@ -79,6 +79,7 @@ public abstract class BaseListFragment extends Fragment implements ItemClickList
         super.onResume();
     }
 
+    @SuppressWarnings("unused")
     public View getRecyclerView() {
         return customRecyclerView;
     }
@@ -118,7 +119,7 @@ public abstract class BaseListFragment extends Fragment implements ItemClickList
         return watchlistView;
     }
 
-    protected View initViews(@NonNull LayoutInflater inflater, ViewGroup container) {
+    private View initViews(@NonNull LayoutInflater inflater, ViewGroup container) {
         View watchlistView = inflater.inflate(getLayout(), container, false);
 
         progressbar = watchlistView.findViewById(R.id.progressBar);

@@ -119,7 +119,7 @@ public class SeasonDetailActivity extends AppCompatActivity {
         });
     }
 
-    public void setPoster(int position) {
+    private void setPoster(int position) {
         Season season = currentSeries.getSeasons().get(position);
         final String posterPath = season.getPosterPath();
 

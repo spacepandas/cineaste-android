@@ -26,7 +26,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     protected final ImageView poster;
     private final Context context;
 
-    public BaseViewHolder(View itemView, ItemClickListener listener, Context context) {
+    protected BaseViewHolder(View itemView, ItemClickListener listener, Context context) {
         super(itemView);
         this.context = context;
         this.listener = listener;

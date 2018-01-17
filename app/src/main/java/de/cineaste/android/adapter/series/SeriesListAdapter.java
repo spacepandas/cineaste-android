@@ -15,7 +15,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.BaseListAdapter;
+import de.cineaste.android.database.dbHelper.EpisodeDbHelper;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
+import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.WatchState;
 import de.cineaste.android.listener.ItemClickListener;
@@ -25,6 +27,7 @@ import de.cineaste.android.viewholder.series.SeriesViewHolder;
 public class SeriesListAdapter extends BaseListAdapter {
 
     private final SeriesDbHelper db;
+    private final EpisodeDbHelper episodeDbHelper;
     private List<Series> dataSet = new ArrayList<>();
     private List<Series> filteredDataSet;
     private OnEpisodeWatchedClickListener onEpisodeWatchedClickListener;
@@ -36,6 +39,7 @@ public class SeriesListAdapter extends BaseListAdapter {
         this.onEpisodeWatchedClickListener = onEpisodeWatchedClickListener;
         this.dataSet.clear();
         this.db = SeriesDbHelper.getInstance(context);
+        this.episodeDbHelper = EpisodeDbHelper.getInstance(context);
         this.dataSet.addAll(db.readSeriesByWatchStatus(state));
         this.filteredDataSet = new LinkedList<>(dataSet);
     }
@@ -53,7 +57,7 @@ public class SeriesListAdapter extends BaseListAdapter {
     public void removeItem(int position) {
         Series series = filteredDataSet.get(position);
         db.delete(series.getId());
-        removeSeries(series);
+        removeSeriesFromList(series);
     }
 
     public Series getItem(int position) {
@@ -75,22 +79,17 @@ public class SeriesListAdapter extends BaseListAdapter {
 
     public void restoreDeletedItem(Series item, int position) {
         db.createOrUpdate(item);
-        filteredDataSet.add(position, item);
-        dataSet.add(position, item);
-        notifyItemInserted(position);
+        addSeriesToList(item, position);
     }
 
     public void toggleItemOnList(Series item) {
         item.setWatched(!item.isWatched());
         db.createOrUpdate(item);
-        removeSeries(item);
     }
     public void restoreToggleItemOnList(Series item, int position) {
         item.setWatched(!item.isWatched());
         db.createOrUpdate(item);
-        filteredDataSet.add(position, item);
-        dataSet.add(position, item);
-        notifyItemInserted(position);
+        addSeriesToList(item, position);
     }
 
     public void onItemMove(int fromPosition, int toPosition) {
@@ -158,7 +157,7 @@ public class SeriesListAdapter extends BaseListAdapter {
         ((SeriesViewHolder) holder).assignData(filteredDataSet.get(position), position);
     }
 
-    public void removeSeries(Series series) {
+    public void removeSeriesFromList(Series series) {
         notifyItemRemoved(filteredDataSet.indexOf(series));
 
         dataSet.remove(series);
@@ -166,11 +165,28 @@ public class SeriesListAdapter extends BaseListAdapter {
         displayMessage.showMessageIfEmptyList();
     }
 
+    public void addSeriesToList(Series series, int position) {
+        filteredDataSet.add(position, series);
+        dataSet.add(position, series);
+        notifyItemInserted(position);
+    }
+
     public void updateDataSet() {
         this.dataSet = db.readSeriesByWatchStatus(state);
         this.filteredDataSet = new LinkedList<>(dataSet);
         displayMessage.showMessageIfEmptyList();
         notifyDataSetChanged();
+    }
+
+    public void markEpisodes(Series series, WatchState watchState) {
+        boolean watchStatus = false;
+        if (watchState == WatchState.WATCHED_STATE) {
+            watchStatus = true;
+        }
+
+        for (Season season : series.getSeasons()) {
+            episodeDbHelper.updateWatchedStateForSeason(season.getId(), watchStatus);
+        }
     }
 
     public class FilerSeries extends Filter {
@@ -226,11 +242,11 @@ public class SeriesListAdapter extends BaseListAdapter {
             this.passiveSeries = passiveSeries;
         }
 
-        public Series getPrev() {
+        Series getPrev() {
             return prev;
         }
 
-        public Series getPassiveSeries() {
+        Series getPassiveSeries() {
             return passiveSeries;
         }
     }

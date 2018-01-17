@@ -20,7 +20,7 @@ public abstract class TouchHelperCallback extends ItemTouchHelper.Callback {
     protected final LinearLayoutManager linearLayoutManager;
     protected final RecyclerView recyclerView;
 
-    public TouchHelperCallback(Resources resources, LinearLayoutManager linearLayoutManager, RecyclerView recyclerView) {
+    protected TouchHelperCallback(Resources resources, LinearLayoutManager linearLayoutManager, RecyclerView recyclerView) {
         this.resources = resources;
         this.linearLayoutManager = linearLayoutManager;
         this.recyclerView = recyclerView;

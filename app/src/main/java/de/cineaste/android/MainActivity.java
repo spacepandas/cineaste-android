@@ -327,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         protected AsyncOutputAttributes doInBackground(AsyncInputAttribute... asyncInputAttributes) {
             ImportExportObject importExportObject = ImportService.importFiles();
 
+            //todo find a better solution to save all files
             for (Movie movie : importExportObject.getMovies()) {
                 movieDbHelper.createOrUpdate(movie);
             }

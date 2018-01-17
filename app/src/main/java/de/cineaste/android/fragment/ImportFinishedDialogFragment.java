@@ -74,19 +74,17 @@ public class ImportFinishedDialogFragment extends DialogFragment {
         if (movieCount < 0) {
             movies.setText(R.string.importedMoviesFailed);
         } else {
-            movies.setText(getString(R.string.importedMovies, movieCount));
+            movies.setText(getString(R.string.importedMovies, String.valueOf(movieCount)));
         }
         if (seriesCount < 0) {
             series.setText(R.string.importedSeriesFailed);
         } else {
-            series.setText(getString(R.string.importedSeries, seriesCount));
+            series.setText(getString(R.string.importedSeries, String.valueOf(seriesCount)));
         }
         if (episodeCount < 0) {
             episodes.setText(R.string.importedEpisodesFailed);
         } else {
-            episodes.setText(getString(R.string.importedEpisodes, episodeCount));
+            episodes.setText(getString(R.string.importedEpisodes, String.valueOf(episodeCount)));
         }
-
     }
-
 }

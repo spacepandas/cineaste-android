@@ -97,6 +97,21 @@ public class EpisodeDao extends BaseDao {
         writeDb.update(EpisodeEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
+    public void updateWatchedStateForSeason(long seasonId, boolean watchstate) {
+        int watchStatus;
+        if (watchstate) {
+            watchStatus = 1;
+        } else {
+            watchStatus = 0;
+        }
+
+        String sql = "UPDATE " + EpisodeEntry.TABLE_NAME +
+                " SET " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = " + watchStatus +
+                " WHERE " + EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = " + seasonId;
+
+        writeDb.execSQL(sql);
+    }
+
     public void delete(long id) {
         writeDb.delete(EpisodeEntry.TABLE_NAME, EpisodeEntry._ID + " = ?", new String[]{id + ""});
     }

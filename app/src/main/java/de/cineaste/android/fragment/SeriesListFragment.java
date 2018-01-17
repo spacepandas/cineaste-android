@@ -125,7 +125,7 @@ public class SeriesListFragment extends BaseListFragment implements SeriesListAd
     @Override
     protected ItemTouchHelper.Callback getCorrectCallBack() {
         if (watchState == WatchState.WATCH_STATE) {
-            return new WatchlistSeriesTouchHelperCallback(getResources(), layoutManager, customRecyclerView, seriesListAdapter);
+            return new WatchlistSeriesTouchHelperCallback(getResources(), layoutManager, customRecyclerView, seriesListAdapter, getActivity());
         } else {
             return new HistoryListSeriesTouchHelperCallback(getResources(), layoutManager, customRecyclerView, seriesListAdapter);
         }

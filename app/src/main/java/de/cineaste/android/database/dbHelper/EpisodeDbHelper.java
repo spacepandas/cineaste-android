@@ -50,6 +50,10 @@ public class EpisodeDbHelper {
         }
     }
 
+    public void updateWatchedStateForSeason(long seasonId, boolean watchstate) {
+        episodeDao.updateWatchedStateForSeason(seasonId, watchstate);
+    }
+
     public void updateWatchState(Episode episode) {
         String selection = BaseDao.EpisodeEntry._ID + " = ?";
         String[] selectionArgs = {String.valueOf(episode.getId())};
@@ -68,4 +72,5 @@ public class EpisodeDbHelper {
     private void update(Episode episode) {
         episodeDao.update(episode);
     }
+
 }

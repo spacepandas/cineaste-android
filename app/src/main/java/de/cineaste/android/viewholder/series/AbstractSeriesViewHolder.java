@@ -10,7 +10,7 @@ import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.viewholder.BaseViewHolder;
 
-public abstract class AbstractSeriesViewHolder extends BaseViewHolder {
+abstract class AbstractSeriesViewHolder extends BaseViewHolder {
 
     private final TextView vote;
 
@@ -19,6 +19,7 @@ public abstract class AbstractSeriesViewHolder extends BaseViewHolder {
         this.vote = itemView.findViewById(R.id.vote);
     }
 
+    @SuppressWarnings("unused")
     public abstract void assignData(final Series series, final int position);
 
     void setBaseInformation(Series series) {

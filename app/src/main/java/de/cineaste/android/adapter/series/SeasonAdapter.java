@@ -16,7 +16,7 @@ import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 import de.cineaste.android.viewholder.series.SeasonViewHolder;
 
-public class SeasonAdapter extends RecyclerView.Adapter<SeasonViewHolder> {
+class SeasonAdapter extends RecyclerView.Adapter<SeasonViewHolder> {
 
     private List<Season> seasons = new ArrayList<>();
     private final Context context;

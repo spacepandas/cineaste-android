@@ -38,11 +38,11 @@ import de.cineaste.android.util.DateAwareGson;
 
 public abstract class AbstractSearchActivity extends AppCompatActivity implements ItemClickListener {
 
-    protected final Gson gson = new DateAwareGson().getGson();
-    protected RecyclerView recyclerView;
-    protected SearchView searchView;
-    protected String searchText;
-    protected ProgressBar progressBar;
+    final Gson gson = new DateAwareGson().getGson();
+    RecyclerView recyclerView;
+    ProgressBar progressBar;
+    private SearchView searchView;
+    private String searchText;
 
     protected abstract Intent getIntentForDetailActivity(long itemId);
     protected abstract int getLayout();
@@ -175,7 +175,7 @@ public abstract class AbstractSearchActivity extends AppCompatActivity implement
         };
     }
 
-    protected void showNetworkError() {
+    private void showNetworkError() {
         Snackbar snackbar = Snackbar
                 .make(recyclerView, R.string.noInternet, Snackbar.LENGTH_LONG);
         snackbar.show();
@@ -203,7 +203,7 @@ public abstract class AbstractSearchActivity extends AppCompatActivity implement
     }
 
     @NonNull
-    protected NetworkCallback getNetworkCallback() {
+    NetworkCallback getNetworkCallback() {
         return new NetworkCallback() {
             @Override
             public void onFailure() {

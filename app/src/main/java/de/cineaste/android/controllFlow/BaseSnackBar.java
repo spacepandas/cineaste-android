@@ -3,9 +3,6 @@ package de.cineaste.android.controllFlow;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
-import de.cineaste.android.adapter.movie.MovieListAdapter;
-
-
 public abstract class BaseSnackBar {
 
     protected final LinearLayoutManager linearLayoutManager;

@@ -1,14 +1,19 @@
 package de.cineaste.android.controllFlow.series;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.Toast;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.series.SeriesListAdapter;
 import de.cineaste.android.controllFlow.BaseSnackBar;
 import de.cineaste.android.entity.series.Series;
+import de.cineaste.android.fragment.WatchState;
 
 
 public class SeriesSnackBarHistory extends BaseSnackBar {
@@ -50,12 +55,17 @@ public class SeriesSnackBarHistory extends BaseSnackBar {
         mySnackBar.show();
     }
 
-    //todo display dialog if still in production -> mark all episodes as watched,
+    //todo  reset to current season end episode after dismiss update current status
     @Override
     public void getSnackBarRightSwipe(final int position, int message) {
         final Series seriesToBeUpdated = adapter.getItem(position);
-        adapter.toggleItemOnList(seriesToBeUpdated);
 
+        int currentSeason = seriesToBeUpdated.getCurrentNumberOfSeason();
+        int currentEpisode = seriesToBeUpdated.getCurrentNumberOfEpisode();
+
+        adapter.markEpisodes(seriesToBeUpdated, WatchState.WATCH_STATE);
+        adapter.removeSeriesFromList(seriesToBeUpdated);
+        adapter.toggleItemOnList(seriesToBeUpdated);
         final Snackbar mySnackBar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
         mySnackBar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
@@ -80,4 +90,5 @@ public class SeriesSnackBarHistory extends BaseSnackBar {
         });
         mySnackBar.show();
     }
+
 }

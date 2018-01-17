@@ -22,11 +22,11 @@
     <string name="exportFailed">Export ist fehlgeschlagen</string>
 
     <string name="importHeadline">Import</string>
-    <string name="importedMovies">%d Filme importiert</string>
+    <string name="importedMovies">%s Filme importiert</string>
     <string name="importedMoviesFailed">Film Import fehlgeschlagen</string>
-    <string name="importedSeries">%d Serien importiert</string>
+    <string name="importedSeries">%s Serien importiert</string>
     <string name="importedSeriesFailed">Serien Import fehlgeschlagen</string>
-    <string name="importedEpisodes">%d Episoden importiert</string>
+    <string name="importedEpisodes">%s Episoden importiert</string>
     <string name="importedEpisodesFailed">Episoden Import fehlgeschlagen</string>
 
     <string name="missing_permission">Import/Export Berechtigungen fehlen</string>
@@ -68,5 +68,9 @@
     <string name="description">Beschreibung:</string>
     <string name="more">mehr</string>
     <string name="to_be_continued">Fortsetzung folgt</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">OK</string>
+    <string name="seriesSeenHeadline">%s gesehen</string>
+    <string name="seriesStillInProduction">Die Serie ist immer noch in Produktion, trotzdem verschieben?</string>
 
 </resources>

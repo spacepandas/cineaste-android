@@ -22,11 +22,11 @@
     <string name="exportFailed">Export failed</string>
 
     <string name="importHeadline">Import</string>
-    <string name="importedMovies">%d movies imported</string>
+    <string name="importedMovies">%s movies imported</string>
     <string name="importedMoviesFailed">Movie import failed</string>
-    <string name="importedSeries">%d series imported</string>
+    <string name="importedSeries">%s series imported</string>
     <string name="importedSeriesFailed">Series import failed</string>
-    <string name="importedEpisodes">%d episodes imported</string>
+    <string name="importedEpisodes">%s episodes imported</string>
     <string name="importedEpisodesFailed">Episode import failed</string>
 
 
@@ -59,7 +59,7 @@ Special thanks to Philipp Wolf, for the design!
     <string name="poster_reloaded">Poster with higher resolution loaded</string>
     <string name="sort_by_alpha">Sort alphabetically</string>
     <string name="sort_by_release">Sort by release date</string>
-    <string name="sort_by_runtime">Sort by runtime</string>
+    <string name="sort_by_runtime">Sort by release date</string>
     <string name="delete">Delete</string>
 
     <string name="movies">Movies</string>
@@ -72,5 +72,9 @@ Special thanks to Philipp Wolf, for the design!
     <string name="description">Description:</string>
     <string name="more">more</string>
     <string name="to_be_continued">To be continued</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="seriesSeenHeadline">%s watched</string>
+    <string name="seriesStillInProduction">The series is still in production, but move to history?</string>
 
 </resources>

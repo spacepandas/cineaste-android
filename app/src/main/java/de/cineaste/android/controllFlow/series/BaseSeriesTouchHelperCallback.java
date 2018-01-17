@@ -9,11 +9,11 @@ import de.cineaste.android.adapter.series.SeriesListAdapter;
 import de.cineaste.android.controllFlow.TouchHelperCallback;
 import de.cineaste.android.viewholder.series.SeriesViewHolder;
 
-public abstract class BaseSeriesTouchHelperCallback extends TouchHelperCallback {
+abstract class BaseSeriesTouchHelperCallback extends TouchHelperCallback {
 
     final SeriesListAdapter seriesListAdapter;
 
-    public BaseSeriesTouchHelperCallback(Resources resources, LinearLayoutManager linearLayoutManager, RecyclerView recyclerView, SeriesListAdapter seriesListAdapter) {
+    BaseSeriesTouchHelperCallback(Resources resources, LinearLayoutManager linearLayoutManager, RecyclerView recyclerView, SeriesListAdapter seriesListAdapter) {
         super(resources, linearLayoutManager, recyclerView);
         this.seriesListAdapter = seriesListAdapter;
     }

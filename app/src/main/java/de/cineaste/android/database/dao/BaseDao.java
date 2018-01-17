@@ -137,7 +137,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 
 	}
 
-	public BaseDao(Context context) {
+	protected BaseDao(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.readDb = getReadableDatabase();
 		this.writeDb = getWritableDatabase();
