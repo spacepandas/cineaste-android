@@ -13,9 +13,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.cineaste.android.R;
+import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
 
@@ -34,6 +37,14 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
 
     public SeriesDetailAdapter(Series series, ItemClickListener clickListener, int state, SeriesStateManipulationClickListener listener) {
         this.series = series;
+        List<Season> seasons = new ArrayList<>();
+        for (Season season : series.getSeasons()) {
+            if (season.getSeasonNumber() > 0) {
+                seasons.add(season);
+            }
+        }
+        this.series.getSeasons().clear();
+        this.series.setSeasons(seasons);
         this.clickListener = clickListener;
         this.state = state;
         this.listener = listener;

@@ -86,10 +86,11 @@ public class SeriesListAdapter extends BaseListAdapter {
         item.setWatched(!item.isWatched());
         db.createOrUpdate(item);
     }
-    public void restoreToggleItemOnList(Series item, int position) {
+    public void restoreToggleItemOnList(Series item, int position, int prevSeason, int prevEpisode) {
         item.setWatched(!item.isWatched());
         db.createOrUpdate(item);
         addSeriesToList(item, position);
+        db.markEpisodesAsWatched(item, prevSeason, prevEpisode);
     }
 
     public void onItemMove(int fromPosition, int toPosition) {
@@ -182,11 +183,22 @@ public class SeriesListAdapter extends BaseListAdapter {
         boolean watchStatus = false;
         if (watchState == WatchState.WATCHED_STATE) {
             watchStatus = true;
+            series.setCurrentNumberOfSeason(series.getNumberOfSeasons());
+
+        } else {
+            series.setCurrentNumberOfSeason(1);
+            series.setCurrentNumberOfEpisode(1);
         }
 
         for (Season season : series.getSeasons()) {
             episodeDbHelper.updateWatchedStateForSeason(season.getId(), watchStatus);
+
+            if (watchStatus && season.getSeasonNumber() == series.getNumberOfSeasons()) {
+                series.setCurrentNumberOfEpisode(season.getEpisodeCount());
+            }
         }
+
+        db.createOrUpdate(series);
     }
 
     public class FilerSeries extends Filter {

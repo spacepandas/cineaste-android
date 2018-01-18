@@ -93,8 +93,8 @@ public class SeriesSnackBarWatchList extends BaseSnackBar {
     //todo  reset to current season end episode after dismiss update current status
     private void updateSeriesAndCreateSnackbar(final int position, int message, final Series seriesToBeUpdated) {
 
-        int currentSeason = seriesToBeUpdated.getCurrentNumberOfSeason();
-        int currentEpisode = seriesToBeUpdated.getCurrentNumberOfEpisode();
+        final int currentSeason = seriesToBeUpdated.getCurrentNumberOfSeason();
+        final int currentEpisode = seriesToBeUpdated.getCurrentNumberOfEpisode();
 
         adapter.markEpisodes(seriesToBeUpdated, WatchState.WATCHED_STATE);
 
@@ -112,7 +112,7 @@ public class SeriesSnackBarWatchList extends BaseSnackBar {
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 switch (event) {
                     case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                        adapter.restoreToggleItemOnList(seriesToBeUpdated, position);
+                        adapter.restoreToggleItemOnList(seriesToBeUpdated, position, currentSeason, currentEpisode);
                         int first = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                         if (first >= position) {
                             linearLayoutManager.scrollToPosition(position);

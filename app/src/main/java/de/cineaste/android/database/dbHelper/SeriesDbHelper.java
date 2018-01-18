@@ -102,6 +102,26 @@ public class SeriesDbHelper {
         return null;
     }
 
+    public void markEpisodesAsWatched(Series series, int currentSeason, int currentEpisode) {
+        series.setCurrentNumberOfSeason(currentSeason);
+        series.setCurrentNumberOfEpisode(currentEpisode);
+        createOrUpdate(series);
+        for (Season season : series.getSeasons()) {
+            episodeDbHelper.updateWatchedStateForSeason(season.getId(), false);
+            if (season.getSeasonNumber() < currentSeason) {
+                episodeDbHelper.updateWatchedStateForSeason(season.getId(), true);
+            } else if (season.getSeasonNumber() == currentSeason) {
+                List<Episode> episodes = episodeDbHelper.readAllEpisodesOfSeason(season.getId());
+                for (Episode episode : episodes) {
+                    if (episode.getEpisodeNumber() < currentEpisode) {
+                        episode.setWatched(true);
+                        episodeDbHelper.updateWatchState(episode);
+                    }
+                }
+            }
+        }
+    }
+
     public Season getSeasonFromId(Series series, long seasonId) {
         for (Season season : series.getSeasons()) {
             if (season.getId() == seasonId) {

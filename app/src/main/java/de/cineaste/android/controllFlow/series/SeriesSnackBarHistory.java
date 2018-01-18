@@ -60,8 +60,8 @@ public class SeriesSnackBarHistory extends BaseSnackBar {
     public void getSnackBarRightSwipe(final int position, int message) {
         final Series seriesToBeUpdated = adapter.getItem(position);
 
-        int currentSeason = seriesToBeUpdated.getCurrentNumberOfSeason();
-        int currentEpisode = seriesToBeUpdated.getCurrentNumberOfEpisode();
+        final int currentSeason = seriesToBeUpdated.getCurrentNumberOfSeason();
+        final int currentEpisode = seriesToBeUpdated.getCurrentNumberOfEpisode();
 
         adapter.markEpisodes(seriesToBeUpdated, WatchState.WATCH_STATE);
         adapter.removeSeriesFromList(seriesToBeUpdated);
@@ -78,7 +78,8 @@ public class SeriesSnackBarHistory extends BaseSnackBar {
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 switch (event) {
                     case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                        adapter.restoreToggleItemOnList(seriesToBeUpdated, position);
+                        adapter.restoreToggleItemOnList(seriesToBeUpdated, position, currentSeason, currentEpisode);
+
                         int first = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                         if (first >= position) {
                             linearLayoutManager.scrollToPosition(position);
