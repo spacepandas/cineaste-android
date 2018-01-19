@@ -30,8 +30,6 @@ public class Series {
     private String backdropPath;
     private List<Season> seasons;
 
-    private int currentNumberOfEpisode;
-    private int currentNumberOfSeason;
     private boolean watched;
     private int listPosition;
 
@@ -127,22 +125,6 @@ public class Series {
         this.seasons = seasons;
     }
 
-    public int getCurrentNumberOfEpisode() {
-        return currentNumberOfEpisode;
-    }
-
-    public void setCurrentNumberOfEpisode(int currentNumberOfEpisode) {
-        this.currentNumberOfEpisode = currentNumberOfEpisode;
-    }
-
-    public int getCurrentNumberOfSeason() {
-        return currentNumberOfSeason;
-    }
-
-    public void setCurrentNumberOfSeason(int currentNumberOfSeason) {
-        this.currentNumberOfSeason = currentNumberOfSeason;
-    }
-
     public boolean isWatched() {
         return watched;
     }
@@ -165,5 +147,33 @@ public class Series {
 
     public void setListPosition(int listPosition) {
         this.listPosition = listPosition;
+    }
+
+    public int getCurrentNumberOfSeason() {
+        Season lastSeason = new Season();
+        for (Season season : seasons) {
+            lastSeason = season;
+            if (!season.isWatched()) {
+                return season.getSeasonNumber();
+            }
+        }
+
+        return lastSeason.getSeasonNumber();
+    }
+
+    public int getCurrentNumberOfEpisode() {
+        Season lastSeason = new Season();
+        for (Season season : seasons) {
+            lastSeason = season;
+            if (!season.isWatched()) {
+                for (Episode episode : season.getEpisodes()) {
+                    if (!episode.isWatched()) {
+                        return episode.getEpisodeNumber();
+                    }
+                }
+            }
+        }
+
+        return lastSeason.getEpisodeCount();
     }
 }

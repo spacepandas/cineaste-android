@@ -50,6 +50,11 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
         this.listener = listener;
     }
 
+    public void updateSeries(Series series) {
+        this.series = series;
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
@@ -91,8 +96,6 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-//        if (state == R.string.searchState)
-//            return 3;
         return 4;
     }
 

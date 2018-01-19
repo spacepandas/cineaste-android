@@ -26,8 +26,6 @@
     <string name="importedMoviesFailed">Movie import failed</string>
     <string name="importedSeries">%s series imported</string>
     <string name="importedSeriesFailed">Series import failed</string>
-    <string name="importedEpisodes">%s episodes imported</string>
-    <string name="importedEpisodesFailed">Episode import failed</string>
 
 
     <string name="missing_permission">Import/Export Permissions missing</string>

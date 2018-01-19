@@ -5,6 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import de.cineaste.android.util.Constants;
 
 public abstract class BaseDao extends SQLiteOpenHelper {
@@ -45,8 +48,6 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS + INTEGER_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_BACKDROP_PATH + TEXT_TYPE + COMMA_SEP +
-					SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_EPISODE + INTEGER_TYPE + COMMA_SEP +
-					SeriesEntry.COLUMN_SERIES_CURRENT_NUMBER_OF_SEASON + INTEGER_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + INTEGER_TYPE + COMMA_SEP +
 					SeriesEntry.COLUMN_SERIES_LIST_POSITION + INTEGER_TYPE +
 					" )";
@@ -57,9 +58,8 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					SeasonEntry.COLUMN_SEASON_EPISODE_COUNT + INTEGER_TYPE + COMMA_SEP +
 					SeasonEntry.COLUMN_SEASON_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
 					SeasonEntry.COLUMN_SEASON_SEASON_NUMBER + INTEGER_TYPE + COMMA_SEP +
-					SeasonEntry.COLUMN_SEASON_SERIES_ID + INTEGER_TYPE + " )"/*COMMA_SEP +
-					" FOREIGN KEY (" + SeasonEntry.COLUMN_SEASON_SERIES_ID + ") REFERENCES " +
-						SeasonEntry.TABLE_NAME + "(" + SeasonEntry._ID + "))"*/;
+					SeasonEntry.COLUMN_SEASON_WATCHED + INTEGER_TYPE + COMMA_SEP +
+					SeasonEntry.COLUMN_SEASON_SERIES_ID + INTEGER_TYPE + " )";
 
 	private static final String SQL_CREATE_EPISODE_ENTRIES =
 			"CREATE TABLE IF NOT EXISTS " + EpisodeEntry.TABLE_NAME + " (" +
@@ -67,12 +67,14 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 					EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER + INTEGER_TYPE + COMMA_SEP +
 					EpisodeEntry.COLUMN_EPISODE_NAME + TEXT_TYPE + COMMA_SEP +
 					EpisodeEntry.COLUMN_EPISODE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+					EpisodeEntry.COLUMN_EPISODE_SERIES_ID + INTEGER_TYPE + COMMA_SEP +
 					EpisodeEntry.COLUMN_EPISODE_SEASON_ID + INTEGER_TYPE + COMMA_SEP +
 					EpisodeEntry.COLUMN_EPISODE_WATCHED + INTEGER_TYPE +
 					" )";
 
 	protected final SQLiteDatabase readDb;
 	protected final SQLiteDatabase writeDb;
+	protected final SimpleDateFormat sdf;
 
 	private static final int DATABASE_VERSION = Constants.DATABASE_VERSION;
 	private static final String DATABASE_NAME = Constants.DATABASE_NAME;
@@ -110,8 +112,6 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		static final String COLUMN_SERIES_NUMBER_OF_EPISODES = "numberOfEpisodes";
 		static final String COLUMN_SERIES_NUMBER_OF_SEASONS = "numberOfSeasons";
 		static final String COLUMN_SERIES_POSTER_PATH = "posterPath";
-		static final String COLUMN_SERIES_CURRENT_NUMBER_OF_EPISODE = "currentNumberOfEpisode";
-		static final String COLUMN_SERIES_CURRENT_NUMBER_OF_SEASON = "currentNumberOfSeason";
 		public static final String COLUMN_SERIES_SERIES_WATCHED = "seriesWatched";
 		public static final String COLUMN_SERIES_LIST_POSITION = "listPosition";
 		static final String COLUMN_SERIES_BACKDROP_PATH = "backdropPath";
@@ -119,21 +119,23 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 
 	public static abstract class SeasonEntry implements BaseColumns {
 
-		static final String TABLE_NAME = "season";
+		public static final String TABLE_NAME = "season";
 		public static final String COLUMN_SEASON_SERIES_ID = "seriesId";
 		public static final String COLUMN_SEASON_SEASON_NUMBER = "seasonNumber";
 		static final String COLUMN_SEASON_RELEASE_DATE = "releaseDate";
 		static final String COLUMN_SEASON_EPISODE_COUNT = "episodenCount";
 		static final String COLUMN_SEASON_POSTER_PATH = "posterPath";
+		public static final String COLUMN_SEASON_WATCHED = "seasonWatched";
 	}
 
 	public static abstract class EpisodeEntry implements BaseColumns {
-		static final String TABLE_NAME = "episode";
+		public static final String TABLE_NAME = "episode";
 		static final String COLUMN_EPISODE_EPISODE_NUMBER = "episodeNumber";
 		static final String COLUMN_EPISODE_NAME = "name";
 		static final String COLUMN_EPISODE_DESCRIPTION = "description";
+		public static final String COLUMN_EPISODE_SERIES_ID = "seriesId";
 		public static final String COLUMN_EPISODE_SEASON_ID = "seasonId";
-		static final String COLUMN_EPISODE_WATCHED = "watched";
+		public static final String COLUMN_EPISODE_WATCHED = "watched";
 
 	}
 
@@ -141,6 +143,7 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.readDb = getReadableDatabase();
 		this.writeDb = getWritableDatabase();
+		this.sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 	}
 
 	@Override

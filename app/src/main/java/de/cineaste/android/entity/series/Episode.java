@@ -10,6 +10,7 @@ public class Episode {
     private String name;
     @SerializedName("overview")
     private String description;
+    private long seriesId;
     private long seasonId;
     private boolean watched;
 
@@ -43,6 +44,14 @@ public class Episode {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getSeriesId() {
+        return seriesId;
+    }
+
+    public void setSeriesId(long seriesId) {
+        this.seriesId = seriesId;
     }
 
     public long getSeasonId() {

@@ -25,36 +25,30 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.series.SeriesDetailAdapter;
 import de.cineaste.android.database.dao.BaseDao;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
-import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.listener.ItemClickListener;
-import de.cineaste.android.network.NetworkCallback;
-import de.cineaste.android.network.NetworkClient;
-import de.cineaste.android.network.NetworkRequest;
-import de.cineaste.android.network.NetworkResponse;
+import de.cineaste.android.network.SeriesCallback;
+import de.cineaste.android.network.SeriesLoader;
 import de.cineaste.android.util.Constants;
-import de.cineaste.android.util.DateAwareGson;
 
 public class SeriesDetailActivity extends AppCompatActivity implements ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener {
 
-    private Gson gson;
     private int state;
     private ImageView poster;
 
     private long seriesId;
-    private SeriesDbHelper dbHelper;
+    private SeriesDbHelper seriesDbHelper;
+    private SeriesLoader seriesLoader;
     private Series currentSeries;
     private RecyclerView layout;
     private Runnable updateCallBack;
+    private SeriesDetailAdapter adapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,9 +58,9 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
         MenuItem toHistory = menu.findItem(R.id.action_to_history);
         MenuItem delete = menu.findItem(R.id.action_delete);
 
-        for(int i = 0; i < menu.size(); i++){
+        for (int i = 0; i < menu.size(); i++) {
             Drawable drawable = menu.getItem(i).getIcon();
-            if(drawable != null) {
+            if (drawable != null) {
                 drawable.mutate();
                 drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
             }
@@ -115,40 +109,39 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
 
     @Override
     public void onDeleteClicked() {
-        dbHelper.delete(seriesId);
+        seriesDbHelper.delete(seriesId);
         layout.removeCallbacks(updateCallBack);
         onBackPressed();
     }
 
-    //todo do not forget about seasons and episodes;
     @Override
     public void onAddToHistoryClicked() {
-        NetworkCallback callback = null;
+        SeriesCallback seriesCallback = null;
 
         switch (state) {
             case R.string.searchState:
-                callback = new NetworkCallback() {
+
+                seriesCallback = new SeriesCallback() {
                     @Override
                     public void onFailure() {
 
                     }
 
                     @Override
-                    public void onSuccess(NetworkResponse response) {
-                        Series series = gson.fromJson(response.getResponseReader(), Series.class);
-                        series.setWatched(true);
-                        dbHelper.createOrUpdate(series);
+                    public void onSuccess(Series series) {
+                        seriesDbHelper.addToHistory(series);
                     }
                 };
+
                 break;
             case R.string.watchlistState:
-                currentSeries.setWatched(true);
-                dbHelper.createOrUpdate(currentSeries);
+                seriesDbHelper.moveToHistory(currentSeries);
         }
 
-        if (callback != null) {
-            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(currentSeries.getId()));
-            client.sendRequest(callback);
+        if (seriesCallback != null) {
+
+            seriesLoader.loadCompleteSeries(currentSeries.getId(), seriesCallback);
+
             Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
                     currentSeries.getName()), Toast.LENGTH_SHORT).show();
         }
@@ -156,41 +149,39 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
         onBackPressed();
     }
 
-    //todo do not forget about seasons and episodes;
     @Override
     public void onAddToWatchClicked() {
-        NetworkCallback callback = null;
+        SeriesCallback callback = null;
 
         switch (state) {
             case R.string.searchState:
-                callback = new NetworkCallback() {
+                callback = new SeriesCallback() {
                     @Override
                     public void onFailure() {
 
                     }
 
                     @Override
-                    public void onSuccess(NetworkResponse response) {
-                        dbHelper.createOrUpdate(gson.fromJson(response.getResponseReader(), Series.class));
+                    public void onSuccess(Series series) {
+                        seriesDbHelper.addToWatchList(series);
                     }
                 };
+
+
                 break;
             case R.string.historyState:
-                currentSeries.setWatched(false);
-                dbHelper.createOrUpdate(currentSeries);
+                seriesDbHelper.moveToWatchList(currentSeries);
                 break;
         }
 
         if (callback != null) {
-            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(currentSeries.getId()));
-            client.sendRequest(callback);
+            seriesLoader.loadCompleteSeries(currentSeries.getId(), callback);
             Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
                     currentSeries.getName()), Toast.LENGTH_SHORT).show();
         }
 
         onBackPressed();
     }
-
 
     @Override
     public void onItemClickListener(long itemId, View[] views) {
@@ -205,9 +196,9 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_detail);
-        gson = new DateAwareGson().getGson();
 
-        dbHelper = SeriesDbHelper.getInstance(this);
+        seriesDbHelper = SeriesDbHelper.getInstance(this);
+        seriesLoader = new SeriesLoader(this);
 
         Intent intent = getIntent();
         seriesId = intent.getLongExtra(BaseDao.SeriesEntry._ID, -1);
@@ -218,7 +209,7 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
         updateCallBack = getUpdateCallBack();
         autoUpdate();
 
-        currentSeries = dbHelper.readSeries(seriesId);
+        currentSeries = seriesDbHelper.getSeriesById(seriesId);
         if (currentSeries == null) {
             loadRequestedSeries();
         } else {
@@ -256,8 +247,8 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dbHelper.episodeWatched(currentSeries);
-                    currentSeries = dbHelper.readSeries(currentSeries.getId());
+                    seriesDbHelper.episodeWatched(currentSeries);
+                    currentSeries = seriesDbHelper.getSeriesById(currentSeries.getId());
                     assignData(currentSeries);
                 }
             });
@@ -318,8 +309,7 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
     private void updateSeries() {
         if (state != R.string.searchState) {
 
-            final NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(seriesId));
-            client.sendRequest(new NetworkCallback() {
+            seriesLoader.loadCompleteSeries(seriesId, new SeriesCallback() {
                 @Override
                 public void onFailure() {
                     runOnUiThread(new Runnable() {
@@ -331,22 +321,22 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
                 }
 
                 @Override
-                public void onSuccess(NetworkResponse response) {
-                    final Series series = gson.fromJson(response.getResponseReader(), Series.class);
+                public void onSuccess(final Series series) {
+                    series.setWatched(currentSeries.isWatched());
+                    seriesDbHelper.update(series);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             assignData(series);
-                            series.setWatched(currentSeries.isWatched());
-                            series.setCurrentNumberOfSeason(currentSeries.getCurrentNumberOfSeason());
-                            series.setCurrentNumberOfEpisode(currentSeries.getCurrentNumberOfEpisode());
-                            dbHelper.createOrUpdate(series);
+
                         }
                     });
+
                 }
             });
         }
     }
+
     private void assignData(Series series) {
         String posterUri = Constants.POSTER_URI_ORIGINAL
                 .replace("<posterName>", series.getBackdropPath() != null ?
@@ -357,43 +347,56 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
                 .error(R.drawable.placeholder_poster)
                 .into(poster);
 
-        layout.setAdapter(new SeriesDetailAdapter(series, this, state, this));
+        adapter = new SeriesDetailAdapter(series, this, state, this);
+        layout.setAdapter(adapter);
     }
 
     private void loadRequestedSeries() {
-        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(seriesId));
-        client.sendRequest(new NetworkCallback() {
+        seriesLoader.loadCompleteSeries(seriesId, new SeriesCallback() {
             @Override
             public void onFailure() {
 
             }
 
             @Override
-            public void onSuccess(NetworkResponse response) {
-                final Series series = gson.fromJson(response.getResponseReader(), Series.class);
+            public void onSuccess(final Series series) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        List<Season> seasons = series.getSeasons();
-                        for (Season season : seasons) {
-                            //remove season which contains only special episodes
-                            if (season.getSeasonNumber() == 0) {
-                                seasons.remove(season);
-                                break;
-                            }
-                        }
                         currentSeries = series;
                         assignData(series);
                     }
                 });
             }
         });
+
     }
 
     private void slideIn() {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.to_top);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         layout.startAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                currentSeries = seriesDbHelper.getSeriesById(seriesId);
+                if (currentSeries != null) {
+                    if (adapter != null) {
+                        adapter.updateSeries(currentSeries);
+                    }
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     private void slideOut() {

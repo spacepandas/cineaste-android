@@ -15,10 +15,8 @@ import java.util.List;
 
 import de.cineaste.android.entity.ImportExportObject;
 import de.cineaste.android.entity.movie.Movie;
-import de.cineaste.android.entity.series.Episode;
 import de.cineaste.android.entity.series.Series;
 
-import static de.cineaste.android.database.ImportExportService.EPISODES_FILE;
 import static de.cineaste.android.database.ImportExportService.FOLDER_NAME;
 import static de.cineaste.android.database.ImportExportService.MOVIES_FILE;
 import static de.cineaste.android.database.ImportExportService.SERIES_FILE;
@@ -31,7 +29,6 @@ public class ImportService {
         ImportExportObject importExportObject = new ImportExportObject();
         List<Movie> movies = new ArrayList<>();
         List<Series> series = new ArrayList<>();
-        List<Episode> episodes = new ArrayList<>();
 
         try {
             movies.addAll(importMovies());
@@ -45,15 +42,8 @@ public class ImportService {
             importExportObject.setSeriesSuccessfullyImported(false);
         }
 
-        try {
-            episodes.addAll(importEpisodes());
-        } catch (IOException ex) {
-            importExportObject.setEpisodesSuccessfullyImported(false);
-        }
-
         importExportObject.setMovies(movies);
         importExportObject.setSeries(series);
-        importExportObject.setEpisodes(episodes);
 
         return importExportObject;
     }
@@ -72,14 +62,6 @@ public class ImportService {
         Type listType = new TypeToken<List<Series>>() {
         }.getType();
         return gson.fromJson(importedSeriesString, listType);
-    }
-
-    private static List<Episode> importEpisodes() throws IOException {
-        String importedEpisodesString = readJsonFromFile(EPISODES_FILE);
-
-        Type listType = new TypeToken<List<Episode>>() {
-        }.getType();
-        return gson.fromJson(importedEpisodesString, listType);
     }
 
     private static String readJsonFromFile(String fileName) throws IOException {

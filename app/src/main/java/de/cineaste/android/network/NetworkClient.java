@@ -12,11 +12,35 @@ import okhttp3.Response;
 public class NetworkClient {
 
 	private final OkHttpClient client;
-	private final NetworkRequest request;
+	private NetworkRequest request;
 
 	public NetworkClient(NetworkRequest request) {
 		this.client = new OkHttpClient();
 		this.request = request;
+	}
+	public NetworkClient() {
+		this.client = new OkHttpClient();
+	}
+
+	public void addRequest(NetworkRequest request, final NetworkCallback callback) {
+		client.newCall(request.buildRequest()).enqueue(new Callback() {
+			@Override
+			public void onFailure(Call call, IOException e) {
+				e.printStackTrace();
+				callback.onFailure();
+			}
+
+			@Override
+			public void onResponse(Call call, Response response) throws IOException {
+				if (!response.isSuccessful()) {
+					Log.d("Request failure", response.toString());
+					callback.onFailure();
+				}
+				callback.onSuccess(
+						new NetworkResponse(response.body().charStream())
+				);
+			}
+		});
 	}
 
 	public void sendRequest(final NetworkCallback callback) {

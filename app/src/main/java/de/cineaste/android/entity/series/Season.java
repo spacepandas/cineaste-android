@@ -2,7 +2,9 @@ package de.cineaste.android.entity.series;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Season {
 
@@ -17,6 +19,12 @@ public class Season {
     private int seasonNumber;
 
     private long seriesId;
+    private boolean watched;
+    private List<Episode> episodes;
+
+    public Season() {
+        this.episodes = new ArrayList<>();
+    }
 
     public long getId() {
         return id;
@@ -64,5 +72,21 @@ public class Season {
 
     public void setSeriesId(long seriesId) {
         this.seriesId = seriesId;
+    }
+
+    public boolean isWatched() {
+        return watched;
+    }
+
+    public void setWatched(boolean watched) {
+        this.watched = watched;
+    }
+
+    public List<Episode> getEpisodes() {
+        return episodes;
+    }
+
+    public void setEpisodes(List<Episode> episodes) {
+        this.episodes = episodes;
     }
 }

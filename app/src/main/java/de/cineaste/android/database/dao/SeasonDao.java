@@ -5,21 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.cineaste.android.entity.series.Season;
 
 public class SeasonDao extends BaseDao {
-    private final SimpleDateFormat sdf;
+
     private static SeasonDao instance;
-    private EpisodeDao episodeDao;
 
     private SeasonDao(Context context) {
         super(context);
-        sdf = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
-        episodeDao = EpisodeDao.getInstance(context);
     }
 
     public static SeasonDao getInstance(Context context) {
@@ -30,9 +26,14 @@ public class SeasonDao extends BaseDao {
         return instance;
     }
 
+    public void executeCustomSql(String sql) {
+        writeDb.execSQL(sql);
+    }
+
     public void create(Season season, long seriesId) {
         if (season.getSeasonNumber() == 0) {
             return;
+            //exclude specials if present
         }
         ContentValues values = new ContentValues();
         values.put(SeasonEntry._ID, season.getId());
@@ -45,11 +46,12 @@ public class SeasonDao extends BaseDao {
         values.put(SeasonEntry.COLUMN_SEASON_POSTER_PATH, season.getPosterPath());
         values.put(SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, season.getSeasonNumber());
         values.put(SeasonEntry.COLUMN_SEASON_SERIES_ID, seriesId);
+        values.put(SeasonEntry.COLUMN_SEASON_WATCHED, season.isWatched() ? 1 : 0);
 
         writeDb.insert(SeasonEntry.TABLE_NAME, null, values);
     }
 
-    List<Season> read(String selection, String[] selectionArgs) {
+    public List<Season> read(String selection, String[] selectionArgs) {
         List<Season> seasons = new ArrayList<>();
 
         String[] projection = {
@@ -58,7 +60,8 @@ public class SeasonDao extends BaseDao {
                 SeasonEntry.COLUMN_SEASON_EPISODE_COUNT,
                 SeasonEntry.COLUMN_SEASON_POSTER_PATH,
                 SeasonEntry.COLUMN_SEASON_SEASON_NUMBER,
-                SeasonEntry.COLUMN_SEASON_SERIES_ID
+                SeasonEntry.COLUMN_SEASON_SERIES_ID,
+                SeasonEntry.COLUMN_SEASON_WATCHED
         };
 
         Cursor c = readDb.query(
@@ -85,6 +88,7 @@ public class SeasonDao extends BaseDao {
                 currentSeason.setPosterPath(c.getString(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_POSTER_PATH)));
                 currentSeason.setSeasonNumber(c.getInt(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_SEASON_NUMBER)));
                 currentSeason.setSeriesId(c.getLong(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_SERIES_ID)));
+                currentSeason.setWatched(c.getInt(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_WATCHED)) > 0);
 
                 seasons.add(currentSeason);
             } while (c.moveToNext());
@@ -93,7 +97,7 @@ public class SeasonDao extends BaseDao {
         return seasons;
     }
 
-    void update(Season season) {
+    public void update(Season season) {
         if (season.getSeasonNumber() == 0) {
             return;
         }
@@ -105,10 +109,11 @@ public class SeasonDao extends BaseDao {
         } else {
             values.put(SeasonEntry.COLUMN_SEASON_RELEASE_DATE, sdf.format(season.getReleaseDate()));
         }
-        values.put(BaseDao.SeasonEntry.COLUMN_SEASON_EPISODE_COUNT, season.getEpisodeCount());
-        values.put(BaseDao.SeasonEntry.COLUMN_SEASON_POSTER_PATH, season.getPosterPath());
-        values.put(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, season.getSeasonNumber());
-        values.put(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, season.getSeriesId());
+        values.put(SeasonEntry.COLUMN_SEASON_EPISODE_COUNT, season.getEpisodeCount());
+        values.put(SeasonEntry.COLUMN_SEASON_POSTER_PATH, season.getPosterPath());
+        values.put(SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, season.getSeasonNumber());
+        values.put(SeasonEntry.COLUMN_SEASON_SERIES_ID, season.getSeriesId());
+        values.put(SeasonEntry.COLUMN_SEASON_WATCHED, season.isWatched() ? 1 : 0);
 
         String selection = BaseDao.SeasonEntry._ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(season.getId())};
@@ -116,19 +121,8 @@ public class SeasonDao extends BaseDao {
         writeDb.update(SeasonEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    public void delete(long id) {
-        writeDb.delete(SeasonEntry.TABLE_NAME, SeasonEntry._ID + " = ?", new String[]{id + ""});
-    }
-
-    void deleteBySeriesId(long id) {
-        String selection = SeasonEntry.COLUMN_SEASON_SERIES_ID + " = ?";
-        String[] selectionArgs = {Long.toString(id)};
-
-        List<Season> seasons = read(selection, selectionArgs);
-        for (Season season : seasons) {
-            episodeDao.deleteBySeasonId(season.getId());
-        }
-
+    public void deleteBySeriesId(long id) {
         writeDb.delete(SeasonEntry.TABLE_NAME, SeasonEntry.COLUMN_SEASON_SERIES_ID + " = ?", new String[]{id + ""});
     }
+
 }

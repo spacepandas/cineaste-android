@@ -12,7 +12,6 @@ import de.cineaste.android.R;
 import de.cineaste.android.adapter.series.SeriesListAdapter;
 import de.cineaste.android.controllFlow.BaseSnackBar;
 import de.cineaste.android.entity.series.Series;
-import de.cineaste.android.fragment.WatchState;
 
 
 public class SeriesSnackBarWatchList extends BaseSnackBar {
@@ -31,6 +30,9 @@ public class SeriesSnackBarWatchList extends BaseSnackBar {
         final Series seriesToBeDeleted = adapter.getItem(position);
         adapter.removeItem(position);
 
+        final int currentSeason = seriesToBeDeleted.getCurrentNumberOfSeason();
+        final int currentEpisode = seriesToBeDeleted.getCurrentNumberOfEpisode();
+
         final Snackbar mySnackbar = Snackbar.make(view,
                 R.string.series_deleted, Snackbar.LENGTH_LONG);
         mySnackbar.setAction(R.string.undo, new View.OnClickListener() {
@@ -44,7 +46,7 @@ public class SeriesSnackBarWatchList extends BaseSnackBar {
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 switch (event) {
                     case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                        adapter.restoreDeletedItem(seriesToBeDeleted, position);
+                        adapter.addDeletedItemToWatchListAgain(seriesToBeDeleted, position, currentSeason, currentEpisode);
                         int first = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                         if (first >= position) {
                             linearLayoutManager.scrollToPosition(position);
@@ -96,9 +98,7 @@ public class SeriesSnackBarWatchList extends BaseSnackBar {
         final int currentSeason = seriesToBeUpdated.getCurrentNumberOfSeason();
         final int currentEpisode = seriesToBeUpdated.getCurrentNumberOfEpisode();
 
-        adapter.markEpisodes(seriesToBeUpdated, WatchState.WATCHED_STATE);
-
-        adapter.toggleItemOnList(seriesToBeUpdated);
+        adapter.moveToHistory(seriesToBeUpdated);
         final Snackbar mySnackbar = Snackbar.make(view,
                 message, Snackbar.LENGTH_LONG);
         mySnackbar.setAction(R.string.undo, new View.OnClickListener() {
@@ -112,7 +112,7 @@ public class SeriesSnackBarWatchList extends BaseSnackBar {
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 switch (event) {
                     case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                        adapter.restoreToggleItemOnList(seriesToBeUpdated, position, currentSeason, currentEpisode);
+                        adapter.moveBackToWatchList(seriesToBeUpdated, position, currentSeason, currentEpisode);
                         int first = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                         if (first >= position) {
                             linearLayoutManager.scrollToPosition(position);

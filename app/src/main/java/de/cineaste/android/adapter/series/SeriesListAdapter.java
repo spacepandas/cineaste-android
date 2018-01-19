@@ -15,9 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.BaseListAdapter;
-import de.cineaste.android.database.dbHelper.EpisodeDbHelper;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
-import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.WatchState;
 import de.cineaste.android.listener.ItemClickListener;
@@ -27,7 +25,6 @@ import de.cineaste.android.viewholder.series.SeriesViewHolder;
 public class SeriesListAdapter extends BaseListAdapter {
 
     private final SeriesDbHelper db;
-    private final EpisodeDbHelper episodeDbHelper;
     private List<Series> dataSet = new ArrayList<>();
     private List<Series> filteredDataSet;
     private OnEpisodeWatchedClickListener onEpisodeWatchedClickListener;
@@ -39,8 +36,7 @@ public class SeriesListAdapter extends BaseListAdapter {
         this.onEpisodeWatchedClickListener = onEpisodeWatchedClickListener;
         this.dataSet.clear();
         this.db = SeriesDbHelper.getInstance(context);
-        this.episodeDbHelper = EpisodeDbHelper.getInstance(context);
-        this.dataSet.addAll(db.readSeriesByWatchStatus(state));
+        this.dataSet.addAll(db.getSeriesByWatchedState(state));
         this.filteredDataSet = new LinkedList<>(dataSet);
     }
 
@@ -65,7 +61,7 @@ public class SeriesListAdapter extends BaseListAdapter {
     }
 
     public void updateSeries(Series series, int pos) {
-        series = db.readSeries(series.getId());
+        series = db.getSeriesById(series.getId());
         dataSet.remove(pos);
         filteredDataSet.remove(pos);
         if (state == WatchState.WATCH_STATE && !series.isWatched()) {
@@ -77,20 +73,36 @@ public class SeriesListAdapter extends BaseListAdapter {
         }
     }
 
-    public void restoreDeletedItem(Series item, int position) {
-        db.createOrUpdate(item);
-        addSeriesToList(item, position);
+    public void addDeletedItemToHistoryAgain(Series series, int position, int prevSeason, int prevEpisode) {
+        db.addToHistory(series);
+        db.moveBackToHistory(series, prevSeason, prevEpisode);
+        addSeriesToList(series, position);
     }
 
-    public void toggleItemOnList(Series item) {
-        item.setWatched(!item.isWatched());
-        db.createOrUpdate(item);
+    public void addDeletedItemToWatchListAgain(Series series, int position, int prevSeason, int prevEpisode) {
+        db.addToWatchList(series);
+        db.moveBackToWatchList(series, prevSeason, prevEpisode);
+        addSeriesToList(series, position);
     }
-    public void restoreToggleItemOnList(Series item, int position, int prevSeason, int prevEpisode) {
-        item.setWatched(!item.isWatched());
-        db.createOrUpdate(item);
-        addSeriesToList(item, position);
-        db.markEpisodesAsWatched(item, prevSeason, prevEpisode);
+
+    public void moveToWatchList(Series series) {
+        removeSeriesFromList(series);
+
+        db.moveToWatchList(series);
+    }
+
+    public void moveBackToHistory(Series series, int position, int prevSeason, int prevEpisode) {
+        db.moveBackToHistory(series, prevSeason, prevEpisode);
+        addSeriesToList(series, position);
+    }
+
+    public void moveToHistory(Series series) {
+        db.moveToHistory(series);
+    }
+
+    public void moveBackToWatchList(Series series, int position, int prevSeason, int prevEpisode) {
+        db.moveBackToWatchList(series, prevSeason, prevEpisode);
+        addSeriesToList(series, position);
     }
 
     public void onItemMove(int fromPosition, int toPosition) {
@@ -173,32 +185,10 @@ public class SeriesListAdapter extends BaseListAdapter {
     }
 
     public void updateDataSet() {
-        this.dataSet = db.readSeriesByWatchStatus(state);
+        this.dataSet = db.getSeriesByWatchedState(state);
         this.filteredDataSet = new LinkedList<>(dataSet);
         displayMessage.showMessageIfEmptyList();
         notifyDataSetChanged();
-    }
-
-    public void markEpisodes(Series series, WatchState watchState) {
-        boolean watchStatus = false;
-        if (watchState == WatchState.WATCHED_STATE) {
-            watchStatus = true;
-            series.setCurrentNumberOfSeason(series.getNumberOfSeasons());
-
-        } else {
-            series.setCurrentNumberOfSeason(1);
-            series.setCurrentNumberOfEpisode(1);
-        }
-
-        for (Season season : series.getSeasons()) {
-            episodeDbHelper.updateWatchedStateForSeason(season.getId(), watchStatus);
-
-            if (watchStatus && season.getSeasonNumber() == series.getNumberOfSeasons()) {
-                series.setCurrentNumberOfEpisode(season.getEpisodeCount());
-            }
-        }
-
-        db.createOrUpdate(series);
     }
 
     public class FilerSeries extends Filter {

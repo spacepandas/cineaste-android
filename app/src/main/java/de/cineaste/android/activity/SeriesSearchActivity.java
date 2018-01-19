@@ -6,8 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -16,20 +14,15 @@ import java.util.List;
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.series.SeriesSearchQueryAdapter;
 import de.cineaste.android.database.dao.BaseDao;
-import de.cineaste.android.database.dbHelper.EpisodeDbHelper;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
-import de.cineaste.android.entity.series.Episode;
-import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
-import de.cineaste.android.network.NetworkCallback;
 import de.cineaste.android.network.NetworkClient;
 import de.cineaste.android.network.NetworkRequest;
-import de.cineaste.android.network.NetworkResponse;
+import de.cineaste.android.network.SeriesCallback;
+import de.cineaste.android.network.SeriesLoader;
 
 public class SeriesSearchActivity extends AbstractSearchActivity implements SeriesSearchQueryAdapter.OnSeriesStateChange {
 
-    private final SeriesDbHelper db = SeriesDbHelper.getInstance(this);
-    private EpisodeDbHelper episodeDbHelper = EpisodeDbHelper.getInstance(this);
     private SeriesSearchQueryAdapter seriesQueryAdapter;
 
     @Override
@@ -43,10 +36,11 @@ public class SeriesSearchActivity extends AbstractSearchActivity implements Seri
 
     @Override
     public void onSeriesStateChangeListener(final Series series, int viewId, final int index) {
-        NetworkCallback callback;
+        final SeriesDbHelper dbHelper = SeriesDbHelper.getInstance(this);
+        SeriesCallback seriesCallback;
         switch (viewId) {
             case R.id.to_watchlist_button:
-                callback = new NetworkCallback() {
+                seriesCallback = new SeriesCallback() {
                     @Override
                     public void onFailure() {
                         runOnUiThread(new Runnable() {
@@ -58,15 +52,14 @@ public class SeriesSearchActivity extends AbstractSearchActivity implements Seri
                     }
 
                     @Override
-                    public void onSuccess(NetworkResponse response) {
-                        Series series = gson.fromJson(response.getResponseReader(), Series.class);
-                        db.createOrUpdate(series);
-                        loadSeasons(series);
+                    public void onSuccess(Series series) {
+                        dbHelper.addToWatchList(series);
                     }
                 };
                 break;
             case R.id.history_button:
-                callback = new NetworkCallback() {
+
+                seriesCallback = new SeriesCallback() {
                     @Override
                     public void onFailure() {
                         runOnUiThread(new Runnable() {
@@ -78,54 +71,20 @@ public class SeriesSearchActivity extends AbstractSearchActivity implements Seri
                     }
 
                     @Override
-                    public void onSuccess(NetworkResponse response) {
-                        Series series = gson.fromJson(response.getResponseReader(), Series.class);
-                        series.setWatched(true);
-                        db.createOrUpdate(series);
-                        loadSeasons(series);
+                    public void onSuccess(Series series) {
+                        dbHelper.addToHistory(series);
+
                     }
                 };
                 break;
                 default:
-                    callback = null;
+                    seriesCallback = null;
                     break;
         }
-        if (callback != null) {
-            seriesQueryAdapter.removeMovie(index);
-            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(series.getId()));
-            client.sendRequest(callback);
-        }
+        if (seriesCallback != null) {
+            seriesQueryAdapter.removeSerie(index);
 
-    }
-
-    private void loadSeasons(Series series) {
-        for (final Season season : series.getSeasons()) {
-            if (season.getSeasonNumber() == 0) {
-                continue;
-            }
-
-            NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeason(series.getId(), season.getSeasonNumber()));
-            client.sendRequest(new NetworkCallback() {
-                @Override
-                public void onFailure() {
-                    android.util.Log.d("mgr", "faild to load season { "+ season.getSeasonNumber() +" }");
-                }
-
-                @Override
-                public void onSuccess(NetworkResponse response) {
-
-                    JsonParser parser = new JsonParser();
-                    JsonObject responseObject =
-                            parser.parse(response.getResponseReader()).getAsJsonObject();
-                    String episodesListJson = responseObject.get("episodes").toString();
-                    Type listType = new TypeToken<List<Episode>>() {}.getType();
-                    final List<Episode> episodes = gson.fromJson(episodesListJson, listType);
-                    for (Episode episode : episodes) {
-                        episode.setSeasonId(season.getId());
-                        episodeDbHelper.createOrUpdate(episode);
-                    }
-                }
-            });
+            new SeriesLoader(this).loadCompleteSeries(series.getId(), seriesCallback);
         }
     }
 

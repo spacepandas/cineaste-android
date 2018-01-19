@@ -32,14 +32,12 @@ import de.cineaste.android.activity.AboutActivity;
 import de.cineaste.android.activity.MovieNightActivity;
 import de.cineaste.android.database.ExportService;
 import de.cineaste.android.database.ImportService;
-import de.cineaste.android.database.dbHelper.EpisodeDbHelper;
 import de.cineaste.android.database.dbHelper.MovieDbHelper;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.database.dbHelper.UserDbHelper;
 import de.cineaste.android.entity.ImportExportObject;
 import de.cineaste.android.entity.User;
 import de.cineaste.android.entity.movie.Movie;
-import de.cineaste.android.entity.series.Episode;
 import de.cineaste.android.entity.series.Series;
 import de.cineaste.android.fragment.BaseListFragment;
 import de.cineaste.android.fragment.BaseMovieListFragment;
@@ -48,7 +46,6 @@ import de.cineaste.android.fragment.SeriesListFragment;
 import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.WatchState;
 
-import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.EPISODES_COUNT;
 import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.MOVIE_COUNT;
 import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.SERIES_COUNT;
 
@@ -59,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     private UserDbHelper userDbHelper;
     private static MovieDbHelper movieDbHelper;
     private static SeriesDbHelper seriesDbHelper;
-    private static EpisodeDbHelper episodeDbHelper;
     private TextView userName;
 
     private DrawerLayout drawerLayout;
@@ -114,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         userDbHelper = UserDbHelper.getInstance(this);
         movieDbHelper = MovieDbHelper.getInstance(this);
         seriesDbHelper = SeriesDbHelper.getInstance(this);
-        episodeDbHelper = EpisodeDbHelper.getInstance(this);
         contentContainer = findViewById(R.id.content_container);
 
         fm = getSupportFragmentManager();
@@ -250,8 +245,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     private void exportMovies() {
         ImportExportObject importExportObject = new ImportExportObject();
         importExportObject.setMovies(movieDbHelper.readAllMovies());
-        importExportObject.setSeries(seriesDbHelper.readAllSeries());
-        importExportObject.setEpisodes(episodeDbHelper.readAllEpisodes());
+        importExportObject.setSeries(seriesDbHelper.getAllSeries());
         importExportObject = ExportService.export(importExportObject);
 
         int snackBarMessage = R.string.exportFailed;
@@ -333,11 +327,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
             }
 
             for (Series series : importExportObject.getSeries()) {
-                seriesDbHelper.createOrUpdate(series);
-            }
-
-            for (Episode episode : importExportObject.getEpisodes()) {
-                episodeDbHelper.createOrUpdate(episode);
+                seriesDbHelper.importSeries(series);
             }
 
             return new AsyncOutputAttributes(importExportObject, asyncInputAttributes[0]);
@@ -359,7 +349,6 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
             args.putInt(MOVIE_COUNT, importExportObject.isMoviesSuccessfullyImported() ? importExportObject.getMovies().size() : -1);
             args.putInt(SERIES_COUNT, importExportObject.isSeriesSuccessfullyImported() ? importExportObject.getSeries().size() : -1);
-            args.putInt(EPISODES_COUNT, importExportObject.isEpisodesSuccessfullyImported() ? importExportObject.getEpisodes().size() : -1);
 
             finishedDialogFragment.setArguments(args);
 

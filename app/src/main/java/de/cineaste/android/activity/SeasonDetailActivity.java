@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,19 +22,13 @@ import de.cineaste.android.database.dao.BaseDao;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
-import de.cineaste.android.network.NetworkCallback;
-import de.cineaste.android.network.NetworkClient;
-import de.cineaste.android.network.NetworkRequest;
-import de.cineaste.android.network.NetworkResponse;
 import de.cineaste.android.util.Constants;
-import de.cineaste.android.util.DateAwareGson;
 
 public class SeasonDetailActivity extends AppCompatActivity {
 
     private Series currentSeries;
     private ImageView poster;
 
-    private long seriesId;
     private long seasonId;
 
     @Override
@@ -48,15 +41,11 @@ public class SeasonDetailActivity extends AppCompatActivity {
         poster = findViewById(R.id.poster_image_view);
 
         Intent intent = getIntent();
-        seriesId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, -1);
+        long seriesId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, -1);
         seasonId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, -1);
 
-        currentSeries = seriesDbHelper.readSeries(seriesId);
-        if (currentSeries == null) {
-            loadSeries();
-        } else {
-            assignData(currentSeries);
-        }
+        currentSeries = seriesDbHelper.getSeriesById(seriesId);
+        assignData(currentSeries);
 
         initToolbar();
 
@@ -86,37 +75,6 @@ public class SeasonDetailActivity extends AppCompatActivity {
         });
 
         setPoster(currentSeasonIndex());
-    }
-
-    private void loadSeries() {
-        NetworkClient client = new NetworkClient(new NetworkRequest(getResources()).getSeries(seriesId));
-        client.sendRequest(new NetworkCallback() {
-            @Override
-            public void onFailure() {
-
-            }
-
-            @Override
-            public void onSuccess(NetworkResponse response) {
-                Gson gson = new DateAwareGson().getGson();
-                final Series series = gson.fromJson(response.getResponseReader(), Series.class);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<Season> seasons = series.getSeasons();
-                        for (Season season : seasons) {
-                            //remove season which contains only special episodes
-                            if (season.getSeasonNumber() == 0) {
-                                seasons.remove(season);
-                                break;
-                            }
-                        }
-                        currentSeries = series;
-                        assignData(series);
-                    }
-                });
-            }
-        });
     }
 
     private void setPoster(int position) {

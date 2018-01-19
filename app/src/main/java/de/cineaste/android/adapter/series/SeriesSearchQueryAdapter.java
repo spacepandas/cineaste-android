@@ -37,7 +37,7 @@ public class SeriesSearchQueryAdapter extends RecyclerView.Adapter<SeriesSearchV
         dataSet.add(index, series);
     }
 
-    public void removeMovie(int index) {
+    public void removeSerie(int index) {
         dataSet.remove(index);
         notifyItemRemoved(index);
     }

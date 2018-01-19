@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import de.cineaste.android.R;
 
-import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.EPISODES_COUNT;
 import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.MOVIE_COUNT;
 import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.SERIES_COUNT;
 
@@ -22,16 +21,13 @@ public class ImportFinishedDialogFragment extends DialogFragment {
     public interface BundleKeyWords {
         String MOVIE_COUNT = "movieCount";
         String SERIES_COUNT = "seriesCount";
-        String EPISODES_COUNT = "episodeCount";
     }
 
     private TextView movies;
     private TextView series;
-    private TextView episodes;
 
     private int movieCount;
     private int seriesCount;
-    private int episodeCount;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +37,6 @@ public class ImportFinishedDialogFragment extends DialogFragment {
         if (bundle != null) {
             movieCount = bundle.getInt(MOVIE_COUNT, -1);
             seriesCount = bundle.getInt(SERIES_COUNT, -1);
-            episodeCount = bundle.getInt(EPISODES_COUNT, -1);
         }
     }
 
@@ -61,7 +56,6 @@ public class ImportFinishedDialogFragment extends DialogFragment {
 
         movies = view.findViewById(R.id.movie);
         series = view.findViewById(R.id.series);
-        episodes = view.findViewById(R.id.episodes);
 
         fillTextViews();
 
@@ -80,11 +74,6 @@ public class ImportFinishedDialogFragment extends DialogFragment {
             series.setText(R.string.importedSeriesFailed);
         } else {
             series.setText(getString(R.string.importedSeries, String.valueOf(seriesCount)));
-        }
-        if (episodeCount < 0) {
-            episodes.setText(R.string.importedEpisodesFailed);
-        } else {
-            episodes.setText(getString(R.string.importedEpisodes, String.valueOf(episodeCount)));
         }
     }
 }

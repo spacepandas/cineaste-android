@@ -28,7 +28,6 @@ public class SeasonPagerAdapter extends FragmentStatePagerAdapter {
         Season currentSeason = series.getSeasons().get(position);
         Fragment fragment = new SeasonDetailFragment();
         Bundle args = new Bundle();
-        args.putInt("seasonNr", currentSeason.getSeasonNumber());
         args.putLong("seasonId", currentSeason.getId());
         args.putLong("seriesId", series.getId());
         fragment.setArguments(args);
