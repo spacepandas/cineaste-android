@@ -1,5 +1,6 @@
 package de.cineaste.android.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -11,6 +12,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -109,8 +111,9 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
 
     @Override
     public void onDeleteClicked() {
-        seriesDbHelper.delete(seriesId);
         layout.removeCallbacks(updateCallBack);
+        seriesDbHelper.delete(seriesId);
+        currentSeries = null;
         onBackPressed();
     }
 
@@ -129,13 +132,13 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
 
                     @Override
                     public void onSuccess(Series series) {
-                        seriesDbHelper.addToHistory(series);
+                        showDialogIfNeeded(series);
                     }
                 };
 
                 break;
             case R.string.watchlistState:
-                seriesDbHelper.moveToHistory(currentSeries);
+                showDialogIfNeeded(currentSeries);
         }
 
         if (seriesCallback != null) {
@@ -144,6 +147,42 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
 
             Toast.makeText(this, this.getResources().getString(R.string.movieAdd,
                     currentSeries.getName()), Toast.LENGTH_SHORT).show();
+
+            onBackPressed();
+        }
+
+
+    }
+
+    private void showDialogIfNeeded(final Series series) {
+        if (series.isInProduction()) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            alertBuilder.setTitle(getString(R.string.seriesSeenHeadline, series.getName()));
+            alertBuilder.setMessage(R.string.seriesStillInProduction);
+            alertBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    moveBetweenLists(series);
+                }
+            });
+            alertBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //do nothing
+                }
+            });
+
+            alertBuilder.create().show();
+        } else {
+            moveBetweenLists(series);
+        }
+    }
+
+    private void moveBetweenLists(Series series) {
+        if (state == R.string.searchState) {
+            seriesDbHelper.addToHistory(series);
+        } else if (state == R.string.watchlistState) {
+            seriesDbHelper.moveToHistory(series);
         }
 
         onBackPressed();
@@ -322,6 +361,9 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
 
                 @Override
                 public void onSuccess(final Series series) {
+                    if (currentSeries == null) {
+                        return;
+                    }
                     series.setWatched(currentSeries.isWatched());
                     seriesDbHelper.update(series);
                     runOnUiThread(new Runnable() {

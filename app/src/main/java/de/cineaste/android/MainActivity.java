@@ -1,6 +1,7 @@
 package de.cineaste.android;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -27,6 +28,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.cineaste.android.activity.AboutActivity;
 import de.cineaste.android.activity.MovieNightActivity;
@@ -149,12 +153,22 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     }
 
     private void checkPermissions() {
-        String storage = Manifest.permission.READ_EXTERNAL_STORAGE;
-        if (ContextCompat.checkSelfPermission(this, storage) == PackageManager.PERMISSION_GRANTED)
-            return;
+        String[] permissions = new String[]{
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
 
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permissions) {
+            int result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
 
-        ActivityCompat.requestPermissions(this, new String[]{storage}, 1);
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
+        }
     }
 
     private void initToolbar() {

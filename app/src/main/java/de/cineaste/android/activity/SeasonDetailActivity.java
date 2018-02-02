@@ -22,6 +22,8 @@ import de.cineaste.android.database.dao.BaseDao;
 import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Season;
 import de.cineaste.android.entity.series.Series;
+import de.cineaste.android.network.SeriesCallback;
+import de.cineaste.android.network.SeriesLoader;
 import de.cineaste.android.util.Constants;
 
 public class SeasonDetailActivity extends AppCompatActivity {
@@ -45,10 +47,26 @@ public class SeasonDetailActivity extends AppCompatActivity {
         seasonId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, -1);
 
         currentSeries = seriesDbHelper.getSeriesById(seriesId);
-        assignData(currentSeries);
+
+        if (currentSeries == null) {
+            SeriesLoader seriesLoader = new SeriesLoader(this);
+            seriesLoader.loadCompleteSeries(seriesId, new SeriesCallback() {
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onSuccess(Series series) {
+                    currentSeries = series;
+                    assignData(series);
+                }
+            });
+        } else {
+            assignData(currentSeries);
+        }
 
         initToolbar();
-
     }
 
     private void assignData(Series series) {
