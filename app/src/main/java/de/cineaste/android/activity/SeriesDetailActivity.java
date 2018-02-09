@@ -228,7 +228,8 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
         intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, currentSeries.getId());
         intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, itemId);
 
-        startActivity(intent);
+        if(state != R.string.searchState)
+            startActivity(intent);
     }
 
     @Override
