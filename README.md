@@ -1,7 +1,7 @@
 # Cineaste
 
 [![code](https://img.shields.io/badge/code-Java-orange.svg)]()
-[![license](https://img.shields.io/badge/licence-GPLv3-lightgrey.svg)](https://github.com/marcelgross90/Cineaste/blob/master/LICENSE)
+[![license](https://img.shields.io/badge/license-GPLv3-lightgrey.svg)](https://github.com/marcelgross90/Cineaste/blob/master/LICENSE)
 [![platform](https://img.shields.io/badge/platform-android-lightgrey.svg)]()
 
 An Android (and iOS) application to manage movies you would like to see and movies you have seen.
@@ -9,7 +9,7 @@ You can also start movie nights with your friends. There is no need to register 
 
 <a href='https://play.google.com/store/apps/details?id=de.cineaste.android&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png' height="45px"/></a>
 
-Also check out the [iOS client](https://github.com/ChristianNorbertBraun/Cineaste) on github. It is still in development.
+Check out the [iOS client](https://github.com/ChristianNorbertBraun/Cineaste) on github. It is still in development.
 
 ## Dependencies
 
