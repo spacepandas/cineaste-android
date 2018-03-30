@@ -30,7 +30,7 @@ We are using [theMovieDb][theMovieDb] to get access to the big movie data univer
         <string name="nearbyKey">XXXX</string>
     </resources>
 ```
-4. Continue with normal development, or building process.
+4. Continue with normal development or building process.
 
 ## License
 
