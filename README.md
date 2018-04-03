@@ -21,7 +21,7 @@ We are using [theMovieDb][theMovieDb] to get access to the big movie data univer
 ## How to build
 
 1. Get a [Nearby][nearbyLink] key.
-2. Get a [theMovieDb] [theMovieDb] key.
+2. Get a [theMovieDb][theMovieDb] key.
 3. Create `secrets.xml` in `res/values` and place your nearby and moviedb key inside it.
 ```xml
     <?xml version="1.0" encoding="utf-8"?>
