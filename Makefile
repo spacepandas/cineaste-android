@@ -1,6 +1,6 @@
 PACKAGE = de.cineaste.android
 APK = app/build/outputs/apk/app-debug.apk
-APKRELEASE = app/build/outputs/apk/app-release.apk
+APKRELEASE = app/build/release/app-release.apk
 
 all: debug install start
 
