@@ -30,6 +30,26 @@ public class SeriesLoader {
         this.resources = context.getResources();
     }
 
+    public void loadSeries(final long seriesId, final SeriesCallback callback) {
+        final NetworkClient client = new NetworkClient();
+
+        client.addRequest(getSeriesRequest(seriesId), new NetworkCallback() {
+            @Override
+            public void onFailure() {
+                callback.onFailure();
+            }
+
+            @Override
+            public void onSuccess(NetworkResponse response) {
+                final Series series = gson.fromJson(response.getResponseReader(), Series.class);
+                excludeSpecialsSeason(series);
+
+                callback.onSuccess(series);
+            }
+        });
+    }
+
+
     public void loadCompleteSeries(final long seriesId, final SeriesCallback callback) {
         final NetworkClient client = new NetworkClient();
 

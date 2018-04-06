@@ -41,15 +41,15 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MovieDetailActivity" />
+        <activity android:name=".activity.MovieDetailActivity" android:theme="@style/Detail"/>
         <activity android:name=".activity.MovieSearchActivity" />
         <activity android:name=".activity.AboutActivity" />
         <activity android:name=".activity.MovieNightActivity" />
         <activity android:name=".activity.ResultActivity" />
         <activity android:name=".activity.PosterActivity" />
         <activity android:name=".activity.SeriesSearchActivity" />
-        <activity android:name=".activity.SeriesDetailActivity" />
-        <activity android:name=".activity.SeasonDetailActivity" />
+        <activity android:name=".activity.SeriesDetailActivity"  android:theme="@style/Detail" />
+        <activity android:name=".activity.SeasonDetailActivity"  android:theme="@style/Detail" />
     </application>
 
 </manifest>

@@ -4,14 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context="de.cineaste.android.activity.SeasonDetailActivity">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/poster_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/moviePoster"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_poster"
+            android:transitionName="poster"
+            tools:targetApi="lollipop" />
+
+        <ImageView
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/gradient"
+            android:src="@drawable/gradient"/>
+    </FrameLayout>
+
     <android.support.design.widget.AppBarLayout
+        android:fitsSystemWindows="true"
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:background="@android:color/transparent"
+        android:theme="@style/ToolbarTheme">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
@@ -19,29 +43,6 @@
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/poster_image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/moviePoster"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/placeholder_poster"
-                    android:transitionName="poster"
-                    tools:targetApi="lollipop" />
-
-                <ImageView
-                    android:scaleType="fitXY"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/gradient"
-                    android:src="@drawable/gradient"/>
-            </FrameLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -58,7 +59,8 @@
         android:id="@+id/pager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
         <android.support.v4.view.PagerTitleStrip
             android:id="@+id/pager_title_strip"
