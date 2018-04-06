@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import de.cineaste.android.R;
 import de.cineaste.android.adapter.series.EpisodeAdapter;
@@ -18,7 +20,7 @@ import de.cineaste.android.database.dbHelper.SeriesDbHelper;
 import de.cineaste.android.entity.series.Episode;
 import de.cineaste.android.viewholder.series.EpisodeViewHolder;
 
-public class SeasonDetailFragment extends Fragment implements EpisodeViewHolder.OnEpisodeWatchStateChangeListener {
+public class SeasonDetailFragment extends Fragment implements EpisodeViewHolder.OnEpisodeWatchStateChangeListener, EpisodeViewHolder.OnDescriptionShowToggleListener {
 
     private long seriesId;
     private long seasonId;
@@ -58,7 +60,7 @@ public class SeasonDetailFragment extends Fragment implements EpisodeViewHolder.
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
 
-        EpisodeAdapter adapter = new EpisodeAdapter(seriesDbHelper.getEpisodesBySeasonId(seasonId), this);
+        EpisodeAdapter adapter = new EpisodeAdapter(seriesDbHelper.getEpisodesBySeasonId(seasonId), this, this);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -66,4 +68,17 @@ public class SeasonDetailFragment extends Fragment implements EpisodeViewHolder.
         return view;
     }
 
+    @Override
+    public void showDescription(ImageButton showDescription, ImageButton hideDescription, TextView description) {
+        showDescription.setVisibility(View.INVISIBLE);
+        hideDescription.setVisibility(View.VISIBLE);
+        description.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideDescription(ImageButton showDescription, ImageButton hideDescription, TextView description) {
+        showDescription.setVisibility(View.VISIBLE);
+        hideDescription.setVisibility(View.INVISIBLE);
+        description.setVisibility(View.GONE);
+    }
 }

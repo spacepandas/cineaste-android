@@ -17,11 +17,13 @@ public class EpisodeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<Episode> episodes = new ArrayList<>();
     private final EpisodeViewHolder.OnEpisodeWatchStateChangeListener onEpisodeWatchStateChangeListener;
+    private final EpisodeViewHolder.OnDescriptionShowToggleListener onDescriptionShowToggleListener;
 
-    public EpisodeAdapter(List<Episode> episodes, EpisodeViewHolder.OnEpisodeWatchStateChangeListener onEpisodeWatchStateChangeListener) {
+    public EpisodeAdapter(List<Episode> episodes, EpisodeViewHolder.OnEpisodeWatchStateChangeListener onEpisodeWatchStateChangeListener, EpisodeViewHolder.OnDescriptionShowToggleListener onDescriptionShowToggleListener) {
         this.episodes.clear();
         this.episodes.addAll(episodes);
         this.onEpisodeWatchStateChangeListener = onEpisodeWatchStateChangeListener;
+        this.onDescriptionShowToggleListener = onDescriptionShowToggleListener;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .from(parent.getContext())
                 .inflate(R.layout.card_episode, parent, false);
 
-        return new EpisodeViewHolder(view, onEpisodeWatchStateChangeListener);
+        return new EpisodeViewHolder(view, onEpisodeWatchStateChangeListener, onDescriptionShowToggleListener);
     }
 
     @Override
