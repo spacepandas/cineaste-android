@@ -4,8 +4,8 @@ package de.cineaste.android.adapter.series;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -276,9 +276,7 @@ public class SeriesDetailAdapter extends RecyclerView.Adapter {
         }
 
         void assignData(Series series) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-
-            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setNestedScrollingEnabled(false);
 
