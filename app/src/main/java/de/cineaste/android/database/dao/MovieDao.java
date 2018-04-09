@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.cineaste.android.entity.movie.Movie;
@@ -41,7 +42,7 @@ public class MovieDao extends BaseDao {
         values.put(MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount());
         values.put(MovieEntry.COLUMN_MOVIE_DESCRIPTION, movie.getDescription());
         values.put(MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0);
-        values.put(MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate());
+        values.put(MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate().getTime());
         if (movie.getReleaseDate() != null) {
             values.put(MovieEntry.COLUMN_MOVIE_RELEASE_DATE, sdf.format(movie.getReleaseDate()));
         } else {
@@ -100,7 +101,8 @@ public class MovieDao extends BaseDao {
                 currentMovie.setWatched(
                         c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED)) > 0);
                 currentMovie.setWatchedDate(
-                        c.getLong(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED_DATE)));
+                        new Date(c.getLong(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED_DATE))));
+
                 try {
                     currentMovie.setReleaseDate(
                             sdf.parse(c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_RELEASE_DATE)))

@@ -49,6 +49,7 @@ import de.cineaste.android.fragment.ImportFinishedDialogFragment;
 import de.cineaste.android.fragment.SeriesListFragment;
 import de.cineaste.android.fragment.UserInputFragment;
 import de.cineaste.android.fragment.WatchState;
+import de.cineaste.android.util.ExportFileUpdater;
 
 import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.MOVIE_COUNT;
 import static de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.SERIES_COUNT;
@@ -110,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ExportFileUpdater.updateFile();
 
         userDbHelper = UserDbHelper.getInstance(this);
         movieDbHelper = MovieDbHelper.getInstance(this);

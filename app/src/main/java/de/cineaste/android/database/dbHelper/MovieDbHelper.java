@@ -111,7 +111,7 @@ public class MovieDbHelper {
     private void update(Movie movie, int listPosition) {
         ContentValues values = new ContentValues();
         values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, movie.isWatched() ? 1 : 0);
-        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate());
+        values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.getWatchedDate().getTime());
         values.put(BaseDao.MovieEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
         values.put(BaseDao.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
         values.put(BaseDao.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage());

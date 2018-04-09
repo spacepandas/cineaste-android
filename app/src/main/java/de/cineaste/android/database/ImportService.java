@@ -64,7 +64,7 @@ public class ImportService {
         return gson.fromJson(importedSeriesString, listType);
     }
 
-    private static String readJsonFromFile(String fileName) throws IOException {
+    public static String readJsonFromFile(String fileName) throws IOException {
         final File importFile = new File(
                 Environment.getExternalStorageDirectory() + "/" + FOLDER_NAME + "/" + fileName);
 

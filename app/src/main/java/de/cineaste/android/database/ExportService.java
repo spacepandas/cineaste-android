@@ -46,12 +46,12 @@ public class ExportService {
     }
 
     @NonNull
-    private static File getFile(String fileName) {
+    public static File getFile(String fileName) {
         return new File(
                 Environment.getExternalStorageDirectory() + "/" + FOLDER_NAME + "/" + fileName);
     }
 
-    private static boolean writeOnDevice(File exportFile, String json) {
+    public static boolean writeOnDevice(File exportFile, String json) {
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(exportFile);
@@ -69,6 +69,5 @@ public class ExportService {
             }
         }
     }
-
 
 }
