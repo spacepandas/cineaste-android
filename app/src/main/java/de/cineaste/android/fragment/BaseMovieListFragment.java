@@ -11,7 +11,7 @@ import de.cineaste.android.R;
 import de.cineaste.android.activity.MovieDetailActivity;
 import de.cineaste.android.activity.MovieSearchActivity;
 import de.cineaste.android.adapter.movie.MovieListAdapter;
-import de.cineaste.android.controllFlow.movie.HistorylistMovieTouchHelperCallback;
+import de.cineaste.android.controllFlow.movie.HistoryListMovieTouchHelperCallback;
 import de.cineaste.android.controllFlow.movie.WatchlistMovieTouchHelperCallback;
 import de.cineaste.android.database.dao.BaseDao;
 
@@ -108,7 +108,7 @@ public class BaseMovieListFragment extends BaseListFragment {
         if (watchState == WatchState.WATCH_STATE) {
             return new WatchlistMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, getResources());
         } else {
-            return new HistorylistMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, getResources());
+            return new HistoryListMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, getResources());
         }
     }
 }
