@@ -319,11 +319,17 @@ public class SeriesDbHelper {
         String selection = SeasonEntry._ID + " = ?";
         String[] selectionArgs = {Long.toString(season.getId())};
 
-        Season oldSeason = seasonDao.read(selection, selectionArgs).get(0);
-        season.setWatched(oldSeason.isWatched());
         season.setSeriesId(seriesId);
 
-        seasonDao.update(season);
+        List<Season> seasons = seasonDao.read(selection, selectionArgs);
+        if (seasons.size() > 0) {
+            Season oldSeason = seasonDao.read(selection, selectionArgs).get(0);
+            season.setWatched(oldSeason.isWatched());
+            seasonDao.update(season);
+        } else {
+            seasonDao.create(season, seriesId);
+        }
+
 
         for (Episode episode : season.getEpisodes()) {
             update(episode, seriesId, season.getId());
@@ -334,12 +340,19 @@ public class SeriesDbHelper {
         String selection = EpisodeEntry._ID + " = ?";
         String[] selectionArgs = {Long.toString(episode.getId())};
 
-        Episode oldEpisode = episodeDao.read(selection, selectionArgs).get(0);
-        episode.setWatched(oldEpisode.isWatched());
         episode.setSeriesId(seriesId);
         episode.setSeasonId(seasonId);
 
-        episodeDao.update(episode);
+        List<Episode> episodes = episodeDao.read(selection, selectionArgs);
+
+        if (episodes.size() > 0) {
+            Episode oldEpisode = episodes.get(0);
+            episode.setWatched(oldEpisode.isWatched());
+            episodeDao.update(episode);
+        } else {
+            episodeDao.create(episode);
+        }
+
     }
 
     private int getNewPosition(Series updatedSeries, Series oldSeries) {
