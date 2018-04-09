@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ExportFileUpdater.updateFile();
+        ExportFileUpdater.INSTANCE.updateFile();
 
         userDbHelper = UserDbHelper.getInstance(this);
         movieDbHelper = MovieDbHelper.getInstance(this);

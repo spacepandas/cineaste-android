@@ -81,7 +81,7 @@ public class SeasonDetailActivity extends AppCompatActivity {
         Season season = currentSeries.getSeasons().get(position);
         final String posterPath = season.getPosterPath();
 
-        String posterUri = Constants.POSTER_URI_SMALL
+        String posterUri = Constants.Companion.getPOSTER_URI_SMALL()
                 .replace("<posterName>", posterPath)
                 .replace("<API_KEY>", getString(R.string.movieKey));
         Picasso.with(this)

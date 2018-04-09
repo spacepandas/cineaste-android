@@ -381,7 +381,7 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
     }
 
     private void assignData(Series series) {
-        String posterUri = Constants.POSTER_URI_ORIGINAL
+        String posterUri = Constants.Companion.getPOSTER_URI_ORIGINAL()
                 .replace("<posterName>", series.getBackdropPath() != null ?
                         series.getBackdropPath() : "/")
                 .replace("<API_KEY>", getString(R.string.movieKey));

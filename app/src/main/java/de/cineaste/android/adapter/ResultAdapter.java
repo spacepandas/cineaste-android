@@ -74,7 +74,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
 		public void assignData(MatchingResult matchingResult, int resultCounter) {
 			String posterUri =
-					Constants.POSTER_URI_SMALL
+					Constants.Companion.getPOSTER_URI_SMALL()
 							.replace("<posterName>", matchingResult.getPosterPath() != null ?
 									matchingResult.getPosterPath() : "/")
 							.replace("<API_KEY>", context.getString(R.string.movieKey));

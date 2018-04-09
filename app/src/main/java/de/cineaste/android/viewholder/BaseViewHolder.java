@@ -38,7 +38,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     protected void setPoster(String posterName) {
         String posterUri =
-                Constants.POSTER_URI_SMALL
+                Constants.Companion.getPOSTER_URI_SMALL()
                         .replace("<posterName>", posterName != null ? posterName : "/")
                         .replace("<API_KEY>", context.getString(R.string.movieKey));
         Picasso.with(context).load(posterUri).resize(222, 334).error(R.drawable.placeholder_poster).into(poster);

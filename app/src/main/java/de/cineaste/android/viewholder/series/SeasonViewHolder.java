@@ -66,7 +66,7 @@ public class SeasonViewHolder extends RecyclerView.ViewHolder {
     private void setMoviePoster(Season season) {
         String posterName = season.getPosterPath();
         String posterUri =
-                Constants.POSTER_URI_SMALL
+                Constants.Companion.getPOSTER_URI_SMALL()
                         .replace("<posterName>", posterName != null ? posterName : "/")
                         .replace("<API_KEY>", context.getString(R.string.movieKey));
         Picasso.with(context).load(posterUri).resize(342, 513).error(R.drawable.placeholder_poster).into(poster);

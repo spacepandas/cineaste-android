@@ -331,7 +331,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         rating.setText(String.valueOf(currentMovie.getVoteAverage()));
 
 
-        String posterUri = Constants.POSTER_URI_SMALL
+        String posterUri = Constants.Companion.getPOSTER_URI_SMALL()
                 .replace("<posterName>", currentMovie.getPosterPath() != null ?
                         currentMovie.getPosterPath() : "/")
                 .replace("<API_KEY>", getString(R.string.movieKey));

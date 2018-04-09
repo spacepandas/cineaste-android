@@ -62,7 +62,7 @@ public class PosterActivity extends AppCompatActivity {
 
     private void displayPoster() {
         Picasso.with(this)
-                .load(getPosterUrl(Constants.POSTER_URI_SMALL))
+                .load(getPosterUrl(Constants.Companion.getPOSTER_URI_SMALL()))
                 .error(R.drawable.placeholder_poster)
                 .into(poster, new Callback() {
                     @Override
@@ -70,7 +70,7 @@ public class PosterActivity extends AppCompatActivity {
                         final Drawable placeHolder = poster.getDrawable();
                         setBackgroundColor(((BitmapDrawable) placeHolder).getBitmap());
                         Picasso.with(PosterActivity.this)
-                                .load(getPosterUrl(Constants.POSTER_URI_ORIGINAL))
+                                .load(getPosterUrl(Constants.Companion.getPOSTER_URI_ORIGINAL()))
                                 .placeholder(placeHolder)
                                 .into(poster, new Callback() {
                                     @Override

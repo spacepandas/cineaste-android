@@ -76,8 +76,8 @@ public abstract class BaseDao extends SQLiteOpenHelper {
 	protected final SQLiteDatabase writeDb;
 	protected final SimpleDateFormat sdf;
 
-	private static final int DATABASE_VERSION = Constants.DATABASE_VERSION;
-	private static final String DATABASE_NAME = Constants.DATABASE_NAME;
+	private static final int DATABASE_VERSION = Constants.Companion.getDATABASE_VERSION();
+	private static final String DATABASE_NAME = Constants.Companion.getDATABASE_NAME();
 
 	public static abstract class UserEntry implements BaseColumns {
 
