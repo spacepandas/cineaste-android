@@ -48,9 +48,9 @@ class SeriesLoader(context: Context) {
             override fun onSuccess(response: NetworkResponse) {
                 val series = gson.fromJson(response.responseReader, Series::class.java)
                 excludeSpecialsSeason(series)
-                val responseCounter = CountDownLatch(series.seasons.size)
+                val responseCounter = CountDownLatch(series.seasons!!.size)
 
-                for (season in series.seasons) {
+                for (season in series!!.seasons!!) {
                     loadEpisodesOfSeason(responseCounter, season, client, seriesId, callback)
                 }
 
@@ -99,13 +99,12 @@ class SeriesLoader(context: Context) {
 
     private fun excludeSpecialsSeason(series: Series) {
         val seasons = ArrayList<Season>()
-        for (season in series.seasons) {
+        for (season in series.seasons!!) {
             if (season.seasonNumber != 0) {
                 seasons.add(season)
             }
         }
 
-        series.seasons.clear()
         series.seasons = seasons
     }
 

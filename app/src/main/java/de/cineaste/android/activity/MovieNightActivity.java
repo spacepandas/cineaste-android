@@ -264,7 +264,7 @@ public class MovieNightActivity extends AppCompatActivity
                 mGoogleApiClient.connect();
             }
         } else {
-            Nearby.Messages.unpublish(mGoogleApiClient, NearbyMessage.newNearbyMessage(localNearbyMessage))
+            Nearby.Messages.unpublish(mGoogleApiClient, NearbyMessage.Companion.newNearbyMessage(localNearbyMessage))
                     .setResultCallback(new ResultCallback<Status>() {
 
                         @Override
@@ -329,7 +329,7 @@ public class MovieNightActivity extends AppCompatActivity
                     .setStrategy(PUB_SUB_STRATEGY)
                     .setCallback(new PublishCallback() {
                     }).build();
-            Nearby.Messages.publish(mGoogleApiClient, NearbyMessage.newNearbyMessage(localNearbyMessage), options)
+            Nearby.Messages.publish(mGoogleApiClient, NearbyMessage.Companion.newNearbyMessage(localNearbyMessage), options)
                     .setResultCallback(new ResultCallback<Status>() {
 
                         @Override
@@ -368,8 +368,8 @@ public class MovieNightActivity extends AppCompatActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!nearbyMessagesArrayList.contains(NearbyMessage.fromMessage(message))) {
-                        nearbyMessagesArrayList.add(NearbyMessage.fromMessage(message));
+                    if (!nearbyMessagesArrayList.contains(NearbyMessage.Companion.fromMessage(message))) {
+                        nearbyMessagesArrayList.add(NearbyMessage.Companion.fromMessage(message));
                         if (nearbyMessagesArrayList.size() > 0) {
                             startBtn.setVisibility(View.VISIBLE);
                             nearbyUser_rv.setVisibility(View.VISIBLE);
