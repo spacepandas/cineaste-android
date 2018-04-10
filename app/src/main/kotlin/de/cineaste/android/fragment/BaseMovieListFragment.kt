@@ -18,8 +18,8 @@ class BaseMovieListFragment : BaseListFragment() {
 
     private var movieListAdapter: MovieListAdapter? = null
 
-    override val subtitle: Int
-        get() = R.string.movies
+    override val subtitle: String
+        get() = resources.getQuantityString(R.plurals.movieTitle, dataSetSize, dataSetSize)
 
     override val layout: Int
         get() = R.layout.fragment_movielist

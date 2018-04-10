@@ -56,6 +56,14 @@
     <string name="sort_by_release">Sortieren nach Erscheinungsdatum</string>
     <string name="sort_by_runtime">Sortieren nach Laufzeit</string>
     <string name="delete">Löschen</string>
+    <plurals name="movieTitle">
+        <item quantity="one">%d Film</item>
+        <item quantity="other">%d Filme</item>
+    </plurals>
+    <plurals name="seriesTitle">
+        <item quantity="one">%d Serie</item>
+        <item quantity="other">%d Serien</item>
+    </plurals>
     <string name="movies">Filme</string>
     <string name="series">Serien</string>
     <string name="seasons">Staffeln: %s</string>

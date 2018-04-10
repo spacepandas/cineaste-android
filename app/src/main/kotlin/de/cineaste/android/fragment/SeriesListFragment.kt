@@ -22,8 +22,8 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
 
     private var seriesListAdapter: SeriesListAdapter? = null
 
-    override val subtitle: Int
-        get() = R.string.series
+    override val subtitle: String
+        get() = resources.getQuantityString(R.plurals.seriesTitle, dataSetSize, dataSetSize)
 
     override val layout: Int
         get() = R.layout.fragment_series_list

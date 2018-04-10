@@ -31,7 +31,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     private var userDbHelper: UserDbHelper? = null
     var progressbar: RelativeLayout? = null
         private set
-    protected abstract val subtitle: Int
+    protected abstract val subtitle: String
     protected abstract val layout: Int
     protected abstract val dataSetSize: Int
     protected abstract val emptyListMessageByState: Int
@@ -92,7 +92,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
                 activity.setTitle(R.string.history)
             }
             val actionBar = (activity as AppCompatActivity).supportActionBar
-            actionBar?.setSubtitle(subtitle)
+            actionBar?.subtitle = subtitle
         }
 
 

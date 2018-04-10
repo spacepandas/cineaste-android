@@ -3,34 +3,31 @@ package de.cineaste.android.entity.movie
 import com.google.android.gms.nearby.messages.Message
 import com.google.gson.Gson
 
-import java.nio.charset.Charset
-//todo use data class
-class NearbyMessage {
-
-    val userName: String
-    private val deviceId: String?
-    val movies: List<MovieDto>
-
-    private constructor(): this("", "", emptyList())
-
-    constructor(userName: String, deviceId: String, movies: List<MovieDto>) {
-        this.userName = userName
-        this.deviceId = deviceId
-        this.movies = movies
-    }
+data class NearbyMessage(
+        val userName: String = "",
+        private val deviceId: String = "",
+        val movies: List<MovieDto>  = emptyList()
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
+        if (javaClass != other?.javaClass) return false
 
-        val that = other as NearbyMessage?
+        other as NearbyMessage
 
-        return !if (deviceId != null) deviceId != that!!.deviceId else that!!.deviceId != null
+        if (userName != other.userName) return false
+        if (deviceId != other.deviceId) return false
+        if (movies != other.movies) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
+        return deviceId.hashCode()
+    }
 
-        return deviceId?.hashCode() ?: 0
+    fun toNearbyMessage() : Message {
+        return Message(GSON.toJson(this).toByteArray(Charsets.UTF_8))
     }
 
     companion object {
@@ -41,13 +38,8 @@ class NearbyMessage {
             val nearbyMessageString = String(message.content).trim { it <= ' ' }
 
             return GSON.fromJson(
-                    String(nearbyMessageString.toByteArray(Charset.forName("UTF-8"))),
+                    String(nearbyMessageString.toByteArray(Charsets.UTF_8)),
                     NearbyMessage::class.java)
-        }
-
-        fun newNearbyMessage(nearbyMessage: NearbyMessage): Message {
-            return Message(
-                    GSON.toJson(nearbyMessage).toByteArray(Charset.forName("UTF-8")))
         }
     }
 }

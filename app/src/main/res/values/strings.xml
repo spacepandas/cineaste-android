@@ -60,6 +60,14 @@ Special thanks to Philipp Wolf, for the design!
     <string name="sort_by_runtime">Sort by release date</string>
     <string name="delete">Delete</string>
 
+    <plurals name="movieTitle">
+        <item quantity="one">%d Movie</item>
+        <item quantity="other">%d Movies</item>
+    </plurals>
+    <plurals name="seriesTitle">
+        <item quantity="one">%d Series</item>
+        <item quantity="other">%d Series</item>
+    </plurals>
     <string name="movies">Movies</string>
     <string name="series">Series</string>
     <string name="seasons">Seasons: %s</string>

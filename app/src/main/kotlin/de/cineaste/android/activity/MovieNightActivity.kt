@@ -211,7 +211,7 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
                 mGoogleApiClient!!.connect()
             }
         } else {
-            Nearby.Messages.unpublish(mGoogleApiClient, NearbyMessage.newNearbyMessage(localNearbyMessage!!))
+            Nearby.Messages.unpublish(mGoogleApiClient, localNearbyMessage!!.toNearbyMessage())
                     .setResultCallback { status ->
                         if (!status.isSuccess) {
                             logAndShowSnackbar("Could not unpublish, status = $status")
@@ -266,7 +266,7 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
                     .setCallback(object : PublishCallback() {
 
                     }).build()
-            Nearby.Messages.publish(mGoogleApiClient, NearbyMessage.newNearbyMessage(localNearbyMessage!!), options)
+            Nearby.Messages.publish(mGoogleApiClient, localNearbyMessage!!.toNearbyMessage(), options)
                     .setResultCallback { status ->
                         if (!status.isSuccess) {
                             logAndShowSnackbar("Could not publish, status = $status")
@@ -310,15 +310,6 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
 
         override fun onLost(message: Message?) {
             //do not remove messages when connection lost
-            //			    getActivity().runOnUiThread( new Runnable() {
-            //                    @Override
-            //                    public void run() {
-            //                        NearbyMessage temp = NearbyMessage.fromMessage( message );
-            //                        int position = nearbyMessagesArrayList.indexOf( temp );
-            //                        nearbyMessagesArrayList.remove( temp );
-            //                        nearbyUserAdapter.notifyItemRemoved( position );
-            //                    }
-            //                } );
         }
     }
 
