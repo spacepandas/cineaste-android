@@ -13,6 +13,9 @@ android {
         versionName "2.3.0"
         resValue "string", "app_name", "Cineaste"
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 
     buildTypes {
         debug {
