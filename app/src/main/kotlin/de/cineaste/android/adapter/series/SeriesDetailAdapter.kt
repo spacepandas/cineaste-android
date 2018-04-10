@@ -10,18 +10,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
 
 import de.cineaste.android.R
 import de.cineaste.android.entity.series.Season
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
+import de.cineaste.android.util.Constants
+import java.util.*
 
-class SeriesDetailAdapter(private var series: Series?, private val clickListener: ItemClickListener, private val state: Int, private val listener: SeriesStateManipulationClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SeriesDetailAdapter(private var series: Series?, private val clickListener: ItemClickListener, private val state: Int, private val listener: SeriesStateManipulationClickListener, private val posterClickListener: View.OnClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface SeriesStateManipulationClickListener {
         fun onDeleteClicked()
@@ -49,7 +51,7 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
         when (viewType) {
             0 -> {
                 v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_base, parent, false)
-                return BaseViewHolder(v, parent.context)
+                return BaseViewHolder(v, parent.context, posterClickListener)
             }
             1 -> {
                 v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_buttons, parent, false)
@@ -65,7 +67,7 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
             }
         }
 
-        return BaseViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.series_detail_base, parent, false), parent.context)
+        return BaseViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.series_detail_base, parent, false), parent.context, posterClickListener)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -85,7 +87,8 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
         return position
     }
 
-    private inner class BaseViewHolder internal constructor(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
+    private inner class BaseViewHolder internal constructor(itemView: View, val context: Context, val clickListener: View.OnClickListener) : RecyclerView.ViewHolder(itemView) {
+        private val poster: ImageView = itemView.findViewById(R.id.poster)
         private val rating: TextView = itemView.findViewById(R.id.rating)
         private val title: TextView = itemView.findViewById(R.id.title)
         private val seasons: TextView = itemView.findViewById(R.id.seasons)
@@ -115,10 +118,21 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
             } else {
                 toBeContinued.visibility = View.GONE
             }
+
+            setPoster(series)
+            poster.setOnClickListener(clickListener)
+        }
+
+        private fun setPoster(series: Series) {
+            val posterName = series.posterPath
+            val posterUri = Constants.POSTER_URI_SMALL
+                    .replace("<posterName>", posterName ?: "/")
+                    .replace("<API_KEY>", context.getString(R.string.movieKey))
+            Picasso.with(context).load(posterUri).resize(273, 410).error(R.drawable.placeholder_poster).into(poster)
         }
 
         private fun convertDate(date: Date?): String {
-            val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", resources.configuration.locale)
+            val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH)
             return simpleDateFormat.format(date)
         }
 

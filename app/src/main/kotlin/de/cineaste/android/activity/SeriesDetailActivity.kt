@@ -32,7 +32,7 @@ import de.cineaste.android.network.SeriesCallback
 import de.cineaste.android.network.SeriesLoader
 import de.cineaste.android.util.Constants
 
-class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener {
+class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
 
     private var state: Int = 0
     private var poster: ImageView? = null
@@ -44,6 +44,14 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private var layout: RecyclerView? = null
     private var updateCallBack: Runnable? = null
     private var adapter: SeriesDetailAdapter? = null
+
+    override fun onClick(v: View?) {
+        if (v!!.id == R.id.poster) {
+            val intent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
+            intent.putExtra(PosterActivity.POSTER_PATH, currentSeries!!.posterPath!!)
+            startActivity(intent)
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
@@ -333,7 +341,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 .error(R.drawable.placeholder_poster)
                 .into(poster)
 
-        adapter = SeriesDetailAdapter(series, this, state, this)
+        adapter = SeriesDetailAdapter(series, this, state, this, this)
         layout!!.adapter = adapter
     }
 

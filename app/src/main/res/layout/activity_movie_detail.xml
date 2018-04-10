@@ -30,8 +30,6 @@
             android:src="@drawable/gradient"/>
     </FrameLayout>
 
-
-
     <android.support.design.widget.AppBarLayout
         android:fitsSystemWindows="true"
         android:id="@+id/appbar"
