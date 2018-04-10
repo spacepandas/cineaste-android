@@ -43,7 +43,7 @@ public class SeasonDetailFragment extends Fragment implements EpisodeViewHolder.
         seasonId = args.getLong("seasonId", -1);
         seriesId = args.getLong("seriesId", -1);
 
-        seriesDbHelper = SeriesDbHelper.getInstance(getContext());
+        seriesDbHelper = SeriesDbHelper.Companion.getInstance(getContext());
 
     }
 

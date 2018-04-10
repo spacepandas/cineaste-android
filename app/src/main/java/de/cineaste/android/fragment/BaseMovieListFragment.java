@@ -98,7 +98,7 @@ public class BaseMovieListFragment extends BaseListFragment {
     @NonNull
     protected Intent createIntent(long itemId, int state, Activity activity) {
         Intent intent = new Intent(activity, MovieDetailActivity.class);
-        intent.putExtra(BaseDao.MovieEntry._ID, itemId);
+        intent.putExtra(BaseDao.MovieEntry.ID, itemId);
         intent.putExtra(getString(R.string.state), state);
         return intent;
     }

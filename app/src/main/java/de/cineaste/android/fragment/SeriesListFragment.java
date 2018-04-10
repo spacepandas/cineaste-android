@@ -25,7 +25,7 @@ public class SeriesListFragment extends BaseListFragment implements SeriesListAd
     private SeriesListAdapter seriesListAdapter;
     @Override
     public void onEpisodeWatchedClick(Series series, int position) {
-        SeriesDbHelper.getInstance(getActivity()).episodeWatched(series);
+        SeriesDbHelper.Companion.getInstance(getActivity()).episodeWatched(series);
         seriesListAdapter.updateSeries(series, position);
     }
 
@@ -117,7 +117,7 @@ public class SeriesListFragment extends BaseListFragment implements SeriesListAd
     @NonNull
     protected Intent createIntent(long itemId, int state, Activity activity) {
         Intent intent = new Intent(activity, SeriesDetailActivity.class);
-        intent.putExtra(BaseDao.SeriesEntry._ID, itemId);
+        intent.putExtra(BaseDao.SeriesEntry.ID, itemId);
         intent.putExtra(getString(R.string.state), state);
         return intent;
     }

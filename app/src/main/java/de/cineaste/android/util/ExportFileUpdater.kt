@@ -7,15 +7,14 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 import de.cineaste.android.database.ExportService
+import de.cineaste.android.database.ImportExportService.Companion.MOVIES_FILE
 import de.cineaste.android.database.ImportService
 
-import de.cineaste.android.database.ImportExportService.MOVIES_FILE
 
 object ExportFileUpdater {
 

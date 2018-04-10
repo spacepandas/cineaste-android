@@ -201,12 +201,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         gson = new DateAwareGson().getGson();
 
         Intent intent = getIntent();
-        movieId = intent.getLongExtra(BaseDao.MovieEntry._ID, -1);
+        movieId = intent.getLongExtra(BaseDao.MovieEntry.ID, -1);
         state = intent.getIntExtra(getString(R.string.state), -1);
 
         initViews();
 
-        movieDbHelper = MovieDbHelper.getInstance(this);
+        movieDbHelper = MovieDbHelper.Companion.getInstance(this);
 
         updateCallBack = getUpdateCallback();
         autoUpdateMovie();

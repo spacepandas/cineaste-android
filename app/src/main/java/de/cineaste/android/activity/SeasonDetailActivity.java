@@ -36,7 +36,7 @@ public class SeasonDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_season_detail);
 
-        SeriesDbHelper seriesDbHelper = SeriesDbHelper.getInstance(this);
+        SeriesDbHelper seriesDbHelper = SeriesDbHelper.Companion.getInstance(this);
 
         poster = findViewById(R.id.poster_image_view);
 

@@ -23,14 +23,14 @@ import de.cineaste.android.network.NetworkResponse;
 
 public class MovieSearchActivity extends AbstractSearchActivity implements  MovieSearchQueryAdapter.OnMovieStateChange {
 
-    private final MovieDbHelper db = MovieDbHelper.getInstance(this);
+    private final MovieDbHelper db = MovieDbHelper.Companion.getInstance(this);
     private MovieSearchQueryAdapter movieQueryAdapter;
 
     @Override
     @NonNull
     protected Intent getIntentForDetailActivity(long itemId) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(BaseDao.MovieEntry._ID, itemId);
+        intent.putExtra(BaseDao.MovieEntry.ID, itemId);
         intent.putExtra(this.getString(R.string.state), R.string.searchState);
         return intent;
     }

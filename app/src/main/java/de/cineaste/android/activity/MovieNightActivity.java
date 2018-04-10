@@ -89,7 +89,7 @@ public class MovieNightActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_night);
-        userDbHelper = UserDbHelper.getInstance(this);
+        userDbHelper = UserDbHelper.Companion.getInstance(this);
         currentUser = userDbHelper.getUser();
 
         initViews();
@@ -170,7 +170,7 @@ public class MovieNightActivity extends AppCompatActivity
     }
 
     private void buildLocalMessage() {
-        MovieDbHelper watchlistDbHelper = MovieDbHelper.getInstance(this);
+        MovieDbHelper watchlistDbHelper = MovieDbHelper.Companion.getInstance(this);
         List<Movie> localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE);
         final List<MovieDto> localMovies = transFormMovies(localWatchlistMovies);
         localNearbyMessage = new NearbyMessage(currentUser.getUserName(), getMyUUid(), localMovies);
@@ -217,10 +217,9 @@ public class MovieNightActivity extends AppCompatActivity
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
-                handler.clearMessages();
-                handler.addMessage(localNearbyMessage);
-                handler.addMessages(nearbyMessagesArrayList);
+                NearbyMessageHandler.INSTANCE.clearMessages();
+                NearbyMessageHandler.INSTANCE.addMessage(localNearbyMessage);
+                NearbyMessageHandler.INSTANCE.addMessages(nearbyMessagesArrayList);
                 Intent intent = new Intent(MovieNightActivity.this, ResultActivity.class);
                 startActivity(intent);
                 finish();

@@ -29,14 +29,14 @@ public class SeriesSearchActivity extends AbstractSearchActivity implements Seri
     @NonNull
     protected Intent getIntentForDetailActivity(long itemId) {
         Intent intent = new Intent(this, SeriesDetailActivity.class);
-        intent.putExtra(BaseDao.SeriesEntry._ID, itemId);
+        intent.putExtra(BaseDao.SeriesEntry.ID, itemId);
         intent.putExtra(this.getString(R.string.state), R.string.searchState);
         return intent;
     }
 
     @Override
     public void onSeriesStateChangeListener(final Series series, int viewId, final int index) {
-        final SeriesDbHelper dbHelper = SeriesDbHelper.getInstance(this);
+        final SeriesDbHelper dbHelper = SeriesDbHelper.Companion.getInstance(this);
         SeriesCallback seriesCallback;
         switch (viewId) {
             case R.id.to_watchlist_button:

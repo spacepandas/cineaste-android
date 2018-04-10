@@ -114,9 +114,9 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
         ExportFileUpdater.INSTANCE.updateFile();
 
-        userDbHelper = UserDbHelper.getInstance(this);
-        movieDbHelper = MovieDbHelper.getInstance(this);
-        seriesDbHelper = SeriesDbHelper.getInstance(this);
+        userDbHelper = UserDbHelper.Companion.getInstance(this);
+        movieDbHelper = MovieDbHelper.Companion.getInstance(this);
+        seriesDbHelper = SeriesDbHelper.Companion.getInstance(this);
         contentContainer = findViewById(R.id.content_container);
 
         fm = getSupportFragmentManager();
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
         ImportExportObject importExportObject = new ImportExportObject();
         importExportObject.setMovies(movieDbHelper.readAllMovies());
         importExportObject.setSeries(seriesDbHelper.getAllSeries());
-        importExportObject = ExportService.export(importExportObject);
+        importExportObject = ExportService.INSTANCE.export(importExportObject);
 
         int snackBarMessage = R.string.exportFailed;
 
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements UserInputFragment
 
         @Override
         protected AsyncOutputAttributes doInBackground(AsyncInputAttribute... asyncInputAttributes) {
-            ImportExportObject importExportObject = ImportService.importFiles();
+            ImportExportObject importExportObject = ImportService.INSTANCE.importFiles();
 
             //todo find a better solution to save all files
             for (Movie movie : importExportObject.getMovies()) {

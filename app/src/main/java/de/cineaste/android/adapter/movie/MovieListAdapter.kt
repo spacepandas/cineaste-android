@@ -89,19 +89,19 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
 
     fun orderAlphabetical() {
         val movies = db.reorderAlphabetical(state)
-        dataSet = movies
+        dataSet = movies as MutableList<Movie>
         filteredDataSet = movies
     }
 
     fun orderByReleaseDate() {
         val movies = db.reorderByReleaseDate(state)
-        dataSet = movies
+        dataSet = movies as MutableList<Movie>
         filteredDataSet = movies
     }
 
     fun orderByRuntime() {
         val movies = db.reorderByRuntime(state)
-        dataSet = movies
+        dataSet = movies as MutableList<Movie>
         filteredDataSet = movies
     }
 
@@ -135,7 +135,7 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     fun updateDataSet() {
-        this.dataSet = db.readMoviesByWatchStatus(state)
+        this.dataSet = db.readMoviesByWatchStatus(state) as MutableList<Movie>
         this.filteredDataSet = LinkedList(dataSet)
         displayMessage.showMessageIfEmptyList()
         notifyDataSetChanged()

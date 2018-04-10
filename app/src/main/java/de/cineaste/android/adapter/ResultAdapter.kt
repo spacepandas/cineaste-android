@@ -22,7 +22,6 @@ class ResultAdapter(
         private val results: MutableList<MatchingResult>?,
         private val listener: OnMovieSelectListener?) : RecyclerView.Adapter<ResultAdapter.ViewHolder>() {
 
-    private val handler: NearbyMessageHandler = NearbyMessageHandler.getInstance()
     private var context: Context? = null
     private val rowLayout: Int = R.layout.card_result
 
@@ -41,7 +40,7 @@ class ResultAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.assignData(results!![position], handler.size)
+        holder.assignData(results!![position], NearbyMessageHandler.size)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {

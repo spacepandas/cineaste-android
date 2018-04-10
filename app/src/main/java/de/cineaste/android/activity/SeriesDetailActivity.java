@@ -237,11 +237,11 @@ public class SeriesDetailActivity extends AppCompatActivity implements ItemClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_detail);
 
-        seriesDbHelper = SeriesDbHelper.getInstance(this);
+        seriesDbHelper = SeriesDbHelper.Companion.getInstance(this);
         seriesLoader = new SeriesLoader(this);
 
         Intent intent = getIntent();
-        seriesId = intent.getLongExtra(BaseDao.SeriesEntry._ID, -1);
+        seriesId = intent.getLongExtra(BaseDao.SeriesEntry.ID, -1);
         state = intent.getIntExtra(getString(R.string.state), -1);
 
         initViews();

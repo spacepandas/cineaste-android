@@ -38,10 +38,9 @@ public class ResultActivity extends AppCompatActivity implements ResultAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        NearbyMessageHandler handler = NearbyMessageHandler.getInstance();
-        nearbyMessages = handler.getMessages();
+        nearbyMessages = NearbyMessageHandler.INSTANCE.getMessages();
 
-        movieDbHelper = MovieDbHelper.getInstance(this);
+        movieDbHelper = MovieDbHelper.Companion.getInstance(this);
 
         initToolbar();
 

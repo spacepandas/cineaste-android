@@ -118,13 +118,13 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
 
     fun orderAlphabetical() {
         val series = db.reorderAlphabetical(state)
-        dataSet = series
+        dataSet = series as MutableList<Series>
         filteredDataSet = series
     }
 
     fun orderByReleaseDate() {
         val series = db.reorderByReleaseDate(state)
-        dataSet = series
+        dataSet = series as MutableList<Series>
         filteredDataSet = series
     }
 
@@ -165,7 +165,7 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     }
 
     fun updateDataSet() {
-        this.dataSet = db.getSeriesByWatchedState(state)
+        this.dataSet = db.getSeriesByWatchedState(state) as MutableList<Series>
         this.filteredDataSet = LinkedList(dataSet)
         displayMessage.showMessageIfEmptyList()
         notifyDataSetChanged()

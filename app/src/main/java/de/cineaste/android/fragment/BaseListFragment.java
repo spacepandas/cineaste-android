@@ -149,7 +149,7 @@ public abstract class BaseListFragment extends Fragment implements ItemClickList
             this.watchState = getWatchState(currentState);
         }
 
-        userDbHelper = UserDbHelper.getInstance(getActivity());
+        userDbHelper = UserDbHelper.Companion.getInstance(getActivity());
     }
 
     @Override
