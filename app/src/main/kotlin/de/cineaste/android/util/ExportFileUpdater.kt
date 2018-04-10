@@ -1,6 +1,5 @@
 package de.cineaste.android.util
 
-import android.os.AsyncTask
 import android.util.Log
 
 import org.json.JSONArray
@@ -14,26 +13,22 @@ import java.util.Locale
 import de.cineaste.android.database.ExportService
 import de.cineaste.android.database.ImportExportService.Companion.MOVIES_FILE
 import de.cineaste.android.database.ImportService
+import kotlinx.coroutines.experimental.launch
 
 
 object ExportFileUpdater {
 
     fun updateFile() {
-        //todo use coroutines
-        object : AsyncTask<Void, Void, Void>() {
-            override fun doInBackground(vararg voids: Void): Void? {
-                try {
-                    var jsonString = ImportService.readJsonFromFile(MOVIES_FILE)
-                    jsonString = updateDateTypes(jsonString)
+        launch {
+            try {
+                var jsonString = ImportService.readJsonFromFile(MOVIES_FILE)
+                jsonString = updateDateTypes(jsonString)
 
-                    ExportService.writeOnDevice(ExportService.getFile(MOVIES_FILE), jsonString)
-                } catch (ex: Exception) {
-                    Log.d("Cineaste", "Update Export-file went wrong")
-                }
-
-                return null
+                ExportService.writeOnDevice(ExportService.getFile(MOVIES_FILE), jsonString)
+            } catch (ex: Exception) {
+                Log.d("Cineaste", "Update Export-file went wrong")
             }
-        }.execute()
+        }
     }
 
     @Throws(JSONException::class)

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
@@ -37,6 +36,8 @@ import de.cineaste.android.fragment.*
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
 import de.cineaste.android.util.ExportFileUpdater
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import java.util.*
 
 class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
@@ -263,7 +264,34 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             return
         }
         baseListFragment.progressbar!!.visibility = View.VISIBLE
-        AsyncImporter().execute(AsyncInputAttribute(supportFragmentManager, baseListFragment))
+
+        launch {
+            val importExportObject = ImportService.importFiles()
+            //todo find a better solution to save all files
+            for (movie in importExportObject.movies) {
+                movieDbHelper!!.createOrUpdate(movie)
+            }
+
+            for (series in importExportObject.series) {
+                seriesDbHelper!!.importSeries(series)
+            }
+
+            launch(UI) {
+                baseListFragment.progressbar!!.visibility = View.GONE
+                baseListFragment.updateAdapter()
+
+                val finishedDialogFragment = ImportFinishedDialogFragment()
+
+                val args = Bundle()
+
+                args.putInt(MOVIE_COUNT, if (importExportObject.isMoviesSuccessfullyImported) importExportObject.movies.size else -1)
+                args.putInt(SERIES_COUNT, if (importExportObject.isSeriesSuccessfullyImported) importExportObject.series.size else -1)
+
+                finishedDialogFragment.arguments = args
+
+                finishedDialogFragment.show(supportFragmentManager, "")
+            }
+        }
     }
 
     private fun getBaseWatchlistFragment(state: WatchState): BaseMovieListFragment {
@@ -294,50 +322,6 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val intent = Intent(this@MainActivity, MovieNightActivity::class.java)
         startActivity(intent)
     }
-
-
-    private class AsyncImporter : AsyncTask<AsyncInputAttribute, Void, AsyncOutputAttributes>() {
-
-        override fun doInBackground(vararg asyncInputAttributes: AsyncInputAttribute): AsyncOutputAttributes {
-            val importExportObject = ImportService.importFiles()
-
-            //todo find a better solution to save all files
-            for (movie in importExportObject.movies) {
-                movieDbHelper!!.createOrUpdate(movie)
-            }
-
-            for (series in importExportObject.series) {
-                seriesDbHelper!!.importSeries(series)
-            }
-
-            return AsyncOutputAttributes(importExportObject, asyncInputAttributes[0])
-        }
-
-        override fun onPostExecute(asyncOutputAttributes: AsyncOutputAttributes) {
-            super.onPostExecute(asyncOutputAttributes)
-
-            val importExportObject = asyncOutputAttributes.importExportObject
-
-            val fragment = asyncOutputAttributes.asyncInputAttribute.baseListFragment
-            fragment.progressbar!!.visibility = View.GONE
-            fragment.updateAdapter()
-
-            val finishedDialogFragment = ImportFinishedDialogFragment()
-
-            val args = Bundle()
-
-            args.putInt(MOVIE_COUNT, if (importExportObject.isMoviesSuccessfullyImported) importExportObject.movies.size else -1)
-            args.putInt(SERIES_COUNT, if (importExportObject.isSeriesSuccessfullyImported) importExportObject.series.size else -1)
-
-            finishedDialogFragment.arguments = args
-
-            finishedDialogFragment.show(asyncOutputAttributes.asyncInputAttribute.fragmentManager, "")
-        }
-    }
-
-    private class AsyncInputAttribute internal constructor(internal val fragmentManager: FragmentManager, internal val baseListFragment: BaseListFragment)
-
-    private class AsyncOutputAttributes internal constructor(internal val importExportObject: ImportExportObject, internal val asyncInputAttribute: AsyncInputAttribute)
 
     companion object {
         private var movieDbHelper: MovieDbHelper? = null

@@ -1,12 +1,13 @@
 package de.cineaste.android.behavior
 
 import android.content.Context
-import android.os.AsyncTask
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.View
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 
 class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingActionButton.Behavior() {
 
@@ -48,27 +49,14 @@ class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingAc
 
         if (dyConsumed > 0 && child.visibility == View.VISIBLE) {
             child.hide()
-            MyAsyncTask().execute(child)
+            launch {
+                Thread.sleep(2000)
+                launch(UI) {
+                    child.show()
+                }
+            }
         } else if (dyConsumed < 0 && child.visibility != View.VISIBLE) {
             child.show()
-        }
-    }
-
-    private class MyAsyncTask : AsyncTask<FloatingActionButton, Void, FloatingActionButton>() {
-
-        override fun doInBackground(vararg buttons: FloatingActionButton): FloatingActionButton {
-            try {
-                Thread.sleep(2000)
-            } catch (ex: InterruptedException) {
-                //do nothing
-            }
-
-            return buttons[0]
-        }
-
-        override fun onPostExecute(button: FloatingActionButton) {
-            super.onPostExecute(button)
-            button.show()
         }
     }
 }
