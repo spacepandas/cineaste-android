@@ -50,18 +50,22 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
         val v: View
         when (viewType) {
             0 -> {
+                v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_triangle, parent, false)
+                return TriangleViewHolder(v)
+            }
+            1 -> {
                 v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_base, parent, false)
                 return BaseViewHolder(v, parent.context, posterClickListener)
             }
-            1 -> {
+            2 -> {
                 v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_buttons, parent, false)
                 return ButtonsViewHolder(v, state, listener)
             }
-            2 -> {
+            3 -> {
                 v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_description, parent, false)
                 return DescriptionViewHolder(v, parent.context)
             }
-            3 -> {
+            4 -> {
                 v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_seasons, parent, false)
                 return SeasonsListViewHolder(v, parent.context, clickListener)
             }
@@ -72,24 +76,32 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (position) {
-            0 -> (holder as BaseViewHolder).assignData(series)
-            1 -> (holder as ButtonsViewHolder).assignData()
-            2 -> (holder as DescriptionViewHolder).assignData(series)
-            3 -> (holder as SeasonsListViewHolder).assignData(series)
+            0 -> (holder as TriangleViewHolder).assignData(series)
+            1 -> (holder as BaseViewHolder).assignData(series)
+            2 -> (holder as ButtonsViewHolder).assignData()
+            3 -> (holder as DescriptionViewHolder).assignData(series)
+            4 -> (holder as SeasonsListViewHolder).assignData(series)
         }
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return 5
     }
 
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
+    private inner class TriangleViewHolder internal constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
+        private val rating: TextView = itemView.findViewById(R.id.rating)
+
+        internal fun assignData(series: Series?) {
+            rating.text = series!!.voteAverage.toString()
+        }
+    }
+
     private inner class BaseViewHolder internal constructor(itemView: View, val context: Context, val clickListener: View.OnClickListener) : RecyclerView.ViewHolder(itemView) {
         private val poster: ImageView = itemView.findViewById(R.id.poster)
-        private val rating: TextView = itemView.findViewById(R.id.rating)
         private val title: TextView = itemView.findViewById(R.id.title)
         private val seasons: TextView = itemView.findViewById(R.id.seasons)
         private val episodes: TextView = itemView.findViewById(R.id.episodes)
@@ -107,7 +119,6 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
                 releaseDate.visibility = View.GONE
             }
 
-            rating.text = series.voteAverage.toString()
             episodes.text = resources.getString(R.string.episodes, series.numberOfEpisodes.toString())
             seasons.text = resources.getString(R.string.seasons, series.numberOfSeasons.toString())
             currentStatus.text = resources.getString(R.string.currentStatus,
