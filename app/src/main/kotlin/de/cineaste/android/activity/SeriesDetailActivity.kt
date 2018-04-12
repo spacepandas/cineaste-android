@@ -45,8 +45,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private var updateCallBack: Runnable? = null
     private var adapter: SeriesDetailAdapter? = null
 
-    override fun onClick(v: View?) {
-        if (v!!.id == R.id.poster) {
+    override fun onClick(v: View) {
+        if (v.id == R.id.poster) {
             val intent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
             intent.putExtra(PosterActivity.POSTER_PATH, currentSeries!!.posterPath!!)
             startActivity(intent)
@@ -322,7 +322,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     }
                     series.isWatched = currentSeries!!.isWatched
                     seriesDbHelper!!.update(series)
-                    runOnUiThread { assignData(series) }
+                    runOnUiThread {
+                        setPoster(series)
+                        adapter!!.updateSeries(series)
+                    }
 
                 }
             })
@@ -330,6 +333,13 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     private fun assignData(series: Series) {
+        setPoster(series)
+
+        adapter = SeriesDetailAdapter(series, this, state, this, this)
+        layout!!.adapter = adapter
+    }
+
+    private fun setPoster(series: Series) {
         val posterUri = Constants.POSTER_URI_ORIGINAL
                 .replace("<posterName>", if (series.backdropPath != null)
                     series.backdropPath!!
@@ -340,9 +350,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 .load(posterUri)
                 .error(R.drawable.placeholder_poster)
                 .into(poster)
-
-        adapter = SeriesDetailAdapter(series, this, state, this, this)
-        layout!!.adapter = adapter
     }
 
     private fun loadRequestedSeries() {

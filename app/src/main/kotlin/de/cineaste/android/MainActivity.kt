@@ -42,18 +42,18 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
-    private var fm: FragmentManager? = null
-    private var contentContainer: View? = null
-    private var userDbHelper: UserDbHelper? = null
-    private var userName: TextView? = null
+    private lateinit var fm: FragmentManager
+    private lateinit var contentContainer: View
+    private lateinit var userDbHelper: UserDbHelper
+    private lateinit var userName: TextView
 
-    private var drawerLayout: DrawerLayout? = null
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onBackPressed() {
-        if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout!!.closeDrawer(GravityCompat.START)
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            if (fm!!.backStackEntryCount > 1)
+            if (fm.backStackEntryCount > 1)
                 super.onBackPressed()
             else
                 finish()
@@ -61,10 +61,10 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        if (fm!!.backStackEntryCount > 1)
-            fm!!.popBackStack()
+        if (fm.backStackEntryCount > 1)
+            fm.popBackStack()
         else
-            drawerLayout!!.openDrawer(GravityCompat.START)
+            drawerLayout.openDrawer(GravityCompat.START)
 
         return false
     }
@@ -104,16 +104,16 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         checkPermissions()
 
         if (savedInstanceState == null) {
-            replaceFragment(fm!!, getBaseWatchlistFragment(WatchState.WATCH_STATE))
+            replaceFragment(fm, getBaseWatchlistFragment(WatchState.WATCH_STATE))
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        val user = userDbHelper!!.user
-        if (user != null && userName != null) {
-            userName!!.text = user.userName
+        val user = userDbHelper.user
+        if (user != null) {
+            userName.text = user.userName
         }
     }
 
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                 this, drawerLayout, R.string.open, R.string.close
         )
         drawerToggle.isDrawerIndicatorEnabled = true
-        drawerLayout!!.addDrawerListener(drawerToggle)
+        drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
     }
 
@@ -200,19 +200,19 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             when (item.itemId) {
                 R.id.show_movie_watchlist -> {
                     val watchlistFragment = getBaseWatchlistFragment(WatchState.WATCH_STATE)
-                    replaceFragmentPopBackStack(fm!!, watchlistFragment)
+                    replaceFragmentPopBackStack(fm, watchlistFragment)
                 }
                 R.id.show_movie_watchedlist -> {
-                    val watchedlistFragment = getBaseWatchlistFragment(WatchState.WATCHED_STATE)
-                    replaceFragmentPopBackStack(fm!!, watchedlistFragment)
+                    val historyFragment = getBaseWatchlistFragment(WatchState.WATCHED_STATE)
+                    replaceFragmentPopBackStack(fm, historyFragment)
                 }
                 R.id.show_series_watchlist -> {
                     val seriesWatchlistFragment = getSeriesListFragment(WatchState.WATCH_STATE)
-                    replaceFragmentPopBackStack(fm!!, seriesWatchlistFragment)
+                    replaceFragmentPopBackStack(fm, seriesWatchlistFragment)
                 }
                 R.id.show_series_watchedlist -> {
-                    val seriesWatchedlistFragment = getSeriesListFragment(WatchState.WATCHED_STATE)
-                    replaceFragmentPopBackStack(fm!!, seriesWatchedlistFragment)
+                    val seriesHistoryFragment = getSeriesListFragment(WatchState.WATCHED_STATE)
+                    replaceFragmentPopBackStack(fm, seriesHistoryFragment)
                 }
                 R.id.exportMovies -> exportMovies()
                 R.id.importMovies -> importMovies()
@@ -221,7 +221,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                     startActivity(intent)
                 }
             }
-            drawerLayout!!.closeDrawer(GravityCompat.START)
+            drawerLayout.closeDrawer(GravityCompat.START)
             return true
         }
     }
@@ -238,22 +238,22 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             snackBarMessage = R.string.exportSucceeded
         }
 
-        val snackbar = Snackbar
-                .make(contentContainer!!, snackBarMessage, Snackbar.LENGTH_SHORT)
-        snackbar.show()
+        val snackBar = Snackbar
+                .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
+        snackBar.show()
     }
 
     private fun importMovies() {
         var baseListFragment: BaseListFragment?
         baseListFragment = try {
-            fm!!.findFragmentByTag(BaseMovieListFragment::class.java.name) as BaseListFragment
+            fm.findFragmentByTag(BaseMovieListFragment::class.java.name) as BaseListFragment
         } catch (ex: Exception) {
             null
         }
 
         if (baseListFragment == null) {
             baseListFragment = try {
-                fm!!.findFragmentByTag(SeriesListFragment::class.java.name) as BaseListFragment
+                fm.findFragmentByTag(SeriesListFragment::class.java.name) as BaseListFragment
             } catch (ex: Exception) {
                 null
             }
@@ -316,11 +316,10 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     override fun onFinishUserDialog(userName: String) {
         if (!userName.isEmpty()) {
-            userDbHelper!!.createUser(User(userName))
+            userDbHelper.createUser(User(userName))
         }
 
-        val intent = Intent(this@MainActivity, MovieNightActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(this@MainActivity, MovieNightActivity::class.java))
     }
 
     companion object {
