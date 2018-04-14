@@ -12,7 +12,16 @@ import de.cineaste.android.viewholder.BaseViewHolder
 abstract class AbstractMovieViewHolder(itemView: View, context: Context, listener: ItemClickListener) : BaseViewHolder(itemView, listener, context) {
 
     private val movieReleaseDate: TextView = itemView.findViewById(R.id.movieReleaseDate)
-    val movieRuntime: TextView = itemView.findViewById(R.id.movieRuntime)
+    lateinit var movieRuntime: TextView
+
+    init {
+        try {
+            movieRuntime = itemView.findViewById(R.id.movieRuntime)
+        } catch (ex: Exception) {
+
+        }
+    }
+
 
     abstract fun assignData(movie: Movie)
 
