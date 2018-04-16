@@ -45,8 +45,8 @@ class BaseMovieListFragment : BaseListFragment() {
         movieListAdapter!!.updateDataSet()
     }
 
-    override fun initFab(activity: Activity, watchlistView: View) {
-        val fab = watchlistView.findViewById<FloatingActionButton>(R.id.fab)
+    override fun initFab(activity: Activity, view: View) {
+        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             val intent = Intent(getActivity(), MovieSearchActivity::class.java)
             activity.startActivity(intent)

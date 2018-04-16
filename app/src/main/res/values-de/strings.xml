@@ -78,5 +78,8 @@
     <string name="ok">OK</string>
     <string name="seriesSeenHeadline">%s gesehen</string>
     <string name="seriesStillInProduction">Die Serie ist immer noch in Produktion, trotzdem verschieben?</string>
+    <string name="share">Teilen</string>
+    <string name="share_movie">Film teilen</string>
+    <string name="share_series">Serie teilen</string>
 
 </resources>

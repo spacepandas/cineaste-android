@@ -111,9 +111,19 @@ class MovieDetailActivity : AppCompatActivity() {
                 onAddToWatchClicked()
                 return true
             }
+            R.id.share -> {
+                val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                sharingIntent.type = "text/plain"
+                val shareBodyText = "${currentMovie!!.title} ${Constants.THE_MOVIE_DB_MOVIES_URI.replace("<MOVIE_ID>", currentMovie!!.id.toString())}"
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_movie))
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_movie)))
+                return true
+            }
         }
         return true
     }
+
 
     private fun onDeleteClicked() {
         movieDbHelper!!.deleteMovieFromWatchlist(currentMovie!!)

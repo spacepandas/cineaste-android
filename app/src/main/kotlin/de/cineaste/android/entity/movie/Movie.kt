@@ -25,6 +25,8 @@ class Movie : MovieDto, Comparable<Movie> {
             this.watched = watched
             if (watched && this.watchedDate == null) {
                 this.watchedDate = Date()
+            } else {
+                this.watchedDate = null
             }
         }
 
