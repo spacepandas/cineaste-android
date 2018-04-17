@@ -12,7 +12,6 @@ import de.cineaste.android.entity.series.Episode
 
 class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeListener: OnEpisodeWatchStateChangeListener, private val onDescriptionShowToggleListener: OnDescriptionShowToggleListener, private val context: Context) : RecyclerView.ViewHolder(itemView) {
 
-    private val episodeNumber: TextView = itemView.findViewById(R.id.episodeNumber)
     private val episodeTitle: TextView = itemView.findViewById(R.id.episodeTitle)
     private val description: TextView = itemView.findViewById(R.id.description)
     private val showDescription: ImageButton = itemView.findViewById(R.id.show_more)
@@ -29,7 +28,6 @@ class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeLis
     }
 
     fun assignData(episode: Episode) {
-        episodeNumber.text = episode.episodeNumber.toString()
         episodeTitle.text = episode.name
         checkBox.isChecked = episode.isWatched
 

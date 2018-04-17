@@ -13,4 +13,6 @@
     <string name="gradient">gradient</string>
     <string name="banner">Banner</string>
     <string name="version">Version %s</string>
+    <string name="expand">Expand</string>
+    <string name="shrink">Shrink</string>
 </resources>

@@ -246,7 +246,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     private fun importMovies() {
         var baseListFragment: BaseListFragment?
         baseListFragment = try {
-            fm.findFragmentByTag(BaseMovieListFragment::class.java.name) as BaseListFragment
+            fm.findFragmentByTag(MovieListFragment::class.java.name) as BaseListFragment
         } catch (ex: Exception) {
             null
         }
@@ -294,8 +294,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
     }
 
-    private fun getBaseWatchlistFragment(state: WatchState): BaseMovieListFragment {
-        val watchlistFragment = BaseMovieListFragment()
+    private fun getBaseWatchlistFragment(state: WatchState): MovieListFragment {
+        val watchlistFragment = MovieListFragment()
         val bundle = Bundle()
         bundle.putString(
                 WatchState.WATCH_STATE_TYPE.name,

@@ -14,7 +14,7 @@ import de.cineaste.android.controllFlow.movie.HistoryListMovieTouchHelperCallbac
 import de.cineaste.android.controllFlow.movie.WatchlistMovieTouchHelperCallback
 import de.cineaste.android.database.dao.BaseDao
 
-class BaseMovieListFragment : BaseListFragment() {
+class MovieListFragment : BaseListFragment() {
 
     private var movieListAdapter: MovieListAdapter? = null
 

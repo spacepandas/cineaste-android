@@ -36,5 +36,6 @@ class EpisodeAdapter(episodes: List<Episode>, private val onEpisodeWatchStateCha
     fun update(episodes: List<Episode>) {
         this.episodes.clear()
         this.episodes.addAll(episodes)
+        notifyDataSetChanged()
     }
 }

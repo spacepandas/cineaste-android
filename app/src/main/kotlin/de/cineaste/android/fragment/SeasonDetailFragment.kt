@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageButton
 import android.widget.TextView
 import de.cineaste.android.R
@@ -22,6 +20,7 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
     private lateinit var seriesDbHelper: SeriesDbHelper
     private var emptyListTextView: TextView? = null
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: EpisodeAdapter
     private val episodes: MutableList<Episode> = mutableListOf()
 
     override fun watchStateChanged(episode: Episode) {
@@ -30,6 +29,7 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
 
         val args = arguments ?: return
         seasonId = args.getLong("seasonId", -1)
@@ -58,12 +58,35 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
 
             recyclerView.setHasFixedSize(true)
             val layoutManager = LinearLayoutManager(activity)
-            val adapter = EpisodeAdapter(episodes, this, this)
+            adapter = EpisodeAdapter(episodes, this, this)
             recyclerView.layoutManager = layoutManager
             recyclerView.adapter = adapter
         }
 
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        if (episodes.isNotEmpty()) {
+            inflater!!.inflate(R.menu.season_menu, menu)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_mark_all -> toggleSeries()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun toggleSeries() {
+        seriesDbHelper.toggleSeason(seasonId)
+        episodes.clear()
+        episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
+        adapter.update(episodes)
     }
 
     override fun showDescription(showDescription: ImageButton, hideDescription: ImageButton, description: TextView) {

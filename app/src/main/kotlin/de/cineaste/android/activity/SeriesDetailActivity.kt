@@ -259,9 +259,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun initViews() {
         val fab = findViewById<FloatingActionButton>(R.id.fab)
+        val layoutManager = LinearLayoutManager(this)
         poster = findViewById(R.id.movie_poster)
         layout = findViewById(R.id.overlay)
-        layout!!.layoutManager = LinearLayoutManager(this)
+        layout!!.layoutManager = layoutManager
         layout!!.setHasFixedSize(true)
 
         if (state == R.string.watchlistState) {

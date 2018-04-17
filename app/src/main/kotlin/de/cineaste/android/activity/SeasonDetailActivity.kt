@@ -21,6 +21,7 @@ class SeasonDetailActivity : AppCompatActivity() {
 
     private var currentSeries: Series? = null
     private var poster: ImageView? = null
+    private lateinit var seriesDbHelper: SeriesDbHelper
 
     private var seasonId: Long = 0
 
@@ -28,7 +29,7 @@ class SeasonDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_season_detail)
 
-        val seriesDbHelper = SeriesDbHelper.getInstance(this)
+        seriesDbHelper = SeriesDbHelper.getInstance(this)
 
         poster = findViewById(R.id.poster_image_view)
 
@@ -137,18 +138,16 @@ class SeasonDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
+                val unwatchedEpisodes = seriesDbHelper.getUnWatchedEpisodesOfSeries(currentSeries!!.id)
+                if (unwatchedEpisodes.isEmpty() && !currentSeries!!.isInProduction) {
+                    currentSeries!!.isWatched = true
+                    seriesDbHelper.updateWatchState(series = currentSeries!!)
+                }
                 onBackPressed()
                 return true
             }
-        }/* case R.id.action_delete:
-                onDeleteClicked();
-                return true;
-            case R.id.action_to_watchedlist:
-                onAddToWatchedClicked();
-                return true;
-            case R.id.action_to_watchlist:
-                onAddToWatchClicked();
-                return true;*/
-        return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
