@@ -81,5 +81,6 @@
     <string name="share">Teilen</string>
     <string name="share_movie">Film teilen</string>
     <string name="share_series">Serie teilen</string>
+    <string name="no_episodes">Keine Episoden verfügbar</string>
 
 </resources>

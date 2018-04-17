@@ -22,7 +22,7 @@ class EpisodeAdapter(episodes: List<Episode>, private val onEpisodeWatchStateCha
                 .from(parent.context)
                 .inflate(R.layout.card_episode, parent, false)
 
-        return EpisodeViewHolder(view, onEpisodeWatchStateChangeListener, onDescriptionShowToggleListener)
+        return EpisodeViewHolder(view, onEpisodeWatchStateChangeListener, onDescriptionShowToggleListener, parent.context)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

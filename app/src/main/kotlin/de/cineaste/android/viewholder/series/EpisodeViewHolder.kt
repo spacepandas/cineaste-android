@@ -1,5 +1,6 @@
 package de.cineaste.android.viewholder.series
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.CheckBox
@@ -9,7 +10,7 @@ import android.widget.TextView
 import de.cineaste.android.R
 import de.cineaste.android.entity.series.Episode
 
-class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeListener: OnEpisodeWatchStateChangeListener, private val onDescriptionShowToggleListener: OnDescriptionShowToggleListener) : RecyclerView.ViewHolder(itemView) {
+class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeListener: OnEpisodeWatchStateChangeListener, private val onDescriptionShowToggleListener: OnDescriptionShowToggleListener, private val context: Context) : RecyclerView.ViewHolder(itemView) {
 
     private val episodeNumber: TextView = itemView.findViewById(R.id.episodeNumber)
     private val episodeTitle: TextView = itemView.findViewById(R.id.episodeTitle)
@@ -30,13 +31,18 @@ class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeLis
     fun assignData(episode: Episode) {
         episodeNumber.text = episode.episodeNumber.toString()
         episodeTitle.text = episode.name
-        description.text = episode.description
         checkBox.isChecked = episode.isWatched
+
+
+        if (episode.description.isNullOrBlank()) {
+            description.text = context.getString(R.string.noDescription)
+        } else {
+            description.text = episode.description
+        }
 
         showDescription.setOnClickListener { onDescriptionShowToggleListener.showDescription(showDescription, hideDescription, description) }
 
         hideDescription.setOnClickListener {
-            android.util.Log.d("mgr", "hide")
             onDescriptionShowToggleListener.hideDescription(showDescription, hideDescription, description)
         }
 

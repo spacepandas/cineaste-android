@@ -68,20 +68,26 @@ class SeasonDetailActivity : AppCompatActivity() {
 
     private fun setPoster(position: Int) {
         val season = currentSeries!!.seasons!![position]
-        val posterPath = season.posterPath
+        val posterPath: String? = season.posterPath
 
-        val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", posterPath!!)
-                .replace("<API_KEY>", getString(R.string.movieKey))
-        Picasso.with(this)
-                .load(posterUri)
-                .error(R.drawable.placeholder_poster)
-                .into(poster)
+        if (posterPath.isNullOrEmpty()) {
+            Picasso.with(this)
+                    .load(R.drawable.placeholder_poster)
+                    .into(poster)
+        } else {
+            val posterUri = Constants.POSTER_URI_SMALL
+                    .replace("<posterName>", posterPath!!)
+                    .replace("<API_KEY>", getString(R.string.movieKey))
+            Picasso.with(this)
+                    .load(posterUri)
+                    .error(R.drawable.placeholder_poster)
+                    .into(poster)
 
-        poster!!.setOnClickListener {
-            val intent = Intent(this@SeasonDetailActivity, PosterActivity::class.java)
-            intent.putExtra(PosterActivity.POSTER_PATH, posterPath)
-            startActivity(intent)
+            poster!!.setOnClickListener {
+                val intent = Intent(this@SeasonDetailActivity, PosterActivity::class.java)
+                intent.putExtra(PosterActivity.POSTER_PATH, posterPath)
+                startActivity(intent)
+            }
         }
     }
 

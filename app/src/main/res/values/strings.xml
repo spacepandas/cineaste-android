@@ -85,5 +85,6 @@ Special thanks to Philipp Wolf, for the design!
     <string name="share">Share</string>
     <string name="share_movie">Share movie</string>
     <string name="share_series">Share series</string>
+    <string name="no_episodes">No episodes available</string>
 
 </resources>

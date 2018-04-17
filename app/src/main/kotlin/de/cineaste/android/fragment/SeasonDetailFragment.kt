@@ -20,6 +20,9 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
     private var seriesId: Long = 0
     private var seasonId: Long = 0
     private lateinit var seriesDbHelper: SeriesDbHelper
+    private var emptyListTextView: TextView? = null
+    private lateinit var recyclerView: RecyclerView
+    private val episodes: MutableList<Episode> = mutableListOf()
 
     override fun watchStateChanged(episode: Episode) {
         seriesDbHelper.episodeClicked(episode)
@@ -33,6 +36,7 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         seriesId = args.getLong("seriesId", -1)
 
         seriesDbHelper = SeriesDbHelper.getInstance(context!!)
+        episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
 
     }
 
@@ -41,14 +45,23 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         val activity = activity ?: return null
         val view = inflater.inflate(R.layout.fragment_series_detail, container, false)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.episodeRecyclerView)
-        recyclerView.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(activity)
+        emptyListTextView = view.findViewById(R.id.info_text)
 
-        val adapter = EpisodeAdapter(seriesDbHelper.getEpisodesBySeasonId(seasonId), this, this)
+        recyclerView = view.findViewById(R.id.episodeRecyclerView)
 
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
+        if (episodes.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyListTextView!!.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyListTextView!!.visibility = View.GONE
+
+            recyclerView.setHasFixedSize(true)
+            val layoutManager = LinearLayoutManager(activity)
+            val adapter = EpisodeAdapter(episodes, this, this)
+            recyclerView.layoutManager = layoutManager
+            recyclerView.adapter = adapter
+        }
 
         return view
     }
@@ -64,4 +77,6 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         hideDescription.visibility = View.INVISIBLE
         description.visibility = View.GONE
     }
+
+
 }

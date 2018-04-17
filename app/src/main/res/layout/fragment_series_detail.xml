@@ -6,7 +6,18 @@
     tools:context="de.cineaste.android.fragment.SeasonDetailFragment">
 
     <android.support.v7.widget.RecyclerView
+        android:visibility="gone"
         android:id="@+id/episodeRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:paddingTop="32dp"
+        android:text="@string/no_episodes"
+        android:id="@+id/info_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:background="@android:color/white"/>
 </LinearLayout>
