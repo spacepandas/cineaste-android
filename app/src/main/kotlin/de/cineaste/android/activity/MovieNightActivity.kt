@@ -11,15 +11,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.nearby.Nearby
-import com.google.android.gms.nearby.messages.*
+import com.google.android.gms.nearby.messages.Message
+import com.google.android.gms.nearby.messages.MessageListener
 import de.cineaste.android.R
 import de.cineaste.android.adapter.NearbyUserAdapter
 import de.cineaste.android.database.NearbyMessageHandler
@@ -33,19 +31,17 @@ import de.cineaste.android.fragment.UserInputFragment
 import de.cineaste.android.fragment.WatchState
 import java.util.*
 
-class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, UserInputFragment.UserNameListener {
+class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     private val nearbyMessagesArrayList = ArrayList<NearbyMessage>()
 
-    private var mGoogleApiClient: GoogleApiClient? = null
+    private lateinit var startBtn: Button
+    private lateinit var searchingFriends: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var nearbyUserRv: RecyclerView
 
-    private var startBtn: Button? = null
-    private var searchingFriends: TextView? = null
-    private var progressBar: ProgressBar? = null
-    private var nearbyUserRv: RecyclerView? = null
-
-    private var mMessageListener: MessageListener? = null
-    private var localNearbyMessage: NearbyMessage? = null
+    private var mMessageListener: MessageListener = MyMessageListener()
+    private lateinit var localNearbyMessage: NearbyMessage
 
     private var nearbyUserAdapter: NearbyUserAdapter? = null
 
@@ -70,27 +66,25 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
         } else {
             buildLocalMessage()
         }
-        mMessageListener = MyMessageListener()
         initializeTimeout()
-        buildGoogleApiClient()
 
         timedOut()
     }
 
     public override fun onPause() {
         super.onPause()
-        nearbyUserRv!!.removeCallbacks(timeOut)
+        nearbyUserRv.removeCallbacks(timeOut)
     }
 
     private fun timedOut() {
-        nearbyUserRv!!.removeCallbacks(timeOut)
-        nearbyUserRv!!.postDelayed(timeOut, 45000)
+        nearbyUserRv.removeCallbacks(timeOut)
+        nearbyUserRv.postDelayed(timeOut, 45000)
     }
 
     private fun initializeTimeout() {
         timeOut = Runnable {
             val snackbar = Snackbar
-                    .make(nearbyUserRv!!, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG)
+                    .make(nearbyUserRv, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG)
             snackbar.show()
         }
     }
@@ -98,7 +92,7 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
     private fun initViews() {
         nearbyUserRv = findViewById(R.id.nearbyUser_rv)
         startBtn = findViewById(R.id.start_btn)
-        startBtn!!.visibility = View.GONE
+        startBtn.visibility = View.GONE
         searchingFriends = findViewById(R.id.searchingFriends)
         progressBar = findViewById(R.id.progressBar)
 
@@ -106,22 +100,11 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
 
         val llm = LinearLayoutManager(this)
         llm.orientation = LinearLayoutManager.VERTICAL
-        nearbyUserRv!!.layoutManager = llm
-        nearbyUserRv!!.itemAnimator = DefaultItemAnimator()
-        nearbyUserRv!!.adapter = nearbyUserAdapter
+        nearbyUserRv.layoutManager = llm
+        nearbyUserRv.itemAnimator = DefaultItemAnimator()
+        nearbyUserRv.adapter = nearbyUserAdapter
         initToolbar()
 
-    }
-
-    private fun buildGoogleApiClient() {
-        if (mGoogleApiClient != null) {
-            return
-        }
-        mGoogleApiClient = GoogleApiClient.Builder(this)
-                .addApi(Nearby.MESSAGES_API)
-                .addConnectionCallbacks(this)
-                .enableAutoManage(this, this)
-                .build()
     }
 
     private fun initToolbar() {
@@ -168,11 +151,14 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
 
     public override fun onStart() {
         super.onStart()
-        mGoogleApiClient!!.connect()
 
-        startBtn!!.setOnClickListener {
+        clearDeviceList()
+        Nearby.getMessagesClient(this).publish(localNearbyMessage.toNearbyMessage())
+        Nearby.getMessagesClient(this).subscribe(mMessageListener)
+
+        startBtn.setOnClickListener {
             NearbyMessageHandler.clearMessages()
-            NearbyMessageHandler.addMessage(localNearbyMessage!!)
+            NearbyMessageHandler.addMessage(localNearbyMessage)
             NearbyMessageHandler.addMessages(nearbyMessagesArrayList)
             val intent = Intent(this@MovieNightActivity, ResultActivity::class.java)
             startActivity(intent)
@@ -181,72 +167,12 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
     }
 
     public override fun onStop() {
-        if (mGoogleApiClient!!.isConnected && !isChangingConfigurations) {
-            unsubscribe()
-            unpublish()
+        Nearby.getMessagesClient(this).unpublish(localNearbyMessage.toNearbyMessage())
+        Nearby.getMessagesClient(this).unsubscribe(mMessageListener)
 
-            mGoogleApiClient!!.disconnect()
-        }
         super.onStop()
     }
 
-    private fun unsubscribe() {
-        if (!mGoogleApiClient!!.isConnected) {
-            if (!mGoogleApiClient!!.isConnecting) {
-                mGoogleApiClient!!.connect()
-            }
-        } else {
-            Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener)
-                    .setResultCallback { status ->
-                        if (!status.isSuccess) {
-                            logAndShowSnackbar("Could not unsubscribe, status = $status")
-                        }
-                    }
-        }
-    }
-
-    private fun unpublish() {
-        if (!mGoogleApiClient!!.isConnected) {
-            if (!mGoogleApiClient!!.isConnecting) {
-                mGoogleApiClient!!.connect()
-            }
-        } else {
-            Nearby.Messages.unpublish(mGoogleApiClient, localNearbyMessage!!.toNearbyMessage())
-                    .setResultCallback { status ->
-                        if (!status.isSuccess) {
-                            logAndShowSnackbar("Could not unpublish, status = $status")
-                        }
-                    }
-        }
-    }
-
-    override fun onConnected(bundle: Bundle?) {
-        subscribe()
-        publish()
-    }
-
-    private fun subscribe() {
-        //trying to subscribe
-        if (!mGoogleApiClient!!.isConnected) {
-            if (!mGoogleApiClient!!.isConnecting) {
-                mGoogleApiClient!!.connect()
-            }
-        } else {
-            clearDeviceList()
-            val options = SubscribeOptions.Builder()
-                    .setStrategy(PUB_SUB_STRATEGY)
-                    .setCallback(object : SubscribeCallback() {
-
-                    }).build()
-
-            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, options)
-                    .setResultCallback { status ->
-                        if (!status.isSuccess) {
-                            logAndShowSnackbar("Could not subscribe, status = $status")
-                        }
-                    }
-        }
-    }
 
     private fun clearDeviceList() {
         runOnUiThread {
@@ -255,71 +181,31 @@ class MovieNightActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallba
         }
     }
 
-    private fun publish() {
-        if (!mGoogleApiClient!!.isConnected) {
-            if (!mGoogleApiClient!!.isConnecting) {
-                mGoogleApiClient!!.connect()
-            }
-        } else {
-            val options = PublishOptions.Builder()
-                    .setStrategy(PUB_SUB_STRATEGY)
-                    .setCallback(object : PublishCallback() {
-
-                    }).build()
-            Nearby.Messages.publish(mGoogleApiClient, localNearbyMessage!!.toNearbyMessage(), options)
-                    .setResultCallback { status ->
-                        if (!status.isSuccess) {
-                            logAndShowSnackbar("Could not publish, status = $status")
-                        }
-                    }
-        }
-    }
-
-    override fun onConnectionSuspended(cause: Int) {
-        // GoogleApiClient connection suspended
-    }
-
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        //connection to GoogleApiClient failed
-        logAndShowSnackbar("Exception while connecting to Google Play services: " + connectionResult.errorMessage!!)
-    }
-
-    private fun logAndShowSnackbar(text: String) {
-        Log.w(MovieNightActivity::class.java.simpleName, text)
-        val container = findViewById<View>(R.id.recycler_view)
-        if (container != null) {
-            Snackbar.make(container, text, Snackbar.LENGTH_LONG).show()
-        }
-    }
-
     private inner class MyMessageListener : MessageListener() {
-        override fun onFound(message: Message?) {
+        override fun onFound(message: Message) {
             runOnUiThread {
-                if (!nearbyMessagesArrayList.contains(NearbyMessage.fromMessage(message!!))) {
-                    nearbyMessagesArrayList.add(NearbyMessage.fromMessage(message))
+                val nearbyMessage = NearbyMessage.fromMessage(message)
+                if (!nearbyMessagesArrayList.contains(nearbyMessage)) {
+                    nearbyMessagesArrayList.add(nearbyMessage)
                     if (nearbyMessagesArrayList.size > 0) {
-                        startBtn!!.visibility = View.VISIBLE
-                        nearbyUserRv!!.visibility = View.VISIBLE
-                        searchingFriends!!.visibility = View.GONE
-                        progressBar!!.visibility = View.GONE
+                        startBtn.visibility = View.VISIBLE
+                        nearbyUserRv.visibility = View.VISIBLE
+                        searchingFriends.visibility = View.GONE
+                        progressBar.visibility = View.GONE
                     }
                     nearbyUserAdapter!!.notifyDataSetChanged()
                 }
             }
         }
 
-        override fun onLost(message: Message?) {
+        override fun onLost(message: Message) {
             //do not remove messages when connection lost
         }
     }
 
     companion object {
 
-        private const val TTL_IN_SECONDS = 3 * 60
         private const val KEY_UUID = "key_uuid"
-
-        private val PUB_SUB_STRATEGY = Strategy.Builder()
-                .setTtlSeconds(TTL_IN_SECONDS).build()
 
         private fun getUUID(sharedPreferences: SharedPreferences): String {
             var uuid = sharedPreferences.getString(KEY_UUID, "")
