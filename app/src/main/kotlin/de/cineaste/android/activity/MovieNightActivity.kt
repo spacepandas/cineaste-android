@@ -10,7 +10,6 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.text.TextUtils
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -40,14 +39,14 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private lateinit var progressBar: ProgressBar
     private lateinit var nearbyUserRv: RecyclerView
 
-    private var mMessageListener: MessageListener = MyMessageListener()
+    private val mMessageListener: MessageListener = MyMessageListener()
     private lateinit var localNearbyMessage: NearbyMessage
 
-    private var nearbyUserAdapter: NearbyUserAdapter? = null
+    private lateinit var nearbyUserAdapter: NearbyUserAdapter
 
     private var currentUser: User? = null
-    private var userDbHelper: UserDbHelper? = null
-    private var timeOut: Runnable? = null
+    private lateinit var userDbHelper: UserDbHelper
+    private lateinit var timeOut: Runnable
 
     private val myUUid: String
         get() = getUUID(getSharedPreferences(
@@ -57,7 +56,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_night)
         userDbHelper = UserDbHelper.getInstance(this)
-        currentUser = userDbHelper!!.user
+        currentUser = userDbHelper.user
 
         initViews()
 
@@ -131,7 +130,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     override fun onFinishUserDialog(userName: String) {
         if (!userName.isEmpty()) {
             currentUser = User(userName)
-            userDbHelper!!.createUser(currentUser!!)
+            userDbHelper.createUser(currentUser!!)
         }
         buildLocalMessage()
     }
@@ -177,7 +176,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private fun clearDeviceList() {
         runOnUiThread {
             nearbyMessagesArrayList.clear()
-            nearbyUserAdapter!!.notifyDataSetChanged()
+            nearbyUserAdapter.notifyDataSetChanged()
         }
     }
 
@@ -187,13 +186,13 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
                 val nearbyMessage = NearbyMessage.fromMessage(message)
                 if (!nearbyMessagesArrayList.contains(nearbyMessage)) {
                     nearbyMessagesArrayList.add(nearbyMessage)
-                    if (nearbyMessagesArrayList.size > 0) {
+                    if (nearbyMessagesArrayList.isNotEmpty()) {
                         startBtn.visibility = View.VISIBLE
                         nearbyUserRv.visibility = View.VISIBLE
                         searchingFriends.visibility = View.GONE
                         progressBar.visibility = View.GONE
                     }
-                    nearbyUserAdapter!!.notifyDataSetChanged()
+                    nearbyUserAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -209,7 +208,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
 
         private fun getUUID(sharedPreferences: SharedPreferences): String {
             var uuid = sharedPreferences.getString(KEY_UUID, "")
-            if (TextUtils.isEmpty(uuid)) {
+            if (uuid.isEmpty()) {
                 uuid = UUID.randomUUID().toString()
                 sharedPreferences.edit().putString(KEY_UUID, uuid).apply()
             }
