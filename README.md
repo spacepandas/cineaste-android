@@ -1,6 +1,6 @@
 # Cineaste
 
-[![code](https://img.shields.io/badge/code-Java-orange.svg)]()
+[![code](https://img.shields.io/badge/code-Kotlin-blue.svg)]()
 [![license](https://img.shields.io/badge/license-GPLv3-lightgrey.svg)](https://github.com/marcelgross90/Cineaste/blob/master/LICENSE)
 [![platform](https://img.shields.io/badge/platform-android-lightgrey.svg)]()
 
