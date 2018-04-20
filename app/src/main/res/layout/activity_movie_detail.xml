@@ -42,13 +42,13 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="?android:attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ToolbarTheme" />
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -70,7 +70,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="?android:attr/actionBarSize"
                 android:background="@drawable/triangle">
 
                 <TextView
@@ -78,9 +78,7 @@
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:layout_marginEnd="64dp"
-                    android:layout_marginRight="64dp"
                     android:paddingTop="4dp"
                     android:background="@drawable/circle"
                     android:gravity="center"
@@ -111,7 +109,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:drawableLeft="@drawable/ic_release"
                     android:drawablePadding="4dp"
                     android:drawableStart="@drawable/ic_release"
                     android:text="@string/releaseDate"/>
@@ -122,7 +119,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
-                    android:drawableLeft="@drawable/ic_runtime"
                     android:drawableStart="@drawable/ic_runtime"
                     android:gravity="center_horizontal"
                     android:text="@string/runtime" />

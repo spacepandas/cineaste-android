@@ -91,12 +91,7 @@ class MovieDao private constructor(context: Context) : BaseDao(context) {
 
         val selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?"
 
-        val selectionArg: String
-        if (watchState) {
-            selectionArg = "1"
-        } else {
-            selectionArg = "0"
-        }
+        val selectionArg = if (watchState) "1" else "0"
 
         val c = writeDb.query(
                 BaseDao.MovieEntry.TABLE_NAME,

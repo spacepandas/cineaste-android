@@ -17,21 +17,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             app:srcCompat="@drawable/placeholder_poster" />
 
         <LinearLayout
             android:layout_toEndOf="@id/poster"
-            android:layout_toRightOf="@id/poster"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="8dp"
             android:paddingStart="0dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="8dp"
             android:paddingEnd="8dp">
 
             <TextView
@@ -53,7 +48,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="@string/seasons" />
@@ -62,7 +56,6 @@
                     android:id="@+id/episodes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
@@ -73,7 +66,6 @@
                 android:id="@+id/releaseDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_release"
                 android:drawablePadding="4dp"
                 android:drawableStart="@drawable/ic_release"
                 android:text="@string/releaseDate" />

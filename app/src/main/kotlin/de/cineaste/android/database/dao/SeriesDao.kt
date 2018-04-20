@@ -113,12 +113,7 @@ class SeriesDao private constructor(context: Context) : BaseDao(context) {
 
         val selection = BaseDao.SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + " = ?"
 
-        val selectionArg: String
-        if (watchState) {
-            selectionArg = "1"
-        } else {
-            selectionArg = "0"
-        }
+        val selectionArg = if (watchState) "1" else "0"
 
         val c = writeDb.query(
                 BaseDao.SeriesEntry.TABLE_NAME,

@@ -51,10 +51,7 @@ class ResultAdapter(
 
         fun assignData(matchingResult: MatchingResult, resultCounter: Int) {
             val posterUri = Constants.POSTER_URI_SMALL
-                    .replace("<posterName>", if (matchingResult.posterPath != null)
-                        matchingResult.posterPath!!
-                    else
-                        "/")
+                    .replace("<posterName>", matchingResult.posterPath)
                     .replace("<API_KEY>", context!!.getString(R.string.movieKey))
             Picasso.with(context)
                     .load(Uri.parse(posterUri))

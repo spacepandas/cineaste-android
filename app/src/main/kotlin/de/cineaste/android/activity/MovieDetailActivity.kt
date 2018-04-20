@@ -291,7 +291,7 @@ class MovieDetailActivity : AppCompatActivity() {
         val movieDescription = findViewById<TextView>(R.id.movie_description)
 
         val description = currentMovie.description
-        movieDescription.text = if (description == null || description.isEmpty())
+        movieDescription.text = if (description.isEmpty())
             getString(R.string.noDescription)
         else
             description
@@ -308,10 +308,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
 
         val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", if (currentMovie.posterPath != null)
-                    currentMovie.posterPath!!
-                else
-                    "/")
+                .replace("<posterName>", currentMovie.posterPath)
                 .replace("<API_KEY>", getString(R.string.movieKey))
         Picasso.with(this)
                 .load(posterUri)

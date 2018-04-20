@@ -20,18 +20,15 @@
             android:layout_height="wrap_content"
             android:id="@+id/movie_counter_tv"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentEnd="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/userName_tv"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/movie_counter_tv"
-            android:layout_toLeftOf="@id/movie_counter_tv"/>
+            android:layout_toStartOf="@id/movie_counter_tv"/>
 
     </RelativeLayout>
 

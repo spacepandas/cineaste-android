@@ -10,7 +10,7 @@ interface Constants {
         val POSTER_URI_SMALL = String.format(POSTER_BASE_URI, "w342")
         val POSTER_URI_ORIGINAL = String.format(POSTER_BASE_URI, "original")
 
-        val THE_MOVIE_DB_SERIES_URI = "https://www.themoviedb.org/tv/<SERIES_ID>"
-        val THE_MOVIE_DB_MOVIES_URI = "https://www.themoviedb.org/movie/<MOVIE_ID>"
+        const val THE_MOVIE_DB_SERIES_URI = "https://www.themoviedb.org/tv/<SERIES_ID>"
+        const val THE_MOVIE_DB_MOVIES_URI = "https://www.themoviedb.org/movie/<MOVIE_ID>"
     }
 }

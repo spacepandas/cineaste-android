@@ -158,7 +158,7 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
                 val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
 
                 for (movie in movieList) {
-                    if (movie.title!!.toLowerCase().contains(filterPattern)) {
+                    if (movie.title.toLowerCase().contains(filterPattern)) {
                         filteredMovieList.add(movie)
                     }
                 }

@@ -3,22 +3,26 @@ package de.cineaste.android.entity.movie
 import com.google.gson.annotations.SerializedName
 
 import java.util.Date
-//todo use data class
-class Movie : MovieDto, Comparable<Movie> {
 
-    var runtime: Int = 0
-    @SerializedName("vote_average")
-    var voteAverage: Double = 0.toDouble()
-    @SerializedName("vote_count")
-    var voteCount: Int = 0
-    @SerializedName("overview")
-    var description: String? = null
-    private var watched: Boolean = false
-    var watchedDate: Date? = null
-    @SerializedName("release_date")
-    var releaseDate: Date? = null
-    var listPosition: Int = 0
+data class Movie(
+        var id: Long = 0,
+        @SerializedName("poster_path")
+        var posterPath: String = "",
+        var title: String = "",
+        var runtime: Int = 0,
+        @SerializedName("vote_average")
+        var voteAverage: Double = 0.toDouble(),
+        @SerializedName("vote_count")
+        var voteCount: Int = 0,
+        @SerializedName("overview")
+        var description: String = "",
+        private var watched: Boolean = false,
+        var watchedDate: Date? = null,
+        @SerializedName("release_date")
+        var releaseDate: Date? = null,
+        var listPosition: Int = 0
 
+) : Comparable<Movie> {
     var isWatched: Boolean
         get() = watched
         set(watched) {
@@ -29,25 +33,6 @@ class Movie : MovieDto, Comparable<Movie> {
                 this.watchedDate = null
             }
         }
-
-    constructor() {
-        this.watched = false
-    }
-
-    constructor(
-            id: Long,
-            posterPath: String,
-            runtime: Int,
-            title: String,
-            voteAverage: Double,
-            description: String,
-            voteCount: Int) : super(id, posterPath, title) {
-        this.runtime = runtime
-        this.voteAverage = voteAverage
-        this.voteCount = voteCount
-        this.description = description
-        this.watched = false
-    }
 
     override fun compareTo(other: Movie): Int {
         return this.id.compareTo(other.id)

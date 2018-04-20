@@ -168,7 +168,7 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
                 EpisodeEntry.COLUMN_EPISODE_WATCHED + INTEGER_TYPE +
                 " )"
 
-        private val DATABASE_VERSION = Constants.DATABASE_VERSION
-        private val DATABASE_NAME = Constants.DATABASE_NAME
+        private const val DATABASE_VERSION = Constants.DATABASE_VERSION
+        private const val DATABASE_NAME = Constants.DATABASE_NAME
     }
 }

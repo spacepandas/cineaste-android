@@ -69,7 +69,7 @@ class SeriesDbHelper private constructor(context: Context) {
         val selection = BaseDao.EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ? AND " + BaseDao.EpisodeEntry.COLUMN_EPISODE_WATCHED + " = 0"
         val selectionArgs = arrayOf(seriesId.toString())
 
-        return episodeDao.read(selection, selectionArgs);
+        return episodeDao.read(selection, selectionArgs)
     }
 
     fun getEpisodesBySeasonId(seasonId: Long): List<Episode> {
@@ -116,10 +116,10 @@ class SeriesDbHelper private constructor(context: Context) {
 
         val seasonList = seasonDao.read(selection, selectionArgs)
 
-        if (seasonList.isEmpty()) {
-            return null
+        return if (seasonList.isEmpty()) {
+            null
         } else {
-            return seasonList[0]
+            seasonList[0]
         }
     }
 
