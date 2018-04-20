@@ -38,12 +38,14 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private var poster: ImageView? = null
 
     private var seriesId: Long = 0
-    private var seriesDbHelper: SeriesDbHelper? = null
-    private var seriesLoader: SeriesLoader? = null
+    private lateinit var seriesDbHelper: SeriesDbHelper
+    private lateinit var seriesLoader: SeriesLoader
     private var currentSeries: Series? = null
-    private var layout: RecyclerView? = null
-    private var updateCallBack: Runnable? = null
-    private var adapter: SeriesDetailAdapter? = null
+    private lateinit var progressBar: View
+    private lateinit var fab: FloatingActionButton
+    private lateinit var layout: RecyclerView
+    private lateinit var updateCallBack: Runnable
+    private lateinit var adapter: SeriesDetailAdapter
 
     override fun onClick(v: View) {
         if (v.id == R.id.poster) {
@@ -122,8 +124,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     override fun onDeleteClicked() {
-        layout!!.removeCallbacks(updateCallBack)
-        seriesDbHelper!!.delete(seriesId)
+        layout.removeCallbacks(updateCallBack)
+        seriesDbHelper.delete(seriesId)
         currentSeries = null
         onBackPressed()
     }
@@ -148,7 +150,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
         if (seriesCallback != null) {
 
-            seriesLoader!!.loadCompleteSeries(currentSeries!!.id, seriesCallback)
+            seriesLoader.loadCompleteSeries(currentSeries!!.id, seriesCallback)
 
             Toast.makeText(this, this.resources.getString(R.string.movieAdd,
                     currentSeries!!.name), Toast.LENGTH_SHORT).show()
@@ -177,9 +179,9 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun moveBetweenLists(series: Series) {
         if (state == R.string.searchState) {
-            seriesDbHelper!!.addToHistory(series)
+            seriesDbHelper.addToHistory(series)
         } else if (state == R.string.watchlistState) {
-            seriesDbHelper!!.moveToHistory(series)
+            seriesDbHelper.moveToHistory(series)
         }
 
         onBackPressed()
@@ -195,14 +197,14 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 }
 
                 override fun onSuccess(series: Series) {
-                    seriesDbHelper!!.addToWatchList(series)
+                    seriesDbHelper.addToWatchList(series)
                 }
             }
-            R.string.historyState -> seriesDbHelper!!.moveToWatchList(currentSeries!!)
+            R.string.historyState -> seriesDbHelper.moveToWatchList(currentSeries!!)
         }
 
         if (callback != null) {
-            seriesLoader!!.loadCompleteSeries(currentSeries!!.id, callback)
+            seriesLoader.loadCompleteSeries(currentSeries!!.id, callback)
             Toast.makeText(this, this.resources.getString(R.string.movieAdd,
                     currentSeries!!.name), Toast.LENGTH_SHORT).show()
         }
@@ -235,10 +237,14 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         updateCallBack = getUpdateCallBack()
         autoUpdate()
 
-        currentSeries = seriesDbHelper!!.getSeriesById(seriesId)
+        currentSeries = seriesDbHelper.getSeriesById(seriesId)
         if (currentSeries == null) {
+            progressBar.visibility = View.VISIBLE
+            fab.visibility = View.GONE
             loadRequestedSeries()
         } else {
+            progressBar.visibility = View.GONE
+            fab.visibility = View.VISIBLE
             assignData(currentSeries!!)
         }
 
@@ -254,22 +260,25 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     override fun onResume() {
         super.onResume()
-        slideIn()
+        if (state != R.string.searchState || currentSeries != null) {
+            slideIn()
+        }
     }
 
     private fun initViews() {
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        progressBar = findViewById(R.id.progressBar)
+        fab = findViewById(R.id.fab)
         val layoutManager = LinearLayoutManager(this)
         poster = findViewById(R.id.movie_poster)
         layout = findViewById(R.id.overlay)
-        layout!!.layoutManager = layoutManager
-        layout!!.setHasFixedSize(true)
+        layout.layoutManager = layoutManager
+        layout.setHasFixedSize(true)
 
         if (state == R.string.watchlistState) {
             fab.visibility = View.VISIBLE
             fab.setOnClickListener {
-                seriesDbHelper!!.episodeWatched(currentSeries!!)
-                currentSeries = seriesDbHelper!!.getSeriesById(currentSeries!!.id)
+                seriesDbHelper.episodeWatched(currentSeries!!)
+                currentSeries = seriesDbHelper.getSeriesById(currentSeries!!.id)
                 assignData(currentSeries!!)
             }
         } else {
@@ -298,8 +307,9 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     scrollRange = appBarLayout.totalScrollRange
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.title = currentSeries!!.name
-
+                    currentSeries?.let {
+                        collapsingToolbarLayout.title = currentSeries!!.name
+                    }
                     isShow = true
                 } else if (isShow) {
                     collapsingToolbarLayout.title = " "
@@ -310,8 +320,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     private fun autoUpdate() {
-        layout!!.removeCallbacks(updateCallBack)
-        layout!!.postDelayed(updateCallBack, 1000)
+        layout.removeCallbacks(updateCallBack)
+        layout.postDelayed(updateCallBack, 1000)
     }
 
     private fun getUpdateCallBack(): Runnable {
@@ -321,7 +331,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private fun updateSeries() {
         if (state != R.string.searchState) {
 
-            seriesLoader!!.loadCompleteSeries(seriesId, object : SeriesCallback {
+            seriesLoader.loadCompleteSeries(seriesId, object : SeriesCallback {
                 override fun onFailure() {
                     runOnUiThread { showNetworkError() }
                 }
@@ -331,10 +341,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                         return
                     }
                     series.isWatched = currentSeries!!.isWatched
-                    seriesDbHelper!!.update(series)
+                    seriesDbHelper.update(series)
                     runOnUiThread {
                         setPoster(series)
-                        adapter!!.updateSeries(series)
+                        adapter.updateSeries(series)
                     }
 
                 }
@@ -346,7 +356,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         setPoster(series)
 
         adapter = SeriesDetailAdapter(series, this, state, this, this)
-        layout!!.adapter = adapter
+        layout.adapter = adapter
     }
 
     private fun setPoster(series: Series) {
@@ -363,7 +373,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     private fun loadRequestedSeries() {
-        seriesLoader!!.loadCompleteSeries(seriesId, object : SeriesCallback {
+        seriesLoader.loadCompleteSeries(seriesId, object : SeriesCallback {
             override fun onFailure() {
 
             }
@@ -372,6 +382,11 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 runOnUiThread {
                     currentSeries = series
                     assignData(series)
+                    progressBar.visibility = View.GONE
+                    if(state != R.string.searchState)
+                        fab.visibility = View.VISIBLE
+
+                    slideIn()
                 }
             }
         })
@@ -381,18 +396,16 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private fun slideIn() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_top)
         animation.interpolator = AccelerateDecelerateInterpolator()
-        layout!!.startAnimation(animation)
+        layout.startAnimation(animation)
         animation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
 
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                currentSeries = seriesDbHelper!!.getSeriesById(seriesId)
+                currentSeries = seriesDbHelper.getSeriesById(seriesId)
                 if (currentSeries != null) {
-                    if (adapter != null) {
-                        adapter!!.updateSeries(currentSeries!!)
-                    }
+                    adapter.updateSeries(currentSeries!!)
                 }
             }
 
@@ -405,13 +418,13 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private fun slideOut() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_bottom)
         animation.interpolator = AccelerateDecelerateInterpolator()
-        layout!!.startAnimation(animation)
+        layout.startAnimation(animation)
     }
 
     override fun onBackPressed() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_bottom)
         animation.interpolator = AccelerateDecelerateInterpolator()
-        layout!!.startAnimation(animation)
+        layout.startAnimation(animation)
         animation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
 
@@ -419,7 +432,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
             override fun onAnimationEnd(animation: Animation) {
                 super@SeriesDetailActivity.onBackPressed()
-                layout!!.visibility = View.GONE
+                layout.visibility = View.GONE
             }
 
             override fun onAnimationRepeat(animation: Animation) {
@@ -431,7 +444,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun showNetworkError() {
         val snackbar = Snackbar
-                .make(layout!!, R.string.noInternet, Snackbar.LENGTH_LONG)
+                .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
 

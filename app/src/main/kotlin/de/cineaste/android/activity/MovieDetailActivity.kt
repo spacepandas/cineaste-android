@@ -43,6 +43,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var movieDbHelper: MovieDbHelper
     private var movieId: Long = 0
     private var currentMovie: Movie? = null
+    private lateinit var progressBar: View
     private lateinit var rating: TextView
     private lateinit var movieTitle: TextView
     private lateinit var movieReleaseDate: TextView
@@ -212,8 +213,10 @@ class MovieDetailActivity : AppCompatActivity() {
 
         currentMovie = movieDbHelper.readMovie(movieId)
         if (currentMovie == null) {
+            progressBar.visibility = View.VISIBLE
             loadRequestedMovie()
         } else {
+            progressBar.visibility = View.GONE
             assignData(currentMovie!!)
         }
 
@@ -228,6 +231,7 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        progressBar = findViewById(R.id.progressBar)
         movieReleaseDate = findViewById(R.id.movieReleaseDate)
         poster = findViewById(R.id.movie_poster)
         rating = findViewById(R.id.rating)
@@ -267,7 +271,9 @@ class MovieDetailActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        slideIn()
+        if (state != R.string.searchState || currentMovie != null) {
+            slideIn()
+        }
     }
 
     private fun loadRequestedMovie() {
@@ -282,6 +288,8 @@ class MovieDetailActivity : AppCompatActivity() {
                 runOnUiThread {
                     currentMovie = movie
                     assignData(movie)
+                    progressBar.visibility = View.GONE
+                    slideIn()
                 }
             }
         })

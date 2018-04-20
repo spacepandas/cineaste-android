@@ -88,6 +88,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = listAdapter
 
+        progressBar.visibility = View.VISIBLE
         getSuggestions()
     }
 
@@ -166,7 +167,6 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
                 .make(recyclerView, R.string.noInternet, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
-
 
     override fun onStop() {
         super.onStop()

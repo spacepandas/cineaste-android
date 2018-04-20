@@ -16,7 +16,6 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/moviePoster"
             android:scaleType="centerCrop"
-            android:src="@drawable/placeholder_poster"
             android:transitionName="poster"
             tools:targetApi="lollipop" />
 
@@ -70,5 +69,18 @@
         android:src="@drawable/ic_done"
         app:layout_anchorGravity="bottom|right|end"/>
 
+    <FrameLayout
+        android:id="@+id/progressBar"
+        android:background="@color/backgroundColor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <ProgressBar
+            android:layout_gravity="center"
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="false" />
+    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>
