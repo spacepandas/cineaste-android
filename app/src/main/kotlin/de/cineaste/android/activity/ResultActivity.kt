@@ -33,7 +33,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
             val multiList = MultiList()
             multiList.addAll(movies)
 
-            for (multiListEntry in multiList.movieList) {
+            for (multiListEntry in multiList.getSortedList()) {
                 results.add(MatchingResult(multiListEntry.movieDto, multiListEntry.counter))
             }
 

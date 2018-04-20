@@ -10,17 +10,24 @@ class MultiList {
 
     private val movies: LongSparseArray<MultiListEntry> = LongSparseArray()
 
-    val movieList: List<MultiListEntry>
-        get() {
-            val entries = ArrayList<MultiListEntry>()
-            for (i in 0 until movies.size()) {
-                entries.add(movies.valueAt(i))
-            }
-
-            entries.sort()
-
-            return entries
+    fun getSortedList(): List<MultiListEntry> {
+        val entries = ArrayList<MultiListEntry>()
+        for (i in 0 until movies.size()) {
+            entries.add(movies.valueAt(i))
         }
+
+        val comparator: Comparator<MultiListEntry> = createComparatorForCounterAndTitle()
+
+        entries.sortWith(comparator)
+
+        return entries
+    }
+
+    private fun createComparatorForCounterAndTitle(): Comparator<MultiListEntry> {
+        val byCountComparator: Comparator<MultiListEntry> = compareByDescending { it.counter }
+
+        return byCountComparator.thenBy { entry -> entry.movieDto.title }
+    }
 
     fun add(movieDto: MovieDto) {
         val movieId = movieDto.id
@@ -39,21 +46,13 @@ class MultiList {
         }
     }
 
-    inner class MultiListEntry constructor(val movieDto: MovieDto) : Comparable<MultiListEntry> {
-        var counter: Int = 0
-            private set
-
-        init {
-            this.counter = 1
-        }
-
+    data class MultiListEntry(
+            val movieDto: MovieDto,
+            var counter: Int = 1
+    ) {
         fun increment(): MultiListEntry {
             this.counter++
             return this
-        }
-
-        override fun compareTo(other: MultiListEntry): Int {
-            return other.counter - this.counter
         }
     }
 }
