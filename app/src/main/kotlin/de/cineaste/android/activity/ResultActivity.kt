@@ -24,8 +24,8 @@ import java.util.*
 
 class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener {
 
-    private var nearbyMessages: List<NearbyMessage>? = null
-    private var movieDbHelper: MovieDbHelper? = null
+    private var nearbyMessages: MutableList<NearbyMessage> = mutableListOf()
+    private lateinit var movieDbHelper: MovieDbHelper
 
     private val results: ArrayList<MatchingResult>
         get() {
@@ -44,7 +44,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         get() {
             val movies = ArrayList<MovieDto>()
 
-            for (current in nearbyMessages!!) {
+            for (current in nearbyMessages) {
                 movies.addAll(current.movies)
             }
 
@@ -55,7 +55,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
-        nearbyMessages = NearbyMessageHandler.getMessages()
+        nearbyMessages.addAll(NearbyMessageHandler.getMessages())
 
         movieDbHelper = MovieDbHelper.getInstance(this)
 
@@ -91,7 +91,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
     override fun onMovieSelectListener(position: Int) {
 
         val selectedMovieId = results[position].id
-        val selectedMovie = movieDbHelper!!.readMovie(selectedMovieId)
+        val selectedMovie = movieDbHelper.readMovie(selectedMovieId)
 
         if (selectedMovie == null) {
             val client = NetworkClient(NetworkRequest(resources).getMovie(results[position].id))
@@ -101,7 +101,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
                 }
 
                 override fun onSuccess(response: NetworkResponse) {
-                    val gson = DateAwareGson().gson
+                    val gson = DateAwareGson.gson
                     val movie = gson.fromJson(response.responseReader, Movie::class.java)
                     runOnUiThread { updateMovie(movie) }
                 }
@@ -113,6 +113,6 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
 
     private fun updateMovie(movie: Movie) {
         movie.isWatched = true
-        movieDbHelper!!.createOrUpdate(movie)
+        movieDbHelper.createOrUpdate(movie)
     }
 }

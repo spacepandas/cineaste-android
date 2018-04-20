@@ -20,7 +20,7 @@ import de.cineaste.android.entity.series.Series
 
 class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatchedClickListener {
 
-    private var seriesListAdapter: SeriesListAdapter? = null
+    private lateinit var seriesListAdapter: SeriesListAdapter
 
     override val subtitle: String
         get() = resources.getQuantityString(R.plurals.seriesTitle, dataSetSize, dataSetSize)
@@ -30,7 +30,7 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
 
 
     override val dataSetSize: Int
-        get() = seriesListAdapter!!.dataSetSize
+        get() = seriesListAdapter.dataSetSize
 
     override val emptyListMessageByState: Int
         get() = if (watchState == WatchState.WATCH_STATE) {
@@ -41,18 +41,18 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
 
     override val correctCallBack: ItemTouchHelper.Callback
         get() = if (watchState == WatchState.WATCH_STATE) {
-            WatchlistSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter!!, activity!!)
+            WatchlistSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter, activity!!)
         } else {
-            HistoryListSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter!!)
+            HistoryListSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter)
         }
 
     override fun onEpisodeWatchedClick(series: Series, position: Int) {
         SeriesDbHelper.getInstance(activity!!).episodeWatched(series)
-        seriesListAdapter!!.updateSeries(series, position)
+        seriesListAdapter.updateSeries(series, position)
     }
 
     override fun updateAdapter() {
-        seriesListAdapter!!.updateDataSet()
+        seriesListAdapter.updateDataSet()
     }
 
     override fun initFab(activity: Activity, view: View) {
@@ -89,12 +89,12 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
 
     override fun reorderEntries(filterType: BaseListFragment.FilterType) {
         when (filterType) {
-            BaseListFragment.FilterType.ALPHABETICAL -> seriesListAdapter!!.orderAlphabetical()
-            BaseListFragment.FilterType.RELEASE_DATE -> seriesListAdapter!!.orderByReleaseDate()
+            BaseListFragment.FilterType.ALPHABETICAL -> seriesListAdapter.orderAlphabetical()
+            BaseListFragment.FilterType.RELEASE_DATE -> seriesListAdapter.orderByReleaseDate()
             else -> { }
         }
 
-        seriesListAdapter!!.notifyDataSetChanged()
+        seriesListAdapter.notifyDataSetChanged()
     }
 
     override fun createIntent(itemId: Long, state: Int, activity: Activity): Intent {

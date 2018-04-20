@@ -9,11 +9,10 @@ import de.cineaste.android.entity.series.Season
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.series.SeasonViewHolder
-import java.util.*
 
 internal class SeasonAdapter(private val context: Context, private val listener: ItemClickListener, series: Series?) : RecyclerView.Adapter<SeasonViewHolder>() {
 
-    private val seasons = ArrayList<Season>()
+    private val seasons: MutableList<Season> = mutableListOf()
 
     init {
         this.seasons.clear()

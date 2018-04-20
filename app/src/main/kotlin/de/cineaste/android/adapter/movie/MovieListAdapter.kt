@@ -19,7 +19,7 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
 
     private val db: MovieDbHelper = MovieDbHelper.getInstance(context)
     private var dataSet: MutableList<Movie> = ArrayList()
-    private var filteredDataSet: MutableList<Movie>? = null
+    private var filteredDataSet: MutableList<Movie> = mutableListOf()
 
     private val updatedMovies = LinkedBlockingQueue<UpdatedMovies>()
 
@@ -39,18 +39,18 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     fun removeItem(position: Int) {
-        val movie = filteredDataSet!![position]
+        val movie = filteredDataSet[position]
         db.deleteMovieFromWatchlist(movie)
         removeMovie(movie)
     }
 
     fun getItem(position: Int): Movie {
-        return filteredDataSet!![position]
+        return filteredDataSet[position]
     }
 
     fun restoreDeletedItem(item: Movie, position: Int) {
         db.createOrUpdate(item)
-        filteredDataSet!!.add(position, item)
+        filteredDataSet.add(position, item)
         dataSet.add(position, item)
         notifyItemInserted(position)
     }
@@ -64,7 +64,7 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     fun restoreToggleItemOnList(item: Movie, position: Int) {
         item.isWatched = !item.isWatched
         db.createOrUpdate(item)
-        filteredDataSet!!.add(position, item)
+        filteredDataSet.add(position, item)
         dataSet.add(position, item)
         notifyItemInserted(position)
     }
@@ -72,18 +72,18 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     fun onItemMove(fromPosition: Int, toPosition: Int) {
         updateMoviePositionsAndAddToQueue(fromPosition, toPosition)
 
-        Collections.swap(filteredDataSet!!, fromPosition, toPosition)
+        Collections.swap(filteredDataSet, fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
     }
 
     private fun updateMoviePositionsAndAddToQueue(fromPosition: Int, toPosition: Int) {
-        val passiveMovedMovie = filteredDataSet!!.removeAt(toPosition)
+        val passiveMovedMovie = filteredDataSet.removeAt(toPosition)
         passiveMovedMovie.listPosition = fromPosition
-        filteredDataSet!!.add(toPosition, passiveMovedMovie)
+        filteredDataSet.add(toPosition, passiveMovedMovie)
 
-        val prev = filteredDataSet!!.removeAt(fromPosition)
+        val prev = filteredDataSet.removeAt(fromPosition)
         prev.listPosition = toPosition
-        filteredDataSet!!.add(fromPosition, prev)
+        filteredDataSet.add(fromPosition, prev)
         updatedMovies.add(UpdatedMovies(prev, passiveMovedMovie))
     }
 
@@ -115,7 +115,7 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     override fun getItemCount(): Int {
-        return filteredDataSet!!.size
+        return filteredDataSet.size
     }
 
     override fun createViewHolder(v: View): RecyclerView.ViewHolder {
@@ -123,14 +123,14 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     override fun assignDataToViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as MovieViewHolder).assignData(filteredDataSet!![position])
+        (holder as MovieViewHolder).assignData(filteredDataSet[position])
     }
 
     override fun removeMovie(movie: Movie) {
-        notifyItemRemoved(filteredDataSet!!.indexOf(movie))
+        notifyItemRemoved(filteredDataSet.indexOf(movie))
 
         dataSet.remove(movie)
-        filteredDataSet!!.remove(movie)
+        filteredDataSet.remove(movie)
         displayMessage.showMessageIfEmptyList()
     }
 
@@ -171,9 +171,9 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
         }
 
         override fun publishResults(charSequence: CharSequence, results: Filter.FilterResults) {
-            adapter.filteredDataSet!!.clear()
+            adapter.filteredDataSet.clear()
 
-            adapter.filteredDataSet!!.addAll(results.values as List<Movie>)
+            adapter.filteredDataSet.addAll(results.values as List<Movie>)
             adapter.notifyDataSetChanged()
         }
     }

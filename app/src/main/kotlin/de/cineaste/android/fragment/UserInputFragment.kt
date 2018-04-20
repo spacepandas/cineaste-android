@@ -15,7 +15,7 @@ import de.cineaste.android.R
 
 class UserInputFragment : DialogFragment(), TextView.OnEditorActionListener, View.OnClickListener {
 
-    private var editText: EditText? = null
+    private lateinit var editText: EditText
 
     interface UserNameListener {
         fun onFinishUserDialog(userName: String)
@@ -29,8 +29,8 @@ class UserInputFragment : DialogFragment(), TextView.OnEditorActionListener, Vie
         editText = view.findViewById(R.id.username_et)
 
         okBtn.setOnClickListener(this)
-        editText!!.setOnEditorActionListener(this)
-        editText!!.requestFocus()
+        editText.setOnEditorActionListener(this)
+        editText.requestFocus()
         if (dialog.window == null) {
             return view
         }
@@ -53,9 +53,9 @@ class UserInputFragment : DialogFragment(), TextView.OnEditorActionListener, Vie
     }
 
     private fun getNameAndDismiss() {
-        val input = editText!!.text.toString().trim { it <= ' ' }
+        val input = editText.text.toString().trim { it <= ' ' }
 
-        if (!input.isEmpty()) {
+        if (input.isNotEmpty()) {
             val activity = activity as UserNameListener? ?: return
             activity.onFinishUserDialog(input)
             this.dismiss()

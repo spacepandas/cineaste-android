@@ -39,7 +39,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private lateinit var progressBar: ProgressBar
     private lateinit var nearbyUserRv: RecyclerView
 
-    private val mMessageListener: MessageListener = MyMessageListener()
+    private val mMessageListener: MessageListener = CineasteMessageListener()
     private lateinit var localNearbyMessage: NearbyMessage
 
     private lateinit var nearbyUserAdapter: NearbyUserAdapter
@@ -180,7 +180,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         }
     }
 
-    private inner class MyMessageListener : MessageListener() {
+    private inner class CineasteMessageListener : MessageListener() {
         override fun onFound(message: Message) {
             runOnUiThread {
                 val nearbyMessage = NearbyMessage.fromMessage(message)

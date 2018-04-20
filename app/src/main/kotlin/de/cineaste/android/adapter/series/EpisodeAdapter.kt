@@ -6,11 +6,10 @@ import android.view.ViewGroup
 import de.cineaste.android.R
 import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.viewholder.series.EpisodeViewHolder
-import java.util.*
 
 class EpisodeAdapter(episodes: List<Episode>, private val onEpisodeWatchStateChangeListener: EpisodeViewHolder.OnEpisodeWatchStateChangeListener, private val onDescriptionShowToggleListener: EpisodeViewHolder.OnDescriptionShowToggleListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val episodes = ArrayList<Episode>()
+    private val episodes: MutableList<Episode> = mutableListOf()
 
     init {
         this.episodes.clear()

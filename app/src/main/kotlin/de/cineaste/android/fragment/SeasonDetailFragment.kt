@@ -18,7 +18,7 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
     private var seriesId: Long = 0
     private var seasonId: Long = 0
     private lateinit var seriesDbHelper: SeriesDbHelper
-    private var emptyListTextView: TextView? = null
+    private lateinit var emptyListTextView: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EpisodeAdapter
     private val episodes: MutableList<Episode> = mutableListOf()
@@ -51,10 +51,10 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
 
         if (episodes.isEmpty()) {
             recyclerView.visibility = View.GONE
-            emptyListTextView!!.visibility = View.VISIBLE
+            emptyListTextView.visibility = View.VISIBLE
         } else {
             recyclerView.visibility = View.VISIBLE
-            emptyListTextView!!.visibility = View.GONE
+            emptyListTextView.visibility = View.GONE
 
             recyclerView.setHasFixedSize(true)
             val layoutManager = LinearLayoutManager(activity)

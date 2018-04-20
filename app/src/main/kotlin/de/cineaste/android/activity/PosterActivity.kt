@@ -17,7 +17,7 @@ import de.markusfisch.android.scalingimageview.widget.ScalingImageView
 
 class PosterActivity : AppCompatActivity() {
 
-    private var poster: ScalingImageView? = null
+    private lateinit var poster: ScalingImageView
     private var posterPath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ class PosterActivity : AppCompatActivity() {
 
         poster = ScalingImageView(this)
         setTransitionNameIfNecessary()
-        poster!!.setImageResource(R.drawable.placeholder_poster)
+        poster.setImageResource(R.drawable.placeholder_poster)
         setContentView(poster)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -39,7 +39,7 @@ class PosterActivity : AppCompatActivity() {
 
     @TargetApi(21)
     private fun setTransitionNameIfNecessary() {
-        poster!!.transitionName = "poster"
+        poster.transitionName = "poster"
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -56,20 +56,20 @@ class PosterActivity : AppCompatActivity() {
         Picasso.with(this)
                 .load(getPosterUrl(Constants.POSTER_URI_SMALL))
                 .error(R.drawable.placeholder_poster)
-                .into(poster!!, object : Callback {
+                .into(poster, object : Callback {
                     override fun onSuccess() {
-                        val placeHolder = poster!!.drawable
+                        val placeHolder = poster.drawable
                         setBackgroundColor((placeHolder as BitmapDrawable).bitmap)
                         Picasso.with(this@PosterActivity)
                                 .load(getPosterUrl(Constants.POSTER_URI_ORIGINAL))
                                 .placeholder(placeHolder)
-                                .into(poster!!, object : Callback {
+                                .into(poster, object : Callback {
                                     override fun onSuccess() {
-                                        Snackbar.make(poster!!, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show()
+                                        Snackbar.make(poster, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show()
                                     }
 
                                     override fun onError() {
-                                        poster!!.setImageDrawable(placeHolder)
+                                        poster.setImageDrawable(placeHolder)
                                     }
                                 })
                     }

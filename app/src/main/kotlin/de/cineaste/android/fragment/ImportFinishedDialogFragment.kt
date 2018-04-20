@@ -13,8 +13,8 @@ import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.
 
 class ImportFinishedDialogFragment : DialogFragment() {
 
-    private var movies: TextView? = null
-    private var series: TextView? = null
+    private lateinit var movies: TextView
+    private lateinit var series: TextView
 
     private var movieCount: Int = 0
     private var seriesCount: Int = 0
@@ -56,14 +56,14 @@ class ImportFinishedDialogFragment : DialogFragment() {
 
     private fun fillTextViews() {
         if (movieCount < 0) {
-            movies!!.setText(R.string.importedMoviesFailed)
+            movies.setText(R.string.importedMoviesFailed)
         } else {
-            movies!!.text = getString(R.string.importedMovies, movieCount.toString())
+            movies.text = getString(R.string.importedMovies, movieCount.toString())
         }
         if (seriesCount < 0) {
-            series!!.setText(R.string.importedSeriesFailed)
+            series.setText(R.string.importedSeriesFailed)
         } else {
-            series!!.text = getString(R.string.importedSeries, seriesCount.toString())
+            series.text = getString(R.string.importedSeries, seriesCount.toString())
         }
     }
 }

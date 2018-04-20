@@ -24,10 +24,10 @@ import java.lang.reflect.Type
 
 abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
 
-    internal val gson = DateAwareGson().gson
+    internal val gson = DateAwareGson.gson
     internal lateinit var recyclerView: RecyclerView
     internal lateinit var progressBar: ProgressBar
-    private var searchView: SearchView? = null
+    private lateinit var searchView: SearchView
     private var searchText: String? = null
     protected abstract val layout: Int
     protected abstract val listAdapter: RecyclerView.Adapter<*>
@@ -99,10 +99,8 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        if (searchView != null) {
-            if (!TextUtils.isEmpty(searchText)) {
-                outState.putString("query", searchText)
-            }
+        if (!TextUtils.isEmpty(searchText)) {
+            outState.putString("query", searchText)
         }
         super.onSaveInstanceState(outState)
     }
@@ -123,10 +121,10 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
 
         if (searchItem != null) {
             searchView = searchItem.actionView as SearchView
-            searchView!!.isFocusable = true
-            searchView!!.isIconified = false
-            searchView!!.requestFocusFromTouch()
-            searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            searchView.isFocusable = true
+            searchView.isIconified = false
+            searchView.requestFocusFromTouch()
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     return false
                 }
@@ -148,15 +146,15 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
 
             })
             if (!TextUtils.isEmpty(searchText))
-                searchView!!.setQuery(searchText, false)
+                searchView.setQuery(searchText, false)
         }
 
         return super.onCreateOptionsMenu(menu)
     }
 
     private fun scheduleSearchRequest(query: String) {
-        searchView!!.removeCallbacks(getSearchRunnable(query))
-        searchView!!.postDelayed(getSearchRunnable(query), 500)
+        searchView.removeCallbacks(getSearchRunnable(query))
+        searchView.postDelayed(getSearchRunnable(query), 500)
     }
 
     private fun getSearchRunnable(searchQuery: String): Runnable {

@@ -22,13 +22,13 @@ import de.cineaste.android.network.NetworkResponse
 class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.OnMovieStateChange {
 
     private val db = MovieDbHelper.getInstance(this)
-    private var movieQueryAdapter: MovieSearchQueryAdapter? = null
+    private lateinit var movieQueryAdapter: MovieSearchQueryAdapter
 
     override val layout: Int
         get() = R.layout.activity_search
 
     override val listAdapter: RecyclerView.Adapter<*>
-        get() = movieQueryAdapter as RecyclerView.Adapter<*>
+        get() = movieQueryAdapter
 
     override val listType: Type
         get() = object : TypeToken<List<Movie>>() {
@@ -69,7 +69,7 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
             else -> callback = null
         }
         if (callback != null) {
-            movieQueryAdapter!!.removeMovie(index)
+            movieQueryAdapter.removeMovie(index)
             val client = NetworkClient(NetworkRequest(resources).getMovie(movie.id))
             client.sendRequest(callback)
         }
@@ -80,7 +80,7 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
         val snackbar = Snackbar
                 .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
         snackbar.show()
-        movieQueryAdapter!!.addMovie(movie, index)
+        movieQueryAdapter.addMovie(movie, index)
     }
 
     override fun initAdapter() {
@@ -100,7 +100,7 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
     override fun getRunnable(json: String, listType: Type): Runnable {
         return Runnable {
             val movies: List<Movie> = gson.fromJson(json, listType)
-            movieQueryAdapter!!.addMovies(movies)
+            movieQueryAdapter.addMovies(movies)
             progressBar.visibility = View.GONE
         }
     }

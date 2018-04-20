@@ -21,13 +21,13 @@ import de.cineaste.android.network.SeriesLoader
 
 class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.OnSeriesStateChange {
 
-    private var seriesQueryAdapter: SeriesSearchQueryAdapter? = null
+    private lateinit var seriesQueryAdapter: SeriesSearchQueryAdapter
 
     override val layout: Int
         get() = R.layout.activity_series_search
 
     override val listAdapter: RecyclerView.Adapter<*>
-        get() = seriesQueryAdapter as RecyclerView.Adapter<*>
+        get() = seriesQueryAdapter
 
     override val listType: Type
         get() = object : TypeToken<List<Series>>() {
@@ -69,7 +69,7 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
             else -> seriesCallback = null
         }
         if (seriesCallback != null) {
-            seriesQueryAdapter!!.removeSerie(index)
+            seriesQueryAdapter.removeSerie(index)
 
             SeriesLoader(this).loadCompleteSeries(series.id, seriesCallback)
         }
@@ -79,7 +79,7 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
         val snackbar = Snackbar
                 .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
         snackbar.show()
-        seriesQueryAdapter!!.addSerie(series, index)
+        seriesQueryAdapter.addSerie(series, index)
     }
 
     override fun initAdapter() {
@@ -99,7 +99,7 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
     override fun getRunnable(json: String, listType: Type): Runnable {
         return Runnable {
             val series: List<Series> = gson.fromJson(json, listType)
-            seriesQueryAdapter!!.addSeries(series)
+            seriesQueryAdapter.addSeries(series)
             progressBar.visibility = View.GONE
         }
     }

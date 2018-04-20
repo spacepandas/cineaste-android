@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 class SeriesLoader(context: Context) {
 
-    private val gson: Gson = DateAwareGson().gson
+    private val gson: Gson = DateAwareGson.gson
     private val resources: Resources = context.resources
 
     fun loadSeries(seriesId: Long, callback: SeriesCallback) {

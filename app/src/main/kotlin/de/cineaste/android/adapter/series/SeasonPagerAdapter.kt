@@ -12,18 +12,23 @@ import de.cineaste.android.fragment.SeasonDetailFragment
 class SeasonPagerAdapter(fm: FragmentManager, private val series: Series, private val resources: Resources) : FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
-        val currentSeason = series.seasons!![position]
         val fragment = SeasonDetailFragment()
-        val args = Bundle()
-        args.putLong("seasonId", currentSeason.id)
-        args.putLong("seriesId", series.id)
-        fragment.arguments = args
+        series.seasons?.let {
+            val currentSeason = series.seasons!![position]
+            val args = Bundle()
+            args.putLong("seasonId", currentSeason.id)
+            args.putLong("seriesId", series.id)
+            fragment.arguments = args
+        }
 
         return fragment
     }
 
     override fun getCount(): Int {
-        return series.seasons!!.size
+        series.seasons?.let {
+            return series.seasons!!.size
+        }
+        return 0
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

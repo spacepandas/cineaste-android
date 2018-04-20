@@ -19,10 +19,10 @@ import de.cineaste.android.database.NearbyMessageHandler
 import de.cineaste.android.entity.movie.MatchingResult
 
 class ResultAdapter(
-        private val results: MutableList<MatchingResult>?,
+        private val results: MutableList<MatchingResult> = mutableListOf(),
         private val listener: OnMovieSelectListener?) : RecyclerView.Adapter<ResultAdapter.ViewHolder>() {
 
-    private var context: Context? = null
+    private lateinit var context: Context
     private val rowLayout: Int = R.layout.card_result
 
     interface OnMovieSelectListener {
@@ -30,17 +30,17 @@ class ResultAdapter(
     }
 
     override fun getItemCount(): Int {
-        return results?.size ?: 0
+        return results.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        val v = LayoutInflater.from(parent.context).inflate(rowLayout, parent, false)
+        val v = LayoutInflater.from(context).inflate(rowLayout, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.assignData(results!![position], NearbyMessageHandler.size)
+        holder.assignData(results[position], NearbyMessageHandler.size)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -52,7 +52,7 @@ class ResultAdapter(
         fun assignData(matchingResult: MatchingResult, resultCounter: Int) {
             val posterUri = Constants.POSTER_URI_SMALL
                     .replace("<posterName>", if (matchingResult.posterPath != null) matchingResult.posterPath!! else "/")
-                    .replace("<API_KEY>", context!!.getString(R.string.movieKey))
+                    .replace("<API_KEY>", context.getString(R.string.movieKey))
             Picasso.with(context)
                     .load(Uri.parse(posterUri))
                     .resize(222, 334)
@@ -66,7 +66,7 @@ class ResultAdapter(
         override fun onClick(v: View) {
             val position = adapterPosition
             listener?.onMovieSelectListener(position)
-            results!!.removeAt(position)
+            results.removeAt(position)
             notifyItemRemoved(position)
         }
     }

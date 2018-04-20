@@ -20,7 +20,7 @@ import de.cineaste.android.util.Constants
 class SeasonDetailActivity : AppCompatActivity() {
 
     private var currentSeries: Series? = null
-    private var poster: ImageView? = null
+    private lateinit var poster: ImageView
     private lateinit var seriesDbHelper: SeriesDbHelper
 
     private var seasonId: Long = 0
@@ -84,7 +84,7 @@ class SeasonDetailActivity : AppCompatActivity() {
                     .error(R.drawable.placeholder_poster)
                     .into(poster)
 
-            poster!!.setOnClickListener {
+            poster.setOnClickListener {
                 val intent = Intent(this@SeasonDetailActivity, PosterActivity::class.java)
                 intent.putExtra(PosterActivity.POSTER_PATH, posterPath)
                 startActivity(intent)
@@ -93,13 +93,16 @@ class SeasonDetailActivity : AppCompatActivity() {
     }
 
     private fun currentSeasonIndex(): Int {
-        val seasons = currentSeries!!.seasons
-        for (i in seasons!!.indices) {
-            if (seasons[i].id == seasonId) {
-                return i
+        currentSeries?.let {
+            val seasons = currentSeries!!.seasons
+            seasons?.let {
+                for (i in seasons.indices) {
+                    if (seasons[i].id == seasonId) {
+                        return i
+                    }
+                }
             }
         }
-
         return 0
     }
 

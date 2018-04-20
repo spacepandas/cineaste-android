@@ -20,7 +20,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.database.dao.BaseDao
@@ -37,19 +36,19 @@ import java.util.*
 
 class MovieDetailActivity : AppCompatActivity() {
 
-    private var gson: Gson? = null
+    private val gson =  DateAwareGson.gson
     private var state: Int = 0
     private var poster: ImageView? = null
 
-    private var movieDbHelper: MovieDbHelper? = null
+    private lateinit var movieDbHelper: MovieDbHelper
     private var movieId: Long = 0
     private var currentMovie: Movie? = null
-    private var rating: TextView? = null
-    private var movieTitle: TextView? = null
-    private var movieReleaseDate: TextView? = null
-    private var movieRuntime: TextView? = null
-    private var layout: NestedScrollView? = null
-    private var updateCallBack: Runnable? = null
+    private lateinit var rating: TextView
+    private lateinit var movieTitle: TextView
+    private lateinit var movieReleaseDate: TextView
+    private lateinit var movieRuntime: TextView
+    private lateinit var layout: NestedScrollView
+    private lateinit var updateCallBack: Runnable
 
     private val updateCallback: Runnable
         get() = Runnable { updateMovie() }
@@ -124,10 +123,9 @@ class MovieDetailActivity : AppCompatActivity() {
         return true
     }
 
-
     private fun onDeleteClicked() {
-        movieDbHelper!!.deleteMovieFromWatchlist(currentMovie!!)
-        layout!!.removeCallbacks(updateCallBack)
+        movieDbHelper.deleteMovieFromWatchlist(currentMovie!!)
+        layout.removeCallbacks(updateCallBack)
         onBackPressed()
     }
 
@@ -141,14 +139,16 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
 
                 override fun onSuccess(response: NetworkResponse) {
-                    val movie = gson!!.fromJson(response.responseReader, Movie::class.java)
+                    val movie = gson.fromJson(response.responseReader, Movie::class.java)
                     movie.isWatched = true
-                    movieDbHelper!!.createOrUpdate(movie)
+                    movieDbHelper.createOrUpdate(movie)
                 }
             }
             R.string.watchlistState -> {
-                currentMovie!!.isWatched = true
-                movieDbHelper!!.createOrUpdate(currentMovie!!)
+                currentMovie?.let {
+                    currentMovie!!.isWatched = true
+                    movieDbHelper.createOrUpdate(currentMovie!!)
+                }
             }
         }
 
@@ -174,12 +174,14 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
 
                 override fun onSuccess(response: NetworkResponse) {
-                    movieDbHelper!!.createOrUpdate(gson!!.fromJson(response.responseReader, Movie::class.java))
+                    movieDbHelper.createOrUpdate(gson.fromJson(response.responseReader, Movie::class.java))
                 }
             }
             R.string.historyState -> {
-                currentMovie!!.isWatched = false
-                movieDbHelper!!.createOrUpdate(currentMovie!!)
+                currentMovie?.let {
+                    currentMovie!!.isWatched = false
+                    movieDbHelper.createOrUpdate(currentMovie!!)
+                }
             }
         }
 
@@ -197,8 +199,6 @@ class MovieDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
 
-        gson = DateAwareGson().gson
-
         val intent = intent
         movieId = intent.getLongExtra(BaseDao.MovieEntry.ID, -1)
         state = intent.getIntExtra(getString(R.string.state), -1)
@@ -210,7 +210,7 @@ class MovieDetailActivity : AppCompatActivity() {
         updateCallBack = updateCallback
         autoUpdateMovie()
 
-        currentMovie = movieDbHelper!!.readMovie(movieId)
+        currentMovie = movieDbHelper.readMovie(movieId)
         if (currentMovie == null) {
             loadRequestedMovie()
         } else {
@@ -278,7 +278,7 @@ class MovieDetailActivity : AppCompatActivity() {
             }
 
             override fun onSuccess(response: NetworkResponse) {
-                val movie = gson!!.fromJson(response.responseReader, Movie::class.java)
+                val movie = gson.fromJson(response.responseReader, Movie::class.java)
                 runOnUiThread {
                     currentMovie = movie
                     assignData(movie)
@@ -296,15 +296,15 @@ class MovieDetailActivity : AppCompatActivity() {
         else
             description
 
-        movieTitle!!.text = currentMovie.title
+        movieTitle.text = currentMovie.title
         if (currentMovie.releaseDate != null) {
-            movieReleaseDate!!.text = convertDate(currentMovie.releaseDate)
-            movieReleaseDate!!.visibility = View.VISIBLE
+            movieReleaseDate.text = convertDate(currentMovie.releaseDate)
+            movieReleaseDate.visibility = View.VISIBLE
         } else {
-            movieReleaseDate!!.visibility = View.GONE
+            movieReleaseDate.visibility = View.GONE
         }
-        movieRuntime!!.text = getString(R.string.runtime, currentMovie.runtime)
-        rating!!.text = currentMovie.voteAverage.toString()
+        movieRuntime.text = getString(R.string.runtime, currentMovie.runtime)
+        rating.text = currentMovie.voteAverage.toString()
 
 
         val posterUri = Constants.POSTER_URI_SMALL
@@ -338,12 +338,12 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbarLayout.title = currentMovie!!.title
-                    movieTitle!!.visibility = View.GONE
+                    movieTitle.visibility = View.GONE
 
                     isShow = true
                 } else if (isShow) {
                     collapsingToolbarLayout.title = " "
-                    movieTitle!!.visibility = View.VISIBLE
+                    movieTitle.visibility = View.VISIBLE
                     isShow = false
                 }
             }
@@ -351,8 +351,8 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun autoUpdateMovie() {
-        layout!!.removeCallbacks(updateCallBack)
-        layout!!.postDelayed(updateCallBack, 1000)
+        layout.removeCallbacks(updateCallBack)
+        layout.postDelayed(updateCallBack, 1000)
     }
 
     private fun updateMovie() {
@@ -364,11 +364,11 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
 
                 override fun onSuccess(response: NetworkResponse) {
-                    val movie = gson!!.fromJson(response.responseReader, Movie::class.java)
+                    val movie = gson.fromJson(response.responseReader, Movie::class.java)
                     runOnUiThread {
                         assignData(movie)
                         updateMovieDetails(movie)
-                        movieDbHelper!!.createOrUpdate(currentMovie!!)
+                        movieDbHelper.createOrUpdate(currentMovie!!)
                     }
                 }
             })
@@ -388,19 +388,19 @@ class MovieDetailActivity : AppCompatActivity() {
     private fun slideIn() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_top)
         animation.interpolator = AccelerateDecelerateInterpolator()
-        layout!!.startAnimation(animation)
+        layout.startAnimation(animation)
     }
 
     private fun slideOut() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_bottom)
         animation.interpolator = AccelerateDecelerateInterpolator()
-        layout!!.startAnimation(animation)
+        layout.startAnimation(animation)
     }
 
     override fun onBackPressed() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_bottom)
         animation.interpolator = AccelerateDecelerateInterpolator()
-        layout!!.startAnimation(animation)
+        layout.startAnimation(animation)
         animation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
 
@@ -408,7 +408,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
             override fun onAnimationEnd(animation: Animation) {
                 super@MovieDetailActivity.onBackPressed()
-                layout!!.visibility = View.GONE
+                layout.visibility = View.GONE
             }
 
             override fun onAnimationRepeat(animation: Animation) {
@@ -420,7 +420,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun showNetworkError() {
         val snackbar = Snackbar
-                .make(layout!!, R.string.noInternet, Snackbar.LENGTH_LONG)
+                .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
 

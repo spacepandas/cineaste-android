@@ -23,7 +23,7 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.util.Constants
 import java.util.*
 
-class SeriesDetailAdapter(private var series: Series?, private val clickListener: ItemClickListener, private val state: Int, private val listener: SeriesStateManipulationClickListener, private val posterClickListener: View.OnClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SeriesDetailAdapter(private var series: Series, private val clickListener: ItemClickListener, private val state: Int, private val listener: SeriesStateManipulationClickListener, private val posterClickListener: View.OnClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface SeriesStateManipulationClickListener {
         fun onDeleteClicked()
@@ -33,12 +33,14 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
 
     init {
         val seasons = ArrayList<Season>()
-        for (season in series!!.seasons!!) {
-            if (season.seasonNumber > 0) {
-                seasons.add(season)
+        series.seasons?.let {
+            for (season in series.seasons!!) {
+                if (season.seasonNumber > 0) {
+                    seasons.add(season)
+                }
             }
+            this.series.seasons = seasons
         }
-        this.series!!.seasons = seasons
     }
 
     fun updateSeries(series: Series) {
@@ -82,6 +84,7 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
             3 -> (holder as DescriptionViewHolder).assignData(series)
             4 -> (holder as SeasonsListViewHolder).assignData(series)
         }
+
     }
 
     override fun getItemCount(): Int {
@@ -92,11 +95,11 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
         return position
     }
 
-    private inner class TriangleViewHolder internal constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
+    private inner class TriangleViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val rating: TextView = itemView.findViewById(R.id.rating)
 
-        internal fun assignData(series: Series?) {
-            rating.text = series!!.voteAverage.toString()
+        internal fun assignData(series: Series) {
+            rating.text = series.voteAverage.toString()
         }
     }
 
@@ -110,8 +113,8 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
         private val toBeContinued: TextView = itemView.findViewById(R.id.toBeContinued)
         private val resources: Resources = context.resources
 
-        internal fun assignData(series: Series?) {
-            title.text = series!!.name
+        internal fun assignData(series: Series) {
+            title.text = series.name
             if (series.releaseDate != null) {
                 releaseDate.text = convertDate(series.releaseDate)
                 releaseDate.visibility = View.VISIBLE
@@ -189,9 +192,9 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
         private val more: TextView = itemView.findViewById(R.id.more)
         private val resources: Resources = context.resources
 
-        internal fun assignData(series: Series?) {
+        internal fun assignData(series: Series) {
             more.setOnClickListener { showCompleteText(series) }
-            description.text = getTrimmedDescription(series!!)
+            description.text = getTrimmedDescription(series)
         }
 
         private fun setDescription(series: Series) {
@@ -202,8 +205,8 @@ class SeriesDetailAdapter(private var series: Series?, private val clickListener
                 original
         }
 
-        private fun showCompleteText(series: Series?) {
-            setDescription(series!!)
+        private fun showCompleteText(series: Series) {
+            setDescription(series)
             more.visibility = View.GONE
 
         }

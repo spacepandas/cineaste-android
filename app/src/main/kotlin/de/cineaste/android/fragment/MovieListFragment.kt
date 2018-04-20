@@ -16,7 +16,7 @@ import de.cineaste.android.database.dao.BaseDao
 
 class MovieListFragment : BaseListFragment() {
 
-    private var movieListAdapter: MovieListAdapter? = null
+    private lateinit var movieListAdapter: MovieListAdapter
 
     override val subtitle: String
         get() = resources.getQuantityString(R.plurals.movieTitle, dataSetSize, dataSetSize)
@@ -25,7 +25,7 @@ class MovieListFragment : BaseListFragment() {
         get() = R.layout.fragment_movielist
 
     override val dataSetSize: Int
-        get() = movieListAdapter!!.dataSetSize
+        get() = movieListAdapter.dataSetSize
 
     override val emptyListMessageByState: Int
         get() = if (watchState == WatchState.WATCH_STATE) {
@@ -36,13 +36,13 @@ class MovieListFragment : BaseListFragment() {
 
     override val correctCallBack: ItemTouchHelper.Callback
         get() = if (watchState == WatchState.WATCH_STATE) {
-            WatchlistMovieTouchHelperCallback(layoutManager, movieListAdapter!!, customRecyclerView, resources)
+            WatchlistMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, resources)
         } else {
-            HistoryListMovieTouchHelperCallback(layoutManager, movieListAdapter!!, customRecyclerView, resources)
+            HistoryListMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, resources)
         }
 
     override fun updateAdapter() {
-        movieListAdapter!!.updateDataSet()
+        movieListAdapter.updateDataSet()
     }
 
     override fun initFab(activity: Activity, view: View) {
@@ -69,12 +69,12 @@ class MovieListFragment : BaseListFragment() {
 
     override fun reorderEntries(filterType: BaseListFragment.FilterType) {
         when (filterType) {
-            BaseListFragment.FilterType.ALPHABETICAL -> movieListAdapter!!.orderAlphabetical()
-            BaseListFragment.FilterType.RELEASE_DATE -> movieListAdapter!!.orderByReleaseDate()
-            BaseListFragment.FilterType.RUNTIME -> movieListAdapter!!.orderByRuntime()
+            BaseListFragment.FilterType.ALPHABETICAL -> movieListAdapter.orderAlphabetical()
+            BaseListFragment.FilterType.RELEASE_DATE -> movieListAdapter.orderByReleaseDate()
+            BaseListFragment.FilterType.RUNTIME -> movieListAdapter.orderByRuntime()
         }
 
-        movieListAdapter!!.notifyDataSetChanged()
+        movieListAdapter.notifyDataSetChanged()
     }
 
     override fun createIntent(itemId: Long, state: Int, activity: Activity): Intent {

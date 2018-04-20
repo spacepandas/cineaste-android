@@ -27,9 +27,9 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     lateinit var watchState: WatchState
     lateinit var customRecyclerView: CustomRecyclerView
     internal lateinit var layoutManager: LinearLayoutManager
-    private var emptyListTextView: TextView? = null
-    private var userDbHelper: UserDbHelper? = null
-    var progressbar: RelativeLayout? = null
+    private lateinit var emptyListTextView: TextView
+    private lateinit var userDbHelper: UserDbHelper
+    lateinit var progressbar: RelativeLayout
         private set
     protected abstract val subtitle: String
     protected abstract val layout: Int
@@ -103,7 +103,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         val watchlistView = inflater.inflate(layout, container, false)
 
         progressbar = watchlistView.findViewById(R.id.progressBar)
-        progressbar!!.visibility = View.GONE
+        progressbar.visibility = View.GONE
 
         emptyListTextView = watchlistView.findViewById(R.id.info_text)
 
@@ -163,7 +163,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.startMovieNight -> if (userDbHelper!!.user != null) {
+            R.id.startMovieNight -> if (userDbHelper.user != null) {
                 startMovieNight()
             } else {
                 val fragmentManager = fragmentManager
@@ -180,12 +180,12 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     }
 
     private fun reorderLists(filterType: FilterType) {
-        progressbar!!.visibility = View.VISIBLE
+        progressbar.visibility = View.VISIBLE
         customRecyclerView.enableScrolling(false)
 
         reorderEntries(filterType)
 
-        progressbar!!.visibility = View.GONE
+        progressbar.visibility = View.GONE
         customRecyclerView.enableScrolling(true)
     }
 
@@ -198,11 +198,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     override fun showMessageIfEmptyList() {
         if (dataSetSize == 0) {
             customRecyclerView.visibility = View.GONE
-            emptyListTextView!!.visibility = View.VISIBLE
-            emptyListTextView!!.setText(emptyListMessageByState)
+            emptyListTextView.visibility = View.VISIBLE
+            emptyListTextView.setText(emptyListMessageByState)
         } else {
             customRecyclerView.visibility = View.VISIBLE
-            emptyListTextView!!.visibility = View.GONE
+            emptyListTextView.visibility = View.GONE
         }
     }
 

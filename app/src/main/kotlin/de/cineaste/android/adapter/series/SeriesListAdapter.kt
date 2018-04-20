@@ -17,8 +17,8 @@ import java.util.concurrent.LinkedBlockingQueue
 class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState, private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener) : BaseListAdapter(context, displayMessage, listener, state) {
 
     private val db: SeriesDbHelper
-    private var dataSet: MutableList<Series> = ArrayList()
-    private var filteredDataSet: MutableList<Series>? = null
+    private var dataSet: MutableList<Series> = mutableListOf()
+    private var filteredDataSet: MutableList<Series> = mutableListOf()
 
     private val updatedSeries = LinkedBlockingQueue<UpdatedSeries>()
 
@@ -43,22 +43,22 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     }
 
     fun removeItem(position: Int) {
-        val series = filteredDataSet!![position]
+        val series = filteredDataSet[position]
         db.delete(series.id)
         removeSeriesFromList(series)
     }
 
     fun getItem(position: Int): Series {
-        return filteredDataSet!![position]
+        return filteredDataSet[position]
     }
 
     fun updateSeries(series: Series?, pos: Int) {
         val mySeries = db.getSeriesById(series!!.id)
         dataSet.removeAt(pos)
-        filteredDataSet!!.removeAt(pos)
+        filteredDataSet.removeAt(pos)
         if (state == WatchState.WATCH_STATE && !mySeries!!.isWatched) {
             dataSet.add(pos, mySeries)
-            filteredDataSet!!.add(pos, mySeries)
+            filteredDataSet.add(pos, mySeries)
             notifyItemChanged(pos)
         } else {
             notifyItemRemoved(pos)
@@ -100,18 +100,18 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     fun onItemMove(fromPosition: Int, toPosition: Int) {
         updateSeriesPositionsAndAddToQueue(fromPosition, toPosition)
 
-        Collections.swap(filteredDataSet!!, fromPosition, toPosition)
+        Collections.swap(filteredDataSet, fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
     }
 
     private fun updateSeriesPositionsAndAddToQueue(fromPosition: Int, toPosition: Int) {
-        val passiveMovedSeries = filteredDataSet!!.removeAt(toPosition)
+        val passiveMovedSeries = filteredDataSet.removeAt(toPosition)
         passiveMovedSeries.listPosition = fromPosition
-        filteredDataSet!!.add(toPosition, passiveMovedSeries)
+        filteredDataSet.add(toPosition, passiveMovedSeries)
 
-        val prev = filteredDataSet!!.removeAt(fromPosition)
+        val prev = filteredDataSet.removeAt(fromPosition)
         prev.listPosition = toPosition
-        filteredDataSet!!.add(fromPosition, prev)
+        filteredDataSet.add(fromPosition, prev)
 
         updatedSeries.add(UpdatedSeries(prev, passiveMovedSeries))
     }
@@ -139,7 +139,7 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     }
 
     override fun getItemCount(): Int {
-        return filteredDataSet!!.size
+        return filteredDataSet.size
     }
 
     override fun createViewHolder(v: View): RecyclerView.ViewHolder {
@@ -147,19 +147,19 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     }
 
     override fun assignDataToViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as SeriesViewHolder).assignData(filteredDataSet!![position], position)
+        (holder as SeriesViewHolder).assignData(filteredDataSet[position], position)
     }
 
     fun removeSeriesFromList(series: Series) {
-        notifyItemRemoved(filteredDataSet!!.indexOf(series))
+        notifyItemRemoved(filteredDataSet.indexOf(series))
 
         dataSet.remove(series)
-        filteredDataSet!!.remove(series)
+        filteredDataSet.remove(series)
         displayMessage.showMessageIfEmptyList()
     }
 
     fun addSeriesToList(series: Series, position: Int) {
-        filteredDataSet!!.add(position, series)
+        filteredDataSet.add(position, series)
         dataSet.add(position, series)
         notifyItemInserted(position)
     }
@@ -201,9 +201,9 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
         }
 
         override fun publishResults(charSequence: CharSequence, results: Filter.FilterResults) {
-            adapter.filteredDataSet!!.clear()
+            adapter.filteredDataSet.clear()
 
-            adapter.filteredDataSet!!.addAll(results.values as List<Series>)
+            adapter.filteredDataSet.addAll(results.values as List<Series>)
             adapter.notifyDataSetChanged()
         }
     }
