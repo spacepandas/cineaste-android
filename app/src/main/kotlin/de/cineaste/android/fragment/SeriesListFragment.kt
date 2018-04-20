@@ -34,9 +34,9 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
 
     override val emptyListMessageByState: Int
         get() = if (watchState == WatchState.WATCH_STATE) {
-            R.string.noMoviesOnWatchList
+            R.string.noSeriesOnWatchList
         } else {
-            R.string.noMoviesOnWatchedList
+            R.string.noSeriesOnWatchedList
         }
 
     override val correctCallBack: ItemTouchHelper.Callback

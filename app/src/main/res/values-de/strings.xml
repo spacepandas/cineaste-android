@@ -11,7 +11,9 @@
 
     <string name="enter_username">Dein Benutzername</string>
     <string name="noMoviesOnWatchList">Du hast noch keine Filme auf deiner Watchlist. \nUnten Rechts fügst du neue Titel hinzu!</string>
-    <string name="noMoviesOnWatchedList">Du hast noch keine Filme auf deiner Watchedlist. \nZieh dir doch einen Titel rein!</string>
+    <string name="noMoviesOnWatchedList">Du hast noch keine Filme in deiner Historie. \nZieh dir doch einen Titel rein!</string>
+    <string name="noSeriesOnWatchList">Du hast noch keine Serien auf deiner Watchlist. \nUnten Rechts fügst du neue Titel hinzu!</string>
+    <string name="noSeriesOnWatchedList">Du hast noch keine Serien in deiner Historie. \nZieh dir doch eine rein!</string>
     <string name="searching_for_friends">Suche nach Freunden</string>
     <string name="no_friends_found_try_again">Keine Freunde gefunden, versuche es erneut!</string>
 

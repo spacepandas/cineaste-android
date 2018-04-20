@@ -34,15 +34,14 @@ class UserInputFragment : DialogFragment(), TextView.OnEditorActionListener, Vie
         if (dialog.window == null) {
             return view
         }
-        dialog.window!!
-                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.setTitle(R.string.enter_username)
         dialog.setCancelable(false)
 
         return view
     }
 
-    override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent): Boolean {
+   override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         getNameAndDismiss()
 
         return true
