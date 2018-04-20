@@ -1,9 +1,11 @@
 package de.cineaste.android
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
@@ -35,9 +37,9 @@ import de.cineaste.android.entity.User
 import de.cineaste.android.fragment.*
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
-import de.cineaste.android.util.ExportFileUpdater
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
@@ -88,8 +90,6 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        ExportFileUpdater.updateFile()
 
         userDbHelper = UserDbHelper.getInstance(this)
         movieDbHelper = MovieDbHelper.getInstance(this)
@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             val drawable = menuItem.icon
             if (drawable != null) {
                 drawable.mutate()
-                drawable.setColorFilter(resources.getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP)
+                drawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP)
             }
 
             val subMenu = menuItem.subMenu
@@ -214,8 +214,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                     val seriesHistoryFragment = getSeriesListFragment(WatchState.WATCHED_STATE)
                     replaceFragmentPopBackStack(fm, seriesHistoryFragment)
                 }
-                R.id.exportMovies -> exportMovies()
-                R.id.importMovies -> importMovies()
+                R.id.exportMovies -> createExportFile()
+                R.id.importMovies -> selectImportFile()
                 R.id.about -> {
                     val intent = Intent(this@MainActivity, AboutActivity::class.java)
                     startActivity(intent)
@@ -226,15 +226,31 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
     }
 
-    private fun exportMovies() {
-        var importExportObject = ImportExportObject()
-        importExportObject.movies = movieDbHelper!!.readAllMovies()
-        importExportObject.series = seriesDbHelper!!.allSeries
-        importExportObject = ExportService.export(importExportObject)
+    private fun createExportFile() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+
+        intent.type = "application/json"
+        intent.putExtra(Intent.EXTRA_TITLE, getExportFileName())
+        startActivityForResult(intent, WRITE_REQUEST_CODE)
+    }
+
+    private fun getExportFileName(): String {
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy-HH:mm", Locale.ENGLISH)
+        return "cineaste-${dateFormat.format(Date())}.json"
+    }
+
+    private fun exportMovies(uri: Uri) {
+        val importExportObject = ImportExportObject()
+        importExportObject.movies = movieDbHelper.readAllMovies()
+        importExportObject.series = seriesDbHelper.allSeries
+
+        val successfullyExported = ExportService.export(importExportObject, uri, this@MainActivity)
 
         var snackBarMessage = R.string.exportFailed
 
-        if (importExportObject.isSuccessfullyImported) {
+        if (successfullyExported) {
             snackBarMessage = R.string.exportSucceeded
         }
 
@@ -243,7 +259,16 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         snackBar.show()
     }
 
-    private fun importMovies() {
+    private fun selectImportFile() {
+
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "*/*"
+
+        startActivityForResult(intent, READ_REQUEST_CODE)
+    }
+
+    private fun importMovies(uri: Uri) {
         var baseListFragment: BaseListFragment?
         baseListFragment = try {
             fm.findFragmentByTag(MovieListFragment::class.java.name) as BaseListFragment
@@ -266,14 +291,15 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         baseListFragment.progressbar!!.visibility = View.VISIBLE
 
         launch {
-            val importExportObject = ImportService.importFiles()
+
+            val importExportObject = ImportService.importFiles(uri, this@MainActivity)
             //todo find a better solution to save all files
             for (movie in importExportObject.movies) {
-                movieDbHelper!!.createOrUpdate(movie)
+                movieDbHelper.createOrUpdate(movie)
             }
 
             for (series in importExportObject.series) {
-                seriesDbHelper!!.importSeries(series)
+                seriesDbHelper.importSeries(series)
             }
 
             launch(UI) {
@@ -284,12 +310,36 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
                 val args = Bundle()
 
-                args.putInt(MOVIE_COUNT, if (importExportObject.isMoviesSuccessfullyImported) importExportObject.movies.size else -1)
-                args.putInt(SERIES_COUNT, if (importExportObject.isSeriesSuccessfullyImported) importExportObject.series.size else -1)
+                args.putInt(MOVIE_COUNT, importExportObject.movies.size)
+                args.putInt(SERIES_COUNT, importExportObject.series.size)
 
                 finishedDialogFragment.arguments = args
 
                 finishedDialogFragment.show(supportFragmentManager, "")
+            }
+        }
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int,
+                                         resultData: Intent?) {
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                READ_REQUEST_CODE -> {
+                    resultData?.let {
+                        val uri = resultData.data
+
+                        importMovies(uri)
+                    }
+                }
+
+                WRITE_REQUEST_CODE -> {
+                    resultData?.let {
+                        val uri = resultData.data
+
+                        exportMovies(uri)
+                    }
+                }
             }
         }
     }
@@ -323,7 +373,10 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     companion object {
-        private var movieDbHelper: MovieDbHelper? = null
-        private var seriesDbHelper: SeriesDbHelper? = null
+        private const val READ_REQUEST_CODE = 42
+        private const val WRITE_REQUEST_CODE = 43
+
+        private lateinit var movieDbHelper: MovieDbHelper
+        private lateinit var seriesDbHelper: SeriesDbHelper
     }
 }

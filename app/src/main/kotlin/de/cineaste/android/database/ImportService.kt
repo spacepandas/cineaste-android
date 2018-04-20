@@ -1,77 +1,40 @@
 package de.cineaste.android.database
 
-import android.os.Environment
+import android.content.Context
+import android.net.Uri
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import de.cineaste.android.database.ImportExportService.Companion.FOLDER_NAME
-import de.cineaste.android.database.ImportExportService.Companion.MOVIES_FILE
-import de.cineaste.android.database.ImportExportService.Companion.SERIES_FILE
 import de.cineaste.android.entity.ImportExportObject
-import de.cineaste.android.entity.movie.Movie
-import de.cineaste.android.entity.series.Series
-import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
-import java.util.*
 
 object ImportService {
 
     private val gson = Gson()
 
-    fun importFiles(): ImportExportObject {
-        val importExportObject = ImportExportObject()
-        val movies = ArrayList<Movie>()
-        val series = ArrayList<Series>()
-
-        try {
-            movies.addAll(importMovies())
-        } catch (ex: IOException) {
-            importExportObject.isMoviesSuccessfullyImported = false
+    fun importFiles(uri: Uri, context: Context): ImportExportObject {
+        return try {
+            gson.fromJson(readJsonFromUri(uri, context), ImportExportObject::class.java)
+        } catch (ex: Exception) {
+            ImportExportObject()
         }
-
-        try {
-            series.addAll(importSeries())
-        } catch (ex: IOException) {
-            importExportObject.isSeriesSuccessfullyImported = false
-        }
-
-        importExportObject.movies = movies
-        importExportObject.series = series
-
-        return importExportObject
     }
 
     @Throws(IOException::class)
-    private fun importMovies(): List<Movie> {
-        val importedMoviesString = readJsonFromFile(MOVIES_FILE)
+    private fun readJsonFromUri(uri: Uri, context: Context): String {
+        val parcelFileDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
+        val fileDescriptor = parcelFileDescriptor.fileDescriptor
+        val fis = FileInputStream(fileDescriptor)
 
-        val listType = object : TypeToken<List<Movie>>() {
+        val stringBuilder = StringBuilder()
+        val line = fis.bufferedReader().readLines()
 
-        }.type
-        return gson.fromJson(importedMoviesString, listType)
-    }
-
-    @Throws(IOException::class)
-    private fun importSeries(): List<Series> {
-        val importedSeriesString = readJsonFromFile(SERIES_FILE)
-
-        val listType = object : TypeToken<List<Series>>() {
-
-        }.type
-        return gson.fromJson(importedSeriesString, listType)
-    }
-
-    @Throws(IOException::class)
-    fun readJsonFromFile(fileName: String): String {
-        val importFile = File(
-                Environment.getExternalStorageDirectory().toString() + "/" + FOLDER_NAME + "/" + fileName)
-
-        val temp:List<String> = importFile.bufferedReader().readLines()
-        val text = StringBuilder()
-
-        for (line in temp) {
-            text.append(line)
+        for (s in line) {
+            stringBuilder.append(s)
         }
 
-        return text.toString()
+        parcelFileDescriptor.close()
+        fis.close()
+
+        return stringBuilder.toString()
     }
 }

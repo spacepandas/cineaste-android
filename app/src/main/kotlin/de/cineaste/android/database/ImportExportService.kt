@@ -6,5 +6,6 @@ interface ImportExportService {
         val FOLDER_NAME = "Cineaste"
         val MOVIES_FILE = "movies.json"
         val SERIES_FILE = "series.json"
+        val CINEASTE_FILE = "cineaste.json"
     }
 }

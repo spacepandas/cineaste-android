@@ -50,6 +50,6 @@ class Movie : MovieDto, Comparable<Movie> {
     }
 
     override fun compareTo(other: Movie): Int {
-        return this.title!!.compareTo(other.title!!)
+        return this.id.compareTo(other.id)
     }
 }
