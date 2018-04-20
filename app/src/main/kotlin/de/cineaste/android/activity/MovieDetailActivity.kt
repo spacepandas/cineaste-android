@@ -308,7 +308,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
 
         val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", currentMovie.posterPath)
+                .replace("<posterName>", if (currentMovie.posterPath != null) currentMovie.posterPath!! else "/")
                 .replace("<API_KEY>", getString(R.string.movieKey))
         Picasso.with(this)
                 .load(posterUri)

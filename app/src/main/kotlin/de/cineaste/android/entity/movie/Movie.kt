@@ -7,7 +7,7 @@ import java.util.Date
 data class Movie(
         var id: Long = 0,
         @SerializedName("poster_path")
-        var posterPath: String = "",
+        var posterPath: String? = "",
         var title: String = "",
         var runtime: Int = 0,
         @SerializedName("vote_average")
