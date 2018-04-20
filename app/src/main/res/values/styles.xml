@@ -46,4 +46,9 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginTop">8dp</item>
     </style>
+    <style name="BorderlessButton" parent="android:Widget.DeviceDefault.Button.Borderless">
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

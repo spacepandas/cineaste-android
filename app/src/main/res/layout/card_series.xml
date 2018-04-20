@@ -107,13 +107,11 @@
         </LinearLayout>
 
         <ImageButton
+            style="@style/BorderlessButton"
         android:id="@+id/episode_seen"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
         android:layout_alignBottom="@+id/poster_image_view"
         android:layout_alignParentBottom="false"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
         android:contentDescription="@string/remove"
         android:src="@drawable/ic_done" />
 
