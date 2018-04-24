@@ -88,5 +88,6 @@ Special thanks to Philipp Wolf, for the design!
     <string name="share_movie">Share movie</string>
     <string name="share_series">Share series</string>
     <string name="no_episodes">No episodes available</string>
+    <string name="notAvailableDuringSearch">Not available during search</string>
 
 </resources>

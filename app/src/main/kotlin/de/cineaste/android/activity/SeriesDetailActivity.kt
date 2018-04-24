@@ -31,6 +31,8 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.SeriesCallback
 import de.cineaste.android.network.SeriesLoader
 import de.cineaste.android.util.Constants
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 
 class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
 
@@ -150,10 +152,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
         if (seriesCallback != null) {
 
-            seriesLoader.loadCompleteSeries(currentSeries!!.id, seriesCallback)
+            seriesLoader.loadCompleteSeries(seriesId, seriesCallback)
 
-            Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                    currentSeries!!.name), Toast.LENGTH_SHORT).show()
+            currentSeries?.let {
+                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
+                        currentSeries!!.name), Toast.LENGTH_SHORT).show()
+            }
 
             onBackPressed()
         }
@@ -204,21 +208,28 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         }
 
         if (callback != null) {
-            seriesLoader.loadCompleteSeries(currentSeries!!.id, callback)
-            Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                    currentSeries!!.name), Toast.LENGTH_SHORT).show()
+            seriesLoader.loadCompleteSeries(seriesId, callback)
+            currentSeries?.let {
+                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
+                        currentSeries!!.name), Toast.LENGTH_SHORT).show()
+            }
         }
 
         onBackPressed()
     }
 
     override fun onItemClickListener(itemId: Long, views: Array<View>) {
-        val intent = Intent(this@SeriesDetailActivity, SeasonDetailActivity::class.java)
-        intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, currentSeries!!.id)
-        intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, itemId)
+        if (state != R.string.searchState) {
+            val intent = Intent(this@SeriesDetailActivity, SeasonDetailActivity::class.java)
+            intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, currentSeries!!.id)
+            intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, itemId)
 
-        if (state != R.string.searchState)
             startActivity(intent)
+        } else {
+            val snackBar = Snackbar.make(layout,
+                    R.string.notAvailableDuringSearch, Snackbar.LENGTH_SHORT)
+            snackBar.show()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -244,7 +255,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             loadRequestedSeries()
         } else {
             progressBar.visibility = View.GONE
-            fab.visibility = View.VISIBLE
+            if( state == R.string.watchlistState)
+                fab.visibility = View.VISIBLE
             assignData(currentSeries!!)
         }
 
@@ -379,16 +391,16 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             }
 
             override fun onSuccess(series: Series) {
-                runOnUiThread {
+                launch(UI) {
                     currentSeries = series
                     assignData(series)
                     progressBar.visibility = View.GONE
-                    if(state != R.string.searchState)
+                    if(state == R.string.watchlistState)
                         fab.visibility = View.VISIBLE
 
-                    slideIn()
-                }
+                    slideIn() }
             }
+            //todo why is currentSeries still null ??
         })
 
     }
