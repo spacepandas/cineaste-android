@@ -10,14 +10,15 @@ import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.series.SeasonViewHolder
 
-internal class SeasonAdapter(private val context: Context, private val listener: ItemClickListener, series: Series?) : RecyclerView.Adapter<SeasonViewHolder>() {
+internal class SeasonAdapter(private val context: Context, private val listener: ItemClickListener, val series: Series?) : RecyclerView.Adapter<SeasonViewHolder>() {
 
     private val seasons: MutableList<Season> = mutableListOf()
 
     init {
         this.seasons.clear()
-        if (series != null)
-            this.seasons.addAll(series.seasons!!)
+        series?.let {
+            this.seasons.addAll(series.seasons)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeasonViewHolder {

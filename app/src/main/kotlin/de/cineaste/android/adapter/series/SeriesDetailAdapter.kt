@@ -1,6 +1,5 @@
 package de.cineaste.android.adapter.series
 
-
 import android.content.Context
 import android.content.res.Resources
 import android.support.v7.widget.DefaultItemAnimator
@@ -23,7 +22,13 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.util.Constants
 import java.util.*
 
-class SeriesDetailAdapter(private var series: Series, private val clickListener: ItemClickListener, private val state: Int, private val listener: SeriesStateManipulationClickListener, private val posterClickListener: View.OnClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SeriesDetailAdapter(
+        private var series: Series,
+        private val clickListener: ItemClickListener,
+        private val state: Int,
+        private val listener: SeriesStateManipulationClickListener,
+        private val posterClickListener: View.OnClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface SeriesStateManipulationClickListener {
         fun onDeleteClicked()
@@ -32,15 +37,14 @@ class SeriesDetailAdapter(private var series: Series, private val clickListener:
     }
 
     init {
-        val seasons = ArrayList<Season>()
-        series.seasons?.let {
-            for (season in series.seasons!!) {
-                if (season.seasonNumber > 0) {
-                    seasons.add(season)
-                }
+        val seasons = mutableListOf<Season>()
+        for (season in series.seasons) {
+            if (season.seasonNumber > 0) {
+                seasons.add(season)
             }
-            this.series.seasons = seasons
         }
+        this.series.seasons = seasons
+
     }
 
     fun updateSeries(series: Series) {
@@ -52,28 +56,44 @@ class SeriesDetailAdapter(private var series: Series, private val clickListener:
         val v: View
         when (viewType) {
             0 -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_triangle, parent, false)
+                v = LayoutInflater
+                        .from(parent.context)
+                        .inflate(R.layout.series_detail_triangle, parent, false)
                 return TriangleViewHolder(v)
             }
             1 -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_base, parent, false)
+                v = LayoutInflater
+                        .from(parent.context)
+                        .inflate(R.layout.series_detail_base, parent, false)
                 return BaseViewHolder(v, parent.context, posterClickListener)
             }
             2 -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_buttons, parent, false)
+                v = LayoutInflater
+                        .from(parent.context)
+                        .inflate(R.layout.series_detail_buttons, parent, false)
                 return ButtonsViewHolder(v, state, listener)
             }
             3 -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_description, parent, false)
+                v = LayoutInflater
+                        .from(parent.context)
+                        .inflate(R.layout.series_detail_description, parent, false)
                 return DescriptionViewHolder(v, parent.context)
             }
             4 -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.series_detail_seasons, parent, false)
+                v = LayoutInflater
+                        .from(parent.context)
+                        .inflate(R.layout.series_detail_seasons, parent, false)
                 return SeasonsListViewHolder(v, parent.context, clickListener)
             }
         }
 
-        return BaseViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.series_detail_base, parent, false), parent.context, posterClickListener)
+        return BaseViewHolder(
+                LayoutInflater
+                        .from(parent.context)
+                        .inflate(R.layout.series_detail_base, parent, false),
+                parent.context,
+                posterClickListener
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -95,7 +115,8 @@ class SeriesDetailAdapter(private var series: Series, private val clickListener:
         return position
     }
 
-    private inner class TriangleViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private inner class TriangleViewHolder internal constructor(itemView: View) :
+            RecyclerView.ViewHolder(itemView) {
         private val rating: TextView = itemView.findViewById(R.id.rating)
 
         internal fun assignData(series: Series) {
@@ -103,7 +124,12 @@ class SeriesDetailAdapter(private var series: Series, private val clickListener:
         }
     }
 
-    private inner class BaseViewHolder internal constructor(itemView: View, val context: Context, val clickListener: View.OnClickListener) : RecyclerView.ViewHolder(itemView) {
+    private inner class BaseViewHolder
+    internal constructor(
+            itemView: View,
+            val context: Context,
+            val clickListener: View.OnClickListener
+    ) : RecyclerView.ViewHolder(itemView) {
         private val poster: ImageView = itemView.findViewById(R.id.poster)
         private val title: TextView = itemView.findViewById(R.id.title)
         private val seasons: TextView = itemView.findViewById(R.id.seasons)
@@ -142,7 +168,11 @@ class SeriesDetailAdapter(private var series: Series, private val clickListener:
             val posterUri = Constants.POSTER_URI_SMALL
                     .replace("<posterName>", posterName ?: "/")
                     .replace("<API_KEY>", context.getString(R.string.movieKey))
-            Picasso.with(context).load(posterUri).resize(273, 410).error(R.drawable.placeholder_poster).into(poster)
+            Picasso.with(context)
+                    .load(posterUri)
+                    .resize(273, 410)
+                    .error(R.drawable.placeholder_poster)
+                    .into(poster)
         }
 
         private fun convertDate(date: Date?): String {
@@ -152,7 +182,12 @@ class SeriesDetailAdapter(private var series: Series, private val clickListener:
 
     }
 
-    private inner class ButtonsViewHolder internal constructor(itemView: View, state: Int, private val listener: SeriesStateManipulationClickListener) : RecyclerView.ViewHolder(itemView) {
+    private inner class ButtonsViewHolder
+    internal constructor(
+            itemView: View,
+            state: Int,
+            private val listener: SeriesStateManipulationClickListener
+    ) : RecyclerView.ViewHolder(itemView) {
         private val deleteBtn: Button = itemView.findViewById(R.id.delete_button)
         private val historyBtn: Button = itemView.findViewById(R.id.history_button)
         private val watchListBtn: Button = itemView.findViewById(R.id.to_watchlist_button)
@@ -187,7 +222,11 @@ class SeriesDetailAdapter(private var series: Series, private val clickListener:
         }
     }
 
-    private inner class DescriptionViewHolder internal constructor(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
+    private inner class DescriptionViewHolder
+    internal constructor(
+            itemView: View,
+            context: Context
+    ) : RecyclerView.ViewHolder(itemView) {
         private val description: TextView = itemView.findViewById(R.id.description)
         private val more: TextView = itemView.findViewById(R.id.more)
         private val resources: Resources = context.resources
@@ -227,11 +266,19 @@ class SeriesDetailAdapter(private var series: Series, private val clickListener:
         }
     }
 
-    private inner class SeasonsListViewHolder internal constructor(itemView: View, private val context: Context, private val itemClickListener: ItemClickListener) : RecyclerView.ViewHolder(itemView) {
+    private inner class SeasonsListViewHolder
+    internal constructor(
+            itemView: View,
+            private val context: Context,
+            private val itemClickListener: ItemClickListener)
+        : RecyclerView.ViewHolder(itemView) {
         private val recyclerView: RecyclerView = itemView.findViewById(R.id.seasonPoster)
 
         internal fun assignData(series: Series?) {
-            recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            recyclerView.layoutManager = StaggeredGridLayoutManager(
+                    2,
+                    StaggeredGridLayoutManager.VERTICAL
+            )
             recyclerView.itemAnimator = DefaultItemAnimator()
             recyclerView.isNestedScrollingEnabled = false
 

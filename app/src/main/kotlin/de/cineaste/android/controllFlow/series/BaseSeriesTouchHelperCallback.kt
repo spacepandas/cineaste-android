@@ -18,8 +18,8 @@ abstract class BaseSeriesTouchHelperCallback(resources: Resources, linearLayoutM
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            val seriesViewHolder = viewHolder as SeriesViewHolder?
-            seriesViewHolder!!.onItemSelected()
+            val seriesViewHolder = viewHolder as SeriesViewHolder
+            seriesViewHolder.onItemSelected()
         }
 
         super.onSelectedChanged(viewHolder, actionState)

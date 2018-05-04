@@ -288,7 +288,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         if (baseListFragment == null) {
             return
         }
-        baseListFragment.progressbar!!.visibility = View.VISIBLE
+        baseListFragment.progressbar.visibility = View.VISIBLE
 
         launch {
 
@@ -303,7 +303,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             }
 
             launch(UI) {
-                baseListFragment.progressbar!!.visibility = View.GONE
+                baseListFragment.progressbar.visibility = View.GONE
                 baseListFragment.updateAdapter()
 
                 val finishedDialogFragment = ImportFinishedDialogFragment()

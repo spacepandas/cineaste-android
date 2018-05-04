@@ -52,16 +52,18 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
         return filteredDataSet[position]
     }
 
-    fun updateSeries(series: Series?, pos: Int) {
-        val mySeries = db.getSeriesById(series!!.id)
-        dataSet.removeAt(pos)
-        filteredDataSet.removeAt(pos)
-        if (state == WatchState.WATCH_STATE && !mySeries!!.isWatched) {
-            dataSet.add(pos, mySeries)
-            filteredDataSet.add(pos, mySeries)
-            notifyItemChanged(pos)
-        } else {
-            notifyItemRemoved(pos)
+    fun updateSeries(givenSeries: Series, pos: Int) {
+        val series = db.getSeriesById(givenSeries.id)
+        series?.let {
+            dataSet.removeAt(pos)
+            filteredDataSet.removeAt(pos)
+            if (state == WatchState.WATCH_STATE && !series.isWatched) {
+                dataSet.add(pos, series)
+                filteredDataSet.add(pos, series)
+                notifyItemChanged(pos)
+            } else {
+                notifyItemRemoved(pos)
+            }
         }
     }
 
@@ -188,8 +190,11 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
                 val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
 
                 for (series in seriesList) {
-                    if (series.name!!.toLowerCase().contains(filterPattern)) {
-                        filteredSeriesList.add(series)
+                    val name = series.name
+                    name?.let {
+                        if (name.toLowerCase().contains(filterPattern)) {
+                            filteredSeriesList.add(series)
+                        }
                     }
                 }
             }

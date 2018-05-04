@@ -149,10 +149,10 @@ class SeriesDbHelper private constructor(context: Context) {
         series.isWatched = watchState
         series.listPosition = seriesDao.getHighestListPosition(watchState)
         seriesDao.create(series)
-        for (season in series.seasons!!) {
+        for (season in series.seasons) {
             season.isWatched = watchState
             seasonDao.create(season, series.id)
-            for (episode in season.episodes!!) {
+            for (episode in season.episodes) {
                 episode.isWatched = watchState
                 episodeDao.create(episode, series.id, season.id)
             }
@@ -211,7 +211,7 @@ class SeriesDbHelper private constructor(context: Context) {
 
     private fun moveBackToList(series: Series, prevSeason: Int, prevEpisode: Int, watchState: Boolean) {
         moveBetweenLists(series, watchState)
-        for (season in series.seasons!!) {
+        for (season in series.seasons) {
             if (season.seasonNumber < prevSeason) {
                 season.isWatched = !watchState
                 seasonDao.update(season)
@@ -224,7 +224,7 @@ class SeriesDbHelper private constructor(context: Context) {
             }
 
             if (season.seasonNumber == prevSeason) {
-                for (episode in season.episodes!!) {
+                for (episode in season.episodes) {
                     if (episode.episodeNumber < prevEpisode) {
                         episode.isWatched = !watchState
                         episodeDao.update(episode)
@@ -248,12 +248,12 @@ class SeriesDbHelper private constructor(context: Context) {
 
     fun episodeWatched(series: Series) {
         val seasons = ArrayList<Season>()
-        for (season in series.seasons!!) {
+        for (season in series.seasons) {
             if (season.isWatched) {
                 seasons.add(season)
             } else {
                 val episodes = ArrayList<Episode>()
-                for (episode in season.episodes!!) {
+                for (episode in season.episodes) {
                     if (episode.isWatched) {
                         episodes.add(episode)
                     } else {
@@ -263,7 +263,7 @@ class SeriesDbHelper private constructor(context: Context) {
                         break
                     }
                 }
-                if (episodes.size == season.episodes!!.size) {
+                if (episodes.size == season.episodes.size) {
                     season.isWatched = true
                     seasonDao.update(season)
                     seasons.add(season)
@@ -272,7 +272,7 @@ class SeriesDbHelper private constructor(context: Context) {
             }
         }
 
-        if (seasons.size == series.seasons!!.size && !series.isInProduction) {
+        if (seasons.size == series.seasons.size && !series.isInProduction) {
             series.isWatched = true
             seriesDao.update(series, seriesDao.getHighestListPosition(true))
         }
@@ -284,16 +284,17 @@ class SeriesDbHelper private constructor(context: Context) {
 
         if (!episode.isWatched) {
             val series = getSeriesById(episode.seriesId)
-            series!!.isWatched = false
-            seriesDao.update(series, seriesDao.getHighestListPosition(false))
-            for (season in series.seasons!!) {
-                if (season.id == episode.seasonId) {
-                    season.isWatched = false
-                    seasonDao.update(season)
-                    break
+            series?.let {
+                series.isWatched = false
+                seriesDao.update(series, seriesDao.getHighestListPosition(false))
+                for (season in series.seasons) {
+                    if (season.id == episode.seasonId) {
+                        season.isWatched = false
+                        seasonDao.update(season)
+                        break
+                    }
                 }
             }
-
         }
     }
 
@@ -301,17 +302,17 @@ class SeriesDbHelper private constructor(context: Context) {
         val oldSeries = getSeriesById(series.id)
         if (oldSeries == null) {
             seriesDao.create(series)
-            for (season in series.seasons!!) {
+            for (season in series.seasons) {
                 seasonDao.create(season, series.id)
-                for (episode in season.episodes!!) {
+                for (episode in season.episodes) {
                     episodeDao.create(episode, series.id, season.id)
                 }
             }
         } else {
             seriesDao.update(series, series.listPosition)
-            for (season in series.seasons!!) {
+            for (season in series.seasons) {
                 seasonDao.update(season)
-                for (episode in season.episodes!!) {
+                for (episode in season.episodes) {
                     episodeDao.update(episode)
                 }
             }
@@ -327,22 +328,26 @@ class SeriesDbHelper private constructor(context: Context) {
 
     fun update(series: Series) {
         val oldSeries = getSeriesById(series.id)
-        val newPosition = getNewPosition(series, oldSeries!!)
-        series.isWatched = oldSeries.isWatched
-        series.listPosition = newPosition
+        oldSeries?.let {
+            val newPosition = getNewPosition(series, oldSeries)
+            series.isWatched = oldSeries.isWatched
+            series.listPosition = newPosition
 
-        seriesDao.update(series, newPosition)
+            seriesDao.update(series, newPosition)
 
-        for (season in series.seasons!!) {
-            update(season, series)
+            for (season in series.seasons) {
+                update(season, series)
+            }
         }
 
     }
 
     fun updatePosition(series: Series) {
         val oldSeries = getSeriesById(series.id)
-        val newPosition = getNewPosition(series, oldSeries!!)
-        seriesDao.update(series, newPosition)
+        oldSeries?.let {
+            val newPosition = getNewPosition(series, oldSeries)
+            seriesDao.update(series, newPosition)
+        }
     }
 
     private fun update(season: Season, series: Series) {
@@ -365,7 +370,7 @@ class SeriesDbHelper private constructor(context: Context) {
         }
 
 
-        for (episode in season.episodes!!) {
+        for (episode in season.episodes) {
             update(episode, series, season)
         }
     }

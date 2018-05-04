@@ -50,8 +50,9 @@ class ResultAdapter(
         internal val counter: TextView = itemView.findViewById(R.id.movie_counter_tv)
 
         fun assignData(matchingResult: MatchingResult, resultCounter: Int) {
+            val posterPath = matchingResult.posterPath
             val posterUri = Constants.POSTER_URI_SMALL
-                    .replace("<posterName>", if (matchingResult.posterPath != null) matchingResult.posterPath!! else "/")
+                    .replace("<posterName>", posterPath ?: "/")
                     .replace("<API_KEY>", context.getString(R.string.movieKey))
             Picasso.with(context)
                     .load(Uri.parse(posterUri))

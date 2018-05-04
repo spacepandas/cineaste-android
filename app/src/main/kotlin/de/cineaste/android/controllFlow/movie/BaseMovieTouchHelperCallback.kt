@@ -18,8 +18,8 @@ abstract class BaseMovieTouchHelperCallback(linearLayoutManager: LinearLayoutMan
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            val movieViewHolder = viewHolder as MovieViewHolder?
-            movieViewHolder!!.onItemSelected()
+            val movieViewHolder = viewHolder as MovieViewHolder
+            movieViewHolder.onItemSelected()
         }
 
         super.onSelectedChanged(viewHolder, actionState)

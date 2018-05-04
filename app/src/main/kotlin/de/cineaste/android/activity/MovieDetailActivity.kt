@@ -38,7 +38,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private val gson =  DateAwareGson.gson
     private var state: Int = 0
-    private var poster: ImageView? = null
+    private lateinit var poster: ImageView
 
     private lateinit var movieDbHelper: MovieDbHelper
     private var movieId: Long = 0
@@ -112,12 +112,20 @@ class MovieDetailActivity : AppCompatActivity() {
                 return true
             }
             R.id.share -> {
-                val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
-                sharingIntent.type = "text/plain"
-                val shareBodyText = "${currentMovie!!.title} ${Constants.THE_MOVIE_DB_MOVIES_URI.replace("<MOVIE_ID>", currentMovie!!.id.toString())}"
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_movie))
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
-                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_movie)))
+                val movie = currentMovie
+                movie?.let {
+                    val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                    sharingIntent.type = "text/plain"
+                    val shareBodyText = "${movie.title} ${Constants.THE_MOVIE_DB_MOVIES_URI
+                            .replace("<MOVIE_ID>", movie.id.toString())}"
+                    sharingIntent.putExtra(
+                            android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_movie)
+                    )
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+                    startActivity(
+                            Intent.createChooser(sharingIntent, getString(R.string.share_movie))
+                    )
+                }
                 return true
             }
         }
@@ -125,9 +133,12 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun onDeleteClicked() {
-        movieDbHelper.deleteMovieFromWatchlist(currentMovie!!)
-        layout.removeCallbacks(updateCallBack)
-        onBackPressed()
+        val movie = currentMovie
+        movie?.let {
+            movieDbHelper.deleteMovieFromWatchlist(movie)
+            layout.removeCallbacks(updateCallBack)
+            onBackPressed()
+        }
     }
 
     private fun onAddToHistoryClicked() {
@@ -146,19 +157,23 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
             }
             R.string.watchlistState -> {
-                currentMovie?.let {
-                    currentMovie!!.isWatched = true
-                    movieDbHelper.createOrUpdate(currentMovie!!)
+                val movie = currentMovie
+                movie?.let {
+                    movie.isWatched = true
+                    movieDbHelper.createOrUpdate(movie)
                 }
             }
         }
 
 
         if (callback != null) {
-            val client = NetworkClient(NetworkRequest(resources).getMovie(currentMovie!!.id))
+            val client = NetworkClient(NetworkRequest(resources).getMovie(movieId))
             client.sendRequest(callback)
-            Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                    currentMovie!!.title), Toast.LENGTH_SHORT).show()
+            val title = currentMovie?.title
+            title?.let {
+                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
+                        title), Toast.LENGTH_SHORT).show()
+            }
         }
 
         onBackPressed()
@@ -175,22 +190,28 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
 
                 override fun onSuccess(response: NetworkResponse) {
-                    movieDbHelper.createOrUpdate(gson.fromJson(response.responseReader, Movie::class.java))
+                    movieDbHelper.createOrUpdate(
+                            gson.fromJson(response.responseReader, Movie::class.java)
+                    )
                 }
             }
             R.string.historyState -> {
-                currentMovie?.let {
-                    currentMovie!!.isWatched = false
-                    movieDbHelper.createOrUpdate(currentMovie!!)
+                val movie = currentMovie
+                movie?.let {
+                    movie.isWatched = false
+                    movieDbHelper.createOrUpdate(movie)
                 }
             }
         }
 
         if (callback != null) {
-            val client = NetworkClient(NetworkRequest(resources).getMovie(currentMovie!!.id))
+            val client = NetworkClient(NetworkRequest(resources).getMovie(movieId))
             client.sendRequest(callback)
-            Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                    currentMovie!!.title), Toast.LENGTH_SHORT).show()
+            val movie = currentMovie
+            movie?.let {
+                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
+                        movie.title), Toast.LENGTH_SHORT).show()
+            }
         }
 
         onBackPressed()
@@ -212,21 +233,25 @@ class MovieDetailActivity : AppCompatActivity() {
         autoUpdateMovie()
 
         currentMovie = movieDbHelper.readMovie(movieId)
-        if (currentMovie == null) {
+        val movie = currentMovie
+        if (movie == null) {
             progressBar.visibility = View.VISIBLE
             loadRequestedMovie()
         } else {
             progressBar.visibility = View.GONE
-            assignData(currentMovie!!)
+            assignData(movie)
         }
 
         initToolbar()
 
-        poster!!.setOnClickListener {
-            val myIntent = Intent(this@MovieDetailActivity, PosterActivity::class.java)
-            myIntent.putExtra(PosterActivity.POSTER_PATH, currentMovie!!.posterPath)
-            slideOut()
-            startActivity(myIntent)
+        val posterPath = currentMovie?.posterPath
+        posterPath?.let {
+            poster.setOnClickListener {
+                val myIntent = Intent(this@MovieDetailActivity, PosterActivity::class.java)
+                myIntent.putExtra(PosterActivity.POSTER_PATH, posterPath)
+                slideOut()
+                startActivity(myIntent)
+            }
         }
     }
 
@@ -271,8 +296,10 @@ class MovieDetailActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (state != R.string.searchState || currentMovie != null) {
-            slideIn()
+        currentMovie?.let {
+            if (state != R.string.searchState) {
+                slideIn()
+            }
         }
     }
 
@@ -316,7 +343,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
 
         val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", if (currentMovie.posterPath != null) currentMovie.posterPath!! else "/")
+                .replace("<posterName>", currentMovie.posterPath ?: "/")
                 .replace("<API_KEY>", getString(R.string.movieKey))
         Picasso.with(this)
                 .load(posterUri)
@@ -345,7 +372,10 @@ class MovieDetailActivity : AppCompatActivity() {
                     scrollRange = appBarLayout.totalScrollRange
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.title = currentMovie!!.title
+                    val title = currentMovie?.title
+                    title?.let {
+                        collapsingToolbarLayout.title = title
+                    }
                     movieTitle.visibility = View.GONE
 
                     isShow = true
@@ -376,7 +406,7 @@ class MovieDetailActivity : AppCompatActivity() {
                     runOnUiThread {
                         assignData(movie)
                         updateMovieDetails(movie)
-                        movieDbHelper.createOrUpdate(currentMovie!!)
+                        movieDbHelper.createOrUpdate(currentMovie ?: movie)
                     }
                 }
             })
@@ -384,15 +414,25 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun updateMovieDetails(movie: Movie) {
-        currentMovie!!.title = movie.title
-        currentMovie!!.runtime = movie.runtime
-        currentMovie!!.voteAverage = movie.voteAverage
-        currentMovie!!.voteCount = movie.voteCount
-        currentMovie!!.description = movie.description
-        currentMovie!!.posterPath = movie.posterPath
-        currentMovie!!.releaseDate = movie.releaseDate
-    }
+        val oldMovie = currentMovie
+        oldMovie?.let {
+            val updatedMovie = Movie(
+                    id = oldMovie.id,
+                    posterPath = movie.posterPath,
+                    title = movie.title,
+                    runtime = movie.runtime,
+                    voteAverage = movie.voteAverage,
+                    voteCount = movie.voteCount,
+                    description = movie.description,
+                    watched = oldMovie.isWatched,
+                    watchedDate = oldMovie.watchedDate,
+                    releaseDate = movie.releaseDate,
+                    listPosition = oldMovie.listPosition
+            )
 
+            currentMovie = updatedMovie
+        }
+    }
     private fun slideIn() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_top)
         animation.interpolator = AccelerateDecelerateInterpolator()

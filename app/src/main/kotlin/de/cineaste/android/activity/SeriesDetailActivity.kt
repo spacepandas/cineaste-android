@@ -37,13 +37,13 @@ import kotlinx.coroutines.experimental.launch
 class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
 
     private var state: Int = 0
-    private var poster: ImageView? = null
-
     private var seriesId: Long = 0
+
     private lateinit var seriesDbHelper: SeriesDbHelper
     private lateinit var seriesLoader: SeriesLoader
     private var currentSeries: Series? = null
     private lateinit var progressBar: View
+    private lateinit var poster: ImageView
     private lateinit var fab: FloatingActionButton
     private lateinit var layout: RecyclerView
     private lateinit var updateCallBack: Runnable
@@ -51,9 +51,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     override fun onClick(v: View) {
         if (v.id == R.id.poster) {
-            val intent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
-            intent.putExtra(PosterActivity.POSTER_PATH, currentSeries!!.posterPath!!)
-            startActivity(intent)
+            val posterPath = currentSeries?.posterPath
+            posterPath?.let {
+                val intent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
+                intent.putExtra(PosterActivity.POSTER_PATH, posterPath)
+                startActivity(intent)
+            }
         }
     }
 
@@ -113,12 +116,15 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 return true
             }
             R.id.share -> {
-                val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
-                sharingIntent.type = "text/plain"
-                val shareBodyText = "${currentSeries!!.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace("<SERIES_ID>", currentSeries!!.id.toString())}"
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_series))
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
-                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_series)))
+                val series = currentSeries
+                series?.let {
+                    val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                    sharingIntent.type = "text/plain"
+                    val shareBodyText = "${series.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace("<SERIES_ID>", series.id.toString())}"
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_series))
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+                    startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_series)))
+                }
                 return true
             }
         }
@@ -147,22 +153,31 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                         showDialogIfNeeded(series)
                     }
                 }
-            R.string.watchlistState -> showDialogIfNeeded(currentSeries!!)
+            R.string.watchlistState -> {
+                val series = currentSeries
+                series?.let {
+                    showDialogIfNeeded(series)
+                }
+            }
         }
 
         if (seriesCallback != null) {
 
             seriesLoader.loadCompleteSeries(seriesId, seriesCallback)
 
-            currentSeries?.let {
-                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                        currentSeries!!.name), Toast.LENGTH_SHORT).show()
-            }
+            showAddToast()
 
             onBackPressed()
         }
 
+    }
 
+    private fun showAddToast() {
+        val series = currentSeries
+        series?.let {
+            Toast.makeText(this, this.resources.getString(R.string.movieAdd,
+                    series.name), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showDialogIfNeeded(series: Series) {
@@ -192,7 +207,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     override fun onAddToWatchClicked() {
-        var callback: SeriesCallback? = null
+        val callback: SeriesCallback?
 
         when (state) {
             R.string.searchState -> callback = object : SeriesCallback {
@@ -204,15 +219,20 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     seriesDbHelper.addToWatchList(series)
                 }
             }
-            R.string.historyState -> seriesDbHelper.moveToWatchList(currentSeries!!)
+            R.string.historyState -> {
+                val series = currentSeries
+                series?.let {
+                    seriesDbHelper.moveToWatchList(series)
+                }
+                callback = null
+            }
+            else -> callback = null
         }
 
-        if (callback != null) {
+        callback?.let {
             seriesLoader.loadCompleteSeries(seriesId, callback)
-            currentSeries?.let {
-                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                        currentSeries!!.name), Toast.LENGTH_SHORT).show()
-            }
+
+            showAddToast()
         }
 
         onBackPressed()
@@ -221,7 +241,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     override fun onItemClickListener(itemId: Long, views: Array<View>) {
         if (state != R.string.searchState) {
             val intent = Intent(this@SeriesDetailActivity, SeasonDetailActivity::class.java)
-            intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, currentSeries!!.id)
+            intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, seriesId)
             intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, itemId)
 
             startActivity(intent)
@@ -249,31 +269,39 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         autoUpdate()
 
         currentSeries = seriesDbHelper.getSeriesById(seriesId)
-        if (currentSeries == null) {
+        val series = currentSeries
+        if (series == null) {
             progressBar.visibility = View.VISIBLE
             fab.visibility = View.GONE
             loadRequestedSeries()
         } else {
             progressBar.visibility = View.GONE
-            if( state == R.string.watchlistState)
+            if (state == R.string.watchlistState)
                 fab.visibility = View.VISIBLE
-            assignData(currentSeries!!)
+            assignData(series)
         }
 
         initToolbar()
 
-        poster!!.setOnClickListener {
-            val myIntent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
-            myIntent.putExtra(PosterActivity.POSTER_PATH, currentSeries!!.backdropPath)
-            slideOut()
-            startActivity(myIntent)
+        val backdropPath = currentSeries?.backdropPath
+        backdropPath?.let {
+            poster.setOnClickListener {
+                val myIntent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
+                myIntent.putExtra(PosterActivity.POSTER_PATH, backdropPath)
+                slideOut()
+                startActivity(myIntent)
+            }
         }
+
     }
 
     override fun onResume() {
         super.onResume()
-        if (state != R.string.searchState || currentSeries != null) {
-            slideIn()
+        val series = currentSeries
+        series?.let {
+            if (state != R.string.searchState) {
+                slideIn()
+            }
         }
     }
 
@@ -287,12 +315,16 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         layout.setHasFixedSize(true)
 
         if (state == R.string.watchlistState) {
-            fab.visibility = View.VISIBLE
-            fab.setOnClickListener {
-                seriesDbHelper.episodeWatched(currentSeries!!)
-                currentSeries = seriesDbHelper.getSeriesById(currentSeries!!.id)
-                assignData(currentSeries!!)
+            val series = currentSeries
+            series?.let {
+                fab.visibility = View.VISIBLE
+                fab.setOnClickListener {
+                    seriesDbHelper.episodeWatched(series)
+                    currentSeries = seriesDbHelper.getSeriesById(series.id)
+                    assignData(series)
+                }
             }
+
         } else {
             fab.visibility = View.GONE
         }
@@ -319,8 +351,9 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     scrollRange = appBarLayout.totalScrollRange
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    currentSeries?.let {
-                        collapsingToolbarLayout.title = currentSeries!!.name
+                    val series = currentSeries
+                    series?.let {
+                        collapsingToolbarLayout.title = series.name
                     }
                     isShow = true
                 } else if (isShow) {
@@ -343,28 +376,31 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private fun updateSeries() {
         if (state != R.string.searchState) {
 
-            seriesLoader.loadCompleteSeries(seriesId, object : SeriesCallback {
-                override fun onFailure() {
-                    runOnUiThread { showNetworkError() }
-                }
+            seriesLoader.loadCompleteSeries(seriesId,
+                    object : SeriesCallback {
+                        override fun onFailure() {
+                            runOnUiThread { showNetworkError() }
+                        }
 
-                override fun onSuccess(series: Series) {
-                    if (currentSeries == null) {
-                        return
+                        override fun onSuccess(series: Series) {
+                            val oldSeries = currentSeries
+                            oldSeries?.let {
+                                series.isWatched = oldSeries.isWatched
+                                series.listPosition = oldSeries.listPosition
+                            }
+                            seriesDbHelper.update(series)
+                            runOnUiThread {
+                                setPoster(series)
+                                adapter.updateSeries(series)
+                            }
+                        }
                     }
-                    series.isWatched = currentSeries!!.isWatched
-                    seriesDbHelper.update(series)
-                    runOnUiThread {
-                        setPoster(series)
-                        adapter.updateSeries(series)
-                    }
-
-                }
-            })
+            )
         }
     }
 
     private fun assignData(series: Series) {
+        currentSeries = series
         setPoster(series)
 
         adapter = SeriesDetailAdapter(series, this, state, this, this)
@@ -373,10 +409,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun setPoster(series: Series) {
         val posterUri = Constants.POSTER_URI_ORIGINAL
-                .replace("<posterName>", if (series.backdropPath != null)
-                    series.backdropPath!!
-                else
-                    "/")
+                .replace("<posterName>", series.backdropPath ?: "/")
                 .replace("<API_KEY>", getString(R.string.movieKey))
         Picasso.with(this)
                 .load(posterUri)
@@ -395,12 +428,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     currentSeries = series
                     assignData(series)
                     progressBar.visibility = View.GONE
-                    if(state == R.string.watchlistState)
+                    if (state == R.string.watchlistState)
                         fab.visibility = View.VISIBLE
 
-                    slideIn() }
+                    slideIn()
+                }
             }
-            //todo why is currentSeries still null ??
         })
 
     }
@@ -409,22 +442,25 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_top)
         animation.interpolator = AccelerateDecelerateInterpolator()
         layout.startAnimation(animation)
-        animation.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
+        if (state != R.string.searchState) {
+            animation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
 
-            }
-
-            override fun onAnimationEnd(animation: Animation) {
-                currentSeries = seriesDbHelper.getSeriesById(seriesId)
-                if (currentSeries != null) {
-                    adapter.updateSeries(currentSeries!!)
                 }
-            }
 
-            override fun onAnimationRepeat(animation: Animation) {
+                override fun onAnimationEnd(animation: Animation) {
+                    val series = seriesDbHelper.getSeriesById(seriesId)
+                    series?.let {
+                        currentSeries = series
+                        adapter.updateSeries(series)
+                    }
+                }
 
-            }
-        })
+                override fun onAnimationRepeat(animation: Animation) {
+
+                }
+            })
+        }
     }
 
     private fun slideOut() {
@@ -459,5 +495,4 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
-
 }

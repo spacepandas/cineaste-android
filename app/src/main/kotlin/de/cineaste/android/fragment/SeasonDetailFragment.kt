@@ -35,7 +35,8 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         seasonId = args.getLong("seasonId", -1)
         seriesId = args.getLong("seriesId", -1)
 
-        seriesDbHelper = SeriesDbHelper.getInstance(context!!)
+        val context = context ?: return
+        seriesDbHelper = SeriesDbHelper.getInstance(context)
         episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
 
     }
@@ -67,11 +68,13 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (episodes.isNotEmpty()) {
-            inflater!!.inflate(R.menu.season_menu, menu)
+        inflater?.let {
+            if (episodes.isNotEmpty()) {
+                inflater.inflate(R.menu.season_menu, menu)
+            }
         }
-        super.onCreateOptionsMenu(menu, inflater)
 
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

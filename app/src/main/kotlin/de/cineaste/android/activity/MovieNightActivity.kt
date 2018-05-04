@@ -119,7 +119,10 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         val watchlistDbHelper = MovieDbHelper.getInstance(this)
         val localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE)
         val localMovies = transFormMovies(localWatchlistMovies)
-        localNearbyMessage = NearbyMessage(currentUser!!.userName!!, myUUid, localMovies)
+        val userName = currentUser?.userName
+        userName?.let {
+            localNearbyMessage = NearbyMessage(userName, myUUid, localMovies)
+        }
     }
 
     private fun startDialogFragment() {
@@ -130,7 +133,10 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     override fun onFinishUserDialog(userName: String) {
         if (!userName.isEmpty()) {
             currentUser = User(userName)
-            userDbHelper.createUser(currentUser!!)
+            val user = currentUser
+            user?.let {
+                userDbHelper.createUser(user)
+            }
         }
         buildLocalMessage()
     }

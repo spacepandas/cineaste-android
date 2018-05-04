@@ -18,8 +18,9 @@ class SeriesSearchViewHolder(itemView: View, listener: ItemClickListener, contex
 
     override fun assignData(series: Series, position: Int) {
         setBaseInformation(series)
-        if (series.releaseDate != null) {
-            releaseDate.text = convertDate(series.releaseDate!!)
+        val seriesReleaseDate = series.releaseDate
+        if (seriesReleaseDate != null) {
+            releaseDate.text = convertDate(seriesReleaseDate)
             releaseDate.visibility = View.VISIBLE
         } else {
             releaseDate.visibility = View.GONE

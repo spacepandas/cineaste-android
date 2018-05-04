@@ -47,8 +47,11 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
         }
 
     override fun onEpisodeWatchedClick(series: Series, position: Int) {
-        SeriesDbHelper.getInstance(activity!!).episodeWatched(series)
-        seriesListAdapter.updateSeries(series, position)
+        val activity = activity
+        activity?.let {
+            SeriesDbHelper.getInstance(activity).episodeWatched(series)
+            seriesListAdapter.updateSeries(series, position)
+        }
     }
 
     override fun updateAdapter() {
@@ -76,11 +79,13 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        val movieNight = menu!!.findItem(R.id.startMovieNight)
-        movieNight.isVisible = false
+        menu?.let {
+            val movieNight = menu.findItem(R.id.startMovieNight)
+            movieNight.isVisible = false
 
-        val sortByRuntime = menu.findItem(R.id.filterRunTime)
-        sortByRuntime.isVisible = false
+            val sortByRuntime = menu.findItem(R.id.filterRunTime)
+            sortByRuntime.isVisible = false
+        }
     }
 
     override fun filterOnQueryTextChange(newText: String) {

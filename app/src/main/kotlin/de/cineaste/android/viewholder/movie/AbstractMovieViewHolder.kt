@@ -22,13 +22,14 @@ abstract class AbstractMovieViewHolder(itemView: View, context: Context, listene
         }
     }
 
-
     abstract fun assignData(movie: Movie)
 
     fun setBaseInformation(movie: Movie) {
         title.text = movie.title
-        if (movie.releaseDate != null) {
-            movieReleaseDate.text = convertDate(movie.releaseDate!!)
+        val releaseDate = movie.releaseDate
+
+        if (releaseDate != null) {
+            movieReleaseDate.text = convertDate(releaseDate)
             movieReleaseDate.visibility = View.VISIBLE
         } else {
             movieReleaseDate.visibility = View.GONE

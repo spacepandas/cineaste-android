@@ -13,25 +13,21 @@ class SeasonPagerAdapter(fm: FragmentManager, private val series: Series, privat
 
     override fun getItem(position: Int): Fragment {
         val fragment = SeasonDetailFragment()
-        series.seasons?.let {
-            val currentSeason = series.seasons!![position]
-            val args = Bundle()
-            args.putLong("seasonId", currentSeason.id)
-            args.putLong("seriesId", series.id)
-            fragment.arguments = args
-        }
+        val currentSeason = series.seasons[position]
+        val args = Bundle()
+        args.putLong("seasonId", currentSeason.id)
+        args.putLong("seriesId", series.id)
+        fragment.arguments = args
+
 
         return fragment
     }
 
     override fun getCount(): Int {
-        series.seasons?.let {
-            return series.seasons!!.size
-        }
-        return 0
+        return series.seasons.size
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return resources.getString(R.string.currentSeason, series.seasons!![position].seasonNumber.toString())
+        return resources.getString(R.string.currentSeason, series.seasons[position].seasonNumber.toString())
     }
 }

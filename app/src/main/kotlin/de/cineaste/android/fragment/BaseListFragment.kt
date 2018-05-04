@@ -54,7 +54,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
-        watchState = getWatchState(args!!.getString(WatchState.WATCH_STATE_TYPE.name, WatchState.WATCH_STATE.name))
+        args?.let {
+            watchState = getWatchState(
+                    args.getString(WatchState.WATCH_STATE_TYPE.name,
+                            WatchState.WATCH_STATE.name))
+        }
     }
 
     private fun getWatchState(watchStateString: String): WatchState {
@@ -127,53 +131,67 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
             this.watchState = getWatchState(currentState)
         }
 
-        userDbHelper = UserDbHelper.getInstance(activity!!)
+        val activity = activity
+        activity?.let {
+            userDbHelper = UserDbHelper.getInstance(activity)
+        }
+
     }
 
+
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        val searchViewMenuItem = menu!!.findItem(R.id.action_search)
-        val mSearchView = searchViewMenuItem.actionView as SearchView
-        val searchImgId = android.support.v7.appcompat.R.id.search_button // I used the explicit layout ID of searchView's ImageView
-        val v = mSearchView.findViewById<ImageView>(searchImgId)
-        v.setImageResource(R.drawable.ic_filter)
-        super.onPrepareOptionsMenu(menu)
+        menu?.let {
+            val searchViewMenuItem = menu.findItem(R.id.action_search)
+            val mSearchView = searchViewMenuItem.actionView as SearchView
+            val searchImgId = android.support.v7.appcompat.R.id.search_button // I used the explicit layout ID of searchView's ImageView
+            val v = mSearchView.findViewById<ImageView>(searchImgId)
+            v.setImageResource(R.drawable.ic_filter)
+            super.onPrepareOptionsMenu(menu)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        val menuInflater = activity!!.menuInflater
-        menuInflater.inflate(R.menu.start_movie_night, menu)
+        val activity = activity
+        activity?.let {
+            val menuInflater = activity.menuInflater
+            menuInflater.inflate(R.menu.start_movie_night, menu)
 
-        val searchItem = menu!!.findItem(R.id.action_search)
+            val searchItem = menu?.findItem(R.id.action_search)
 
-        if (searchItem != null) {
-            val searchView = searchItem.actionView as SearchView
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    return false
-                }
+            searchItem?.let {
+                val searchView = searchItem.actionView as SearchView
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        return false
+                    }
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    filterOnQueryTextChange(newText)
-                    return false
-                }
-            })
+                    override fun onQueryTextChange(newText: String): Boolean {
+                        filterOnQueryTextChange(newText)
+                        return false
+                    }
+                })
+            }
         }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.startMovieNight -> if (userDbHelper.user != null) {
-                startMovieNight()
-            } else {
-                val fragmentManager = fragmentManager
-                if (fragmentManager != null) {
-                    UserInputFragment().show(fragmentManager, "")
+        item?.let {
+            when (item.itemId) {
+                R.id.startMovieNight -> if (userDbHelper.user != null) {
+                    startMovieNight()
+                } else {
+                    val fragmentManager = fragmentManager
+                    if (fragmentManager != null) {
+                        UserInputFragment().show(fragmentManager, "")
+                    }
                 }
+                R.id.filterAlphabetical -> reorderLists(BaseListFragment.FilterType.ALPHABETICAL)
+                R.id.filterReleaseDate -> reorderLists(BaseListFragment.FilterType.RELEASE_DATE)
+                R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
             }
-            R.id.filterAlphabetical -> reorderLists(BaseListFragment.FilterType.ALPHABETICAL)
-            R.id.filterReleaseDate -> reorderLists(BaseListFragment.FilterType.RELEASE_DATE)
-            R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
         }
 
         return super.onOptionsItemSelected(item)

@@ -48,9 +48,9 @@ class SeriesLoader(context: Context) {
             override fun onSuccess(response: NetworkResponse) {
                 val series = gson.fromJson(response.responseReader, Series::class.java)
                 excludeSpecialsSeason(series)
-                val responseCounter = CountDownLatch(series.seasons!!.size)
+                val responseCounter = CountDownLatch(series.seasons.size)
 
-                for (season in series!!.seasons!!) {
+                for (season in series.seasons) {
                     loadEpisodesOfSeason(responseCounter, season, client, seriesId, callback)
                 }
 
@@ -74,7 +74,7 @@ class SeriesLoader(context: Context) {
             override fun onSuccess(response: NetworkResponse) {
                 responseCounter.countDown()
                 val episodes = parseResponse(response)
-                for (episode in episodes!!) {
+                for (episode in episodes) {
                     episode.seasonId = season.id
                 }
                 season.episodes = episodes
@@ -82,7 +82,7 @@ class SeriesLoader(context: Context) {
         })
     }
 
-    private fun parseResponse(response: NetworkResponse): List<Episode>? {
+    private fun parseResponse(response: NetworkResponse): List<Episode> {
         val parser = JsonParser()
         val responseObject = parser.parse(response.responseReader).asJsonObject
         val episodesListJson = responseObject.get("episodes").toString()
@@ -92,14 +92,14 @@ class SeriesLoader(context: Context) {
         return try {
             gson.fromJson<List<Episode>>(episodesListJson, listType)
         } catch (ex: Exception) {
-            ArrayList()
+            listOf()
         }
 
     }
 
     private fun excludeSpecialsSeason(series: Series) {
         val seasons = ArrayList<Season>()
-        for (season in series.seasons!!) {
+        for (season in series.seasons) {
             if (season.seasonNumber != 0) {
                 seasons.add(season)
             }

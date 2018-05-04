@@ -39,13 +39,15 @@ class SeasonDetailActivity : AppCompatActivity() {
 
         currentSeries = seriesDbHelper.getSeriesById(seriesId)
 
-        assignData(currentSeries)
+        val series = currentSeries
+
+        series?.let { assignData(series) }
 
         initToolbar()
     }
 
-    private fun assignData(series: Series?) {
-        val adapter = SeasonPagerAdapter(supportFragmentManager, series!!, resources)
+    private fun assignData(series: Series) {
+        val adapter = SeasonPagerAdapter(supportFragmentManager, series, resources)
         val viewPager = findViewById<ViewPager>(R.id.pager)
 
         viewPager.adapter = adapter
@@ -68,33 +70,38 @@ class SeasonDetailActivity : AppCompatActivity() {
     }
 
     private fun setPoster(position: Int) {
-        val season = currentSeries!!.seasons!![position]
-        val posterPath: String? = season.posterPath
+        val seasons = currentSeries?.seasons
+        seasons?.let {
+            val season = seasons[position]
 
-        if (posterPath.isNullOrEmpty()) {
-            Picasso.with(this)
-                    .load(R.drawable.placeholder_poster)
-                    .into(poster)
-        } else {
-            val posterUri = Constants.POSTER_URI_SMALL
-                    .replace("<posterName>", posterPath!!)
-                    .replace("<API_KEY>", getString(R.string.movieKey))
-            Picasso.with(this)
-                    .load(posterUri)
-                    .error(R.drawable.placeholder_poster)
-                    .into(poster)
+            val posterPath = season.posterPath
 
-            poster.setOnClickListener {
-                val intent = Intent(this@SeasonDetailActivity, PosterActivity::class.java)
-                intent.putExtra(PosterActivity.POSTER_PATH, posterPath)
-                startActivity(intent)
+            if (posterPath.isNullOrEmpty()) {
+                Picasso.with(this)
+                        .load(R.drawable.placeholder_poster)
+                        .into(poster)
+            } else {
+                val posterUri = Constants.POSTER_URI_SMALL
+                        .replace("<posterName>", posterPath ?: "/")
+                        .replace("<API_KEY>", getString(R.string.movieKey))
+                Picasso.with(this)
+                        .load(posterUri)
+                        .error(R.drawable.placeholder_poster)
+                        .into(poster)
+
+                poster.setOnClickListener {
+                    val intent = Intent(this@SeasonDetailActivity, PosterActivity::class.java)
+                    intent.putExtra(PosterActivity.POSTER_PATH, posterPath)
+                    startActivity(intent)
+                }
             }
+
         }
     }
 
     private fun currentSeasonIndex(): Int {
         currentSeries?.let {
-            val seasons = currentSeries!!.seasons
+            val seasons = currentSeries?.seasons
             seasons?.let {
                 for (i in seasons.indices) {
                     if (seasons[i].id == seasonId) {
@@ -127,7 +134,11 @@ class SeasonDetailActivity : AppCompatActivity() {
                     scrollRange = appBarLayout.totalScrollRange
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.title = currentSeries!!.name
+                    val title = currentSeries?.name
+
+                    title?.let {
+                        collapsingToolbarLayout.title = title
+                    }
 
                     isShow = true
                 } else if (isShow) {
@@ -141,13 +152,16 @@ class SeasonDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                val unwatchedEpisodes = seriesDbHelper.getUnWatchedEpisodesOfSeries(currentSeries!!.id)
-                if (unwatchedEpisodes.isEmpty() && !currentSeries!!.isInProduction) {
-                    currentSeries!!.isWatched = true
-                    seriesDbHelper.updateWatchState(series = currentSeries!!)
+                val series = currentSeries
+                series?.let {
+                    val unwatchedEpisodes = seriesDbHelper.getUnWatchedEpisodesOfSeries(series.id)
+                    if (unwatchedEpisodes.isEmpty() && !series.isInProduction) {
+                        series.isWatched = true
+                        seriesDbHelper.updateWatchState(series)
+                    }
+                    onBackPressed()
+                    return true
                 }
-                onBackPressed()
-                return true
             }
         }
 

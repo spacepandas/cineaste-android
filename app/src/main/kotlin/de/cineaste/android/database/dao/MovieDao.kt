@@ -21,11 +21,11 @@ class MovieDao private constructor(context: Context) : BaseDao(context) {
         values.put(BaseDao.MovieEntry.COLUMN_VOTE_COUNT, movie.voteCount)
         values.put(BaseDao.MovieEntry.COLUMN_MOVIE_DESCRIPTION, movie.description)
         values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, if (movie.isWatched) 1 else 0)
-        if (movie.watchedDate != null) {
-            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, movie.watchedDate!!.time)
+        val watchDate = movie.watchedDate
+        watchDate?.let {
+            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, watchDate.time)
         }
-        if (movie.releaseDate !=
-                null) {
+        if (movie.releaseDate != null) {
             values.put(BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, sdf.format(movie.releaseDate))
         } else {
             values.put(BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, "")
