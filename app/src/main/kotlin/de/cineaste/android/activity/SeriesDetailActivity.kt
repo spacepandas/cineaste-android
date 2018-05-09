@@ -315,10 +315,11 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         layout.setHasFixedSize(true)
 
         if (state == R.string.watchlistState) {
-            val series = currentSeries
-            series?.let {
-                fab.visibility = View.VISIBLE
-                fab.setOnClickListener {
+
+            fab.visibility = View.VISIBLE
+            fab.setOnClickListener {
+                val series = currentSeries
+                series?.let {
                     seriesDbHelper.episodeWatched(series)
                     currentSeries = seriesDbHelper.getSeriesById(series.id)
                     assignData(series)
