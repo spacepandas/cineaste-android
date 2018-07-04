@@ -15,4 +15,13 @@
     <string name="version">Version %s</string>
     <string name="expand">Expand</string>
     <string name="shrink">Shrink</string>
+
+    <string name="android_app_github">Android App - GitHub:</string>
+    <string name="githubAndroidLink"><a href="https://github.com/spacepandas/cineaste-android">github.com/spacepandas/cineaste-android</a></string>
+    <string name="ios_app_github">iOS App - GitHub:</string>
+    <string name="githubIOsLink"><a href="https://github.com/spacepandas/cineaste-ios">github.com/spacepandas/cineaste-ios</a></string>
+    <string name="spacePandas">SpacePandas</string>
+    <string name="spacePandasPersons">Marcel Groß (Android-App)\nChristian Braun (Android-  iOS-App)\nFelizia Bernutz (iOS-App)</string>
+    <string name="helpPandasPersons">Philipp Wolf  (Design)</string>
+    <string name="tmdb">TMDb</string>
 </resources>

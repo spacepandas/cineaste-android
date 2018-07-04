@@ -19,10 +19,8 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
 
         initToolbar()
 
-        val githubLogo = findViewById<ImageView>(R.id.github_logo)
         val movieDbLogo = findViewById<ImageView>(R.id.themoviedb_logo)
 
-        githubLogo.setOnClickListener(this)
         movieDbLogo.setOnClickListener(this)
 
         val version = findViewById<TextView>(R.id.version)
@@ -35,7 +33,7 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setTitle(R.string.about)
+        setTitle(R.string.about_open_source)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -51,13 +49,11 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.github_logo -> openWebsite(GITHUB_URL)
             R.id.themoviedb_logo -> openWebsite(MOVIE_DB_URL)
         }
     }
 
     companion object {
-        private const val GITHUB_URL = "https://github.com/marcelgross90/Cineaste"
         private const val MOVIE_DB_URL = "https://www.themoviedb.org/"
     }
 }
