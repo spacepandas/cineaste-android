@@ -69,7 +69,7 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
             else -> callback = null
         }
         if (callback != null) {
-            movieQueryAdapter.removeMovie(index)
+            movieQueryAdapter.removeMovie(movie)
             val client = NetworkClient(NetworkRequest(resources).getMovie(movie.id))
             client.sendRequest(callback)
         }

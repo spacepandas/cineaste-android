@@ -26,9 +26,13 @@ class MovieSearchQueryAdapter(private val listener: ItemClickListener, private v
         dataSet.add(index, movie)
     }
 
-    fun removeMovie(index: Int) {
-        dataSet.removeAt(index)
-        notifyItemRemoved(index)
+    fun removeMovie(movie: Movie) {
+        val index = dataSet.indexOf(movie)
+
+        if (index >= 0) {
+            dataSet.removeAt(index)
+            notifyItemRemoved(index)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieSearchViewHolder {
