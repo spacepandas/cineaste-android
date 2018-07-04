@@ -3,6 +3,7 @@ package de.cineaste.android.activity
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
@@ -36,7 +37,7 @@ import java.util.*
 
 class MovieDetailActivity : AppCompatActivity() {
 
-    private val gson =  DateAwareGson.gson
+    private val gson = DateAwareGson.gson
     private var state: Int = 0
     private lateinit var poster: ImageView
 
@@ -58,36 +59,6 @@ class MovieDetailActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.detail_menu, menu)
-        val toWatchList = menu.findItem(R.id.action_to_watchlist)
-        val toHistory = menu.findItem(R.id.action_to_history)
-        val delete = menu.findItem(R.id.action_delete)
-
-        for (i in 0 until menu.size()) {
-            val drawable = menu.getItem(i).icon
-            if (drawable != null) {
-                drawable.mutate()
-                drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
-            }
-        }
-
-        when (state) {
-            R.string.searchState -> {
-                delete.isVisible = false
-                toHistory.isVisible = true
-                toWatchList.isVisible = true
-            }
-            R.string.historyState -> {
-                delete.isVisible = true
-                toHistory.isVisible = false
-                toWatchList.isVisible = true
-            }
-            R.string.watchlistState -> {
-                delete.isVisible = true
-                toHistory.isVisible = true
-                toWatchList.isVisible = false
-            }
-        }
-
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -98,19 +69,16 @@ class MovieDetailActivity : AppCompatActivity() {
                 onBackPressed()
                 return true
             }
+            R.id.more_info -> {
+                val movie = currentMovie
+                movie?.let {
+                    val tmdbUri = Constants.THE_MOVIE_DB_MOVIES_URI
+                            .replace("<MOVIE_ID>", movie.id.toString())
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUri))
+                    startActivity(browserIntent)
+                }
+            }
 
-            R.id.action_delete -> {
-                onDeleteClicked()
-                return true
-            }
-            R.id.action_to_history -> {
-                onAddToHistoryClicked()
-                return true
-            }
-            R.id.action_to_watchlist -> {
-                onAddToWatchClicked()
-                return true
-            }
             R.id.share -> {
                 val movie = currentMovie
                 movie?.let {
@@ -433,6 +401,7 @@ class MovieDetailActivity : AppCompatActivity() {
             currentMovie = updatedMovie
         }
     }
+
     private fun slideIn() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.to_top)
         animation.interpolator = AccelerateDecelerateInterpolator()

@@ -85,5 +85,6 @@
     <string name="share_series">Serie teilen</string>
     <string name="no_episodes">Keine Episoden verfügbar</string>
     <string name="notAvailableDuringSearch">Nicht verfügbar während der Suche</string>
+    <string name="more_info">Weitere Infos</string>
 
 </resources>
