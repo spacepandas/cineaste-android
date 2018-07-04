@@ -33,7 +33,7 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setTitle(R.string.about_open_source)
+        setTitle(R.string.about)
     }
 
     override fun onSupportNavigateUp(): Boolean {
