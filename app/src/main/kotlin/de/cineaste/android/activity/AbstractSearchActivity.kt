@@ -76,7 +76,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
         initToolbar()
 
         if (savedInstanceState != null) {
-            searchText = savedInstanceState.getString("query", null).replace("+", " ")
+            searchText = savedInstanceState.getString("query", "").replace("+", " ")
         }
 
         progressBar = findViewById(R.id.progressBar)
