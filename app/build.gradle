@@ -9,8 +9,8 @@ android {
         applicationId "de.cineaste.android"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 12
-        versionName "2.4.0"
+        versionCode 13
+        versionName "2.5.0"
         resValue "string", "app_name", "Cineaste"
     }
     sourceSets {
