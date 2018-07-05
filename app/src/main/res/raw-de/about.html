@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>About</title>
+    </head>
+    <body>
+        <div>
+            <p>
+                Cineaste ist der bequemste Weg das richtige Bewegtbild für einen entspannten
+                Filmabend zu finden. Hier kannst du alle Filme, die du noch sehen möchtest, oder
+                schon gesehen hast, einfach und übersichtlich verwalten.
+                <br />
+                <br />
+                Ein einziger Klick findet bei deinem nächsten Filmabend den Titel, welchen die
+                meisten Anwesenden sehen wollen. Hierbei werden deine Filme über Bluetooth nur in
+                deinem Wohnzimmer geteilt. Ist der passende Titel gefunden, können deine Freunde
+                deine Filme nicht mehr sehen. Das heißt, dass deine Filmlisten zu keinem Zeitpunkt
+                über irgendwelche Server gehen und sicher auf deinem Gerät liegen.
+                <br />
+                <br />
+                Solltest du doch einmal deine Filmlisten dauerhaft zu einem anderen Gerät übertragen
+                wollen, kannst du sie problemlos exportieren und importieren.
+            </p>
+        </div>
+        <div>
+            <h2>Open Source Projekt</h2>
+            <p>
+                Cineaste startete 2016 mit einer Android App und seit Ende 2017 arbeiten die
+                SpacePandas nun auch an der längst überfälligen iOS App. Und weil wir absolut nichts
+                zu verbergen haben, ist Cineaste Open Source. Das heißt jeder kann unseren Code
+                sehen und etwas zu der App beitragen.
+                <br />
+                <br />
+                Wir geben unser Bestes, um das Nutzererlebnis so gut wie möglich zu machen, dabei
+                sind wir aber auf dein Feedback angewiesen. Schreib doch einen Kommentar im Play
+                Store oder schau auf GitHub vorbei.
+            </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Android App - GitHub:</td>
+                        <td>
+                            <a style="color:#fbe22e; text-decoration: none;"
+                                    href="https://github.com/spacepandas/cineaste-android">
+                                github.com/spacepandas/cineaste-android
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>iOS App - GitHub:</td>
+                        <td>
+                            <a style="color:#fbe22e; text-decoration: none;"
+                                    href="https://github.com/spacepandas/cineaste-ios">
+                                github.com/spacepandas/cineaste-ios
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h2>SpacePandas</h2>
+            <p>
+                Marcel Groß (Android-App)
+                <br />
+                Christian Braun (Android- & iOS-App)
+                <br />
+                Felizia Bernutz (iOS-App)
+            </p>
+        </div>
+        <div>
+            <h2>HilfsPandas</h2>
+            <p>
+                Philipp Wolf (Design)
+                <br />
+            </p>
+        </div>
+        <div>
+            <h2>TMDb</h2>
+            <p>
+                Das Wissen über die ganzen Filme haben wir übrigens von TMDb (<a style="color:#fbe22e; text-decoration: none;" href="https://www.themoviedb.org">www.themoviedb.org</a>).
+                <br />
+                <br />
+                Diese App nutzt die TMDb API, wird jedoch nicht durch TMDb unterstützt oder
+                zertifiziert.
+            </p>
+        </div>
+        <div>
+            <a href="https://www.themoviedb.org">
+                <img border="0" src="file:///android_res/drawable/themoviedb_logo" alt="TMDb" />
+            </a>
+        </div>
+        <div style="float:right;">
+            <p id="version"></p>
+        </div>
+    </body>
+
+    <script type="text/javascript">
+        function addVersion() {
+            document.getElementById('version').innerHTML = Android.addVersion();
+        }
+
+        addVersion();
+    </script>
+</html>

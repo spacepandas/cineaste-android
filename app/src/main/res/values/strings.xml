@@ -85,10 +85,4 @@
     <string name="notAvailableDuringSearch">Not available during search</string>
     <string name="more_info">More Info</string>
 
-    <string name="about_cineaste">Cineaste is the most comfortable way to find the proper movie for a relaxed movie night. Here you can easily manage all movies you want to see or you have already seen.\n\nOnly one click will find the title for the next movie night, which the most present want to see. Therefore all movies are shared with Bluetooth only in your living room. When the appropriate title is found, your friends can’t see your movies anymore. That means your movie lists won’t be sent to any server at any time and they are save on your device.\n\nIf you want to transfer your movie lists permanently to another device, you can export and import them without any problems.</string>
-    <string name="open_source_project">Open Source Project</string>
-    <string name="about_open_source">Cineaste started in year 2016 with an Android app and since the end of 2017 the SpacePandas are working on the long overdue iOS app. And because we have nothing to hide, Cineaste is open source. That means everybody can see our code and can contribute to the app at GitHub.\n\nWe give our best to make the user experience as good as possible, therefore we need your feedback. Leave a comment on the Play Store or check us out on GitHub.</string>
-    <string name="tmdb_content">All knowledge we have about the movies is from TMDb (<a href="https://www.themoviedb.org/">www.themoviedb.org</a>). \n\nThis product uses the TMDb API but is not endorsed or certified by TMDb.</string>
-    <string name="helpPandas">HelpPandas</string>
-
 </resources>

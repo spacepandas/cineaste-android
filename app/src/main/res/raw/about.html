@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>About</title>
+    </head>
+    <body>
+        <div>
+            <p>
+                Cineaste is the most comfortable way to find the proper movie for a relaxed movie
+                night. Here you can easily manage all movies you want to see or you have already
+                seen.
+                <br />
+                <br />
+                Only one click will find the title for the next movie night, which the most present
+                want to see. Therefore all movies are shared with Bluetooth only in your living
+                room. When the appropriate title is found, your friends can’t see your movies
+                anymore. That means your movie lists won’t be sent to any server at any time and
+                they are save on your device.
+                <br />
+                <br />
+                If you want to transfer your movie lists permanently to another device, you can
+                export and import them without any problems.
+            </p>
+        </div>
+        <div>
+            <h2>Open Source Project</h2>
+            <p>
+                Cineaste started in year 2016 with an Android app and since the end of 2017 the
+                SpacePandas are working on the long overdue iOS app. And because we have nothing to
+                hide, Cineaste is open source. That means everybody can see our code and can
+                contribute to the app at GitHub.
+                <br />
+                <br />
+                We give our best to make the user experience as good as possible, therefore we need
+                your feedback. Leave a comment on the App Store/Play Store or check us out on
+                GitHub.
+            </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Android App - GitHub:</td>
+                        <td>
+                            <a style="color:#fbe22e; text-decoration: none;"
+                                    href="https://github.com/spacepandas/cineaste-android">
+                                github.com/spacepandas/cineaste-android
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>iOS App - GitHub:</td>
+                        <td>
+                            <a style="color:#fbe22e; text-decoration: none;"
+                                    href="https://github.com/spacepandas/cineaste-ios">
+                                github.com/spacepandas/cineaste-ios
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h2>SpacePandas</h2>
+            <p>
+                Marcel Groß (Android-App)
+                <br />
+                Christian Braun (Android- & iOS-App)
+                <br />
+                Felizia Bernutz (iOS-App)
+            </p>
+        </div>
+        <div>
+            <h2>HelpPandas</h2>
+            <p>
+                Philipp Wolf (Design)
+                <br />
+            </p>
+        </div>
+        <div>
+            <h2>TMDb</h2>
+            <p>
+                All knowledge we have about the movies is from TMDb (<a style="color:#fbe22e; text-decoration: none;" href="https://www.themoviedb.org">www.themoviedb.org</a>).
+                <br />
+                <br />
+                This product uses the TMDb API but is not endorsed or certified by TMDb.
+            </p>
+        </div>
+        <div>
+            <a href="https://www.themoviedb.org">
+                <img border="0" src="file:///android_res/drawable/themoviedb_logo" alt="TMDb" />
+            </a>
+        </div>
+        <div style="float:right;">
+            <p id="version"></p>
+        </div>
+    </body>
+
+    <script type="text/javascript">
+        function addVersion() {
+            document.getElementById('version').innerHTML = Android.addVersion();
+        }
+
+        addVersion();
+
+    </script>
+</html>
