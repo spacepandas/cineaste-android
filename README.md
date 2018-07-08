@@ -9,7 +9,9 @@ You can also start movie nights with your friends. There is no need to register 
 
 <a href='https://play.google.com/store/apps/details?id=de.cineaste.android&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png' height="45px"/></a>
 
-Check out the [iOS client](https://github.com/ChristianNorbertBraun/Cineaste) on github. It is still in development.
+Check out the [iOS client](https://github.com/spacepandas/cineaste-ios) on GitHub. It is available on the App Store.
+
+<a href='https://itunes.apple.com/us/app/cineaste-app/id1402748020'><img alt='Download on the App Store' img src='https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg' width="152" height="45"/></a>
 
 ## Dependencies
 
