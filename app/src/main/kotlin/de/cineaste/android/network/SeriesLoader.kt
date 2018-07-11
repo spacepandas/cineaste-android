@@ -19,24 +19,6 @@ class SeriesLoader(context: Context) {
     private val gson: Gson = DateAwareGson.gson
     private val resources: Resources = context.resources
 
-    fun loadSeries(seriesId: Long, callback: SeriesCallback) {
-        val client = NetworkClient()
-
-        client.addRequest(getSeriesRequest(seriesId), object : NetworkCallback {
-            override fun onFailure() {
-                callback.onFailure()
-            }
-
-            override fun onSuccess(response: NetworkResponse) {
-                val series = gson.fromJson(response.responseReader, Series::class.java)
-                excludeSpecialsSeason(series)
-
-                callback.onSuccess(series)
-            }
-        })
-    }
-
-
     fun loadCompleteSeries(seriesId: Long, callback: SeriesCallback) {
         val client = NetworkClient()
 

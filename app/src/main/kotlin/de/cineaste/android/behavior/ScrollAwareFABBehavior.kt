@@ -9,6 +9,7 @@ import android.view.View
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
+@Suppress("unused")
 class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingActionButton.Behavior() {
 
     override fun onStartNestedScroll(

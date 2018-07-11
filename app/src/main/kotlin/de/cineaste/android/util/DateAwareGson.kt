@@ -21,7 +21,7 @@ object DateAwareGson {
     init {
         val gsonBuilder = GsonBuilder()
         gsonBuilder.registerTypeAdapter(Date::class.java, object : JsonDeserializer<Date> {
-            internal val df: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val df: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
             @Throws(JsonParseException::class)
             override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Date? {
@@ -43,7 +43,7 @@ object ExtendedDateAwareGson {
     init {
         val gsonBuilder = GsonBuilder()
         gsonBuilder.registerTypeAdapter(Date::class.java, object : JsonDeserializer<Date> {
-            internal val df: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
+            val df: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
 
             @Throws(JsonParseException::class)
             override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Date? {
