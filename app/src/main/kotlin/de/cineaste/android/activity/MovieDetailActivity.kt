@@ -1,8 +1,6 @@
 package de.cineaste.android.activity
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
@@ -26,18 +24,14 @@ import de.cineaste.android.R
 import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.entity.movie.Movie
-import de.cineaste.android.network.NetworkCallback
-import de.cineaste.android.network.NetworkClient
-import de.cineaste.android.network.NetworkRequest
-import de.cineaste.android.network.NetworkResponse
+import de.cineaste.android.network.MovieCallback
+import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.util.Constants
-import de.cineaste.android.util.DateAwareGson
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MovieDetailActivity : AppCompatActivity() {
 
-    private val gson = DateAwareGson.gson
     private var state: Int = 0
     private lateinit var poster: ImageView
 
@@ -110,16 +104,15 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun onAddToHistoryClicked() {
-        var callback: NetworkCallback? = null
+        var callback: MovieCallback? = null
 
         when (state) {
-            R.string.searchState -> callback = object : NetworkCallback {
+            R.string.searchState -> callback = object : MovieCallback {
                 override fun onFailure() {
 
                 }
 
-                override fun onSuccess(response: NetworkResponse) {
-                    val movie = gson.fromJson(response.responseReader, Movie::class.java)
+                override fun onSuccess(movie: Movie) {
                     movie.isWatched = true
                     movieDbHelper.createOrUpdate(movie)
                 }
@@ -135,8 +128,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
 
         if (callback != null) {
-            val client = NetworkClient(NetworkRequest(resources).getMovie(movieId))
-            client.sendRequest(callback)
+            MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), callback)
             val title = currentMovie?.title
             title?.let {
                 Toast.makeText(this, this.resources.getString(R.string.movieAdd,
@@ -149,18 +141,16 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun onAddToWatchClicked() {
-        var callback: NetworkCallback? = null
+        var callback: MovieCallback? = null
 
         when (state) {
-            R.string.searchState -> callback = object : NetworkCallback {
+            R.string.searchState -> callback = object : MovieCallback {
                 override fun onFailure() {
 
                 }
 
-                override fun onSuccess(response: NetworkResponse) {
-                    movieDbHelper.createOrUpdate(
-                            gson.fromJson(response.responseReader, Movie::class.java)
-                    )
+                override fun onSuccess(movie: Movie) {
+                    movieDbHelper.createOrUpdate(movie)
                 }
             }
             R.string.historyState -> {
@@ -173,8 +163,7 @@ class MovieDetailActivity : AppCompatActivity() {
         }
 
         if (callback != null) {
-            val client = NetworkClient(NetworkRequest(resources).getMovie(movieId))
-            client.sendRequest(callback)
+            MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), callback)
             val movie = currentMovie
             movie?.let {
                 Toast.makeText(this, this.resources.getString(R.string.movieAdd,
@@ -272,14 +261,11 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun loadRequestedMovie() {
-        val client = NetworkClient(NetworkRequest(resources).getMovie(movieId))
-        client.sendRequest(object : NetworkCallback {
+        MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object: MovieCallback{
             override fun onFailure() {
-
             }
 
-            override fun onSuccess(response: NetworkResponse) {
-                val movie = gson.fromJson(response.responseReader, Movie::class.java)
+            override fun onSuccess(movie: Movie) {
                 runOnUiThread {
                     currentMovie = movie
                     assignData(movie)
@@ -332,8 +318,8 @@ class MovieDetailActivity : AppCompatActivity() {
         val collapsingToolbarLayout = findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
         val appBarLayout = findViewById<AppBarLayout>(R.id.appbar)
         appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
-            internal var isShow = true
-            internal var scrollRange = -1
+            var isShow = true
+            var scrollRange = -1
 
             override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
                 if (scrollRange == -1) {
@@ -363,14 +349,12 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun updateMovie() {
         if (state != R.string.searchState) {
-            val client = NetworkClient(NetworkRequest(resources).getMovie(movieId))
-            client.sendRequest(object : NetworkCallback {
+            MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback{
                 override fun onFailure() {
                     runOnUiThread { showNetworkError() }
                 }
 
-                override fun onSuccess(response: NetworkResponse) {
-                    val movie = gson.fromJson(response.responseReader, Movie::class.java)
+                override fun onSuccess(movie: Movie) {
                     runOnUiThread {
                         assignData(movie)
                         updateMovieDetails(movie)

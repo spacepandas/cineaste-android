@@ -11,13 +11,17 @@ class NetworkRequest(resources: Resources) {
 
     private val baseUrl = "https://api.themoviedb.org/3"
 
-    private val staticQueryParams: String = "language=" + Locale.getDefault().language + "&api_key=" + resources.getString(R.string.movieKey)
+    private val defaultLanguage = Locale.getDefault()
+    private val staticQueryParams: String = "language=${defaultLanguage.language}" +
+            "&api_key=${resources.getString(R.string.movieKey)}"
+    private val region = "&region=${defaultLanguage.country}&with_release_type=3"
+    private val appendReleaseDate = "&append_to_response=release_dates"
 
     private val requestBuilder: Request.Builder = Request.Builder()
 
     val upcomingMovies: NetworkRequest
         get() {
-            this.requestBuilder.url("$baseUrl/movie/upcoming?$staticQueryParams")
+            this.requestBuilder.url("$baseUrl/movie/upcoming?$staticQueryParams$region")
             this.requestBuilder.header("accept", "application/json")
             return this
         }
@@ -30,13 +34,13 @@ class NetworkRequest(resources: Resources) {
         }
 
     fun getMovie(movieID: Long): NetworkRequest {
-        this.requestBuilder.url("$baseUrl/movie/$movieID?$staticQueryParams")
+        this.requestBuilder.url("$baseUrl/movie/$movieID?$staticQueryParams$appendReleaseDate")
         this.requestBuilder.header("accept", "application/json")
         return this
     }
 
     fun searchMovie(query: String): NetworkRequest {
-        this.requestBuilder.url("$baseUrl/search/movie?query=$query&$staticQueryParams")
+        this.requestBuilder.url("$baseUrl/search/movie?query=$query&$staticQueryParams$region")
         this.requestBuilder.header("accept", "application/json")
         return this
     }

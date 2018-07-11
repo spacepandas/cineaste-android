@@ -14,11 +14,8 @@ import de.cineaste.android.entity.movie.MatchingResult
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.MovieDto
 import de.cineaste.android.entity.movie.NearbyMessage
-import de.cineaste.android.network.NetworkCallback
-import de.cineaste.android.network.NetworkClient
-import de.cineaste.android.network.NetworkRequest
-import de.cineaste.android.network.NetworkResponse
-import de.cineaste.android.util.DateAwareGson
+import de.cineaste.android.network.MovieCallback
+import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.util.MultiList
 import java.util.*
 
@@ -94,18 +91,15 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         val selectedMovie = movieDbHelper.readMovie(selectedMovieId)
 
         if (selectedMovie == null) {
-            val client = NetworkClient(NetworkRequest(resources).getMovie(results[position].id))
-            client.sendRequest(object : NetworkCallback {
+            MovieLoader(this).loadLocalizedMovie(results[position].id, Locale.getDefault(), (object  : MovieCallback {
                 override fun onFailure() {
 
                 }
 
-                override fun onSuccess(response: NetworkResponse) {
-                    val gson = DateAwareGson.gson
-                    val movie = gson.fromJson(response.responseReader, Movie::class.java)
+                override fun onSuccess(movie: Movie) {
                     runOnUiThread { updateMovie(movie) }
                 }
-            })
+            }))
         } else {
             updateMovie(selectedMovie)
         }

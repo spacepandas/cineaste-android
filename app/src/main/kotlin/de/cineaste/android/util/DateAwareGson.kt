@@ -36,3 +36,25 @@ object DateAwareGson {
         gson = gsonBuilder.create()
     }
 }
+
+object ExtendedDateAwareGson {
+    val gson: Gson
+
+    init {
+        val gsonBuilder = GsonBuilder()
+        gsonBuilder.registerTypeAdapter(Date::class.java, object : JsonDeserializer<Date> {
+            internal val df: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
+
+            @Throws(JsonParseException::class)
+            override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Date? {
+                return try {
+                    df.parse(json.asString)
+                } catch (e: ParseException) {
+                    null
+                }
+
+            }
+        })
+        gson = gsonBuilder.create()
+    }
+}
