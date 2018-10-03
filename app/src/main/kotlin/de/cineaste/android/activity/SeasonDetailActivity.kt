@@ -71,7 +71,7 @@ class SeasonDetailActivity : AppCompatActivity() {
 
     private fun setPoster(position: Int) {
         val seasons = currentSeries?.seasons
-        seasons?.let {
+        seasons?.let { seasons ->
             val season = seasons[position]
 
             val posterPath = season.posterPath
@@ -100,9 +100,9 @@ class SeasonDetailActivity : AppCompatActivity() {
     }
 
     private fun currentSeasonIndex(): Int {
-        currentSeries?.let {
-            val seasons = currentSeries?.seasons
-            seasons?.let {
+        currentSeries?.let { currentSeries ->
+            val seasons = currentSeries.seasons
+            seasons?.let { seasons ->
                 for (i in seasons.indices) {
                     if (seasons[i].id == seasonId) {
                         return i

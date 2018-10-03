@@ -30,7 +30,8 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.SeriesCallback
 import de.cineaste.android.network.SeriesLoader
 import de.cineaste.android.util.Constants
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 
 class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
@@ -251,7 +252,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         initToolbar()
 
         val backdropPath = currentSeries?.backdropPath
-        backdropPath?.let {
+        backdropPath?.let { backdropPath ->
             poster.setOnClickListener {
                 val myIntent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
                 myIntent.putExtra(PosterActivity.POSTER_PATH, backdropPath)
@@ -286,7 +287,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             fab.show()
             fab.setOnClickListener {
                 val series = currentSeries
-                series?.let {
+                series?.let { series ->
                     seriesDbHelper.episodeWatched(series)
                     currentSeries = seriesDbHelper.getSeriesById(series.id)
                     assignData(series)
@@ -392,7 +393,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             }
 
             override fun onSuccess(series: Series) {
-                launch(UI) {
+                launch(Dispatchers.Main) {
                     currentSeries = series
                     assignData(series)
                     progressBar.visibility = View.GONE

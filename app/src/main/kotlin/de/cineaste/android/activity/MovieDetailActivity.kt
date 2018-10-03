@@ -202,7 +202,7 @@ class MovieDetailActivity : AppCompatActivity() {
         initToolbar()
 
         val posterPath = currentMovie?.posterPath
-        posterPath?.let {
+        posterPath?.let { posterPath ->
             poster.setOnClickListener {
                 val myIntent = Intent(this@MovieDetailActivity, PosterActivity::class.java)
                 myIntent.putExtra(PosterActivity.POSTER_PATH, posterPath)

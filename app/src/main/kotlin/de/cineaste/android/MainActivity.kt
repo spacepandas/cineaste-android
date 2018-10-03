@@ -39,7 +39,6 @@ import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -328,18 +327,18 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 READ_REQUEST_CODE -> {
-                    resultData?.let {
+                    resultData?.let { resultData ->
                         val uri = resultData.data
-                        uri?.let {
+                        uri?.let { uri ->
                             importMovies(uri)
                         }
                     }
                 }
 
                 WRITE_REQUEST_CODE -> {
-                    resultData?.let {
+                    resultData?.let { resultData ->
                         val uri = resultData.data
-                        uri?.let {
+                        uri?.let { uri ->
                             exportMovies(uri)
                         }
                     }
