@@ -37,6 +37,8 @@ import de.cineaste.android.entity.User
 import de.cineaste.android.fragment.*
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import java.text.SimpleDateFormat
@@ -302,7 +304,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                 seriesDbHelper.importSeries(series)
             }
 
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 baseListFragment.progressbar.visibility = View.GONE
                 baseListFragment.updateAdapter()
 
@@ -328,16 +330,18 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                 READ_REQUEST_CODE -> {
                     resultData?.let {
                         val uri = resultData.data
-
-                        importMovies(uri)
+                        uri?.let {
+                            importMovies(uri)
+                        }
                     }
                 }
 
                 WRITE_REQUEST_CODE -> {
                     resultData?.let {
                         val uri = resultData.data
-
-                        exportMovies(uri)
+                        uri?.let {
+                            exportMovies(uri)
+                        }
                     }
                 }
             }

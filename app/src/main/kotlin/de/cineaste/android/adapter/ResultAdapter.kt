@@ -54,7 +54,7 @@ class ResultAdapter(
             val posterUri = Constants.POSTER_URI_SMALL
                     .replace("<posterName>", posterPath ?: "/")
                     .replace("<API_KEY>", context.getString(R.string.movieKey))
-            Picasso.with(context)
+            Picasso.get()
                     .load(Uri.parse(posterUri))
                     .resize(222, 334)
                     .error(R.drawable.placeholder_poster)

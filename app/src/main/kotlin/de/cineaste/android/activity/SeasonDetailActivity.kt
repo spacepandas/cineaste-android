@@ -77,14 +77,14 @@ class SeasonDetailActivity : AppCompatActivity() {
             val posterPath = season.posterPath
 
             if (posterPath.isNullOrEmpty()) {
-                Picasso.with(this)
+                Picasso.get()
                         .load(R.drawable.placeholder_poster)
                         .into(poster)
             } else {
                 val posterUri = Constants.POSTER_URI_SMALL
                         .replace("<posterName>", posterPath ?: "/")
                         .replace("<API_KEY>", getString(R.string.movieKey))
-                Picasso.with(this)
+                Picasso.get()
                         .load(posterUri)
                         .error(R.drawable.placeholder_poster)
                         .into(poster)

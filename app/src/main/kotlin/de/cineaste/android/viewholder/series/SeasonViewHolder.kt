@@ -18,7 +18,9 @@ import de.cineaste.android.util.Constants
 import java.util.*
 
 
-class SeasonViewHolder(private val view: View, private val itemClickListener: ItemClickListener?, private val context: Context) : RecyclerView.ViewHolder(view) {
+class SeasonViewHolder(private val view: View,
+                       private val itemClickListener: ItemClickListener?,
+                       private val context: Context) : RecyclerView.ViewHolder(view) {
 
     private val poster: ImageView = view.findViewById(R.id.poster_image_view)
     private val seasonNumber: TextView = view.findViewById(R.id.season)
@@ -48,7 +50,11 @@ class SeasonViewHolder(private val view: View, private val itemClickListener: It
         val posterUri = Constants.POSTER_URI_SMALL
                 .replace("<posterName>", posterName ?: "/")
                 .replace("<API_KEY>", context.getString(R.string.movieKey))
-        Picasso.with(context).load(posterUri).resize(342, 513).error(R.drawable.placeholder_poster).into(poster)
+        Picasso.get()
+                .load(posterUri)
+                .resize(342, 513)
+                .error(R.drawable.placeholder_poster)
+                .into(poster)
     }
 
     private fun convertDate(date: Date?): String {

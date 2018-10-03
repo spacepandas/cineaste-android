@@ -299,7 +299,7 @@ class MovieDetailActivity : AppCompatActivity() {
         val posterUri = Constants.POSTER_URI_SMALL
                 .replace("<posterName>", currentMovie.posterPath ?: "/")
                 .replace("<API_KEY>", getString(R.string.movieKey))
-        Picasso.with(this)
+        Picasso.get()
                 .load(posterUri)
                 .error(R.drawable.placeholder_poster)
                 .into(poster)

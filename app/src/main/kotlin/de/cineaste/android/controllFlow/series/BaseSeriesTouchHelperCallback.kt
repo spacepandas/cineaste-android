@@ -25,7 +25,7 @@ abstract class BaseSeriesTouchHelperCallback(resources: Resources, linearLayoutM
         super.onSelectedChanged(viewHolder, actionState)
     }
 
-    override fun clearView(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder) {
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
 
         val seriesViewHolder = viewHolder as SeriesViewHolder

@@ -24,7 +24,11 @@ abstract class BaseViewHolder protected constructor(protected val view: View, pr
         val posterUri = Constants.POSTER_URI_SMALL
                 .replace("<posterName>", posterName ?: "/")
                 .replace("<API_KEY>", context.getString(R.string.movieKey))
-        Picasso.with(context).load(posterUri).resize(222, 334).error(R.drawable.placeholder_poster).into(poster)
+        Picasso.get()
+                .load(posterUri)
+                .resize(222, 334)
+                .error(R.drawable.placeholder_poster)
+                .into(poster)
     }
 
     protected fun convertDate(date: Date): String {

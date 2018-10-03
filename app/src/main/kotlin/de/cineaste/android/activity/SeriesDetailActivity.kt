@@ -239,12 +239,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         val series = currentSeries
         if (series == null) {
             progressBar.visibility = View.VISIBLE
-            fab.visibility = View.GONE
+            fab.hide()
             loadRequestedSeries()
         } else {
             progressBar.visibility = View.GONE
             if (state == R.string.watchlistState)
-                fab.visibility = View.VISIBLE
+                fab.show()
             assignData(series)
         }
 
@@ -283,7 +283,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
         if (state == R.string.watchlistState) {
 
-            fab.visibility = View.VISIBLE
+            fab.show()
             fab.setOnClickListener {
                 val series = currentSeries
                 series?.let {
@@ -294,7 +294,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             }
 
         } else {
-            fab.visibility = View.GONE
+            fab.hide()
         }
     }
 
@@ -379,7 +379,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         val posterUri = Constants.POSTER_URI_ORIGINAL
                 .replace("<posterName>", series.backdropPath ?: "/")
                 .replace("<API_KEY>", getString(R.string.movieKey))
-        Picasso.with(this)
+        Picasso.get()
                 .load(posterUri)
                 .error(R.drawable.placeholder_poster)
                 .into(poster)
@@ -397,7 +397,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     assignData(series)
                     progressBar.visibility = View.GONE
                     if (state == R.string.watchlistState)
-                        fab.visibility = View.VISIBLE
+                        fab.show()
 
                     slideIn()
                 }

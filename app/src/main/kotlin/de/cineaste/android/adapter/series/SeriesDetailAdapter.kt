@@ -168,7 +168,7 @@ class SeriesDetailAdapter(
             val posterUri = Constants.POSTER_URI_SMALL
                     .replace("<posterName>", posterName ?: "/")
                     .replace("<API_KEY>", context.getString(R.string.movieKey))
-            Picasso.with(context)
+            Picasso.get()
                     .load(posterUri)
                     .resize(273, 410)
                     .error(R.drawable.placeholder_poster)

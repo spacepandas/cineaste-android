@@ -53,14 +53,14 @@ class PosterActivity : AppCompatActivity() {
     }
 
     private fun displayPoster() {
-        Picasso.with(this)
+        Picasso.get()
                 .load(getPosterUrl(Constants.POSTER_URI_SMALL))
                 .error(R.drawable.placeholder_poster)
                 .into(poster, object : Callback {
                     override fun onSuccess() {
                         val placeHolder = poster.drawable
                         setBackgroundColor((placeHolder as BitmapDrawable).bitmap)
-                        Picasso.with(this@PosterActivity)
+                        Picasso.get()
                                 .load(getPosterUrl(Constants.POSTER_URI_ORIGINAL))
                                 .placeholder(placeHolder)
                                 .into(poster, object : Callback {
@@ -68,13 +68,13 @@ class PosterActivity : AppCompatActivity() {
                                         Snackbar.make(poster, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show()
                                     }
 
-                                    override fun onError() {
+                                    override fun onError(e: Exception) {
                                         poster.setImageDrawable(placeHolder)
                                     }
                                 })
                     }
 
-                    override fun onError() {
+                    override fun onError(e: Exception) {
                         displayPoster()
                     }
                 })
@@ -82,7 +82,7 @@ class PosterActivity : AppCompatActivity() {
 
     private fun setBackgroundColor(moviePoster: Bitmap) {
         val paletteAsyncListener = Palette.PaletteAsyncListener { palette ->
-            val swatch = palette.dominantSwatch ?: return@PaletteAsyncListener
+            val swatch = palette?.dominantSwatch ?: return@PaletteAsyncListener
 
             window.decorView.setBackgroundColor(swatch.rgb)
         }
