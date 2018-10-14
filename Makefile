@@ -1,10 +1,8 @@
 PACKAGE = de.cineaste.android
-APK = app/build/outputs/apk/app-debug.apk
-APKRELEASE = app/build/release/app-release.apk
 
 all: debug install start
 
-cleanInstall: release uninstall installRelease start
+cleanInstall: release uninstallRelease installRelease start
 
 debug:
 	./gradlew assembleDebug
@@ -12,7 +10,7 @@ debug:
 lint:
 	./gradlew lintDebug
 
-release:
+release: lint
 	@./gradlew assembleRelease \
 		-Pandroid.injected.signing.store.file=$(ANDROID_KEYFILE) \
 		-Pandroid.injected.signing.store.password=$(ANDROID_STORE_PASSWORD) \
@@ -20,15 +18,18 @@ release:
 		-Pandroid.injected.signing.key.password=$(ANDROID_KEY_PASSWORD)
 
 install:
-	adb $(TARGET) install -r $(APK)
+	adb $(TARGET) install -r app/build/outputs/apk/debug/app-debug.apk
 
 installRelease:
-	adb $(TARGET) install -r $(APKRELEASE)
+	adb $(TARGET) install -r app/build/outputs/apk/release/app-release.apk
 
 start:
-	adb $(TARGET) shell 'am start -n $(PACKAGE)/.MainActivity'
+	adb $(TARGET) shell 'am start -n $(PACKAGE).debug/$(PACKAGE).MainActivity'
 
 uninstall:
+	adb $(TARGET) uninstall $(PACKAGE).debug
+
+uninstallRelease:
 	adb $(TARGET) uninstall $(PACKAGE)
 
 clean:
