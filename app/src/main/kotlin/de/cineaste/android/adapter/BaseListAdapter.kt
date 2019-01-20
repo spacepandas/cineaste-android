@@ -28,10 +28,10 @@ abstract class BaseListAdapter constructor(val context: Context, val displayMess
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val v = LayoutInflater
+        val view = LayoutInflater
                 .from(parent.context)
                 .inflate(layout, parent, false)
-        return createViewHolder(v)
+        return createViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

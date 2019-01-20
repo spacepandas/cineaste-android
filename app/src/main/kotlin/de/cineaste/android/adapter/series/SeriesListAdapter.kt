@@ -181,9 +181,8 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
 
         override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
             filteredSeriesList.clear()
-            val results = Filter.FilterResults()
 
-            if (constraint == null || constraint.isEmpty()) {
+            if (constraint.isNullOrEmpty()) {
                 filteredSeriesList.addAll(seriesList)
             } else {
                 val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
@@ -195,6 +194,7 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
                 }
             }
 
+            val results = Filter.FilterResults()
             results.values = filteredSeriesList
             results.count = filteredSeriesList.size
 

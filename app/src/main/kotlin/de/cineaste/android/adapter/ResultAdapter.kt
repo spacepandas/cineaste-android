@@ -35,8 +35,8 @@ class ResultAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        val v = LayoutInflater.from(context).inflate(rowLayout, parent, false)
-        return ViewHolder(v)
+        val view = LayoutInflater.from(context).inflate(rowLayout, parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

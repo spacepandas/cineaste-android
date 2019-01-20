@@ -53,47 +53,44 @@ class SeriesDetailAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val v: View
         when (viewType) {
             0 -> {
-                v = LayoutInflater
+                val view = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_triangle, parent, false)
-                return TriangleViewHolder(v)
+                return TriangleViewHolder(view)
             }
             1 -> {
-                v = LayoutInflater
+                val view  = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_base, parent, false)
-                return BaseViewHolder(v, parent.context, posterClickListener)
+                return BaseViewHolder(view, parent.context, posterClickListener)
             }
             2 -> {
-                v = LayoutInflater
+                val view  = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_buttons, parent, false)
-                return ButtonsViewHolder(v, state, listener)
+                return ButtonsViewHolder(view, state, listener)
             }
             3 -> {
-                v = LayoutInflater
+                val view  = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_description, parent, false)
-                return DescriptionViewHolder(v, parent.context)
+                return DescriptionViewHolder(view, parent.context)
             }
             4 -> {
-                v = LayoutInflater
+                val view  = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_seasons, parent, false)
-                return SeasonsListViewHolder(v, parent.context, clickListener)
+                return SeasonsListViewHolder(view, parent.context, clickListener)
+            }
+            else -> {
+                val view  = LayoutInflater
+                        .from(parent.context)
+                        .inflate(R.layout.series_detail_base, parent, false)
+                return BaseViewHolder(view, parent.context, posterClickListener)
             }
         }
-
-        return BaseViewHolder(
-                LayoutInflater
-                        .from(parent.context)
-                        .inflate(R.layout.series_detail_base, parent, false),
-                parent.context,
-                posterClickListener
-        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -247,13 +244,12 @@ class SeriesDetailAdapter(
         private fun showCompleteText(series: Series) {
             setDescription(series)
             more.visibility = View.GONE
-
         }
 
         private fun getTrimmedDescription(series: Series): String {
             val original = series.description
 
-            if (original == null || original.isEmpty()) {
+            if (original.isNullOrEmpty()) {
                 return resources.getString(R.string.noDescription)
             }
 

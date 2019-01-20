@@ -46,7 +46,6 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
         val seriesToBeUpdated = adapter.getItem(position)
 
         showDialogIfNeeded(seriesToBeUpdated, position, message)
-
     }
 
     private fun showDialogIfNeeded(series: Series, position: Int, message: Int) {

@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             }
         }
 
-        if (!listPermissionsNeeded.isEmpty()) {
+        if (listPermissionsNeeded.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toTypedArray(), 1)
         }
     }
@@ -261,7 +261,6 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     private fun selectImportFile() {
-
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "*/*"
@@ -283,16 +282,13 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             } catch (ex: Exception) {
                 null
             }
-
         }
 
-        if (baseListFragment == null) {
-            return
-        }
+        if (baseListFragment == null) return
+
         baseListFragment.progressbar.visibility = View.VISIBLE
 
         GlobalScope.launch {
-
             val importExportObject = ImportService.importFiles(uri, this@MainActivity)
             //todo find a better solution to save all files
             for (movie in importExportObject.movies) {
@@ -321,7 +317,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int,
+    public override fun onActivityResult(requestCode: Int,
+                                         resultCode: Int,
                                          resultData: Intent?) {
 
         if (resultCode == Activity.RESULT_OK) {
@@ -362,7 +359,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     override fun onFinishUserDialog(userName: String) {
-        if (!userName.isEmpty()) {
+        if (userName.isNotEmpty()) {
             userDbHelper.createUser(User(userName))
         }
 

@@ -27,8 +27,8 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
                 when (event) {
                     Snackbar.Callback.DISMISS_EVENT_ACTION -> {
                         adapter.addDeletedItemToHistoryAgain(seriesToBeDeleted, position, currentSeason, currentEpisode)
-                        val fist = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (fist >= position) {
+                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                        if (first >= position) {
                             linearLayoutManager.scrollToPosition(position)
                         }
                     }
@@ -54,7 +54,6 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
                 when (event) {
                     Snackbar.Callback.DISMISS_EVENT_ACTION -> {
                         adapter.moveBackToHistory(seriesToBeUpdated, position, currentSeason, currentEpisode)
-
                         val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
                         if (first >= position) {
                             linearLayoutManager.scrollToPosition(position)

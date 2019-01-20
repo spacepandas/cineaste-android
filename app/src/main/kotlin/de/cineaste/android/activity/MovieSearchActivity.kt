@@ -68,6 +68,7 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
             }
             else -> callback = null
         }
+
         if (callback != null) {
             movieQueryAdapter.removeMovie(movie)
 

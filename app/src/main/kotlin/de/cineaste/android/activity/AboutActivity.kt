@@ -20,8 +20,7 @@ class AboutActivity : AppCompatActivity() {
         initToolbar()
 
         val webView = findViewById<WebView>(R.id.webview)
-        val webSettings = webView.settings
-        webSettings.javaScriptEnabled = true
+        webView.settings.javaScriptEnabled = true
         webView.addJavascriptInterface(WebInterface(resources), "Android")
         webView.loadUrl("file:///android_res/raw/about.html")
     }
@@ -30,8 +29,7 @@ class AboutActivity : AppCompatActivity() {
     private fun initToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setTitle(R.string.about)
     }

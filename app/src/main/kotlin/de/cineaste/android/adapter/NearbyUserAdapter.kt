@@ -19,8 +19,8 @@ class NearbyUserAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(rowLayout, parent, false)
-        return ViewHolder(v)
+        val view = LayoutInflater.from(parent.context).inflate(rowLayout, parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
