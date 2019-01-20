@@ -1,17 +1,15 @@
 package de.cineaste.android.behavior
 
-import android.content.Context
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
-import android.util.AttributeSet
 import android.view.View
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Suppress("unused")
-class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingActionButton.Behavior() {
+class ScrollAwareFABBehavior : FloatingActionButton.Behavior() {
 
     override fun onStartNestedScroll(
             coordinatorLayout: CoordinatorLayout,

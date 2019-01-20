@@ -71,10 +71,11 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
                 }
             else -> seriesCallback = null
         }
-        if (seriesCallback != null) {
+        
+        seriesCallback?.let {
             seriesQueryAdapter.removeSerie(index)
 
-            SeriesLoader(this).loadCompleteSeries(series.id, seriesCallback)
+            SeriesLoader(this).loadCompleteSeries(series.id, it)
         }
     }
 

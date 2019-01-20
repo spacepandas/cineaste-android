@@ -168,9 +168,7 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     fun toggleSeason(seasonId: Long) {
-        val season = getSeasonById(seasonId)
-
-        season?.let {
+        getSeasonById(seasonId)?.let { season ->
             val watchState = !season.isWatched
             val updateEpisodesSql = "UPDATE " + EpisodeEntry.TABLE_NAME +
                     " SET " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = " + (if (watchState) 1 else 0).toString() +
@@ -327,8 +325,7 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     fun update(series: Series) {
-        val oldSeries = getSeriesById(series.id)
-        oldSeries?.let {
+        getSeriesById(series.id)?.let { oldSeries ->
             val newPosition = getNewPosition(series, oldSeries)
             series.isWatched = oldSeries.isWatched
             series.listPosition = newPosition

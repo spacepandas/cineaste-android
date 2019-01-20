@@ -70,8 +70,7 @@ class SeasonDetailActivity : AppCompatActivity() {
     }
 
     private fun setPoster(position: Int) {
-        val seasons = currentSeries?.seasons
-        seasons?.let { seasons ->
+        currentSeries?.seasons?.let { seasons ->
             val season = seasons[position]
 
             val posterPath = season.posterPath
@@ -82,7 +81,7 @@ class SeasonDetailActivity : AppCompatActivity() {
                         .into(poster)
             } else {
                 val posterUri = Constants.POSTER_URI_SMALL
-                        .replace("<posterName>", posterPath ?: "/")
+                        .replace("<posterName>", posterPath)
                         .replace("<API_KEY>", getString(R.string.movieKey))
                 Picasso.get()
                         .load(posterUri)
@@ -100,13 +99,10 @@ class SeasonDetailActivity : AppCompatActivity() {
     }
 
     private fun currentSeasonIndex(): Int {
-        currentSeries?.let { currentSeries ->
-            val seasons = currentSeries.seasons
-            seasons?.let { seasons ->
-                for (i in seasons.indices) {
-                    if (seasons[i].id == seasonId) {
-                        return i
-                    }
+        currentSeries?.seasons?.let { seasons ->
+            for (i in seasons.indices) {
+                if (seasons[i].id == seasonId) {
+                    return i
                 }
             }
         }
@@ -152,8 +148,7 @@ class SeasonDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                val series = currentSeries
-                series?.let {
+                currentSeries?.let { series ->
                     val unwatchedEpisodes = seriesDbHelper.getUnWatchedEpisodesOfSeries(series.id)
                     if (unwatchedEpisodes.isEmpty() && !series.isInProduction) {
                         series.isWatched = true

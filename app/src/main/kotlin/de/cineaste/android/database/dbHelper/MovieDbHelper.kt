@@ -91,9 +91,8 @@ class MovieDbHelper private constructor(context: Context) {
     private fun update(movie: Movie, listPosition: Int) {
         val values = ContentValues()
         values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, if (movie.isWatched) 1 else 0)
-        val watchedDate = movie.watchedDate
-        watchedDate?.let {
-            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, watchedDate.time)
+        movie.watchedDate?.let {
+            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, it.time)
         }
         values.put(BaseDao.MovieEntry.COLUMN_MOVIE_TITLE, movie.title)
         values.put(BaseDao.MovieEntry.COLUMN_RUNTIME, movie.runtime)

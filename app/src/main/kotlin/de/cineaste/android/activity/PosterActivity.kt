@@ -92,9 +92,8 @@ class PosterActivity : AppCompatActivity() {
 
 
     private fun getPosterUrl(postUri: String): String {
-        val posterName = posterPath
         return postUri
-                .replace("<posterName>", posterName ?: "/")
+                .replace("<posterName>", posterPath ?: "/")
                 .replace("<API_KEY>", getString(R.string.movieKey))
     }
 

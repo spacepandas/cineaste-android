@@ -70,7 +70,7 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.let {
             if (episodes.isNotEmpty()) {
-                inflater.inflate(R.menu.season_menu, menu)
+                it.inflate(R.menu.season_menu, menu)
             }
         }
 

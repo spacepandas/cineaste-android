@@ -31,12 +31,12 @@ class UserInputFragment : DialogFragment(), TextView.OnEditorActionListener, Vie
         okBtn.setOnClickListener(this)
         editText.setOnEditorActionListener(this)
         editText.requestFocus()
-        if (dialog.window == null) {
-            return view
+
+        dialog.window?.let {
+            it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            dialog.setTitle(R.string.enter_username)
+            dialog.setCancelable(false)
         }
-        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.setTitle(R.string.enter_username)
-        dialog.setCancelable(false)
 
         return view
     }

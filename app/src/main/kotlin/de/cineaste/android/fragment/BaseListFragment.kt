@@ -131,9 +131,8 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
             this.watchState = getWatchState(currentState)
         }
 
-        val activity = activity
         activity?.let {
-            userDbHelper = UserDbHelper.getInstance(activity)
+            userDbHelper = UserDbHelper.getInstance(it)
         }
 
     }
@@ -152,14 +151,10 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        val activity = activity
-        activity?.let { activity ->
-            val menuInflater = activity.menuInflater
-            menuInflater.inflate(R.menu.start_movie_night, menu)
+        activity?.let {
+            it.menuInflater.inflate(R.menu.start_movie_night, menu)
 
-            val searchItem = menu?.findItem(R.id.action_search)
-
-            searchItem?.let { searchItem ->
+            menu?.findItem(R.id.action_search)?.let { searchItem ->
                 val searchView = searchItem.actionView as SearchView
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {

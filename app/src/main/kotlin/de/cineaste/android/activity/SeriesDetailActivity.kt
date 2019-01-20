@@ -51,8 +51,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     override fun onClick(v: View) {
         if (v.id == R.id.poster) {
-            val posterPath = currentSeries?.posterPath
-            posterPath?.let {
+            currentSeries?.posterPath?.let { posterPath ->
                 val intent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
                 intent.putExtra(PosterActivity.POSTER_PATH, posterPath)
                 startActivity(intent)
@@ -73,9 +72,9 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 onBackPressed()
                 return true
             }
+
             R.id.more_info -> {
-                val series = currentSeries
-                series?.let {
+                currentSeries?.let { series ->
                     val tmdbUri = Constants.THE_MOVIE_DB_SERIES_URI
                             .replace("<SERIES_ID>", series.id.toString())
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUri))
@@ -84,8 +83,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             }
 
             R.id.share -> {
-                val series = currentSeries
-                series?.let {
+                currentSeries?.let { series ->
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBodyText = "${series.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace("<SERIES_ID>", series.id.toString())}"
@@ -122,15 +120,13 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     }
                 }
             R.string.watchlistState -> {
-                val series = currentSeries
-                series?.let {
+                currentSeries?.let { series ->
                     showDialogIfNeeded(series)
                 }
             }
         }
 
-        if (seriesCallback != null) {
-
+        seriesCallback?.let {
             seriesLoader.loadCompleteSeries(seriesId, seriesCallback)
 
             showAddToast()
@@ -141,8 +137,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     private fun showAddToast() {
-        val series = currentSeries
-        series?.let {
+        currentSeries?.let { series ->
             Toast.makeText(this, this.resources.getString(R.string.movieAdd,
                     series.name), Toast.LENGTH_SHORT).show()
         }
@@ -198,7 +193,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         }
 
         callback?.let {
-            seriesLoader.loadCompleteSeries(seriesId, callback)
+            seriesLoader.loadCompleteSeries(seriesId, it)
 
             showAddToast()
         }
@@ -251,8 +246,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
         initToolbar()
 
-        val backdropPath = currentSeries?.backdropPath
-        backdropPath?.let { backdropPath ->
+        currentSeries?.backdropPath?.let { backdropPath ->
             poster.setOnClickListener {
                 val myIntent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
                 myIntent.putExtra(PosterActivity.POSTER_PATH, backdropPath)
@@ -265,8 +259,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     override fun onResume() {
         super.onResume()
-        val series = currentSeries
-        series?.let {
+
+        currentSeries?.let {
             if (state != R.string.searchState) {
                 slideIn()
             }
@@ -286,11 +280,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
             fab.show()
             fab.setOnClickListener {
-                val series = currentSeries
-                series?.let { series ->
-                    seriesDbHelper.episodeWatched(series)
-                    currentSeries = seriesDbHelper.getSeriesById(series.id)
-                    assignData(series)
+                currentSeries?.let {
+                    seriesDbHelper.episodeWatched(it)
+                    currentSeries = seriesDbHelper.getSeriesById(it.id)
+                    assignData(it)
                 }
             }
 

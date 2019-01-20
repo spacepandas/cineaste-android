@@ -21,20 +21,21 @@ object ImportService {
 
     @Throws(IOException::class)
     private fun readJsonFromUri(uri: Uri, context: Context): String {
-        val parcelFileDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
-        val fileDescriptor = parcelFileDescriptor.fileDescriptor
-        val fis = FileInputStream(fileDescriptor)
+        context.contentResolver.openFileDescriptor(uri, "r")?.let { parcelFileDescriptor ->
+            val fileDescriptor = parcelFileDescriptor.fileDescriptor
+            val fis = FileInputStream(fileDescriptor)
 
-        val stringBuilder = StringBuilder()
-        val line = fis.bufferedReader().readLines()
+            val stringBuilder = StringBuilder()
+            val line = fis.bufferedReader().readLines()
 
-        for (s in line) {
-            stringBuilder.append(s)
+            line.forEach {
+                stringBuilder.append(it)
+            }
+
+            parcelFileDescriptor.close()
+            fis.close()
+
+            return stringBuilder.toString()
         }
-
-        parcelFileDescriptor.close()
-        fis.close()
-
-        return stringBuilder.toString()
     }
 }

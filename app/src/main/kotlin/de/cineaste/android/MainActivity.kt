@@ -327,20 +327,14 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 READ_REQUEST_CODE -> {
-                    resultData?.let { resultData ->
-                        val uri = resultData.data
-                        uri?.let { uri ->
-                            importMovies(uri)
-                        }
+                    resultData?.data?.let {
+                        importMovies(it)
                     }
                 }
 
                 WRITE_REQUEST_CODE -> {
-                    resultData?.let { resultData ->
-                        val uri = resultData.data
-                        uri?.let { uri ->
-                            exportMovies(uri)
-                        }
+                    resultData?.data?.let {
+                        exportMovies(it)
                     }
                 }
             }
