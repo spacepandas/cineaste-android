@@ -6,9 +6,9 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.View
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Suppress("unused")
 class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingActionButton.Behavior() {
@@ -51,9 +51,9 @@ class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingAc
 
         if (dyConsumed > 0 && child.visibility == View.VISIBLE) {
             child.hide()
-            launch {
+            GlobalScope.launch {
                 Thread.sleep(2000)
-                launch(Dispatchers.Main) {
+                launch(Main) {
                     child.show()
                 }
             }

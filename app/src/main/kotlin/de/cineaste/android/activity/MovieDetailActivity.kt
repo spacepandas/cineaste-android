@@ -27,6 +27,9 @@ import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.util.Constants
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -266,7 +269,7 @@ class MovieDetailActivity : AppCompatActivity() {
             }
 
             override fun onSuccess(movie: Movie) {
-                runOnUiThread {
+                GlobalScope.launch(Main) {
                     currentMovie = movie
                     assignData(movie)
                     progressBar.visibility = View.GONE
@@ -351,11 +354,11 @@ class MovieDetailActivity : AppCompatActivity() {
         if (state != R.string.searchState) {
             MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback{
                 override fun onFailure() {
-                    runOnUiThread { showNetworkError() }
+                    GlobalScope.launch(Main) { showNetworkError() }
                 }
 
                 override fun onSuccess(movie: Movie) {
-                    runOnUiThread {
+                    GlobalScope.launch(Main) {
                         assignData(movie)
                         updateMovieDetails(movie)
                         movieDbHelper.createOrUpdate(currentMovie ?: movie)

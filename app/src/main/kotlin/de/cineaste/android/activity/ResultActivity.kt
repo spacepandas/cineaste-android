@@ -17,6 +17,9 @@ import de.cineaste.android.entity.movie.NearbyMessage
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.util.MultiList
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener {
@@ -97,7 +100,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
                 }
 
                 override fun onSuccess(movie: Movie) {
-                    runOnUiThread { updateMovie(movie) }
+                    GlobalScope.launch(Main) { updateMovie(movie) }
                 }
             }))
         } else {

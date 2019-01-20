@@ -28,6 +28,9 @@ import de.cineaste.android.entity.movie.MovieDto
 import de.cineaste.android.entity.movie.NearbyMessage
 import de.cineaste.android.fragment.UserInputFragment
 import de.cineaste.android.fragment.WatchState
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
@@ -180,7 +183,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
 
 
     private fun clearDeviceList() {
-        runOnUiThread {
+        GlobalScope.launch(Main) {
             nearbyMessagesArrayList.clear()
             nearbyUserAdapter.notifyDataSetChanged()
         }
@@ -188,7 +191,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
 
     private inner class CineasteMessageListener : MessageListener() {
         override fun onFound(message: Message) {
-            runOnUiThread {
+            GlobalScope.launch(Main) {
                 val nearbyMessage = NearbyMessage.fromMessage(message)
                 if (!nearbyMessagesArrayList.contains(nearbyMessage)) {
                     nearbyMessagesArrayList.add(nearbyMessage)

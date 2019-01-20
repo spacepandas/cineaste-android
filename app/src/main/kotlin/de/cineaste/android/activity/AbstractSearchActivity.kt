@@ -20,6 +20,9 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.NetworkCallback
 import de.cineaste.android.network.NetworkResponse
 import de.cineaste.android.util.DateAwareGson
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.reflect.Type
 
 abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
@@ -36,7 +39,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     val networkCallback: NetworkCallback
         get() = object : NetworkCallback {
             override fun onFailure() {
-                runOnUiThread { showNetworkError() }
+                GlobalScope.launch(Main) { showNetworkError() }
             }
 
             override fun onSuccess(response: NetworkResponse) {
@@ -45,7 +48,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
                 val json = responseObject.get("results").toString()
                 val listType = listType
 
-                runOnUiThread(getRunnable(json, listType))
+                GlobalScope.launch(Main) { getRunnable(json, listType) }
             }
         }
 

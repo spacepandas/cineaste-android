@@ -30,9 +30,9 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.SeriesCallback
 import de.cineaste.android.network.SeriesLoader
 import de.cineaste.android.util.Constants
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
 
@@ -348,7 +348,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             seriesLoader.loadCompleteSeries(seriesId,
                     object : SeriesCallback {
                         override fun onFailure() {
-                            runOnUiThread { showNetworkError() }
+                            GlobalScope.launch(Main) { showNetworkError() }
                         }
 
                         override fun onSuccess(series: Series) {
@@ -358,7 +358,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                                 series.listPosition = oldSeries.listPosition
                             }
                             seriesDbHelper.update(series)
-                            runOnUiThread {
+                            GlobalScope.launch(Main) {
                                 setPoster(series)
                                 adapter.updateSeries(series)
                             }
@@ -393,7 +393,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             }
 
             override fun onSuccess(series: Series) {
-                launch(Dispatchers.Main) {
+                GlobalScope.launch(Main) {
                     currentSeries = series
                     assignData(series)
                     progressBar.visibility = View.GONE

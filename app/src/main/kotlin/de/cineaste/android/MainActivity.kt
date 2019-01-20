@@ -37,9 +37,9 @@ import de.cineaste.android.entity.User
 import de.cineaste.android.fragment.*
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -291,7 +291,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
         baseListFragment.progressbar.visibility = View.VISIBLE
 
-        launch {
+        GlobalScope.launch {
 
             val importExportObject = ImportService.importFiles(uri, this@MainActivity)
             //todo find a better solution to save all files
@@ -303,7 +303,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                 seriesDbHelper.importSeries(series)
             }
 
-            launch(Dispatchers.Main) {
+            launch(Main) {
                 baseListFragment.progressbar.visibility = View.GONE
                 baseListFragment.updateAdapter()
 

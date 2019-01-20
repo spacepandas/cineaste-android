@@ -18,6 +18,9 @@ import de.cineaste.android.network.NetworkClient
 import de.cineaste.android.network.NetworkRequest
 import de.cineaste.android.network.SeriesCallback
 import de.cineaste.android.network.SeriesLoader
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.OnSeriesStateChange {
 
@@ -47,7 +50,7 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
         when (viewId) {
             R.id.to_watchlist_button -> seriesCallback = object : SeriesCallback {
                 override fun onFailure() {
-                    runOnUiThread { seriesAddError(series, index) }
+                    GlobalScope.launch(Main) { seriesAddError(series, index) }
                 }
 
                 override fun onSuccess(series: Series) {
@@ -58,7 +61,7 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
 
                 seriesCallback = object : SeriesCallback {
                     override fun onFailure() {
-                        runOnUiThread { seriesAddError(series, index) }
+                        GlobalScope.launch(Main) { seriesAddError(series, index) }
                     }
 
                     override fun onSuccess(series: Series) {
