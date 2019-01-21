@@ -5,11 +5,11 @@ import android.app.ActivityOptions.makeSceneTransitionAnimation
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Pair
 import android.view.*
 import android.widget.ImageView
@@ -142,8 +142,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         menu?.let {
             val searchViewMenuItem = menu.findItem(R.id.action_search)
             val mSearchView = searchViewMenuItem.actionView as SearchView
-            val searchImgId = android.support.v7.appcompat.R.id.search_button // I used the explicit layout ID of searchView's ImageView
-            val v = mSearchView.findViewById<ImageView>(searchImgId)
+            val v = mSearchView.findViewById<ImageView>(R.id.search_button)
             v.setImageResource(R.drawable.ic_filter)
             super.onPrepareOptionsMenu(menu)
         }

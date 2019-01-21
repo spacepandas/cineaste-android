@@ -1,7 +1,7 @@
 package de.cineaste.android.adapter.series
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.Filter
 import de.cineaste.android.R

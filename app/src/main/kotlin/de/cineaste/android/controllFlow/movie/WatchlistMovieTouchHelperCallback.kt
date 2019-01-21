@@ -1,8 +1,8 @@
 package de.cineaste.android.controllFlow.movie
 
 import android.content.res.Resources
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import de.cineaste.android.R
 import de.cineaste.android.adapter.movie.MovieListAdapter

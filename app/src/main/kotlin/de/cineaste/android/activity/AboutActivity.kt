@@ -3,8 +3,8 @@ package de.cineaste.android.activity
 import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import de.cineaste.android.BuildConfig

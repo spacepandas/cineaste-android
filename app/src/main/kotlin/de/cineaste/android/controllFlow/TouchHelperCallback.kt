@@ -6,9 +6,9 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import de.cineaste.android.R
 
 abstract class TouchHelperCallback protected constructor(private val resources: Resources, protected val linearLayoutManager: LinearLayoutManager, protected val recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
