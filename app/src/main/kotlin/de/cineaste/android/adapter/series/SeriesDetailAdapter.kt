@@ -61,31 +61,31 @@ class SeriesDetailAdapter(
                 return TriangleViewHolder(view)
             }
             1 -> {
-                val view  = LayoutInflater
+                val view = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_base, parent, false)
                 return BaseViewHolder(view, parent.context, posterClickListener)
             }
             2 -> {
-                val view  = LayoutInflater
+                val view = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_buttons, parent, false)
                 return ButtonsViewHolder(view, state, listener)
             }
             3 -> {
-                val view  = LayoutInflater
+                val view = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_description, parent, false)
                 return DescriptionViewHolder(view, parent.context)
             }
             4 -> {
-                val view  = LayoutInflater
+                val view = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_seasons, parent, false)
                 return SeasonsListViewHolder(view, parent.context, clickListener)
             }
             else -> {
-                val view  = LayoutInflater
+                val view = LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.series_detail_base, parent, false)
                 return BaseViewHolder(view, parent.context, posterClickListener)

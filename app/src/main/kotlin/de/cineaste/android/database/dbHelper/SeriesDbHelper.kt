@@ -400,7 +400,7 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     private fun getSelectionArgs(state: WatchState): String {
-        return if (state == WatchState.WATCH_STATE) "0" else  "1"
+        return if (state == WatchState.WATCH_STATE) "0" else "1"
     }
 
     companion object {
