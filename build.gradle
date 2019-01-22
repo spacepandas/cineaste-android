@@ -3,7 +3,7 @@ buildscript {
     ext.tools_version = '3.3.0'
     ext.build_tools_version = '28.0.3'
     ext.sdk_version = 28
-    ext.ax_version = '1.0.0-beta01'
+    ext.ax_version = '1.0.0'
 
     repositories {
         jcenter()
