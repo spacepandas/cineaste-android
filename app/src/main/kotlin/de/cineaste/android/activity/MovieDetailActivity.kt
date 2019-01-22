@@ -3,12 +3,12 @@ package de.cineaste.android.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CollapsingToolbarLayout
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.widget.NestedScrollView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -27,6 +27,9 @@ import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.util.Constants
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -74,8 +77,7 @@ class MovieDetailActivity : AppCompatActivity() {
             }
 
             R.id.share -> {
-                val movie = currentMovie
-                movie?.let {
+                currentMovie?.let { movie ->
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBodyText = "${movie.title} ${Constants.THE_MOVIE_DB_MOVIES_URI
@@ -95,8 +97,7 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun onDeleteClicked() {
-        val movie = currentMovie
-        movie?.let {
+        currentMovie?.let { movie ->
             movieDbHelper.deleteMovieFromWatchlist(movie)
             layout.removeCallbacks(updateCallBack)
             onBackPressed()
@@ -118,26 +119,22 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
             }
             R.string.watchlistState -> {
-                val movie = currentMovie
-                movie?.let {
+                currentMovie?.let { movie ->
                     movie.isWatched = true
                     movieDbHelper.createOrUpdate(movie)
                 }
             }
         }
 
-
         if (callback != null) {
             MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), callback)
-            val title = currentMovie?.title
-            title?.let {
+            currentMovie?.title?.let { title ->
                 Toast.makeText(this, this.resources.getString(R.string.movieAdd,
                         title), Toast.LENGTH_SHORT).show()
             }
         }
 
         onBackPressed()
-
     }
 
     private fun onAddToWatchClicked() {
@@ -164,8 +161,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         if (callback != null) {
             MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), callback)
-            val movie = currentMovie
-            movie?.let {
+            currentMovie?.let { movie ->
                 Toast.makeText(this, this.resources.getString(R.string.movieAdd,
                         movie.title), Toast.LENGTH_SHORT).show()
             }
@@ -201,8 +197,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         initToolbar()
 
-        val posterPath = currentMovie?.posterPath
-        posterPath?.let { posterPath ->
+        currentMovie?.posterPath?.let { posterPath ->
             poster.setOnClickListener {
                 val myIntent = Intent(this@MovieDetailActivity, PosterActivity::class.java)
                 myIntent.putExtra(PosterActivity.POSTER_PATH, posterPath)
@@ -266,7 +261,7 @@ class MovieDetailActivity : AppCompatActivity() {
             }
 
             override fun onSuccess(movie: Movie) {
-                runOnUiThread {
+                GlobalScope.launch(Main) {
                     currentMovie = movie
                     assignData(movie)
                     progressBar.visibility = View.GONE
@@ -294,7 +289,6 @@ class MovieDetailActivity : AppCompatActivity() {
         }
         movieRuntime.text = getString(R.string.runtime, currentMovie.runtime)
         rating.text = currentMovie.voteAverage.toString()
-
 
         val posterUri = Constants.POSTER_URI_SMALL
                 .replace("<posterName>", currentMovie.posterPath ?: "/")
@@ -351,11 +345,11 @@ class MovieDetailActivity : AppCompatActivity() {
         if (state != R.string.searchState) {
             MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback{
                 override fun onFailure() {
-                    runOnUiThread { showNetworkError() }
+                    GlobalScope.launch(Main) { showNetworkError() }
                 }
 
                 override fun onSuccess(movie: Movie) {
-                    runOnUiThread {
+                    GlobalScope.launch(Main) {
                         assignData(movie)
                         updateMovieDetails(movie)
                         movieDbHelper.createOrUpdate(currentMovie ?: movie)

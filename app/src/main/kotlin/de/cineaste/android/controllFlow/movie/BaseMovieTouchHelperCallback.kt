@@ -1,9 +1,9 @@
 package de.cineaste.android.controllFlow.movie
 
 import android.content.res.Resources
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 
 import de.cineaste.android.adapter.movie.MovieListAdapter
 import de.cineaste.android.controllFlow.TouchHelperCallback

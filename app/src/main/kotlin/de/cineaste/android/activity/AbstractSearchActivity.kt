@@ -5,21 +5,27 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.*
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.*
 import android.text.TextUtils
 import android.util.Pair
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonParser
 import de.cineaste.android.R
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.NetworkCallback
 import de.cineaste.android.network.NetworkResponse
 import de.cineaste.android.util.DateAwareGson
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.reflect.Type
 
 abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
@@ -36,7 +42,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     val networkCallback: NetworkCallback
         get() = object : NetworkCallback {
             override fun onFailure() {
-                runOnUiThread { showNetworkError() }
+                GlobalScope.launch(Main) { showNetworkError() }
             }
 
             override fun onSuccess(response: NetworkResponse) {
@@ -45,7 +51,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
                 val json = responseObject.get("results").toString()
                 val listType = listType
 
-                runOnUiThread(getRunnable(json, listType))
+                GlobalScope.launch(Main) { getRunnable(json, listType) }
             }
         }
 

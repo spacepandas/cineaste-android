@@ -61,11 +61,7 @@ class MovieDbHelper private constructor(context: Context) {
     }
 
     private fun getSelectionArgs(state: WatchState): String {
-        return if (state == WatchState.WATCH_STATE) {
-            "0"
-        } else {
-            "1"
-        }
+        return if (state == WatchState.WATCH_STATE) "0" else "1"
     }
 
     fun createOrUpdate(movie: Movie) {
@@ -73,7 +69,7 @@ class MovieDbHelper private constructor(context: Context) {
         val selectionArgs = arrayOf(java.lang.Long.toString(movie.id))
         val movieList = movieDao.read(selection, selectionArgs, null)
 
-        if (!movieList.isEmpty()) {
+        if (movieList.isNotEmpty()) {
             update(movie, getNewPosition(movie, movieList[0]))
         } else {
             movieDao.create(movie)
@@ -91,9 +87,8 @@ class MovieDbHelper private constructor(context: Context) {
     private fun update(movie: Movie, listPosition: Int) {
         val values = ContentValues()
         values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED, if (movie.isWatched) 1 else 0)
-        val watchedDate = movie.watchedDate
-        watchedDate?.let {
-            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, watchedDate.time)
+        movie.watchedDate?.let {
+            values.put(BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED_DATE, it.time)
         }
         values.put(BaseDao.MovieEntry.COLUMN_MOVIE_TITLE, movie.title)
         values.put(BaseDao.MovieEntry.COLUMN_RUNTIME, movie.runtime)

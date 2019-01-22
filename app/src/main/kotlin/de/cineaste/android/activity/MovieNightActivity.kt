@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -28,6 +28,9 @@ import de.cineaste.android.entity.movie.MovieDto
 import de.cineaste.android.entity.movie.NearbyMessage
 import de.cineaste.android.fragment.UserInputFragment
 import de.cineaste.android.fragment.WatchState
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
@@ -119,8 +122,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         val watchlistDbHelper = MovieDbHelper.getInstance(this)
         val localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE)
         val localMovies = transFormMovies(localWatchlistMovies)
-        val userName = currentUser?.userName
-        userName?.let {
+        currentUser?.userName?.let { userName ->
             localNearbyMessage = NearbyMessage(userName, myUUid, localMovies)
         }
     }
@@ -133,8 +135,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     override fun onFinishUserDialog(userName: String) {
         if (!userName.isEmpty()) {
             currentUser = User(userName)
-            val user = currentUser
-            user?.let {
+            currentUser?.let { user ->
                 userDbHelper.createUser(user)
             }
         }
@@ -180,7 +181,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
 
 
     private fun clearDeviceList() {
-        runOnUiThread {
+        GlobalScope.launch(Main) {
             nearbyMessagesArrayList.clear()
             nearbyUserAdapter.notifyDataSetChanged()
         }
@@ -188,7 +189,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
 
     private inner class CineasteMessageListener : MessageListener() {
         override fun onFound(message: Message) {
-            runOnUiThread {
+            GlobalScope.launch(Main) {
                 val nearbyMessage = NearbyMessage.fromMessage(message)
                 if (!nearbyMessagesArrayList.contains(nearbyMessage)) {
                     nearbyMessagesArrayList.add(nearbyMessage)
@@ -214,7 +215,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
 
         private fun getUUID(sharedPreferences: SharedPreferences): String {
             var uuid = sharedPreferences.getString(KEY_UUID, "")
-            if (uuid.isEmpty()) {
+            if (uuid.isNullOrEmpty()) {
                 uuid = UUID.randomUUID().toString()
                 sharedPreferences.edit().putString(KEY_UUID, uuid).apply()
             }

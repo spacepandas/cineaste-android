@@ -2,8 +2,8 @@ package de.cineaste.android.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.widget.helper.ItemTouchHelper
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.View
 
 import de.cineaste.android.R

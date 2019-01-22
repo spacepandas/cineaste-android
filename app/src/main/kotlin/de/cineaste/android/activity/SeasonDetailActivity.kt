@@ -2,11 +2,11 @@ package de.cineaste.android.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CollapsingToolbarLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
@@ -70,8 +70,7 @@ class SeasonDetailActivity : AppCompatActivity() {
     }
 
     private fun setPoster(position: Int) {
-        val seasons = currentSeries?.seasons
-        seasons?.let { seasons ->
+        currentSeries?.seasons?.let { seasons ->
             val season = seasons[position]
 
             val posterPath = season.posterPath
@@ -82,7 +81,7 @@ class SeasonDetailActivity : AppCompatActivity() {
                         .into(poster)
             } else {
                 val posterUri = Constants.POSTER_URI_SMALL
-                        .replace("<posterName>", posterPath ?: "/")
+                        .replace("<posterName>", posterPath)
                         .replace("<API_KEY>", getString(R.string.movieKey))
                 Picasso.get()
                         .load(posterUri)
@@ -100,13 +99,10 @@ class SeasonDetailActivity : AppCompatActivity() {
     }
 
     private fun currentSeasonIndex(): Int {
-        currentSeries?.let { currentSeries ->
-            val seasons = currentSeries.seasons
-            seasons?.let { seasons ->
-                for (i in seasons.indices) {
-                    if (seasons[i].id == seasonId) {
-                        return i
-                    }
+        currentSeries?.seasons?.let { seasons ->
+            for (i in seasons.indices) {
+                if (seasons[i].id == seasonId) {
+                    return i
                 }
             }
         }
@@ -116,8 +112,7 @@ class SeasonDetailActivity : AppCompatActivity() {
     private fun initToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setTitleIfNeeded()
     }
@@ -152,8 +147,7 @@ class SeasonDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                val series = currentSeries
-                series?.let {
+                currentSeries?.let { series ->
                     val unwatchedEpisodes = seriesDbHelper.getUnWatchedEpisodesOfSeries(series.id)
                     if (unwatchedEpisodes.isEmpty() && !series.isInProduction) {
                         series.isWatched = true

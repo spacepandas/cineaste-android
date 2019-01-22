@@ -4,9 +4,9 @@ import android.annotation.TargetApi
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.graphics.Palette
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.palette.graphics.Palette
 import android.view.MenuItem
 import android.view.WindowManager
 import com.squareup.picasso.Callback
@@ -92,9 +92,8 @@ class PosterActivity : AppCompatActivity() {
 
 
     private fun getPosterUrl(postUri: String): String {
-        val posterName = posterPath
         return postUri
-                .replace("<posterName>", posterName ?: "/")
+                .replace("<posterName>", posterPath ?: "/")
                 .replace("<API_KEY>", getString(R.string.movieKey))
     }
 

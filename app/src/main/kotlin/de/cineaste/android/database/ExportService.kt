@@ -22,9 +22,11 @@ object ExportService {
 
     private fun writeOnDevice(importExportObject: ImportExportObject, uri: Uri, context: Context) {
         val pfd = context.contentResolver.openFileDescriptor(uri, "w")
-        val fileOutputStream = FileOutputStream(pfd.fileDescriptor)
-        fileOutputStream.write(gson.toJson(importExportObject).toByteArray())
-        fileOutputStream.close()
-        pfd.close()
+        pfd?.let {
+            val fileOutputStream = FileOutputStream(it.fileDescriptor)
+            fileOutputStream.write(gson.toJson(importExportObject).toByteArray())
+            fileOutputStream.close()
+            it.close()
+        }
     }
 }

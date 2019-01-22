@@ -1,10 +1,10 @@
 package de.cineaste.android.controllFlow.series
 
 import android.content.Context
-import android.support.design.widget.BaseTransientBottomBar
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesListAdapter
@@ -46,7 +46,6 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
         val seriesToBeUpdated = adapter.getItem(position)
 
         showDialogIfNeeded(seriesToBeUpdated, position, message)
-
     }
 
     private fun showDialogIfNeeded(series: Series, position: Int, message: Int) {

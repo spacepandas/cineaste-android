@@ -1,6 +1,6 @@
 package de.cineaste.android.adapter.series
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import de.cineaste.android.R
@@ -32,10 +32,10 @@ class SeriesSearchQueryAdapter(private val listener: ItemClickListener, private 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesSearchViewHolder {
-        val v = LayoutInflater
+        val view = LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.card_series_search, parent, false)
-        return SeriesSearchViewHolder(v, listener, parent.context, seriesStateChange)
+        return SeriesSearchViewHolder(view, listener, parent.context, seriesStateChange)
     }
 
     override fun onBindViewHolder(holder: SeriesSearchViewHolder, position: Int) {

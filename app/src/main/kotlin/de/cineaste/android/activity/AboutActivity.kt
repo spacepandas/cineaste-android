@@ -3,8 +3,8 @@ package de.cineaste.android.activity
 import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import de.cineaste.android.BuildConfig
@@ -20,8 +20,7 @@ class AboutActivity : AppCompatActivity() {
         initToolbar()
 
         val webView = findViewById<WebView>(R.id.webview)
-        val webSettings = webView.settings
-        webSettings.javaScriptEnabled = true
+        webView.settings.javaScriptEnabled = true
         webView.addJavascriptInterface(WebInterface(resources), "Android")
         webView.loadUrl("file:///android_res/raw/about.html")
     }
@@ -30,8 +29,7 @@ class AboutActivity : AppCompatActivity() {
     private fun initToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setTitle(R.string.about)
     }

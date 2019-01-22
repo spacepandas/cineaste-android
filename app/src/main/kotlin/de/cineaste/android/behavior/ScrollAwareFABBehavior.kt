@@ -1,17 +1,17 @@
 package de.cineaste.android.behavior
 
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.view.ViewCompat
 import android.view.View
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Suppress("unused")
-class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingActionButton.Behavior() {
+class ScrollAwareFABBehavior(@Suppress("UNUSED_PARAMETER")context: Context, @Suppress("UNUSED_PARAMETER")attrs: AttributeSet) : FloatingActionButton.Behavior() {
 
     override fun onStartNestedScroll(
             coordinatorLayout: CoordinatorLayout,
@@ -51,9 +51,9 @@ class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingAc
 
         if (dyConsumed > 0 && child.visibility == View.VISIBLE) {
             child.hide()
-            launch {
+            GlobalScope.launch {
                 Thread.sleep(2000)
-                launch(Dispatchers.Main) {
+                launch(Main) {
                     child.show()
                 }
             }

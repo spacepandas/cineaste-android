@@ -1,6 +1,6 @@
 package de.cineaste.android.controllFlow
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 
 abstract class BaseSnackBar protected constructor(protected val linearLayoutManager: LinearLayoutManager, protected val view: View) {

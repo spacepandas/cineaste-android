@@ -1,7 +1,7 @@
 package de.cineaste.android.adapter.series
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.Filter
 import de.cineaste.android.R
@@ -53,8 +53,7 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     }
 
     fun updateSeries(givenSeries: Series, pos: Int) {
-        val series = db.getSeriesById(givenSeries.id)
-        series?.let {
+        db.getSeriesById(givenSeries.id)?.let { series ->
             dataSet.removeAt(pos)
             filteredDataSet.removeAt(pos)
             if (state == WatchState.WATCH_STATE && !series.isWatched) {
@@ -182,23 +181,20 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
 
         override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
             filteredSeriesList.clear()
-            val results = Filter.FilterResults()
 
-            if (constraint == null || constraint.isEmpty()) {
+            if (constraint.isNullOrEmpty()) {
                 filteredSeriesList.addAll(seriesList)
             } else {
                 val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
 
                 for (series in seriesList) {
-                    val name = series.name
-                    name?.let {
-                        if (name.toLowerCase().contains(filterPattern)) {
-                            filteredSeriesList.add(series)
-                        }
+                    if (series.name.toLowerCase().contains(filterPattern)) {
+                        filteredSeriesList.add(series)
                     }
                 }
             }
 
+            val results = Filter.FilterResults()
             results.values = filteredSeriesList
             results.count = filteredSeriesList.size
 

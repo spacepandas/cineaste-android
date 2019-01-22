@@ -7,17 +7,17 @@ import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
@@ -37,9 +37,9 @@ import de.cineaste.android.entity.User
 import de.cineaste.android.fragment.*
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             }
         }
 
-        if (!listPermissionsNeeded.isEmpty()) {
+        if (listPermissionsNeeded.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toTypedArray(), 1)
         }
     }
@@ -261,7 +261,6 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     private fun selectImportFile() {
-
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "*/*"
@@ -283,16 +282,13 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             } catch (ex: Exception) {
                 null
             }
-
         }
 
-        if (baseListFragment == null) {
-            return
-        }
+        if (baseListFragment == null) return
+
         baseListFragment.progressbar.visibility = View.VISIBLE
 
-        launch {
-
+        GlobalScope.launch {
             val importExportObject = ImportService.importFiles(uri, this@MainActivity)
             //todo find a better solution to save all files
             for (movie in importExportObject.movies) {
@@ -303,7 +299,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                 seriesDbHelper.importSeries(series)
             }
 
-            launch(Dispatchers.Main) {
+            launch(Main) {
                 baseListFragment.progressbar.visibility = View.GONE
                 baseListFragment.updateAdapter()
 
@@ -321,26 +317,21 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int,
+    public override fun onActivityResult(requestCode: Int,
+                                         resultCode: Int,
                                          resultData: Intent?) {
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 READ_REQUEST_CODE -> {
-                    resultData?.let { resultData ->
-                        val uri = resultData.data
-                        uri?.let { uri ->
-                            importMovies(uri)
-                        }
+                    resultData?.data?.let {
+                        importMovies(it)
                     }
                 }
 
                 WRITE_REQUEST_CODE -> {
-                    resultData?.let { resultData ->
-                        val uri = resultData.data
-                        uri?.let { uri ->
-                            exportMovies(uri)
-                        }
+                    resultData?.data?.let {
+                        exportMovies(it)
                     }
                 }
             }
@@ -368,7 +359,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     override fun onFinishUserDialog(userName: String) {
-        if (!userName.isEmpty()) {
+        if (userName.isNotEmpty()) {
             userDbHelper.createUser(User(userName))
         }
 

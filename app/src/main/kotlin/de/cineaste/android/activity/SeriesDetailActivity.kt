@@ -3,15 +3,15 @@ package de.cineaste.android.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CollapsingToolbarLayout
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -30,9 +30,9 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.SeriesCallback
 import de.cineaste.android.network.SeriesLoader
 import de.cineaste.android.util.Constants
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
 
@@ -51,8 +51,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     override fun onClick(v: View) {
         if (v.id == R.id.poster) {
-            val posterPath = currentSeries?.posterPath
-            posterPath?.let {
+            currentSeries?.posterPath?.let { posterPath ->
                 val intent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
                 intent.putExtra(PosterActivity.POSTER_PATH, posterPath)
                 startActivity(intent)
@@ -73,9 +72,9 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 onBackPressed()
                 return true
             }
+
             R.id.more_info -> {
-                val series = currentSeries
-                series?.let {
+                currentSeries?.let { series ->
                     val tmdbUri = Constants.THE_MOVIE_DB_SERIES_URI
                             .replace("<SERIES_ID>", series.id.toString())
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUri))
@@ -84,8 +83,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             }
 
             R.id.share -> {
-                val series = currentSeries
-                series?.let {
+                currentSeries?.let { series ->
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBodyText = "${series.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace("<SERIES_ID>", series.id.toString())}"
@@ -122,15 +120,13 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     }
                 }
             R.string.watchlistState -> {
-                val series = currentSeries
-                series?.let {
+                currentSeries?.let { series ->
                     showDialogIfNeeded(series)
                 }
             }
         }
 
-        if (seriesCallback != null) {
-
+        seriesCallback?.let {
             seriesLoader.loadCompleteSeries(seriesId, seriesCallback)
 
             showAddToast()
@@ -141,8 +137,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     private fun showAddToast() {
-        val series = currentSeries
-        series?.let {
+        currentSeries?.let { series ->
             Toast.makeText(this, this.resources.getString(R.string.movieAdd,
                     series.name), Toast.LENGTH_SHORT).show()
         }
@@ -198,7 +193,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         }
 
         callback?.let {
-            seriesLoader.loadCompleteSeries(seriesId, callback)
+            seriesLoader.loadCompleteSeries(seriesId, it)
 
             showAddToast()
         }
@@ -251,8 +246,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
         initToolbar()
 
-        val backdropPath = currentSeries?.backdropPath
-        backdropPath?.let { backdropPath ->
+        currentSeries?.backdropPath?.let { backdropPath ->
             poster.setOnClickListener {
                 val myIntent = Intent(this@SeriesDetailActivity, PosterActivity::class.java)
                 myIntent.putExtra(PosterActivity.POSTER_PATH, backdropPath)
@@ -265,8 +259,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     override fun onResume() {
         super.onResume()
-        val series = currentSeries
-        series?.let {
+
+        currentSeries?.let {
             if (state != R.string.searchState) {
                 slideIn()
             }
@@ -286,11 +280,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
             fab.show()
             fab.setOnClickListener {
-                val series = currentSeries
-                series?.let { series ->
-                    seriesDbHelper.episodeWatched(series)
-                    currentSeries = seriesDbHelper.getSeriesById(series.id)
-                    assignData(series)
+                currentSeries?.let {
+                    seriesDbHelper.episodeWatched(it)
+                    currentSeries = seriesDbHelper.getSeriesById(it.id)
+                    assignData(it)
                 }
             }
 
@@ -348,7 +341,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             seriesLoader.loadCompleteSeries(seriesId,
                     object : SeriesCallback {
                         override fun onFailure() {
-                            runOnUiThread { showNetworkError() }
+                            GlobalScope.launch(Main) { showNetworkError() }
                         }
 
                         override fun onSuccess(series: Series) {
@@ -358,7 +351,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                                 series.listPosition = oldSeries.listPosition
                             }
                             seriesDbHelper.update(series)
-                            runOnUiThread {
+                            GlobalScope.launch(Main) {
                                 setPoster(series)
                                 adapter.updateSeries(series)
                             }
@@ -393,7 +386,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             }
 
             override fun onSuccess(series: Series) {
-                launch(Dispatchers.Main) {
+                GlobalScope.launch(Main) {
                     currentSeries = series
                     assignData(series)
                     progressBar.visibility = View.GONE

@@ -1,11 +1,11 @@
 package de.cineaste.android.activity
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import de.cineaste.android.R
 import de.cineaste.android.adapter.ResultAdapter
 import de.cineaste.android.database.NearbyMessageHandler
@@ -17,6 +17,9 @@ import de.cineaste.android.entity.movie.NearbyMessage
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.util.MultiList
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener {
@@ -97,7 +100,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
                 }
 
                 override fun onSuccess(movie: Movie) {
-                    runOnUiThread { updateMovie(movie) }
+                    GlobalScope.launch(Main) { updateMovie(movie) }
                 }
             }))
         } else {

@@ -18,8 +18,7 @@ class SeriesDao private constructor(context: Context) : BaseDao(context) {
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE, series.voteAverage)
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_VOTE_COUNT, series.voteCount)
         values.put(BaseDao.SeriesEntry.COLUMN_SERIES_DESCRIPTION, series.description)
-        if (series.releaseDate ==
-                null) {
+        if (series.releaseDate == null) {
             values.put(BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE, "")
         } else {
             values.put(BaseDao.SeriesEntry.COLUMN_SERIES_RELEASE_DATE, sdf.format(series.releaseDate))

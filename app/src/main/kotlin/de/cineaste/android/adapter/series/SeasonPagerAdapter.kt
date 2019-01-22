@@ -2,9 +2,9 @@ package de.cineaste.android.adapter.series
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import de.cineaste.android.R
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.SeasonDetailFragment

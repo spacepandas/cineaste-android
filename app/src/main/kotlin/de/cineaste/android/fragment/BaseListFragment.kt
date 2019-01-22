@@ -5,11 +5,11 @@ import android.app.ActivityOptions.makeSceneTransitionAnimation
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Pair
 import android.view.*
 import android.widget.ImageView
@@ -131,9 +131,8 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
             this.watchState = getWatchState(currentState)
         }
 
-        val activity = activity
         activity?.let {
-            userDbHelper = UserDbHelper.getInstance(activity)
+            userDbHelper = UserDbHelper.getInstance(it)
         }
 
     }
@@ -143,8 +142,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         menu?.let {
             val searchViewMenuItem = menu.findItem(R.id.action_search)
             val mSearchView = searchViewMenuItem.actionView as SearchView
-            val searchImgId = android.support.v7.appcompat.R.id.search_button // I used the explicit layout ID of searchView's ImageView
-            val v = mSearchView.findViewById<ImageView>(searchImgId)
+            val v = mSearchView.findViewById<ImageView>(R.id.search_button)
             v.setImageResource(R.drawable.ic_filter)
             super.onPrepareOptionsMenu(menu)
         }
@@ -152,14 +150,10 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        val activity = activity
-        activity?.let { activity ->
-            val menuInflater = activity.menuInflater
-            menuInflater.inflate(R.menu.start_movie_night, menu)
+        activity?.let {
+            it.menuInflater.inflate(R.menu.start_movie_night, menu)
 
-            val searchItem = menu?.findItem(R.id.action_search)
-
-            searchItem?.let { searchItem ->
+            menu?.findItem(R.id.action_search)?.let { searchItem ->
                 val searchView = searchItem.actionView as SearchView
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {

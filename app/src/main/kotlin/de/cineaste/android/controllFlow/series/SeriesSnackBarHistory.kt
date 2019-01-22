@@ -1,8 +1,8 @@
 package de.cineaste.android.controllFlow.series
 
-import android.support.design.widget.BaseTransientBottomBar
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesListAdapter
@@ -27,8 +27,8 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
                 when (event) {
                     Snackbar.Callback.DISMISS_EVENT_ACTION -> {
                         adapter.addDeletedItemToHistoryAgain(seriesToBeDeleted, position, currentSeason, currentEpisode)
-                        val fist = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (fist >= position) {
+                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                        if (first >= position) {
                             linearLayoutManager.scrollToPosition(position)
                         }
                     }
@@ -54,7 +54,6 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
                 when (event) {
                     Snackbar.Callback.DISMISS_EVENT_ACTION -> {
                         adapter.moveBackToHistory(seriesToBeUpdated, position, currentSeason, currentEpisode)
-
                         val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
                         if (first >= position) {
                             linearLayoutManager.scrollToPosition(position)

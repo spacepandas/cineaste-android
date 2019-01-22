@@ -2,7 +2,7 @@ package de.cineaste.android.adapter
 
 import android.content.Context
 import android.net.Uri
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,8 +35,8 @@ class ResultAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        val v = LayoutInflater.from(context).inflate(rowLayout, parent, false)
-        return ViewHolder(v)
+        val view = LayoutInflater.from(context).inflate(rowLayout, parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
