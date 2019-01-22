@@ -51,7 +51,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
                 val json = responseObject.get("results").toString()
                 val listType = listType
 
-                GlobalScope.launch(Main) { getRunnable(json, listType) }
+                GlobalScope.launch(Main) { getRunnable(json, listType).run() }
             }
         }
 
