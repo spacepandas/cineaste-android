@@ -34,14 +34,20 @@ import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.database.dbHelper.UserDbHelper
 import de.cineaste.android.entity.ImportExportObject
 import de.cineaste.android.entity.User
-import de.cineaste.android.fragment.*
+import de.cineaste.android.fragment.ImportFinishedDialogFragment
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
+import de.cineaste.android.fragment.BaseListFragment
+import de.cineaste.android.fragment.SeriesListFragment
+import de.cineaste.android.fragment.UserInputFragment
+import de.cineaste.android.fragment.MovieListFragment
+import de.cineaste.android.fragment.WatchState
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.Date
 
 class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 

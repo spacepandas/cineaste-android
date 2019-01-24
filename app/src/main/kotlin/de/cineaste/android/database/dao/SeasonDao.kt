@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import de.cineaste.android.entity.series.Season
 import java.text.ParseException
-import java.util.*
 
 class SeasonDao private constructor(context: Context) : BaseDao(context) {
 

@@ -31,7 +31,8 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.Date
 
 class MovieDetailActivity : AppCompatActivity() {
 

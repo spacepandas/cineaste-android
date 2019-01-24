@@ -3,7 +3,6 @@ package de.cineaste.android.database.dao
 import android.content.ContentValues
 import android.content.Context
 import de.cineaste.android.entity.series.Series
-import java.util.*
 
 class SeriesDao private constructor(context: Context) : BaseDao(context) {
 

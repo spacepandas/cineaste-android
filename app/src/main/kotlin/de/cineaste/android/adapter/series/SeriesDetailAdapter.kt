@@ -14,13 +14,14 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 
 import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.Date
 
 import de.cineaste.android.R
 import de.cineaste.android.entity.series.Season
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.util.Constants
-import java.util.*
 
 class SeriesDetailAdapter(
     private var series: Series,

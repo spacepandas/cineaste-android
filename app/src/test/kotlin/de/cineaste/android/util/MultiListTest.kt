@@ -7,8 +7,6 @@ import java.util.ArrayList
 
 import de.cineaste.android.entity.movie.MovieDto
 
-import org.junit.Assert.*
-
 class MultiListTest {
     private val initialDtos = ArrayList<MovieDto>()
     private lateinit var list: MultiList

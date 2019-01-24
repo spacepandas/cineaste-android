@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-
 import de.cineaste.android.R
 import de.cineaste.android.activity.SeriesDetailActivity
 import de.cineaste.android.activity.SeriesSearchActivity

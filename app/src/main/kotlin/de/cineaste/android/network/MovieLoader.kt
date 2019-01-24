@@ -8,7 +8,8 @@ import com.google.gson.JsonParser
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.util.ExtendedDateAwareGson
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import kotlin.collections.HashMap
 
 interface MovieCallback {

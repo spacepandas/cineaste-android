@@ -31,7 +31,7 @@ import de.cineaste.android.fragment.WatchState
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 
 class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 

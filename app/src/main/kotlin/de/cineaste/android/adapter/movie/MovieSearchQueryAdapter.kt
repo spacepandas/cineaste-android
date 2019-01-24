@@ -7,7 +7,6 @@ import de.cineaste.android.R
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.movie.MovieSearchViewHolder
-import java.util.*
 
 class MovieSearchQueryAdapter(private val listener: ItemClickListener, private val movieStateChange: OnMovieStateChange) : RecyclerView.Adapter<MovieSearchViewHolder>() {
     private val dataSet = ArrayList<Movie>()

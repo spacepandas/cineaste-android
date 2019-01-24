@@ -9,7 +9,6 @@ import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.entity.series.Season
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.util.DateAwareGson
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 

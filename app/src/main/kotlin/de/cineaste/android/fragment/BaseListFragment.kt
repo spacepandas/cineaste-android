@@ -11,10 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Pair
-import android.view.*
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.MenuInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.ViewGroup
 import de.cineaste.android.R
 import de.cineaste.android.activity.MovieNightActivity
 import de.cineaste.android.adapter.BaseListAdapter

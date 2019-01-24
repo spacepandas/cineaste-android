@@ -18,7 +18,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.reflect.Type
-import java.util.*
+import java.util.Locale
 
 class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.OnMovieStateChange {
 

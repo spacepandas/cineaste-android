@@ -20,7 +20,7 @@ import de.cineaste.android.util.MultiList
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 
 class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener {
 
