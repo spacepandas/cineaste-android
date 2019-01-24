@@ -86,9 +86,9 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         when (requestCode) {
             1 -> if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(
-                        this,
-                        R.string.missing_permission,
-                        Toast.LENGTH_SHORT).show()
+                    this,
+                    R.string.missing_permission,
+                    Toast.LENGTH_SHORT).show()
             }
             else -> {
             }
@@ -127,11 +127,11 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     private fun replaceFragment(fm: FragmentManager, fragment: Fragment) {
         fm.beginTransaction()
-                .replace(
-                        R.id.content_container,
-                        fragment, fragment.javaClass.name)
-                .addToBackStack(null)
-                .commit()
+            .replace(
+                R.id.content_container,
+                fragment, fragment.javaClass.name)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun replaceFragmentPopBackStack(fm: FragmentManager, fragment: Fragment) {
@@ -173,7 +173,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
         drawerLayout = findViewById(R.id.drawer_layout)
         val drawerToggle = ActionBarDrawerToggle(
-                this, drawerLayout, R.string.open, R.string.close
+            this, drawerLayout, R.string.open, R.string.close
         )
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerLayout.addDrawerListener(drawerToggle)
@@ -263,7 +263,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
 
         val snackBar = Snackbar
-                .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
+            .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
         snackBar.show()
     }
 
@@ -351,8 +351,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val watchlistFragment = MovieListFragment()
         val bundle = Bundle()
         bundle.putString(
-                WatchState.WATCH_STATE_TYPE.name,
-                state.name)
+            WatchState.WATCH_STATE_TYPE.name,
+            state.name)
         watchlistFragment.arguments = bundle
         return watchlistFragment
     }
@@ -361,8 +361,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val seriesListFragment = SeriesListFragment()
         val bundle = Bundle()
         bundle.putString(
-                WatchState.WATCH_STATE_TYPE.name,
-                state.name)
+            WatchState.WATCH_STATE_TYPE.name,
+            state.name)
         seriesListFragment.arguments = bundle
         return seriesListFragment
     }

@@ -44,7 +44,7 @@ class UserInputFragment : DialogFragment(), TextView.OnEditorActionListener, Vie
         return view
     }
 
-   override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         getNameAndDismiss()
 
         return true
