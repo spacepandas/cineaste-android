@@ -99,5 +99,4 @@ class EpisodeDao private constructor(context: Context) : BaseDao(context) {
             return instance!!
         }
     }
-
 }

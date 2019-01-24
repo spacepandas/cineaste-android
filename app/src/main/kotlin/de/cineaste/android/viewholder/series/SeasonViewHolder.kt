@@ -17,10 +17,11 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.util.Constants
 import java.util.*
 
-
-class SeasonViewHolder(private val view: View,
-                       private val itemClickListener: ItemClickListener?,
-                       private val context: Context) : RecyclerView.ViewHolder(view) {
+class SeasonViewHolder(
+    private val view: View,
+    private val itemClickListener: ItemClickListener?,
+    private val context: Context
+) : RecyclerView.ViewHolder(view) {
 
     private val poster: ImageView = view.findViewById(R.id.poster_image_view)
     private val seasonNumber: TextView = view.findViewById(R.id.season)
@@ -42,7 +43,6 @@ class SeasonViewHolder(private val view: View,
         view.setOnClickListener { view ->
             itemClickListener?.onItemClickListener(season.id, arrayOf(view, poster))
         }
-
     }
 
     private fun setMoviePoster(season: Season) {

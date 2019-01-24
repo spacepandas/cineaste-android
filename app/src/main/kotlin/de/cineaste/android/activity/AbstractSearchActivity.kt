@@ -61,7 +61,6 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     protected abstract fun searchRequest(searchQuery: String)
     protected abstract fun getRunnable(json: String, listType: Type): Runnable
 
-
     override fun onItemClickListener(itemId: Long, views: Array<View>) {
         val intent = getIntentForDetailActivity(itemId)
 
@@ -150,7 +149,6 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
                     }
                     return false
                 }
-
             })
             if (!TextUtils.isEmpty(searchText))
                 searchView.setQuery(searchText, false)
@@ -181,7 +179,6 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromInputMethod(view.windowToken, 0)
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

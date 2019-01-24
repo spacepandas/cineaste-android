@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.MotionEvent
 
-
 class CustomRecyclerView : RecyclerView {
 
     var isScrollingEnabled = true
@@ -23,7 +22,6 @@ class CustomRecyclerView : RecyclerView {
 
     override fun computeVerticalScrollRange(): Int {
         return if (isScrollingEnabled) super.computeVerticalScrollRange() else 0
-
     }
 
     override fun onInterceptTouchEvent(e: MotionEvent): Boolean {

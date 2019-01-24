@@ -15,7 +15,7 @@ class SeasonDao private constructor(context: Context) : BaseDao(context) {
     fun create(season: Season, seriesId: Long) {
         if (season.seasonNumber == 0) {
             return
-            //exclude specials if present
+            // exclude specials if present
         }
         val values = ContentValues()
         values.put(BaseDao.SeasonEntry.ID, season.id)
@@ -108,5 +108,4 @@ class SeasonDao private constructor(context: Context) : BaseDao(context) {
             return instance!!
         }
     }
-
 }

@@ -20,7 +20,6 @@ abstract class AbstractSeriesViewHolder(itemView: View, listener: ItemClickListe
         title.text = series.name
         vote.text = resources.getString(R.string.vote, series.voteAverage.toString())
 
-
         var posterName = series.posterPath
         if (TextUtils.isEmpty(posterName)) {
             posterName = series.posterPath

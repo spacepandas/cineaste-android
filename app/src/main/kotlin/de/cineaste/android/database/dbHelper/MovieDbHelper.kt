@@ -112,7 +112,6 @@ class MovieDbHelper private constructor(context: Context) {
         return if (updatedMovie.isWatched == oldMovie.isWatched) {
             oldMovie.listPosition
         } else movieDao.getHighestListPosition(updatedMovie.isWatched)
-
     }
 
     companion object {
@@ -126,5 +125,4 @@ class MovieDbHelper private constructor(context: Context) {
             return instance!!
         }
     }
-
 }

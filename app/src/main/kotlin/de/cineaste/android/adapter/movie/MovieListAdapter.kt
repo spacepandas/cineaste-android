@@ -111,7 +111,6 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
             db.updatePosition(movies.prev)
             db.updatePosition(movies.passiveMovie)
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -179,5 +178,4 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     inner class UpdatedMovies internal constructor(internal val prev: Movie, internal val passiveMovie: Movie)
-
 }

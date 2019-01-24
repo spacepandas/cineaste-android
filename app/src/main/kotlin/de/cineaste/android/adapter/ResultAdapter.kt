@@ -19,8 +19,9 @@ import de.cineaste.android.database.NearbyMessageHandler
 import de.cineaste.android.entity.movie.MatchingResult
 
 class ResultAdapter(
-        private val results: MutableList<MatchingResult> = mutableListOf(),
-        private val listener: OnMovieSelectListener?) : RecyclerView.Adapter<ResultAdapter.ViewHolder>() {
+    private val results: MutableList<MatchingResult> = mutableListOf(),
+    private val listener: OnMovieSelectListener?
+) : RecyclerView.Adapter<ResultAdapter.ViewHolder>() {
 
     private lateinit var context: Context
     private val rowLayout: Int = R.layout.card_result

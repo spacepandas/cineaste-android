@@ -9,10 +9,12 @@ import de.cineaste.android.adapter.movie.MovieListAdapter
 import de.cineaste.android.controllFlow.TouchHelperCallback
 import de.cineaste.android.viewholder.movie.MovieViewHolder
 
-abstract class BaseMovieTouchHelperCallback(linearLayoutManager: LinearLayoutManager,
-                                            val movieListAdapter: MovieListAdapter,
-                                            recyclerView: RecyclerView,
-                                            resources: Resources) :
+abstract class BaseMovieTouchHelperCallback(
+    linearLayoutManager: LinearLayoutManager,
+    val movieListAdapter: MovieListAdapter,
+    recyclerView: RecyclerView,
+    resources: Resources
+) :
         TouchHelperCallback(resources, linearLayoutManager, recyclerView) {
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {

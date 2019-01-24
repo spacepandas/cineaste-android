@@ -18,7 +18,6 @@ abstract class AbstractMovieViewHolder(itemView: View, context: Context, listene
         try {
             movieRuntime = itemView.findViewById(R.id.movieRuntime)
         } catch (ex: Exception) {
-
         }
     }
 

@@ -10,8 +10,9 @@ import de.cineaste.android.R
 import de.cineaste.android.entity.movie.NearbyMessage
 
 class NearbyUserAdapter(
-        private val nearbyMessages: List<NearbyMessage> = listOf(),
-        private val context: Context) : RecyclerView.Adapter<NearbyUserAdapter.ViewHolder>() {
+    private val nearbyMessages: List<NearbyMessage> = listOf(),
+    private val context: Context
+) : RecyclerView.Adapter<NearbyUserAdapter.ViewHolder>() {
     private val rowLayout: Int = R.layout.card_nearby_user
 
     override fun getItemCount(): Int {

@@ -54,7 +54,7 @@ class SeasonDetailActivity : AppCompatActivity() {
         viewPager.currentItem = currentSeasonIndex()
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                //do nothing
+                // do nothing
             }
 
             override fun onPageSelected(position: Int) {
@@ -62,7 +62,7 @@ class SeasonDetailActivity : AppCompatActivity() {
             }
 
             override fun onPageScrollStateChanged(state: Int) {
-                //do nothing
+                // do nothing
             }
         })
 
@@ -94,7 +94,6 @@ class SeasonDetailActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
             }
-
         }
     }
 

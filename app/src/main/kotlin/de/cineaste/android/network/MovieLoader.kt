@@ -1,6 +1,5 @@
 package de.cineaste.android.network
 
-
 import android.content.Context
 import android.content.res.Resources
 import com.google.gson.Gson
@@ -87,7 +86,7 @@ class MovieLoader(context: Context) {
         return hashMap
     }
 
-    //Type 3 means only cinema release dates
+    // Type 3 means only cinema release dates
     private fun getOnlyType3Dates(dates: HashMap<String, ReleaseDate>, language: Locale): ReleaseDateType? {
         val date = dates[language.country]
 
@@ -105,14 +104,15 @@ class MovieLoader(context: Context) {
     data class ReleaseDates(val results: List<ReleaseDate>)
 
     data class ReleaseDate(
-            val iso_3166_1: String,
-            val release_dates: List<ReleaseDateType>
+        val iso_3166_1: String,
+        val release_dates: List<ReleaseDateType>
     )
 
     data class ReleaseDateType(
-            val certification: String,
-            val iso_639_1: String,
-            val note: String,
-            val release_date: Date,
-            val type: Int)
+        val certification: String,
+        val iso_639_1: String,
+        val note: String,
+        val release_date: Date,
+        val type: Int
+    )
 }

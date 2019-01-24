@@ -33,7 +33,6 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
 
     override val listType: Type
         get() = object : TypeToken<List<Movie>>() {
-
         }.type
 
     override fun getIntentForDetailActivity(itemId: Long): Intent {
@@ -53,7 +52,6 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
 
                 override fun onSuccess(movie: Movie) {
                     db.createOrUpdate(movie)
-
                 }
             }
             R.id.history_button -> callback = object : MovieCallback {

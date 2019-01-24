@@ -6,7 +6,7 @@ import de.cineaste.android.entity.movie.Movie
 import java.util.*
 
 class MovieDao private constructor(context: Context) : BaseDao(context) {
-    
+
     fun reorder(statement: String) {
         writeDb.execSQL(statement)
     }

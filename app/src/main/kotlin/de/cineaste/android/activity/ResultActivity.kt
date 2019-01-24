@@ -94,9 +94,8 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         val selectedMovie = movieDbHelper.readMovie(selectedMovieId)
 
         if (selectedMovie == null) {
-            MovieLoader(this).loadLocalizedMovie(results[position].id, Locale.getDefault(), (object  : MovieCallback {
+            MovieLoader(this).loadLocalizedMovie(results[position].id, Locale.getDefault(), (object : MovieCallback {
                 override fun onFailure() {
-
                 }
 
                 override fun onSuccess(movie: Movie) {

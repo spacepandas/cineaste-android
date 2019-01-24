@@ -74,8 +74,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         super.onResume()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val activity = activity
 
         val watchlistView = initViews(inflater, container)
@@ -98,7 +101,6 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
             val actionBar = (activity as AppCompatActivity).supportActionBar
             actionBar?.subtitle = subtitle
         }
-
 
         return watchlistView
     }
@@ -134,9 +136,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         activity?.let {
             userDbHelper = UserDbHelper.getInstance(it)
         }
-
     }
-
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         menu?.let {
@@ -146,7 +146,6 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
             v.setImageResource(R.drawable.ic_filter)
             super.onPrepareOptionsMenu(menu)
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

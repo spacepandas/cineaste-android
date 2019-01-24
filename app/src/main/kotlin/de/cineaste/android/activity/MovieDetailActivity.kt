@@ -52,7 +52,6 @@ class MovieDetailActivity : AppCompatActivity() {
     private val updateCallback: Runnable
         get() = Runnable { updateMovie() }
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.detail_menu, menu)
@@ -110,7 +109,6 @@ class MovieDetailActivity : AppCompatActivity() {
         when (state) {
             R.string.searchState -> callback = object : MovieCallback {
                 override fun onFailure() {
-
                 }
 
                 override fun onSuccess(movie: Movie) {
@@ -143,7 +141,6 @@ class MovieDetailActivity : AppCompatActivity() {
         when (state) {
             R.string.searchState -> callback = object : MovieCallback {
                 override fun onFailure() {
-
                 }
 
                 override fun onSuccess(movie: Movie) {
@@ -243,7 +240,6 @@ class MovieDetailActivity : AppCompatActivity() {
         historyBtn.setOnClickListener { onAddToHistoryClicked() }
 
         watchListBtn.setOnClickListener { onAddToWatchClicked() }
-
     }
 
     override fun onResume() {
@@ -256,7 +252,7 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun loadRequestedMovie() {
-        MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object: MovieCallback{
+        MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback {
             override fun onFailure() {
             }
 
@@ -343,7 +339,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun updateMovie() {
         if (state != R.string.searchState) {
-            MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback{
+            MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback {
                 override fun onFailure() {
                     GlobalScope.launch(Main) { showNetworkError() }
                 }
@@ -398,7 +394,6 @@ class MovieDetailActivity : AppCompatActivity() {
         layout.startAnimation(animation)
         animation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
-
             }
 
             override fun onAnimationEnd(animation: Animation) {
@@ -407,10 +402,8 @@ class MovieDetailActivity : AppCompatActivity() {
             }
 
             override fun onAnimationRepeat(animation: Animation) {
-
             }
         })
-
     }
 
     private fun showNetworkError() {

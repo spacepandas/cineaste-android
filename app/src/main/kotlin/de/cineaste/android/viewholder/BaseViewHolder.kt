@@ -13,7 +13,6 @@ import de.cineaste.android.util.Constants
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 abstract class BaseViewHolder protected constructor(protected val view: View, protected val listener: ItemClickListener, private val context: Context) : RecyclerView.ViewHolder(view) {
 
     protected val title: TextView = view.findViewById(R.id.title)

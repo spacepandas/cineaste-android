@@ -19,7 +19,6 @@ class SeasonPagerAdapter(fm: FragmentManager, private val series: Series, privat
         args.putLong("seriesId", series.id)
         fragment.arguments = args
 
-
         return fragment
     }
 

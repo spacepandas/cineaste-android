@@ -1,6 +1,5 @@
 package de.cineaste.android.controllFlow.series
 
-
 import android.content.res.Resources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView

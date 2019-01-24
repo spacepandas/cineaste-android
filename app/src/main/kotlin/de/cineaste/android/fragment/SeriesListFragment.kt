@@ -28,7 +28,6 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
     override val layout: Int
         get() = R.layout.fragment_series_list
 
-
     override val dataSetSize: Int
         get() = seriesListAdapter.dataSetSize
 
@@ -74,7 +73,6 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
     override fun initAdapter(activity: Activity) {
         seriesListAdapter = SeriesListAdapter(this, activity, this, watchState, this)
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)

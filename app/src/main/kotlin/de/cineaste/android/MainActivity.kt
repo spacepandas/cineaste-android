@@ -73,9 +73,10 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray) {
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             1 -> if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(
@@ -290,7 +291,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
         GlobalScope.launch {
             val importExportObject = ImportService.importFiles(uri, this@MainActivity)
-            //todo find a better solution to save all files
+            // todo find a better solution to save all files
             for (movie in importExportObject.movies) {
                 movieDbHelper.createOrUpdate(movie)
             }
@@ -317,9 +318,11 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
     }
 
-    public override fun onActivityResult(requestCode: Int,
-                                         resultCode: Int,
-                                         resultData: Intent?) {
+    public override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        resultData: Intent?
+    ) {
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {

@@ -20,7 +20,7 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
         val mySnackBar = Snackbar.make(view,
                 R.string.series_deleted, Snackbar.LENGTH_LONG)
         mySnackBar.setAction(R.string.undo) {
-            //do nothing
+            // do nothing
         }
         mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -47,7 +47,7 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
         adapter.moveToWatchList(seriesToBeUpdated)
         val mySnackBar = Snackbar.make(view, message, Snackbar.LENGTH_LONG)
         mySnackBar.setAction(R.string.undo) {
-            //do nothing
+            // do nothing
         }
         mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -61,9 +61,7 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
                     }
                 }
             }
-
         })
         mySnackBar.show()
     }
-
 }

@@ -1,6 +1,5 @@
 package android.util
 
-
 /**
  * This class is needed to mock android.util.LongSparseArray for the tests
  */

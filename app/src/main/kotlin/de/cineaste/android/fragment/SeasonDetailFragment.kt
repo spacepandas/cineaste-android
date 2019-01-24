@@ -38,11 +38,13 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         val context = context ?: return
         seriesDbHelper = SeriesDbHelper.getInstance(context)
         episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
-
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val activity = activity ?: return null
         val view = inflater.inflate(R.layout.fragment_series_detail, container, false)
 
@@ -103,6 +105,4 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         hideDescription.visibility = View.INVISIBLE
         description.visibility = View.GONE
     }
-
-
 }

@@ -23,7 +23,7 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
         val mySnackbar = Snackbar.make(view,
                 R.string.series_deleted, Snackbar.LENGTH_LONG)
         mySnackbar.setAction(R.string.undo) {
-            //do nothing
+            // do nothing
         }
         mySnackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -37,7 +37,6 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
                     }
                 }
             }
-
         })
         mySnackbar.show()
     }
@@ -64,7 +63,7 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
         }
     }
 
-    //todo  reset to current season end episode after dismiss update current status
+    // todo  reset to current season end episode after dismiss update current status
     private fun updateSeriesAndCreateSnackbar(position: Int, message: Int, seriesToBeUpdated: Series) {
 
         val currentSeason = seriesToBeUpdated.currentNumberOfSeason
@@ -74,7 +73,7 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
         val mySnackbar = Snackbar.make(view,
                 message, Snackbar.LENGTH_LONG)
         mySnackbar.setAction(R.string.undo) {
-            //do nothing
+            // do nothing
         }
         mySnackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {

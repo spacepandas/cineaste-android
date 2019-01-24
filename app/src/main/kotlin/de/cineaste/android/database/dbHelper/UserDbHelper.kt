@@ -29,7 +29,6 @@ class UserDbHelper private constructor(context: Context) : BaseDao(context) {
             return user
         }
 
-
     fun createUser(user: User) {
         val values = ContentValues()
         values.put(BaseDao.UserEntry.COLUMN_USER_NAME, user.userName)

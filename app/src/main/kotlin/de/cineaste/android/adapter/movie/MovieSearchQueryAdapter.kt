@@ -49,6 +49,4 @@ class MovieSearchQueryAdapter(private val listener: ItemClickListener, private v
     override fun getItemCount(): Int {
         return dataSet.size
     }
-
 }
-

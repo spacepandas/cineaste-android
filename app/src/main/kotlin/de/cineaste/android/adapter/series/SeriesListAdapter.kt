@@ -136,7 +136,6 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
             db.updatePosition(series.prev)
             db.updatePosition(series.passiveSeries)
         }
-
     }
 
     override fun getItemCount(): Int {

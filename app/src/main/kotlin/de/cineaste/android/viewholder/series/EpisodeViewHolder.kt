@@ -31,7 +31,6 @@ class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeLis
         episodeTitle.text = episode.name
         checkBox.isChecked = episode.isWatched
 
-
         if (episode.description.isNullOrBlank()) {
             description.text = context.getString(R.string.noDescription)
         } else {

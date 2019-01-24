@@ -1,6 +1,5 @@
 package de.cineaste.android.network
 
-
 import android.content.Context
 import android.content.res.Resources
 import com.google.gson.Gson
@@ -42,7 +41,6 @@ class SeriesLoader(context: Context) {
                 } catch (ex: InterruptedException) {
                     callback.onFailure()
                 }
-
             }
         })
     }
@@ -69,14 +67,12 @@ class SeriesLoader(context: Context) {
         val responseObject = parser.parse(response.responseReader).asJsonObject
         val episodesListJson = responseObject.get("episodes").toString()
         val listType = object : TypeToken<List<Episode>>() {
-
         }.type
         return try {
             gson.fromJson<List<Episode>>(episodesListJson, listType)
         } catch (ex: Exception) {
             listOf()
         }
-
     }
 
     private fun excludeSpecialsSeason(series: Series) {

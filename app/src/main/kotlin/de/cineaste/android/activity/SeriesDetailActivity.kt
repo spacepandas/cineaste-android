@@ -112,7 +112,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
                 seriesCallback = object : SeriesCallback {
                     override fun onFailure() {
-
                     }
 
                     override fun onSuccess(series: Series) {
@@ -133,7 +132,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
             onBackPressed()
         }
-
     }
 
     private fun showAddToast() {
@@ -150,7 +148,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             alertBuilder.setMessage(R.string.seriesStillInProduction)
             alertBuilder.setPositiveButton(R.string.ok) { _, _ -> moveBetweenLists(series) }
             alertBuilder.setNegativeButton(R.string.cancel) { _, _ ->
-                //do nothing
+                // do nothing
             }
 
             alertBuilder.create().show()
@@ -175,7 +173,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         when (state) {
             R.string.searchState -> callback = object : SeriesCallback {
                 override fun onFailure() {
-
                 }
 
                 override fun onSuccess(series: Series) {
@@ -254,7 +251,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 startActivity(myIntent)
             }
         }
-
     }
 
     override fun onResume() {
@@ -286,7 +282,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                     assignData(it)
                 }
             }
-
         } else {
             fab.hide()
         }
@@ -382,7 +377,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private fun loadRequestedSeries() {
         seriesLoader.loadCompleteSeries(seriesId, object : SeriesCallback {
             override fun onFailure() {
-
             }
 
             override fun onSuccess(series: Series) {
@@ -397,7 +391,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 }
             }
         })
-
     }
 
     private fun slideIn() {
@@ -407,7 +400,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         if (state != R.string.searchState) {
             animation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {
-
                 }
 
                 override fun onAnimationEnd(animation: Animation) {
@@ -419,7 +411,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 }
 
                 override fun onAnimationRepeat(animation: Animation) {
-
                 }
             })
         }
@@ -437,7 +428,6 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         layout.startAnimation(animation)
         animation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
-
             }
 
             override fun onAnimationEnd(animation: Animation) {
@@ -446,10 +436,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             }
 
             override fun onAnimationRepeat(animation: Animation) {
-
             }
         })
-
     }
 
     private fun showNetworkError() {

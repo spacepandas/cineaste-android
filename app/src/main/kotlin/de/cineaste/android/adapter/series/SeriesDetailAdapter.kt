@@ -23,11 +23,11 @@ import de.cineaste.android.util.Constants
 import java.util.*
 
 class SeriesDetailAdapter(
-        private var series: Series,
-        private val clickListener: ItemClickListener,
-        private val state: Int,
-        private val listener: SeriesStateManipulationClickListener,
-        private val posterClickListener: View.OnClickListener
+    private var series: Series,
+    private val clickListener: ItemClickListener,
+    private val state: Int,
+    private val listener: SeriesStateManipulationClickListener,
+    private val posterClickListener: View.OnClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface SeriesStateManipulationClickListener {
@@ -44,7 +44,6 @@ class SeriesDetailAdapter(
             }
         }
         this.series.seasons = seasons
-
     }
 
     fun updateSeries(series: Series) {
@@ -101,7 +100,6 @@ class SeriesDetailAdapter(
             3 -> (holder as DescriptionViewHolder).assignData(series)
             4 -> (holder as SeasonsListViewHolder).assignData(series)
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -123,9 +121,9 @@ class SeriesDetailAdapter(
 
     private inner class BaseViewHolder
     internal constructor(
-            itemView: View,
-            val context: Context,
-            val clickListener: View.OnClickListener
+        itemView: View,
+        val context: Context,
+        val clickListener: View.OnClickListener
     ) : RecyclerView.ViewHolder(itemView) {
         private val poster: ImageView = itemView.findViewById(R.id.poster)
         private val title: TextView = itemView.findViewById(R.id.title)
@@ -176,14 +174,13 @@ class SeriesDetailAdapter(
             val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH)
             return simpleDateFormat.format(date)
         }
-
     }
 
     private inner class ButtonsViewHolder
     internal constructor(
-            itemView: View,
-            state: Int,
-            private val listener: SeriesStateManipulationClickListener
+        itemView: View,
+        state: Int,
+        private val listener: SeriesStateManipulationClickListener
     ) : RecyclerView.ViewHolder(itemView) {
         private val deleteBtn: Button = itemView.findViewById(R.id.delete_button)
         private val historyBtn: Button = itemView.findViewById(R.id.history_button)
@@ -221,8 +218,8 @@ class SeriesDetailAdapter(
 
     private inner class DescriptionViewHolder
     internal constructor(
-            itemView: View,
-            context: Context
+        itemView: View,
+        context: Context
     ) : RecyclerView.ViewHolder(itemView) {
         private val description: TextView = itemView.findViewById(R.id.description)
         private val more: TextView = itemView.findViewById(R.id.more)
@@ -264,9 +261,10 @@ class SeriesDetailAdapter(
 
     private inner class SeasonsListViewHolder
     internal constructor(
-            itemView: View,
-            private val context: Context,
-            private val itemClickListener: ItemClickListener)
+        itemView: View,
+        private val context: Context,
+        private val itemClickListener: ItemClickListener
+    )
         : RecyclerView.ViewHolder(itemView) {
         private val recyclerView: RecyclerView = itemView.findViewById(R.id.seasonPoster)
 

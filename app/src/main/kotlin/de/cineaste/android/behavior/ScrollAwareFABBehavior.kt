@@ -14,12 +14,13 @@ import kotlinx.coroutines.launch
 class ScrollAwareFABBehavior(@Suppress("UNUSED_PARAMETER")context: Context, @Suppress("UNUSED_PARAMETER")attrs: AttributeSet) : FloatingActionButton.Behavior() {
 
     override fun onStartNestedScroll(
-            coordinatorLayout: CoordinatorLayout,
-            child: FloatingActionButton,
-            directTargetChild: View,
-            target: View,
-            nestedScrollAxes: Int,
-            type: Int): Boolean {
+        coordinatorLayout: CoordinatorLayout,
+        child: FloatingActionButton,
+        directTargetChild: View,
+        target: View,
+        nestedScrollAxes: Int,
+        type: Int
+    ): Boolean {
 
         return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL || super.onStartNestedScroll(
                 coordinatorLayout,
@@ -31,14 +32,15 @@ class ScrollAwareFABBehavior(@Suppress("UNUSED_PARAMETER")context: Context, @Sup
     }
 
     override fun onNestedScroll(
-            coordinatorLayout: CoordinatorLayout,
-            child: FloatingActionButton,
-            target: View,
-            dxConsumed: Int,
-            dyConsumed: Int,
-            dxUnconsumed: Int,
-            dyUnconsumed: Int,
-            type: Int) {
+        coordinatorLayout: CoordinatorLayout,
+        child: FloatingActionButton,
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        type: Int
+    ) {
         super.onNestedScroll(
                 coordinatorLayout,
                 child,
