@@ -3,7 +3,6 @@ package de.cineaste.android.database.dao
 import android.content.ContentValues
 import android.content.Context
 import de.cineaste.android.entity.series.Episode
-import java.util.*
 
 class EpisodeDao private constructor(context: Context) : BaseDao(context) {
 
@@ -99,5 +98,4 @@ class EpisodeDao private constructor(context: Context) : BaseDao(context) {
             return instance!!
         }
     }
-
 }

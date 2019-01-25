@@ -62,7 +62,6 @@ class MovieListFragment : BaseListFragment() {
         movieListAdapter = MovieListAdapter(this, activity, this, watchState)
     }
 
-
     override fun filterOnQueryTextChange(newText: String) {
         (customRecyclerView.adapter as MovieListAdapter).filter.filter(newText)
     }

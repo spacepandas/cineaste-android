@@ -3,10 +3,10 @@ package de.cineaste.android.entity.movie
 import com.google.gson.annotations.SerializedName
 
 data class MovieDto(
-        var id: Long = 0,
-        @SerializedName("poster_path")
-        var posterPath: String? = "",
-        var title: String = ""
+    var id: Long = 0,
+    @SerializedName("poster_path")
+    var posterPath: String? = "",
+    var title: String = ""
 ) {
     constructor(movie: Movie) : this(movie.id, movie.posterPath, movie.title)
 

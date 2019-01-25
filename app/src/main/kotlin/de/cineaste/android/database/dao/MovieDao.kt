@@ -3,10 +3,10 @@ package de.cineaste.android.database.dao
 import android.content.ContentValues
 import android.content.Context
 import de.cineaste.android.entity.movie.Movie
-import java.util.*
+import java.util.Date
 
 class MovieDao private constructor(context: Context) : BaseDao(context) {
-    
+
     fun reorder(statement: String) {
         writeDb.execSQL(statement)
     }

@@ -4,7 +4,12 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.Menu
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import de.cineaste.android.R
@@ -38,11 +43,13 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         val context = context ?: return
         seriesDbHelper = SeriesDbHelper.getInstance(context)
         episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
-
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val activity = activity ?: return null
         val view = inflater.inflate(R.layout.fragment_series_detail, container, false)
 
@@ -103,6 +110,4 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         hideDescription.visibility = View.INVISIBLE
         description.visibility = View.GONE
     }
-
-
 }

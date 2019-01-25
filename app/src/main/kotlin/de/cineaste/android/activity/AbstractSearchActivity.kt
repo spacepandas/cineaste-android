@@ -6,14 +6,15 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.*
 import android.text.TextUtils
 import android.util.Pair
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -60,7 +61,6 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     protected abstract fun getSuggestions()
     protected abstract fun searchRequest(searchQuery: String)
     protected abstract fun getRunnable(json: String, listType: Type): Runnable
-
 
     override fun onItemClickListener(itemId: Long, views: Array<View>) {
         val intent = getIntentForDetailActivity(itemId)
@@ -150,7 +150,6 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
                     }
                     return false
                 }
-
             })
             if (!TextUtils.isEmpty(searchText))
                 searchView.setQuery(searchText, false)
@@ -181,7 +180,6 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromInputMethod(view.windowToken, 0)
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

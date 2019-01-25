@@ -34,7 +34,6 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
 
     override val listType: Type
         get() = object : TypeToken<List<Series>>() {
-
         }.type
 
     override fun getIntentForDetailActivity(itemId: Long): Intent {
@@ -66,12 +65,11 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
 
                     override fun onSuccess(series: Series) {
                         dbHelper.addToHistory(series)
-
                     }
                 }
             else -> seriesCallback = null
         }
-        
+
         seriesCallback?.let {
             seriesQueryAdapter.removeSerie(index)
 

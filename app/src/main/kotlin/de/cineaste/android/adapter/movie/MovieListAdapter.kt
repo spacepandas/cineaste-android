@@ -12,8 +12,9 @@ import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.listener.OnMovieRemovedListener
 import de.cineaste.android.viewholder.movie.MovieViewHolder
-import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
+import java.util.LinkedList
+import java.util.Collections
 
 class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState) : BaseListAdapter(context, displayMessage, listener, state), OnMovieRemovedListener {
 
@@ -111,7 +112,6 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
             db.updatePosition(movies.prev)
             db.updatePosition(movies.passiveMovie)
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -179,5 +179,4 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     inner class UpdatedMovies internal constructor(internal val prev: Movie, internal val passiveMovie: Movie)
-
 }

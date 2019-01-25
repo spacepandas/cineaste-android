@@ -7,7 +7,7 @@ import de.cineaste.android.database.dao.MovieDao
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.fragment.WatchState
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class MovieDbHelper private constructor(context: Context) {
 
@@ -112,7 +112,6 @@ class MovieDbHelper private constructor(context: Context) {
         return if (updatedMovie.isWatched == oldMovie.isWatched) {
             oldMovie.listPosition
         } else movieDao.getHighestListPosition(updatedMovie.isWatched)
-
     }
 
     companion object {
@@ -126,5 +125,4 @@ class MovieDbHelper private constructor(context: Context) {
             return instance!!
         }
     }
-
 }

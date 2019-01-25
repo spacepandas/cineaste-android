@@ -17,7 +17,7 @@ class MovieSnackBarWatchList internal constructor(linearLayoutManager: LinearLay
         val mySnackbar = Snackbar.make(view,
                 R.string.movie_deleted, Snackbar.LENGTH_LONG)
         mySnackbar.setAction(R.string.undo) {
-            //do nothing
+            // do nothing
         }
         mySnackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -31,7 +31,6 @@ class MovieSnackBarWatchList internal constructor(linearLayoutManager: LinearLay
                     }
                 }
             }
-
         })
         mySnackbar.show()
     }
@@ -43,7 +42,7 @@ class MovieSnackBarWatchList internal constructor(linearLayoutManager: LinearLay
         val mySnackbar = Snackbar.make(view,
                 message, Snackbar.LENGTH_LONG)
         mySnackbar.setAction(R.string.undo) {
-            //do nothing
+            // do nothing
         }
         mySnackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -57,7 +56,6 @@ class MovieSnackBarWatchList internal constructor(linearLayoutManager: LinearLay
                     }
                 }
             }
-
         })
         mySnackbar.show()
     }

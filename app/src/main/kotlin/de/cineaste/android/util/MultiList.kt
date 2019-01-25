@@ -47,8 +47,8 @@ class MultiList {
     }
 
     data class MultiListEntry(
-            val movieDto: MovieDto,
-            var counter: Int = 1
+        val movieDto: MovieDto,
+        var counter: Int = 1
     ) {
         fun increment(): MultiListEntry {
             this.counter++

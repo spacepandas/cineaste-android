@@ -7,7 +7,6 @@ import de.cineaste.android.R
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.series.SeriesSearchViewHolder
-import java.util.*
 
 class SeriesSearchQueryAdapter(private val listener: ItemClickListener, private val seriesStateChange: OnSeriesStateChange) : RecyclerView.Adapter<SeriesSearchViewHolder>() {
     private val dataSet = ArrayList<Series>()

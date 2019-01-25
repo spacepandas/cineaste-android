@@ -11,8 +11,8 @@ import de.cineaste.android.R
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.util.Constants
 import java.text.SimpleDateFormat
-import java.util.*
-
+import java.util.Date
+import java.util.Locale
 
 abstract class BaseViewHolder protected constructor(protected val view: View, protected val listener: ItemClickListener, private val context: Context) : RecyclerView.ViewHolder(view) {
 

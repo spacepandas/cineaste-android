@@ -31,7 +31,7 @@ import de.cineaste.android.fragment.WatchState
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 
 class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
@@ -106,7 +106,6 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         nearbyUserRv.itemAnimator = DefaultItemAnimator()
         nearbyUserRv.adapter = nearbyUserAdapter
         initToolbar()
-
     }
 
     private fun initToolbar() {
@@ -130,7 +129,6 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private fun startDialogFragment() {
         UserInputFragment().show(supportFragmentManager, "")
     }
-
 
     override fun onFinishUserDialog(userName: String) {
         if (!userName.isEmpty()) {
@@ -179,7 +177,6 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         super.onStop()
     }
 
-
     private fun clearDeviceList() {
         GlobalScope.launch(Main) {
             nearbyMessagesArrayList.clear()
@@ -205,7 +202,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         }
 
         override fun onLost(message: Message) {
-            //do not remove messages when connection lost
+            // do not remove messages when connection lost
         }
     }
 

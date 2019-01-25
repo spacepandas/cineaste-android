@@ -1,6 +1,5 @@
 package de.cineaste.android.database.dbHelper
 
-
 import android.content.Context
 
 import java.util.ArrayList
@@ -332,7 +331,6 @@ class SeriesDbHelper private constructor(context: Context) {
                 update(season, series)
             }
         }
-
     }
 
     fun updatePosition(series: Series) {
@@ -360,7 +358,6 @@ class SeriesDbHelper private constructor(context: Context) {
             series.isWatched = false
             seriesDao.update(series, series.listPosition)
         }
-
 
         for (episode in season.episodes) {
             update(episode, series, season)
@@ -396,7 +393,6 @@ class SeriesDbHelper private constructor(context: Context) {
         return if (updatedSeries.isWatched == oldSeries.isWatched) {
             updatedSeries.listPosition
         } else seriesDao.getHighestListPosition(updatedSeries.isWatched)
-
     }
 
     private fun getSelectionArgs(state: WatchState): String {

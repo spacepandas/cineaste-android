@@ -4,9 +4,9 @@ import com.google.android.gms.nearby.messages.Message
 import com.google.gson.Gson
 
 data class NearbyMessage(
-        val userName: String = "",
-        private val deviceId: String = "",
-        val movies: List<MovieDto>  = emptyList()
+    val userName: String = "",
+    private val deviceId: String = "",
+    val movies: List<MovieDto> = emptyList()
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -26,7 +26,7 @@ data class NearbyMessage(
         return deviceId.hashCode()
     }
 
-    fun toNearbyMessage() : Message {
+    fun toNearbyMessage(): Message {
         return Message(GSON.toJson(this).toByteArray(Charsets.UTF_8))
     }
 

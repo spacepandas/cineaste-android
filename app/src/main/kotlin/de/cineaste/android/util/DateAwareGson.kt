@@ -30,7 +30,6 @@ object DateAwareGson {
                 } catch (e: ParseException) {
                     null
                 }
-
             }
         })
         gson = gsonBuilder.create()
@@ -52,7 +51,6 @@ object ExtendedDateAwareGson {
                 } catch (e: ParseException) {
                     null
                 }
-
             }
         })
         gson = gsonBuilder.create()

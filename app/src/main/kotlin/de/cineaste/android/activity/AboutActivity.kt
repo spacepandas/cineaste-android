@@ -25,7 +25,6 @@ class AboutActivity : AppCompatActivity() {
         webView.loadUrl("file:///android_res/raw/about.html")
     }
 
-
     private fun initToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

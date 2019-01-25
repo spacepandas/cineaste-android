@@ -20,7 +20,7 @@ import de.cineaste.android.util.MultiList
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 
 class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener {
 
@@ -94,9 +94,8 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         val selectedMovie = movieDbHelper.readMovie(selectedMovieId)
 
         if (selectedMovie == null) {
-            MovieLoader(this).loadLocalizedMovie(results[position].id, Locale.getDefault(), (object  : MovieCallback {
+            MovieLoader(this).loadLocalizedMovie(results[position].id, Locale.getDefault(), (object : MovieCallback {
                 override fun onFailure() {
-
                 }
 
                 override fun onSuccess(movie: Movie) {

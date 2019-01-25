@@ -33,7 +33,6 @@ class PosterActivity : AppCompatActivity() {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-
         displayPoster()
     }
 
@@ -89,7 +88,6 @@ class PosterActivity : AppCompatActivity() {
 
         Palette.from(moviePoster).generate(paletteAsyncListener)
     }
-
 
     private fun getPosterUrl(postUri: String): String {
         return postUri

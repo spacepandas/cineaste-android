@@ -11,8 +11,9 @@ import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.series.SeriesViewHolder
-import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
+import java.util.Collections
+import java.util.LinkedList
 
 class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState, private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener) : BaseListAdapter(context, displayMessage, listener, state) {
 
@@ -136,7 +137,6 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
             db.updatePosition(series.prev)
             db.updatePosition(series.passiveSeries)
         }
-
     }
 
     override fun getItemCount(): Int {

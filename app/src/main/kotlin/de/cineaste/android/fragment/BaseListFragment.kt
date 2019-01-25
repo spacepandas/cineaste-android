@@ -11,10 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Pair
-import android.view.*
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.MenuInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.ViewGroup
 import de.cineaste.android.R
 import de.cineaste.android.activity.MovieNightActivity
 import de.cineaste.android.adapter.BaseListAdapter
@@ -74,8 +79,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         super.onResume()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val activity = activity
 
         val watchlistView = initViews(inflater, container)
@@ -98,7 +106,6 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
             val actionBar = (activity as AppCompatActivity).supportActionBar
             actionBar?.subtitle = subtitle
         }
-
 
         return watchlistView
     }
@@ -134,9 +141,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         activity?.let {
             userDbHelper = UserDbHelper.getInstance(it)
         }
-
     }
-
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         menu?.let {
@@ -146,7 +151,6 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
             v.setImageResource(R.drawable.ic_filter)
             super.onPrepareOptionsMenu(menu)
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

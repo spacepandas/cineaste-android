@@ -34,14 +34,20 @@ import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.database.dbHelper.UserDbHelper
 import de.cineaste.android.entity.ImportExportObject
 import de.cineaste.android.entity.User
-import de.cineaste.android.fragment.*
+import de.cineaste.android.fragment.ImportFinishedDialogFragment
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
+import de.cineaste.android.fragment.BaseListFragment
+import de.cineaste.android.fragment.SeriesListFragment
+import de.cineaste.android.fragment.UserInputFragment
+import de.cineaste.android.fragment.MovieListFragment
+import de.cineaste.android.fragment.WatchState
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.Date
 
 class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
@@ -73,15 +79,16 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray) {
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             1 -> if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(
-                        this,
-                        R.string.missing_permission,
-                        Toast.LENGTH_SHORT).show()
+                    this,
+                    R.string.missing_permission,
+                    Toast.LENGTH_SHORT).show()
             }
             else -> {
             }
@@ -120,11 +127,11 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     private fun replaceFragment(fm: FragmentManager, fragment: Fragment) {
         fm.beginTransaction()
-                .replace(
-                        R.id.content_container,
-                        fragment, fragment.javaClass.name)
-                .addToBackStack(null)
-                .commit()
+            .replace(
+                R.id.content_container,
+                fragment, fragment.javaClass.name)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun replaceFragmentPopBackStack(fm: FragmentManager, fragment: Fragment) {
@@ -166,7 +173,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
         drawerLayout = findViewById(R.id.drawer_layout)
         val drawerToggle = ActionBarDrawerToggle(
-                this, drawerLayout, R.string.open, R.string.close
+            this, drawerLayout, R.string.open, R.string.close
         )
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerLayout.addDrawerListener(drawerToggle)
@@ -256,7 +263,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
 
         val snackBar = Snackbar
-                .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
+            .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
         snackBar.show()
     }
 
@@ -290,7 +297,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
         GlobalScope.launch {
             val importExportObject = ImportService.importFiles(uri, this@MainActivity)
-            //todo find a better solution to save all files
+            // todo find a better solution to save all files
             for (movie in importExportObject.movies) {
                 movieDbHelper.createOrUpdate(movie)
             }
@@ -317,9 +324,11 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
     }
 
-    public override fun onActivityResult(requestCode: Int,
-                                         resultCode: Int,
-                                         resultData: Intent?) {
+    public override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        resultData: Intent?
+    ) {
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
@@ -342,8 +351,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val watchlistFragment = MovieListFragment()
         val bundle = Bundle()
         bundle.putString(
-                WatchState.WATCH_STATE_TYPE.name,
-                state.name)
+            WatchState.WATCH_STATE_TYPE.name,
+            state.name)
         watchlistFragment.arguments = bundle
         return watchlistFragment
     }
@@ -352,8 +361,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val seriesListFragment = SeriesListFragment()
         val bundle = Bundle()
         bundle.putString(
-                WatchState.WATCH_STATE_TYPE.name,
-                state.name)
+            WatchState.WATCH_STATE_TYPE.name,
+            state.name)
         seriesListFragment.arguments = bundle
         return seriesListFragment
     }

@@ -84,7 +84,6 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
             const val COLUMN_EPISODE_SEASON_ID = "seasonId"
             const val COLUMN_EPISODE_WATCHED = "watched"
         }
-
     }
 
     override fun onCreate(db: SQLiteDatabase) {
