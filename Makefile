@@ -34,3 +34,6 @@ uninstallRelease:
 
 clean:
 	./gradlew clean
+
+format: 
+	./gradlew ktlintFormat
