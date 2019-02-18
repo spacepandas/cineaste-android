@@ -1,6 +1,6 @@
 # Cineaste
 
-[![Build Status](https://travis-ci.org/spacepandas/cineaste-android.svg?branch=master)](https://travis-ci.org/spacepandas/cineaste-android.svg?branch=master)
+[![Build Status](https://travis-ci.com/spacepandas/cineaste-android.svg?branch=master)](https://travis-ci.org/spacepandas/cineaste-android.svg?branch=master)
 [![code](https://img.shields.io/badge/code-Kotlin-blue.svg)]()
 [![license](https://img.shields.io/badge/license-GPLv3-lightgrey.svg)](https://github.com/marcelgross90/Cineaste/blob/master/LICENSE)
 [![platform](https://img.shields.io/badge/platform-android-lightgrey.svg)]()
