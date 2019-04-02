@@ -6,3 +6,6 @@ build
 gradle.properties
 app/src/main/res/values/secrets.xml
 *.swp
+.project
+.settings
+app/.classpath
