@@ -64,7 +64,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         val result = findViewById<RecyclerView>(R.id.result_list)
 
         val llm = LinearLayoutManager(this)
-        llm.orientation = LinearLayoutManager.VERTICAL
+        llm.orientation = RecyclerView.VERTICAL
         result.layoutManager = llm
         result.itemAnimator = DefaultItemAnimator()
 

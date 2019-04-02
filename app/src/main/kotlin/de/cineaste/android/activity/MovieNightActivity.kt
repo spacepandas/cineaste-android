@@ -101,7 +101,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         nearbyUserAdapter = NearbyUserAdapter(nearbyMessagesArrayList, this)
 
         val llm = LinearLayoutManager(this)
-        llm.orientation = LinearLayoutManager.VERTICAL
+        llm.orientation = RecyclerView.VERTICAL
         nearbyUserRv.layoutManager = llm
         nearbyUserRv.itemAnimator = DefaultItemAnimator()
         nearbyUserRv.adapter = nearbyUserAdapter
