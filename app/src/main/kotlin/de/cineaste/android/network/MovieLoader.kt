@@ -40,7 +40,6 @@ class MovieLoader(context: Context) {
     private fun parseResponse(response: NetworkResponse, language: Locale): Movie {
         val parser = JsonParser()
         val responseObject = parser.parse(response.responseReader).asJsonObject
-
         val movie = getMovieFromJson(responseObject)
 
         val localReleaseDate = getOnlyType3Dates(getReleaseDates(responseObject), language)
@@ -55,14 +54,46 @@ class MovieLoader(context: Context) {
     private fun getMovieFromJson(jsonString: JsonObject): Movie {
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
-        val id = jsonString.get("id").asLong
-        val posterPath = jsonString.get("poster_path").asString
-        val title = jsonString.get("title").asString
-        val runtime = jsonString.get("runtime").asInt
-        val voteAverage = jsonString.get("vote_average").asDouble
-        val voteCount = jsonString.get("vote_count").asInt
-        val description = jsonString.get("overview").asString
-        val releaseDate = formatter.parse(jsonString.get("release_date").asString)
+        val id = try {
+            jsonString.get("id").asLong
+        } catch (ex: UnsupportedOperationException) {
+            0L
+        }
+        val posterPath = try {
+            jsonString.get("poster_path").asString
+        } catch (ex: UnsupportedOperationException) {
+            ""
+        }
+        val title = try {
+            jsonString.get("title").asString
+        } catch (ex: UnsupportedOperationException) {
+            ""
+        }
+        val runtime = try {
+            jsonString.get("runtime").asInt
+        } catch (ex: UnsupportedOperationException) {
+            0
+        }
+        val voteAverage = try {
+            jsonString.get("vote_average").asDouble
+        } catch (ex: UnsupportedOperationException) {
+            0.0
+        }
+        val voteCount = try {
+            jsonString.get("vote_count").asInt
+        } catch (ex: UnsupportedOperationException) {
+            0
+        }
+        val description = try {
+            jsonString.get("overview").asString
+        } catch (ex: UnsupportedOperationException) {
+            ""
+        }
+        val releaseDate = try {
+            formatter.parse(jsonString.get("release_date").asString)
+        } catch (ex: UnsupportedOperationException) {
+            Date()
+        }
 
         return Movie(
                 id,
