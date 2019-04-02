@@ -37,5 +37,7 @@ object ImportService {
 
             return stringBuilder.toString()
         }
+
+        return ""
     }
 }
