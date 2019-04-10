@@ -98,6 +98,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         searchingFriends = findViewById(R.id.searchingFriends)
         progressBar = findViewById(R.id.progressBar)
 
+        nearbyMessagesArrayList.clear()
         nearbyUserAdapter = NearbyUserAdapter(nearbyMessagesArrayList, this)
 
         val llm = LinearLayoutManager(this)
