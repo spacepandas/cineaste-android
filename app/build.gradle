@@ -9,8 +9,8 @@ android {
         applicationId "de.cineaste.android"
         minSdkVersion 19
         targetSdkVersion sdk_version
-        versionCode 15
-        versionName "2.6.1"
+        versionCode 16
+        versionName "2.6.2"
         resValue "string", "app_name", "Cineaste"
     }
 
