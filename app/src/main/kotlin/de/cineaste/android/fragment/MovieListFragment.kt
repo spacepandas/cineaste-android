@@ -5,6 +5,7 @@ import android.content.Intent
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.View
+import androidx.recyclerview.widget.DividerItemDecoration
 
 import de.cineaste.android.R
 import de.cineaste.android.activity.MovieDetailActivity
@@ -56,6 +57,10 @@ class MovieListFragment : BaseListFragment() {
     override fun initRecyclerView() {
         customRecyclerView.layoutManager = layoutManager
         customRecyclerView.adapter = movieListAdapter
+
+        val itemDecor = DividerItemDecoration(customRecyclerView.context,
+            layoutManager.orientation)
+        customRecyclerView.addItemDecoration(itemDecor)
     }
 
     override fun initAdapter(activity: Activity) {

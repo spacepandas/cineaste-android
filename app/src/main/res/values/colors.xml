@@ -5,6 +5,7 @@
     <color name="colorAccent">#fbe22e</color>
     <color name="toolbar_text">#ffffff</color>
     <color name="backgroundColor">#414a51</color>
+    <color name="backgroundColorListView">#e9e9e9</color>
     <color name="backgroundColor_half_translucent">#7f414a51</color>
     <color name="information">#828280</color>
 
