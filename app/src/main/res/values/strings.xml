@@ -35,7 +35,7 @@
     <string name="remove">Remove movie</string>
     <string name="noInternet">No internet-connection!</string>
     <string name="runtime">%d min</string>
-    <string name="vote">%s</string>
+    <string name="vote">%s/10</string>
     <string name="releaseDate">Release</string>
 
     <string name="movieTitle">Title</string>
