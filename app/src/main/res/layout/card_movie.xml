@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/b"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -47,7 +48,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/movieReleaseDate"
         app:layout_constraintEnd_toStartOf="@id/movieRuntime"
         app:layout_constraintStart_toEndOf="@+id/movieReleaseDate"
-        app:layout_constraintTop_toTopOf="@+id/movieReleaseDate" />
+        app:layout_constraintTop_toTopOf="@+id/movieReleaseDate"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/movieRuntime"
