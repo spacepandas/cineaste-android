@@ -15,7 +15,9 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonParser
@@ -88,6 +90,13 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
         progressBar = findViewById(R.id.progressBar)
         recyclerView = findViewById(R.id.search_recycler_view)
         val layoutManager = LinearLayoutManager(this)
+        val divider = ContextCompat.getDrawable(recyclerView.context, R.drawable.divider);
+        val itemDecor = DividerItemDecoration(recyclerView.context,
+            layoutManager.orientation)
+        divider?.let {
+            itemDecor.setDrawable(it)
+        }
+        recyclerView.addItemDecoration(itemDecor)
         initAdapter()
         recyclerView.itemAnimator = DefaultItemAnimator()
 
