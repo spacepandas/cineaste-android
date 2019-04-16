@@ -4,24 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.messages.Message
 import com.google.android.gms.nearby.messages.MessageListener
+import com.google.android.material.snackbar.Snackbar
 import de.cineaste.android.R
 import de.cineaste.android.adapter.NearbyUserAdapter
 import de.cineaste.android.database.NearbyMessageHandler
-import de.cineaste.android.database.dbHelper.NMovieDbHelper
-import de.cineaste.android.database.dbHelper.NUserDbHelper
+import de.cineaste.android.database.dbHelper.MovieDbHelper
+import de.cineaste.android.database.dbHelper.UserDbHelper
 import de.cineaste.android.entity.User
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.MovieDto
@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.UUID
+import kotlin.collections.ArrayList
 
 class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
@@ -48,7 +49,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private lateinit var nearbyUserAdapter: NearbyUserAdapter
 
     private var currentUser: User? = null
-    private lateinit var userDbHelper: NUserDbHelper
+    private lateinit var userDbHelper: UserDbHelper
     private lateinit var timeOut: Runnable
 
     private val myUUid: String
@@ -58,8 +59,8 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_night)
-        userDbHelper = NUserDbHelper.getInstance(this)
-        GlobalScope.launch(Main) {
+        userDbHelper = UserDbHelper.getInstance(this)
+        GlobalScope.launch {
             currentUser = userDbHelper.user
         }
 
@@ -121,7 +122,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     }
 
     private fun buildLocalMessage() {
-        val watchlistDbHelper = NMovieDbHelper.getInstance(this)
+        val watchlistDbHelper = MovieDbHelper.getInstance(this)
         var localWatchlistMovies = listOf<Movie>()
         GlobalScope.launch { localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE) }
         val localMovies = transFormMovies(localWatchlistMovies)
@@ -135,7 +136,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     }
 
     override fun onFinishUserDialog(userName: String) {
-        GlobalScope.launch(Main) {
+        GlobalScope.launch {
             if (!userName.isEmpty()) {
                 currentUser = User(0, userName)
                 currentUser?.let { user ->

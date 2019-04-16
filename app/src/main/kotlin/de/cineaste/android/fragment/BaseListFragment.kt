@@ -23,10 +23,10 @@ import android.view.ViewGroup
 import de.cineaste.android.R
 import de.cineaste.android.activity.MovieNightActivity
 import de.cineaste.android.adapter.BaseListAdapter
-import de.cineaste.android.database.dbHelper.NUserDbHelper
+import de.cineaste.android.database.dbHelper.UserDbHelper
+import de.cineaste.android.entity.User
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.util.CustomRecyclerView
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -36,7 +36,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     lateinit var customRecyclerView: CustomRecyclerView
     internal lateinit var layoutManager: LinearLayoutManager
     private lateinit var emptyListTextView: TextView
-    private lateinit var userDbHelper: NUserDbHelper
+    private lateinit var userDbHelper: UserDbHelper
     lateinit var progressbar: RelativeLayout
         private set
     protected abstract val subtitle: String
@@ -64,8 +64,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         super.setArguments(args)
         args?.let {
             watchState = getWatchState(
-                    args.getString(WatchState.WATCH_STATE_TYPE.name,
-                            WatchState.WATCH_STATE.name))
+                args.getString(
+                    WatchState.WATCH_STATE_TYPE.name,
+                    WatchState.WATCH_STATE.name
+                )
+            )
         }
     }
 
@@ -137,12 +140,15 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         if (savedInstanceState != null) {
-            val currentState = savedInstanceState.getString(WatchState.WATCH_STATE_TYPE.name, WatchState.WATCH_STATE.name)
+            val currentState = savedInstanceState.getString(
+                WatchState.WATCH_STATE_TYPE.name,
+                WatchState.WATCH_STATE.name
+            )
             this.watchState = getWatchState(currentState)
         }
 
         activity?.let {
-            userDbHelper = NUserDbHelper.getInstance(it)
+            GlobalScope.launch { userDbHelper = UserDbHelper.getInstance(it) }
         }
     }
 
@@ -179,23 +185,24 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        GlobalScope.launch(Main) {
-            item?.let {
-                when (item.itemId) {
-                    R.id.startMovieNight -> if (userDbHelper.user != null) {
-                        startMovieNight()
-                    } else {
-                        val fragmentManager = fragmentManager
-                        if (fragmentManager != null) {
-                            UserInputFragment().show(fragmentManager, "")
-                        }
+        var user: User? = null
+        GlobalScope.launch { user = userDbHelper.user }
+        item?.let {
+            when (item.itemId) {
+                R.id.startMovieNight -> if (user != null) {
+                    startMovieNight()
+                } else {
+                    val fragmentManager = fragmentManager
+                    if (fragmentManager != null) {
+                        UserInputFragment().show(fragmentManager, "")
                     }
-                    R.id.filterAlphabetical -> reorderLists(BaseListFragment.FilterType.ALPHABETICAL)
-                    R.id.filterReleaseDate -> reorderLists(BaseListFragment.FilterType.RELEASE_DATE)
-                    R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
                 }
+                R.id.filterAlphabetical -> reorderLists(BaseListFragment.FilterType.ALPHABETICAL)
+                R.id.filterReleaseDate -> reorderLists(BaseListFragment.FilterType.RELEASE_DATE)
+                R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -239,9 +246,10 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         val intent = createIntent(itemId, state, activity)
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = makeSceneTransitionAnimation(activity,
-                    Pair.create(views[0], "card"),
-                    Pair.create(views[1], "poster")
+            val options = makeSceneTransitionAnimation(
+                activity,
+                Pair.create(views[0], "card"),
+                Pair.create(views[1], "poster")
             )
             activity.startActivity(intent, options.toBundle())
         } else {

@@ -14,7 +14,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.EpisodeAdapter
-import de.cineaste.android.database.dbHelper.NSeriesDbHelper
+import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.viewholder.series.EpisodeViewHolder
 import kotlinx.coroutines.GlobalScope
@@ -24,7 +24,7 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
 
     private var seriesId: Long = 0
     private var seasonId: Long = 0
-    private lateinit var seriesDbHelper: NSeriesDbHelper
+    private lateinit var seriesDbHelper: SeriesDbHelper
     private lateinit var emptyListTextView: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EpisodeAdapter
@@ -45,7 +45,7 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         seriesId = args.getLong("seriesId", -1)
 
         val context = context ?: return
-        seriesDbHelper = NSeriesDbHelper.getInstance(context)
+        seriesDbHelper = SeriesDbHelper.getInstance(context)
         GlobalScope.launch {
             episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
         }

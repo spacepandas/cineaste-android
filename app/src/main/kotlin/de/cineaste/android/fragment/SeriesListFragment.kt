@@ -14,7 +14,7 @@ import de.cineaste.android.adapter.series.SeriesListAdapter
 import de.cineaste.android.controllFlow.series.HistoryListSeriesTouchHelperCallback
 import de.cineaste.android.controllFlow.series.WatchlistSeriesTouchHelperCallback
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.NSeriesDbHelper
+import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Series
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -49,7 +49,7 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
     override fun onEpisodeWatchedClick(series: Series, position: Int) {
         val activity = activity
         activity?.let {
-            GlobalScope.launch { NSeriesDbHelper.getInstance(activity).episodeWatched(series) }
+            GlobalScope.launch { SeriesDbHelper.getInstance(activity).episodeWatched(series) }
             seriesListAdapter.updateSeries(series, position)
         }
     }

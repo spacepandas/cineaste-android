@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.NMovieDbHelper
+import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
@@ -40,7 +40,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private var state: Int = 0
     private lateinit var poster: ImageView
 
-    private lateinit var movieDbHelper: NMovieDbHelper
+    private lateinit var movieDbHelper: MovieDbHelper
     private var movieId: Long = 0
     private var currentMovie: Movie? = null
     private lateinit var progressBar: View
@@ -187,7 +187,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         initViews()
 
-        movieDbHelper = NMovieDbHelper.getInstance(this)
+        movieDbHelper = MovieDbHelper.getInstance(this)
 
         updateCallBack = updateCallback
         autoUpdateMovie()

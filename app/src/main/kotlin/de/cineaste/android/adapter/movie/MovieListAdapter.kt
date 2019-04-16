@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Filter
 import de.cineaste.android.R
 import de.cineaste.android.adapter.BaseListAdapter
-import de.cineaste.android.database.dbHelper.NMovieDbHelper
+import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.ItemClickListener
@@ -20,7 +20,7 @@ import java.util.Collections
 
 class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState) : BaseListAdapter(context, displayMessage, listener, state), OnMovieRemovedListener {
 
-    private val db: NMovieDbHelper = NMovieDbHelper.getInstance(context)
+    private val db: MovieDbHelper = MovieDbHelper.getInstance(context)
     private var dataSet: MutableList<Movie> = ArrayList()
     private var filteredDataSet: MutableList<Movie> = mutableListOf()
 
@@ -144,11 +144,13 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     fun updateDataSet() {
-        var movies = listOf<Movie>()
-        GlobalScope.launch { movies = db.readMoviesByWatchStatus(state) }
-        this.dataSet = movies as MutableList<Movie>
-        this.filteredDataSet = LinkedList(dataSet)
-        displayMessage.showMessageIfEmptyList()
+        GlobalScope.launch {
+            val movies = db.readMoviesByWatchStatus(state)
+            this@MovieListAdapter.dataSet = movies as MutableList<Movie>
+            this@MovieListAdapter.filteredDataSet = LinkedList(dataSet)
+            displayMessage.showMessageIfEmptyList()
+        }
+
         notifyDataSetChanged()
     }
 

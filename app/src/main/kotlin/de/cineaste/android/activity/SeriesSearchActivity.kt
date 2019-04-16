@@ -12,7 +12,7 @@ import java.lang.reflect.Type
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesSearchQueryAdapter
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.NSeriesDbHelper
+import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.network.NetworkClient
 import de.cineaste.android.network.NetworkRequest
@@ -44,7 +44,7 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
     }
 
     override fun onSeriesStateChangeListener(series: Series, viewId: Int, index: Int) {
-        val dbHelper = NSeriesDbHelper.getInstance(this)
+        val dbHelper = SeriesDbHelper.getInstance(this)
         val seriesCallback: SeriesCallback?
         when (viewId) {
             R.id.to_watchlist_button -> seriesCallback = object : SeriesCallback {

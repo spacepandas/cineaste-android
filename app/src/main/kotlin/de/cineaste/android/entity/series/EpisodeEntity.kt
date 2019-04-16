@@ -15,6 +15,7 @@ data class EpisodeEntity(
     var description: String? = null,
     var seriesId: Long = 0,
     var seasonId: Long = 0,
+    @ColumnInfo(name = BaseDao.EpisodeEntry.COLUMN_EPISODE_WATCHED)
     var isWatched: Boolean = false
 )
 

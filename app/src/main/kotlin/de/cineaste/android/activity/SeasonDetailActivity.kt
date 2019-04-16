@@ -13,10 +13,10 @@ import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeasonPagerAdapter
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.NSeriesDbHelper
+import de.cineaste.android.database.dbHelper.SeriesDbHelper
+import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.util.Constants
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -24,7 +24,7 @@ class SeasonDetailActivity : AppCompatActivity() {
 
     private var currentSeries: Series? = null
     private lateinit var poster: ImageView
-    private lateinit var seriesDbHelper: NSeriesDbHelper
+    private lateinit var seriesDbHelper: SeriesDbHelper
 
     private var seasonId: Long = 0
 
@@ -32,7 +32,7 @@ class SeasonDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_season_detail)
 
-        seriesDbHelper = NSeriesDbHelper.getInstance(this)
+        seriesDbHelper = SeriesDbHelper.getInstance(this)
 
         poster = findViewById(R.id.poster_image_view)
 
@@ -155,16 +155,17 @@ class SeasonDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                GlobalScope.launch(Main) {
-                    currentSeries?.let { series ->
-                        val unwatchedEpisodes =
-                            seriesDbHelper.getUnWatchedEpisodesOfSeries(series.id)
-                        if (unwatchedEpisodes.isEmpty() && !series.isInProduction) {
-                            series.isWatched = true
-                            seriesDbHelper.updateWatchState(series)
-                        }
-                        onBackPressed()
+                currentSeries?.let { series ->
+                    var unwatchedEpisodes = listOf<Episode>()
+                    GlobalScope.launch {
+                        unwatchedEpisodes = seriesDbHelper.getUnWatchedEpisodesOfSeries(series.id)
                     }
+                    if (unwatchedEpisodes.isEmpty() && !series.isInProduction) {
+                        series.isWatched = true
+                        GlobalScope.launch { seriesDbHelper.updateWatchState(series) }
+                    }
+                    onBackPressed()
+
                 }
                 return true
 

@@ -17,6 +17,7 @@ data class SeasonEntity(
     var posterPath: String? = null,
     var seasonNumber: Int = 0,
     var seriesId: Long = 0,
+    @ColumnInfo(name = BaseDao.SeasonEntry.COLUMN_SEASON_WATCHED)
     var isWatched: Boolean = false
 )
 

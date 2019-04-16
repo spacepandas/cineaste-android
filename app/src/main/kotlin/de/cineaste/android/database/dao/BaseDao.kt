@@ -1,22 +1,8 @@
 package de.cineaste.android.database.dao
 
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
-import android.provider.BaseColumns
+abstract class BaseDao {
 
-import java.text.SimpleDateFormat
-import java.util.Locale
-
-import de.cineaste.android.util.Constants
-
-abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-
-    protected val readDb: SQLiteDatabase = readableDatabase
-    protected val writeDb: SQLiteDatabase = writableDatabase
-    protected val sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-
-    abstract class UserEntry : BaseColumns {
+    abstract class UserEntry {
         companion object {
             const val TABLE_NAME = "user"
             const val ID = "_id"
@@ -24,7 +10,7 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
         }
     }
 
-    abstract class MovieEntry : BaseColumns {
+    abstract class MovieEntry {
         companion object {
             const val TABLE_NAME = "movie"
             const val ID = "_id"
@@ -41,7 +27,7 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
         }
     }
 
-    abstract class SeriesEntry : BaseColumns {
+    abstract class SeriesEntry {
         companion object {
             const val TABLE_NAME = "series"
             const val ID = "_id"
@@ -60,7 +46,7 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
         }
     }
 
-    abstract class SeasonEntry : BaseColumns {
+    abstract class SeasonEntry {
         companion object {
             const val TABLE_NAME = "season"
             const val ID = "_id"
@@ -73,7 +59,7 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
         }
     }
 
-    abstract class EpisodeEntry : BaseColumns {
+    abstract class EpisodeEntry {
         companion object {
             const val TABLE_NAME = "episode"
             const val ID = "_id"
@@ -86,41 +72,17 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
         }
     }
 
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(SQL_CREATE_USER_ENTRIES)
-        db.execSQL(SQL_CREATE_MOVIE_ENTRIES)
-        db.execSQL(SQL_CREATE_SERIES_ENTRIES)
-        db.execSQL(SQL_CREATE_SEASON_ENTRIES)
-        db.execSQL(SQL_CREATE_EPISODE_ENTRIES)
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 2) {
-            db.execSQL("ALTER TABLE " + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.COLUMN_MOVIE_RELEASE_DATE + " " + TEXT_TYPE + ";")
-        }
-
-        if (oldVersion < 3) {
-            db.execSQL("ALTER TABLE " + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.COLUMN_MOVIE_LIST_POSITION + " " + INTEGER_TYPE + ";")
-        }
-
-        if (oldVersion < 4) {
-            db.execSQL(SQL_CREATE_SERIES_ENTRIES)
-            db.execSQL(SQL_CREATE_SEASON_ENTRIES)
-            db.execSQL(SQL_CREATE_EPISODE_ENTRIES)
-        }
-    }
-
     companion object {
 
         const val TEXT_TYPE = " TEXT"
         const val INTEGER_TYPE = " INTEGER"
         private const val REAL_TYPE = " REAL"
         private const val COMMA_SEP = ","
-        private const val SQL_CREATE_USER_ENTRIES = "CREATE TABLE IF NOT EXISTS " + UserEntry.TABLE_NAME + " (" +
+        const val SQL_CREATE_USER_ENTRIES = "CREATE TABLE IF NOT EXISTS " + UserEntry.TABLE_NAME + " (" +
                 UserEntry.ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT" + COMMA_SEP +
                 UserEntry.COLUMN_USER_NAME + TEXT_TYPE +
                 " )"
-        private const val SQL_CREATE_MOVIE_ENTRIES = "CREATE TABLE IF NOT EXISTS " + MovieEntry.TABLE_NAME + " (" +
+        const val SQL_CREATE_MOVIE_ENTRIES = "CREATE TABLE IF NOT EXISTS " + MovieEntry.TABLE_NAME + " (" +
                 MovieEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
                 MovieEntry.COLUMN_MOVIE_TITLE + TEXT_TYPE + COMMA_SEP +
                 MovieEntry.COlUMN_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
@@ -166,8 +128,5 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
                 EpisodeEntry.COLUMN_EPISODE_SEASON_ID + INTEGER_TYPE + COMMA_SEP +
                 EpisodeEntry.COLUMN_EPISODE_WATCHED + INTEGER_TYPE +
                 " )"
-
-        private const val DATABASE_VERSION = Constants.DATABASE_VERSION
-        private const val DATABASE_NAME = Constants.DATABASE_NAME
     }
 }

@@ -6,12 +6,11 @@ import android.view.View
 import android.widget.Filter
 import de.cineaste.android.R
 import de.cineaste.android.adapter.BaseListAdapter
-import de.cineaste.android.database.dbHelper.NSeriesDbHelper
+import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.series.SeriesViewHolder
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.LinkedBlockingQueue
@@ -26,7 +25,7 @@ class SeriesListAdapter(
     private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener
 ) : BaseListAdapter(context, displayMessage, listener, state) {
 
-    private val db: NSeriesDbHelper
+    private val db: SeriesDbHelper
     private var dataSet: MutableList<Series> = mutableListOf()
     private var filteredDataSet: MutableList<Series> = mutableListOf()
 
@@ -43,7 +42,7 @@ class SeriesListAdapter(
 
     init {
         this.dataSet.clear()
-        this.db = NSeriesDbHelper.getInstance(context)
+        this.db = SeriesDbHelper.getInstance(context)
         this.dataSet.addAll(db.getSeriesByWatchedState(state))
         this.filteredDataSet = LinkedList(dataSet)
     }
@@ -197,7 +196,7 @@ class SeriesListAdapter(
 
     fun updateDataSet() {
         var tempDataSet: MutableList<Series> = mutableListOf()
-        GlobalScope.launch(Main) {tempDataSet = db.getSeriesByWatchedState(state) as MutableList<Series> }
+        GlobalScope.launch {tempDataSet = db.getSeriesByWatchedState(state) as MutableList<Series> }
         this.dataSet = tempDataSet
         this.filteredDataSet = LinkedList(dataSet)
         displayMessage.showMessageIfEmptyList()

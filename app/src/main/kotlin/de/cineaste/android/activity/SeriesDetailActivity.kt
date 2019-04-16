@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesDetailAdapter
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.NSeriesDbHelper
+import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.SeriesCallback
@@ -34,12 +34,13 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
+class SeriesDetailActivity : AppCompatActivity(), ItemClickListener,
+    SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
 
     private var state: Int = 0
     private var seriesId: Long = 0
 
-    private lateinit var seriesDbHelper: NSeriesDbHelper
+    private lateinit var seriesDbHelper: SeriesDbHelper
     private lateinit var seriesLoader: SeriesLoader
     private var currentSeries: Series? = null
     private lateinit var progressBar: View
@@ -76,7 +77,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             R.id.more_info -> {
                 currentSeries?.let { series ->
                     val tmdbUri = Constants.THE_MOVIE_DB_SERIES_URI
-                            .replace("<SERIES_ID>", series.id.toString())
+                        .replace("<SERIES_ID>", series.id.toString())
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUri))
                     startActivity(browserIntent)
                 }
@@ -86,10 +87,21 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 currentSeries?.let { series ->
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
-                    val shareBodyText = "${series.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace("<SERIES_ID>", series.id.toString())}"
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_series))
+                    val shareBodyText = "${series.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace(
+                        "<SERIES_ID>",
+                        series.id.toString()
+                    )}"
+                    sharingIntent.putExtra(
+                        android.content.Intent.EXTRA_SUBJECT,
+                        getString(R.string.share_series)
+                    )
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
-                    startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_series)))
+                    startActivity(
+                        Intent.createChooser(
+                            sharingIntent,
+                            getString(R.string.share_series)
+                        )
+                    )
                 }
                 return true
             }
@@ -98,12 +110,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     override fun onDeleteClicked() {
-        GlobalScope.launch(Main) {
-            layout.removeCallbacks(updateCallBack)
-            seriesDbHelper.delete(seriesId)
-            currentSeries = null
-            onBackPressed()
-        }
+        layout.removeCallbacks(updateCallBack)
+        GlobalScope.launch { seriesDbHelper.delete(seriesId) }
+        currentSeries = null
+        onBackPressed()
     }
 
     override fun onAddToHistoryClicked() {
@@ -138,8 +148,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun showAddToast() {
         currentSeries?.let { series ->
-            Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                    series.name), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this, this.resources.getString(
+                    R.string.movieAdd,
+                    series.name
+                ), Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -214,8 +228,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
             startActivity(intent)
         } else {
-            val snackBar = Snackbar.make(layout,
-                    R.string.notAvailableDuringSearch, Snackbar.LENGTH_SHORT)
+            val snackBar = Snackbar.make(
+                layout,
+                R.string.notAvailableDuringSearch, Snackbar.LENGTH_SHORT
+            )
             snackBar.show()
         }
     }
@@ -224,7 +240,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_series_detail)
 
-        seriesDbHelper = NSeriesDbHelper.getInstance(this)
+        seriesDbHelper = SeriesDbHelper.getInstance(this)
         seriesLoader = SeriesLoader(this)
 
         val intent = intent
@@ -344,24 +360,25 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         if (state != R.string.searchState) {
 
             seriesLoader.loadCompleteSeries(seriesId,
-                    object : SeriesCallback {
-                        override fun onFailure() {
-                            GlobalScope.launch(Main) { showNetworkError() }
-                        }
-
-                        override fun onSuccess(series: Series) {
-                            val oldSeries = currentSeries
-                            oldSeries?.let {
-                                series.isWatched = oldSeries.isWatched
-                                series.listPosition = oldSeries.listPosition
-                            }
-                            GlobalScope.launch(Main) {
-                                seriesDbHelper.update(series)
-                                setPoster(series)
-                                adapter.updateSeries(series)
-                            }
-                        }
+                object : SeriesCallback {
+                    override fun onFailure() {
+                        GlobalScope.launch(Main) { showNetworkError() }
                     }
+
+                    override fun onSuccess(series: Series) {
+                        val oldSeries = currentSeries
+                        oldSeries?.let {
+                            series.isWatched = oldSeries.isWatched
+                            series.listPosition = oldSeries.listPosition
+                        }
+                        GlobalScope.launch {
+                            seriesDbHelper.update(series)
+                        }
+                        setPoster(series)
+                        adapter.updateSeries(series)
+
+                    }
+                }
             )
         }
     }
@@ -376,12 +393,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun setPoster(series: Series) {
         val posterUri = Constants.POSTER_URI_ORIGINAL
-                .replace("<posterName>", series.backdropPath ?: "/")
-                .replace("<API_KEY>", getString(R.string.movieKey))
+            .replace("<posterName>", series.backdropPath ?: "/")
+            .replace("<API_KEY>", getString(R.string.movieKey))
         Picasso.get()
-                .load(posterUri)
-                .error(R.drawable.placeholder_poster)
-                .into(poster)
+            .load(posterUri)
+            .error(R.drawable.placeholder_poster)
+            .into(poster)
     }
 
     private fun loadRequestedSeries() {
@@ -454,7 +471,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun showNetworkError() {
         val snackbar = Snackbar
-                .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
+            .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
 }

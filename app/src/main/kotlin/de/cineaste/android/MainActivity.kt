@@ -7,17 +7,6 @@ import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
@@ -25,35 +14,42 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import de.cineaste.android.activity.AboutActivity
 import de.cineaste.android.activity.MovieNightActivity
 import de.cineaste.android.database.ExportService
 import de.cineaste.android.database.ImportService
-import de.cineaste.android.database.dbHelper.NMovieDbHelper
-import de.cineaste.android.database.dbHelper.NSeriesDbHelper
-import de.cineaste.android.database.dbHelper.NUserDbHelper
+import de.cineaste.android.database.dbHelper.MovieDbHelper
+import de.cineaste.android.database.dbHelper.SeriesDbHelper
+import de.cineaste.android.database.dbHelper.UserDbHelper
 import de.cineaste.android.entity.ImportExportObject
 import de.cineaste.android.entity.User
-import de.cineaste.android.fragment.ImportFinishedDialogFragment
+import de.cineaste.android.fragment.*
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
-import de.cineaste.android.fragment.BaseListFragment
-import de.cineaste.android.fragment.SeriesListFragment
-import de.cineaste.android.fragment.UserInputFragment
-import de.cineaste.android.fragment.MovieListFragment
-import de.cineaste.android.fragment.WatchState
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.Date
+import java.util.Locale
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     private lateinit var fm: FragmentManager
     private lateinit var contentContainer: View
-    private lateinit var userDbHelper: NUserDbHelper
+    private lateinit var userDbHelper: UserDbHelper
     private lateinit var userName: TextView
 
     private lateinit var drawerLayout: DrawerLayout
@@ -100,9 +96,11 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        userDbHelper = NUserDbHelper.getInstance(this)
-        movieDbHelper = NMovieDbHelper.getInstance(this)
-        seriesDbHelper = NSeriesDbHelper.getInstance(this)
+        GlobalScope.launch {
+            userDbHelper = UserDbHelper.getInstance(this@MainActivity)
+            movieDbHelper = MovieDbHelper.getInstance(this@MainActivity)
+            seriesDbHelper = SeriesDbHelper.getInstance(this@MainActivity)
+        }
         contentContainer = findViewById(R.id.content_container)
 
         fm = supportFragmentManager
@@ -119,7 +117,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     override fun onResume() {
         super.onResume()
-        GlobalScope.launch(Main) {
+        GlobalScope.launch {
             val user = userDbHelper.user
             if (user != null) {
                 userName.text = user.userName
@@ -267,23 +265,22 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     private fun exportMovies(uri: Uri) {
-        GlobalScope.launch(Main) {
-            val importExportObject = ImportExportObject()
+        val importExportObject = ImportExportObject()
+        GlobalScope.launch {
             importExportObject.movies = movieDbHelper.readAllMovies()
             importExportObject.series = seriesDbHelper.allSeries
-
-            val successfullyExported = ExportService.export(importExportObject, uri, this@MainActivity)
-
-            var snackBarMessage = R.string.exportFailed
-
-            if (successfullyExported) {
-                snackBarMessage = R.string.exportSucceeded
-            }
-
-            val snackBar = Snackbar
-                .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
-            snackBar.show()
         }
+        val successfullyExported = ExportService.export(importExportObject, uri, this@MainActivity)
+
+        var snackBarMessage = R.string.exportFailed
+
+        if (successfullyExported) {
+            snackBarMessage = R.string.exportSucceeded
+        }
+
+        val snackBar = Snackbar
+            .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
+        snackBar.show()
     }
 
     private fun selectImportFile() {
@@ -389,7 +386,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     override fun onFinishUserDialog(userName: String) {
-        GlobalScope.launch(Main) {
+        GlobalScope.launch {
             if (userName.isNotEmpty()) {
                 userDbHelper.createUser(User(0, userName))
             }
@@ -402,7 +399,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         private const val READ_REQUEST_CODE = 42
         private const val WRITE_REQUEST_CODE = 43
 
-        private lateinit var movieDbHelper: NMovieDbHelper
-        private lateinit var seriesDbHelper: NSeriesDbHelper
+        private lateinit var movieDbHelper: MovieDbHelper
+        private lateinit var seriesDbHelper: SeriesDbHelper
     }
 }

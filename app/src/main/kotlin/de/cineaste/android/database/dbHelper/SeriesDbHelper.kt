@@ -1,136 +1,89 @@
 package de.cineaste.android.database.dbHelper
 
 import android.content.Context
+import de.cineaste.android.database.CineasteDb
 
 import java.util.ArrayList
 
-import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dao.EpisodeDao
-import de.cineaste.android.database.dao.SeasonDao
-import de.cineaste.android.database.dao.SeriesDao
-import de.cineaste.android.entity.series.Episode
-import de.cineaste.android.entity.series.Season
-import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.WatchState
 
-import de.cineaste.android.database.dao.BaseDao.EpisodeEntry
 import de.cineaste.android.database.dao.BaseDao.SeasonEntry
-import de.cineaste.android.database.dao.BaseDao.SeriesEntry
+import de.cineaste.android.entity.series.*
 
 class SeriesDbHelper private constructor(context: Context) {
 
-    private val seriesDao: SeriesDao = SeriesDao.getInstance(context)
-    private val seasonDao: SeasonDao = SeasonDao.getInstance(context)
-    private val episodeDao: EpisodeDao = EpisodeDao.getInstance(context)
+    private val seriesDao = CineasteDb.getDatabase(context).seriesDao()
+    private val seasonDao = CineasteDb.getDatabase(context).seasonDao()
+    private val episodeDao = CineasteDb.getDatabase(context).episodeDao()
 
     val allSeries: List<Series>
         get() {
-            val seriesList = seriesDao.read(null, null, null)
-
-            for (series in seriesList) {
-                loadRemainingInformation(series)
+            val seriesEntityList = seriesDao.getAll()
+            val seriesList = mutableListOf<Series>()
+            for (series in seriesEntityList) {
+                seriesList.add(toSeriesModel(series))
             }
 
             return seriesList
         }
 
-    fun getSeriesById(seriesId: Long): Series? {
-        val selection = SeriesEntry.ID + " = ?"
-        val selectionArgs = arrayOf(seriesId.toString())
-
-        val seriesList = seriesDao.read(selection, selectionArgs, null)
-
-        if (seriesList.isEmpty()) {
-            return null
+    private fun toSeriesModel(seriesEntity: SeriesEntity): Series {
+        val seasonEntities = seasonDao.getBySeriesId(seriesEntity.id)
+        val season = mutableListOf<Season>()
+        for (seasonEntity in seasonEntities) {
+            val episodeEntities = episodeDao.getBySeasonId(seasonEntity.id)
+            season.add(seasonEntity.toModel(episodeEntities.map { it.toModel() }))
         }
 
-        val series = seriesList[0]
-        loadRemainingInformation(series)
+        return seriesEntity.toModel(season)
+    }
 
-        return series
+    fun getSeriesById(seriesId: Long): Series? {
+        val series = seriesDao.getOne(seriesId)
+        return toSeriesModel(series)
+    }
+
+    private fun getStatusFromState(state: WatchState): Boolean {
+        return when(state) {
+            WatchState.WATCH_STATE -> false
+            WatchState.WATCHED_STATE -> true
+            else -> false
+        }
     }
 
     fun getSeriesByWatchedState(watchedState: WatchState): List<Series> {
-        val selectionArg = getSelectionArgs(watchedState)
-        val selection = SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + " = ?"
-        val selectionArgs = arrayOf(selectionArg)
-
-        val seriesList = seriesDao.read(selection, selectionArgs, SeriesEntry.COLUMN_SERIES_LIST_POSITION + " ASC")
-
-        for (series in seriesList) {
-            loadRemainingInformation(series)
+        val seriesEntityList = seriesDao.getAllByWatchState(getStatusFromState(watchedState))
+        val seriesList = mutableListOf<Series>()
+        for (series in seriesEntityList) {
+            seriesList.add(toSeriesModel(series))
         }
 
         return seriesList
     }
 
     fun getUnWatchedEpisodesOfSeries(seriesId: Long): List<Episode> {
-        val selection = BaseDao.EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ? AND " + BaseDao.EpisodeEntry.COLUMN_EPISODE_WATCHED + " = 0"
-        val selectionArgs = arrayOf(seriesId.toString())
-
-        return episodeDao.read(selection, selectionArgs)
+        return episodeDao.getBySeriesAndWatchedState(seriesId, false).map { it.toModel() }
     }
 
     fun getEpisodesBySeasonId(seasonId: Long): List<Episode> {
-        val selection = BaseDao.EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = ?"
-        val selectionArgs = arrayOf(seasonId.toString())
-
-        return episodeDao.read(selection, selectionArgs)
+        return episodeDao.getBySeasonId(seasonId).map { it.toModel() }
     }
 
     fun reorderAlphabetical(state: WatchState): List<Series> {
-        return reorder(state, SeriesEntry.COLUMN_SERIES_NAME)
+        return getSeriesByWatchedState(state).sortedBy { it.name }
     }
 
     fun reorderByReleaseDate(state: WatchState): List<Series> {
-        return reorder(state, SeriesEntry.COLUMN_SERIES_RELEASE_DATE)
-    }
-
-    private fun reorder(state: WatchState, orderBy: String): List<Series> {
-        val sql = "UPDATE " + SeriesEntry.TABLE_NAME +
-                " SET " + SeriesEntry.COLUMN_SERIES_LIST_POSITION + " = ( " +
-                "SELECT COUNT(*) " +
-                "FROM " + SeriesEntry.TABLE_NAME + " AS t2 " +
-                "WHERE t2." + orderBy + " <= " + SeriesEntry.TABLE_NAME + "." + orderBy +
-                " ) " +
-                "WHERE " + SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + " = " + getSelectionArgs(state)
-        seriesDao.reorder(sql)
-
-        return getSeriesByWatchedState(state)
-    }
-
-    private fun loadRemainingInformation(series: Series) {
-        val seasons = readSeasonsBySeriesId(series.id)
-
-        for (season in seasons) {
-            season.episodes = readEpisodesBySeasonId(season.id)
-        }
-
-        series.seasons = seasons
+        return getSeriesByWatchedState(state).sortedBy { it.releaseDate }
     }
 
     private fun getSeasonById(seasonId: Long): Season? {
-        val selection = SeasonEntry.ID + " = ?"
-        val selectionArgs = arrayOf(seasonId.toString())
+        val seasonEntity = seasonDao.getOne(seasonId)
+        val episodeEntitiesOfSeason = episodeDao.getBySeasonId(seasonId)
 
-        val seasonList = seasonDao.read(selection, selectionArgs)
-
-        return if (seasonList.isEmpty()) null else seasonList[0]
+        return seasonEntity?.toModel(episodeEntitiesOfSeason.map { it.toModel() })
     }
 
-    private fun readSeasonsBySeriesId(seriesId: Long): List<Season> {
-        val selection = SeasonEntry.COLUMN_SEASON_SERIES_ID + " = ?"
-        val selectionArgs = arrayOf(seriesId.toString())
-
-        return seasonDao.read(selection, selectionArgs)
-    }
-
-    private fun readEpisodesBySeasonId(seasonId: Long): List<Episode> {
-        val selection = EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = ?"
-        val selectionArgs = arrayOf(seasonId.toString())
-
-        return episodeDao.read(selection, selectionArgs)
-    }
 
     fun addToWatchList(series: Series) {
         addToList(series, false)
@@ -143,13 +96,17 @@ class SeriesDbHelper private constructor(context: Context) {
     private fun addToList(series: Series, watchState: Boolean) {
         series.isWatched = watchState
         series.listPosition = seriesDao.getHighestListPosition(watchState)
-        seriesDao.create(series)
+
+        seriesDao.insert(series.toEntity())
         for (season in series.seasons) {
             season.isWatched = watchState
-            seasonDao.create(season, series.id)
+            season.seriesId = series.id
+            seasonDao.insert(season.toEntity())
             for (episode in season.episodes) {
                 episode.isWatched = watchState
-                episodeDao.create(episode, series.id, season.id)
+                episode.seasonId = season.id
+                episode.seriesId = series.id
+                episodeDao.insert(episode.toEntity())
             }
         }
     }
@@ -165,33 +122,19 @@ class SeriesDbHelper private constructor(context: Context) {
     fun toggleSeason(seasonId: Long) {
         getSeasonById(seasonId)?.let { season ->
             val watchState = !season.isWatched
-            val updateEpisodesSql = "UPDATE " + EpisodeEntry.TABLE_NAME +
-                    " SET " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = " + (if (watchState) 1 else 0).toString() +
-                    " WHERE " + EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = " + seasonId
-
-            val updateSeasonsSql = "UPDATE " + SeasonEntry.TABLE_NAME +
-                    " SET " + SeasonEntry.COLUMN_SEASON_WATCHED + " = " + (if (watchState) 1 else 0).toString() +
-                    " WHERE " + SeasonEntry.ID + " = " + seasonId
-
-            seasonDao.executeCustomSql(updateSeasonsSql)
-            episodeDao.executeCustomSql(updateEpisodesSql)
+            seasonDao.updateWatchedStateBySeasonId(watchState, seasonId)
+            episodeDao.updateWatchedStateBySeasonId(watchState, seasonId)
         }
     }
 
     private fun moveBetweenLists(series: Series, watchState: Boolean) {
-        val updateEpisodesSql = "UPDATE " + EpisodeEntry.TABLE_NAME +
-                " SET " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = " + (if (watchState) 1 else 0).toString() +
-                " WHERE " + EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = " + series.id
-
-        val updateSeasonsSql = "UPDATE " + SeasonEntry.TABLE_NAME +
-                " SET " + SeasonEntry.COLUMN_SEASON_WATCHED + " = " + (if (watchState) 1 else 0).toString() +
-                " WHERE " + SeasonEntry.COLUMN_SEASON_SERIES_ID + " = " + series.id
-
         series.isWatched = watchState
+        series.listPosition = seriesDao.getHighestListPosition(watchState)
 
-        seriesDao.update(series, seriesDao.getHighestListPosition(watchState))
-        seasonDao.executeCustomSql(updateSeasonsSql)
-        episodeDao.executeCustomSql(updateEpisodesSql)
+        seriesDao.update(series.toEntity())
+
+        seasonDao.updateWatchedStateBySeriesId(watchState, series.id)
+        episodeDao.updateWatchedStateBySeriesId(watchState, series.id)
     }
 
     fun moveBackToWatchList(series: Series, prevSeason: Int, prevEpisode: Int) {
@@ -207,20 +150,16 @@ class SeriesDbHelper private constructor(context: Context) {
         for (season in series.seasons) {
             if (season.seasonNumber < prevSeason) {
                 season.isWatched = !watchState
-                seasonDao.update(season)
+                seasonDao.update(season.toEntity())
 
-                val updateEpisodesSql = "UPDATE " + EpisodeEntry.TABLE_NAME +
-                        " SET " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = " + (if (!watchState) 1 else 0).toString() +
-                        " WHERE " + EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = " + season.id
-
-                episodeDao.executeCustomSql(updateEpisodesSql)
+                episodeDao.updateWatchedStateBySeasonId(season.isWatched, season.id)
             }
 
             if (season.seasonNumber == prevSeason) {
                 for (episode in season.episodes) {
                     if (episode.episodeNumber < prevEpisode) {
                         episode.isWatched = !watchState
-                        episodeDao.update(episode)
+                        episodeDao.update(episode.toEntity())
                     }
                 }
             }
@@ -230,13 +169,17 @@ class SeriesDbHelper private constructor(context: Context) {
     fun delete(series: Series) {
         episodeDao.deleteBySeriesId(series.id)
         seasonDao.deleteBySeriesId(series.id)
-        seriesDao.delete(series.id)
+        seriesDao.delete(series.toEntity())
     }
 
     fun delete(seriesId: Long) {
         episodeDao.deleteBySeriesId(seriesId)
         seasonDao.deleteBySeriesId(seriesId)
-        seriesDao.delete(seriesId)
+        val series = getSeriesById(seriesId)?.toEntity()
+        series?.let {
+            seriesDao.delete(it)
+        }
+
     }
 
     fun episodeWatched(series: Series) {
@@ -251,14 +194,14 @@ class SeriesDbHelper private constructor(context: Context) {
                         episodes.add(episode)
                     } else {
                         episode.isWatched = true
-                        episodeDao.update(episode)
+                        episodeDao.update(episode.toEntity())
                         episodes.add(episode)
                         break
                     }
                 }
                 if (episodes.size == season.episodes.size) {
                     season.isWatched = true
-                    seasonDao.update(season)
+                    seasonDao.update(season.toEntity())
                     seasons.add(season)
                 }
                 break
@@ -267,23 +210,25 @@ class SeriesDbHelper private constructor(context: Context) {
 
         if (seasons.size == series.seasons.size && !series.isInProduction) {
             series.isWatched = true
-            seriesDao.update(series, seriesDao.getHighestListPosition(true))
+            series.listPosition = seriesDao.getHighestListPosition(true)
+            seriesDao.update(series.toEntity())
         }
     }
 
     fun episodeClicked(episode: Episode) {
         episode.isWatched = !episode.isWatched
-        episodeDao.update(episode)
+        episodeDao.update(episode.toEntity())
 
         if (!episode.isWatched) {
             val series = getSeriesById(episode.seriesId)
             series?.let {
                 series.isWatched = false
-                seriesDao.update(series, seriesDao.getHighestListPosition(false))
+                series.listPosition = seriesDao.getHighestListPosition(false)
+                seriesDao.update(series.toEntity())
                 for (season in series.seasons) {
                     if (season.id == episode.seasonId) {
                         season.isWatched = false
-                        seasonDao.update(season)
+                        seasonDao.update(season.toEntity())
                         break
                     }
                 }
@@ -294,19 +239,22 @@ class SeriesDbHelper private constructor(context: Context) {
     fun importSeries(series: Series) {
         val oldSeries = getSeriesById(series.id)
         if (oldSeries == null) {
-            seriesDao.create(series)
+            seriesDao.insert(series.toEntity())
             for (season in series.seasons) {
-                seasonDao.create(season, series.id)
+                season.seriesId = series.id
+                seasonDao.insert(season.toEntity())
                 for (episode in season.episodes) {
-                    episodeDao.create(episode, series.id, season.id)
+                    episode.seriesId = series.id
+                    episode.seasonId = season.id
+                    episodeDao.insert(episode.toEntity())
                 }
             }
         } else {
-            seriesDao.update(series, series.listPosition)
+            seriesDao.update(series.toEntity())
             for (season in series.seasons) {
-                seasonDao.update(season)
+                seasonDao.update(season.toEntity())
                 for (episode in season.episodes) {
-                    episodeDao.update(episode)
+                    episodeDao.update(episode.toEntity())
                 }
             }
         }
@@ -316,7 +264,7 @@ class SeriesDbHelper private constructor(context: Context) {
         val newListPosition = seriesDao.getHighestListPosition(series.isWatched)
         series.listPosition = newListPosition
 
-        seriesDao.update(series, newListPosition)
+        seriesDao.update(series.toEntity())
     }
 
     fun update(series: Series) {
@@ -325,7 +273,7 @@ class SeriesDbHelper private constructor(context: Context) {
             series.isWatched = oldSeries.isWatched
             series.listPosition = newPosition
 
-            seriesDao.update(series, newPosition)
+            seriesDao.update(series.toEntity())
 
             for (season in series.seasons) {
                 update(season, series)
@@ -335,28 +283,25 @@ class SeriesDbHelper private constructor(context: Context) {
 
     fun updatePosition(series: Series) {
         getSeriesById(series.id)?.let { oldSeries ->
-            val newPosition = getNewPosition(series, oldSeries)
-            seriesDao.update(series, newPosition)
+            series.listPosition = getNewPosition(series, oldSeries)
+            seriesDao.update(series.toEntity())
         }
     }
 
     private fun update(season: Season, series: Series) {
-        val selection = SeasonEntry.ID + " = ?"
-        val selectionArgs = arrayOf(java.lang.Long.toString(season.id))
-
         season.seriesId = series.id
 
-        val seasons = seasonDao.read(selection, selectionArgs)
-        if (seasons.isNotEmpty()) {
-            val oldSeason = seasonDao.read(selection, selectionArgs)[0]
-            season.isWatched = oldSeason.isWatched
-            seasonDao.update(season)
+        val seasons = seasonDao.getOne(season.id)
+        if (seasons != null) {
+            season.isWatched = seasons.isWatched
+            seasonDao.update(season.toEntity())
         } else {
             season.isWatched = false
-            seasonDao.create(season, series.id)
+            season.seriesId = series.id
+            seasonDao.insert(season.toEntity())
 
             series.isWatched = false
-            seriesDao.update(series, series.listPosition)
+            seriesDao.update(series.toEntity())
         }
 
         for (episode in season.episodes) {
@@ -365,27 +310,24 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     private fun update(episode: Episode, series: Series, season: Season) {
-        val selection = EpisodeEntry.ID + " = ?"
-        val selectionArgs = arrayOf(java.lang.Long.toString(episode.id))
 
         episode.seriesId = series.id
         episode.seasonId = season.id
 
-        val episodes = episodeDao.read(selection, selectionArgs)
+        val episodes = episodeDao.getOne(episode.id)
 
-        if (episodes.isNotEmpty()) {
-            val oldEpisode = episodes[0]
-            episode.isWatched = oldEpisode.isWatched
-            episodeDao.update(episode)
+        if (episodes != null) {
+            episode.isWatched = episodes.isWatched
+            episodeDao.update(episode.toEntity())
         } else {
             episode.isWatched = false
-            episodeDao.create(episode)
+            episodeDao.insert(episode.toEntity())
 
             season.isWatched = false
-            seasonDao.update(season)
+            seasonDao.update(season.toEntity())
 
             series.isWatched = false
-            seriesDao.update(series, series.listPosition)
+            seriesDao.update(series.toEntity())
         }
     }
 
@@ -393,10 +335,6 @@ class SeriesDbHelper private constructor(context: Context) {
         return if (updatedSeries.isWatched == oldSeries.isWatched) {
             updatedSeries.listPosition
         } else seriesDao.getHighestListPosition(updatedSeries.isWatched)
-    }
-
-    private fun getSelectionArgs(state: WatchState): String {
-        return if (state == WatchState.WATCH_STATE) "0" else "1"
     }
 
     companion object {

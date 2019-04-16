@@ -19,7 +19,8 @@ import de.cineaste.android.util.Constants
 
 @Database(
     entities = [MovieEntity::class, User::class, SeriesEntity::class, SeasonEntity::class, EpisodeEntity::class],
-    version = Constants.DATABASE_VERSION
+    version = Constants.DATABASE_VERSION,
+    exportSchema = false
 )
 @TypeConverters(DateTypeConverter::class)
 abstract class CineasteDb : RoomDatabase() {
@@ -42,6 +43,7 @@ abstract class CineasteDb : RoomDatabase() {
                     Constants.DATABASE_NAME
                 )
                     .fallbackToDestructiveMigration()
+                    .addMigrations(MIGRATION_0_1)
                     .addMigrations(MIGRATION_1_2)
                     .addMigrations(MIGRATION_2_3)
                     .addMigrations(MIGRATION_3_4)
@@ -52,6 +54,13 @@ abstract class CineasteDb : RoomDatabase() {
                 return instance
             }
         }
+    }
+}
+
+val MIGRATION_0_1: Migration = object : Migration(0, 1) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL(BaseDao.SQL_CREATE_MOVIE_ENTRIES)
+        database.execSQL(BaseDao.SQL_CREATE_USER_ENTRIES)
     }
 }
 

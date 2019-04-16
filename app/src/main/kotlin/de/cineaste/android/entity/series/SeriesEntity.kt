@@ -22,6 +22,7 @@ data class SeriesEntity(
     var numberOfSeasons: Int = 0,
     var posterPath: String? = null,
     var backdropPath: String? = null,
+    @ColumnInfo(name = BaseDao.SeriesEntry.COLUMN_SERIES_SERIES_WATCHED)
     var isWatched: Boolean = false,
     var listPosition: Int = 0
 )

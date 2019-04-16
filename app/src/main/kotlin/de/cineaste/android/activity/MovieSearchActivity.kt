@@ -8,7 +8,7 @@ import com.google.gson.reflect.TypeToken
 import de.cineaste.android.R
 import de.cineaste.android.adapter.movie.MovieSearchQueryAdapter
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.NMovieDbHelper
+import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
@@ -22,7 +22,7 @@ import java.util.Locale
 
 class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.OnMovieStateChange {
 
-    private val db = NMovieDbHelper.getInstance(this)
+    private val db = MovieDbHelper.getInstance(this)
     private lateinit var movieQueryAdapter: MovieSearchQueryAdapter
 
     override val layout: Int
