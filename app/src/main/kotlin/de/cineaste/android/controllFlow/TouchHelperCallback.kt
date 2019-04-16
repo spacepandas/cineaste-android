@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -58,8 +59,9 @@ abstract class TouchHelperCallback protected constructor(private val resources: 
             val iconRight: Int
             val intrinsicWidth: Int
             if (dX > 0) {
-                myIcon = resources.getDrawable(icon)
-                background = ColorDrawable(resources.getColor(R.color.colorAccent))
+                val tempIcon = ContextCompat.getDrawable(recyclerView.context, icon) ?: return
+                myIcon = tempIcon
+                background = ColorDrawable(ContextCompat.getColor(recyclerView.context, R.color.colorAccent))
 
                 intrinsicWidth = myIcon.intrinsicWidth
 
@@ -67,8 +69,9 @@ abstract class TouchHelperCallback protected constructor(private val resources: 
                 iconRight = itemView.left + iconMargin + intrinsicWidth
                 myIcon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
             } else {
-                myIcon = resources.getDrawable(R.drawable.ic_delete_white)
-                background = ColorDrawable(resources.getColor(R.color.colorPrimary))
+                val tempIcon = ContextCompat.getDrawable(recyclerView.context, R.drawable.ic_delete_white) ?: return
+                myIcon = tempIcon
+                background = ColorDrawable(ContextCompat.getColor(recyclerView.context, R.color.colorPrimary))
 
                 intrinsicWidth = myIcon.intrinsicWidth
 
