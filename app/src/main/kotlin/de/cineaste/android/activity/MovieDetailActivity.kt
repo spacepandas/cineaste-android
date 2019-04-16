@@ -3,22 +3,21 @@ package de.cineaste.android.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.widget.NestedScrollView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.widget.NestedScrollView
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.database.dao.BaseDao
@@ -27,12 +26,14 @@ import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.util.Constants
+import de.cineaste.android.util.DetailButtonsHistory
+import de.cineaste.android.util.DetailButtonsMovieList
+import de.cineaste.android.util.DetailButtonsSearch
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
+import java.util.*
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -70,7 +71,7 @@ class MovieDetailActivity : AppCompatActivity() {
                 val movie = currentMovie
                 movie?.let {
                     val tmdbUri = Constants.THE_MOVIE_DB_MOVIES_URI
-                            .replace("<MOVIE_ID>", movie.id.toString())
+                        .replace("<MOVIE_ID>", movie.id.toString())
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUri))
                     startActivity(browserIntent)
                 }
@@ -81,13 +82,13 @@ class MovieDetailActivity : AppCompatActivity() {
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBodyText = "${movie.title} ${Constants.THE_MOVIE_DB_MOVIES_URI
-                            .replace("<MOVIE_ID>", movie.id.toString())}"
+                        .replace("<MOVIE_ID>", movie.id.toString())}"
                     sharingIntent.putExtra(
-                            android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_movie)
+                        android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_movie)
                     )
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
                     startActivity(
-                            Intent.createChooser(sharingIntent, getString(R.string.share_movie))
+                        Intent.createChooser(sharingIntent, getString(R.string.share_movie))
                     )
                 }
                 return true
@@ -128,8 +129,12 @@ class MovieDetailActivity : AppCompatActivity() {
         if (callback != null) {
             MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), callback)
             currentMovie?.title?.let { title ->
-                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                        title), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this, this.resources.getString(
+                        R.string.movieAdd,
+                        title
+                    ), Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -160,8 +165,12 @@ class MovieDetailActivity : AppCompatActivity() {
         if (callback != null) {
             MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), callback)
             currentMovie?.let { movie ->
-                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                        movie.title), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this, this.resources.getString(
+                        R.string.movieAdd,
+                        movie.title
+                    ), Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -214,33 +223,37 @@ class MovieDetailActivity : AppCompatActivity() {
         movieRuntime = findViewById(R.id.movieRuntime)
         layout = findViewById(R.id.overlay)
 
-        val deleteBtn = findViewById<Button>(R.id.delete_button)
-        val historyBtn = findViewById<Button>(R.id.history_button)
-        val watchListBtn = findViewById<Button>(R.id.to_watchlist_button)
+        val detailHistory = findViewById<DetailButtonsHistory>(R.id.detailHistory)
+        val detailMovieList = findViewById<DetailButtonsMovieList>(R.id.detailMovieList)
+        val detailSearch = findViewById<DetailButtonsSearch>(R.id.detailSearch)
 
         when (state) {
             R.string.searchState -> {
-                deleteBtn.visibility = View.GONE
-                historyBtn.visibility = View.VISIBLE
-                watchListBtn.visibility = View.VISIBLE
+                detailHistory.visibility = View.GONE
+                detailMovieList.visibility = View.GONE
+                detailSearch.visibility = View.VISIBLE
             }
             R.string.historyState -> {
-                deleteBtn.visibility = View.VISIBLE
-                historyBtn.visibility = View.GONE
-                watchListBtn.visibility = View.VISIBLE
+                detailHistory.visibility = View.VISIBLE
+                detailMovieList.visibility = View.GONE
+                detailSearch.visibility = View.GONE
             }
             R.string.watchlistState -> {
-                deleteBtn.visibility = View.VISIBLE
-                historyBtn.visibility = View.VISIBLE
-                watchListBtn.visibility = View.GONE
+                detailHistory.visibility = View.GONE
+                detailMovieList.visibility = View.VISIBLE
+                detailSearch.visibility = View.GONE
             }
         }
 
-        deleteBtn.setOnClickListener { onDeleteClicked() }
-
-        historyBtn.setOnClickListener { onAddToHistoryClicked() }
-
-        watchListBtn.setOnClickListener { onAddToWatchClicked() }
+        detailHistory.setClickListener(
+            View.OnClickListener { onAddToWatchClicked() },
+            View.OnClickListener { onDeleteClicked() })
+        detailMovieList.setClickListener(
+            View.OnClickListener { onAddToHistoryClicked() },
+            View.OnClickListener { onDeleteClicked() })
+        detailSearch.setClickListener(
+            View.OnClickListener { onAddToWatchClicked() },
+            View.OnClickListener { onAddToHistoryClicked() })
     }
 
     override fun onResume() {
@@ -288,12 +301,12 @@ class MovieDetailActivity : AppCompatActivity() {
         rating.text = currentMovie.voteAverage.toString()
 
         val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", currentMovie.posterPath ?: "/")
-                .replace("<API_KEY>", getString(R.string.movieKey))
+            .replace("<posterName>", currentMovie.posterPath ?: "/")
+            .replace("<API_KEY>", getString(R.string.movieKey))
         Picasso.get()
-                .load(posterUri)
-                .error(R.drawable.placeholder_poster)
-                .into(poster)
+            .load(posterUri)
+            .error(R.drawable.placeholder_poster)
+            .into(poster)
     }
 
     private fun initToolbar() {
@@ -340,19 +353,22 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun updateMovie() {
         if (state != R.string.searchState) {
-            MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback {
-                override fun onFailure() {
-                    GlobalScope.launch(Main) { showNetworkError() }
-                }
-
-                override fun onSuccess(movie: Movie) {
-                    GlobalScope.launch(Main) {
-                        assignData(movie)
-                        updateMovieDetails(movie)
-                        movieDbHelper.createOrUpdate(currentMovie ?: movie)
+            MovieLoader(this).loadLocalizedMovie(
+                movieId,
+                Locale.getDefault(),
+                object : MovieCallback {
+                    override fun onFailure() {
+                        GlobalScope.launch(Main) { showNetworkError() }
                     }
-                }
-            })
+
+                    override fun onSuccess(movie: Movie) {
+                        GlobalScope.launch(Main) {
+                            assignData(movie)
+                            updateMovieDetails(movie)
+                            movieDbHelper.createOrUpdate(currentMovie ?: movie)
+                        }
+                    }
+                })
         }
     }
 
@@ -360,17 +376,17 @@ class MovieDetailActivity : AppCompatActivity() {
         val oldMovie = currentMovie
         oldMovie?.let {
             val updatedMovie = Movie(
-                    id = oldMovie.id,
-                    posterPath = movie.posterPath,
-                    title = movie.title,
-                    runtime = movie.runtime,
-                    voteAverage = movie.voteAverage,
-                    voteCount = movie.voteCount,
-                    description = movie.description,
-                    watched = oldMovie.isWatched,
-                    watchedDate = oldMovie.watchedDate,
-                    releaseDate = movie.releaseDate,
-                    listPosition = oldMovie.listPosition
+                id = oldMovie.id,
+                posterPath = movie.posterPath,
+                title = movie.title,
+                runtime = movie.runtime,
+                voteAverage = movie.voteAverage,
+                voteCount = movie.voteCount,
+                description = movie.description,
+                watched = oldMovie.isWatched,
+                watchedDate = oldMovie.watchedDate,
+                releaseDate = movie.releaseDate,
+                listPosition = oldMovie.listPosition
             )
 
             currentMovie = updatedMovie
@@ -409,7 +425,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun showNetworkError() {
         val snackbar = Snackbar
-                .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
+            .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
 
