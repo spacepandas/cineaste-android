@@ -20,8 +20,8 @@ import com.google.android.gms.nearby.messages.MessageListener
 import de.cineaste.android.R
 import de.cineaste.android.adapter.NearbyUserAdapter
 import de.cineaste.android.database.NearbyMessageHandler
-import de.cineaste.android.database.dbHelper.MovieDbHelper
-import de.cineaste.android.database.dbHelper.UserDbHelper
+import de.cineaste.android.database.dbHelper.NMovieDbHelper
+import de.cineaste.android.database.dbHelper.NUserDbHelper
 import de.cineaste.android.entity.User
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.MovieDto
@@ -48,7 +48,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private lateinit var nearbyUserAdapter: NearbyUserAdapter
 
     private var currentUser: User? = null
-    private lateinit var userDbHelper: UserDbHelper
+    private lateinit var userDbHelper: NUserDbHelper
     private lateinit var timeOut: Runnable
 
     private val myUUid: String
@@ -58,8 +58,10 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_night)
-        userDbHelper = UserDbHelper.getInstance(this)
-        currentUser = userDbHelper.user
+        userDbHelper = NUserDbHelper.getInstance(this)
+        GlobalScope.launch(Main) {
+            currentUser = userDbHelper.user
+        }
 
         initViews()
 
@@ -119,8 +121,9 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     }
 
     private fun buildLocalMessage() {
-        val watchlistDbHelper = MovieDbHelper.getInstance(this)
-        val localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE)
+        val watchlistDbHelper = NMovieDbHelper.getInstance(this)
+        var localWatchlistMovies = listOf<Movie>()
+        GlobalScope.launch { localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE) }
         val localMovies = transFormMovies(localWatchlistMovies)
         currentUser?.userName?.let { userName ->
             localNearbyMessage = NearbyMessage(userName, myUUid, localMovies)
@@ -132,13 +135,15 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     }
 
     override fun onFinishUserDialog(userName: String) {
-        if (!userName.isEmpty()) {
-            currentUser = User(userName)
-            currentUser?.let { user ->
-                userDbHelper.createUser(user)
+        GlobalScope.launch(Main) {
+            if (!userName.isEmpty()) {
+                currentUser = User(0, userName)
+                currentUser?.let { user ->
+                    userDbHelper.createUser(user)
+                }
             }
+            buildLocalMessage()
         }
-        buildLocalMessage()
     }
 
     private fun transFormMovies(movies: List<Movie>): List<MovieDto> {

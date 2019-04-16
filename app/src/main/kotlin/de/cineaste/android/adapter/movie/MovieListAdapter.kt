@@ -6,19 +6,21 @@ import android.view.View
 import android.widget.Filter
 import de.cineaste.android.R
 import de.cineaste.android.adapter.BaseListAdapter
-import de.cineaste.android.database.dbHelper.MovieDbHelper
+import de.cineaste.android.database.dbHelper.NMovieDbHelper
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.listener.OnMovieRemovedListener
 import de.cineaste.android.viewholder.movie.MovieViewHolder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.LinkedList
 import java.util.Collections
 
 class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState) : BaseListAdapter(context, displayMessage, listener, state), OnMovieRemovedListener {
 
-    private val db: MovieDbHelper = MovieDbHelper.getInstance(context)
+    private val db: NMovieDbHelper = NMovieDbHelper.getInstance(context)
     private var dataSet: MutableList<Movie> = ArrayList()
     private var filteredDataSet: MutableList<Movie> = mutableListOf()
 
@@ -35,13 +37,15 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
 
     init {
         this.dataSet.clear()
-        this.dataSet.addAll(db.readMoviesByWatchStatus(state))
+        var movies = listOf<Movie>()
+        GlobalScope.launch { movies = db.readMoviesByWatchStatus(state) }
+        this.dataSet.addAll(movies)
         this.filteredDataSet = LinkedList(dataSet)
     }
 
     fun removeItem(position: Int) {
         val movie = filteredDataSet[position]
-        db.deleteMovieFromWatchlist(movie)
+        GlobalScope.launch { db.deleteMovieFromWatchlist(movie) }
         removeMovie(movie)
     }
 
@@ -50,7 +54,7 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     fun restoreDeletedItem(item: Movie, position: Int) {
-        db.createOrUpdate(item)
+        GlobalScope.launch { db.createOrUpdate(item) }
         filteredDataSet.add(position, item)
         dataSet.add(position, item)
         notifyItemInserted(position)
@@ -58,13 +62,13 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
 
     fun toggleItemOnList(item: Movie) {
         item.isWatched = !item.isWatched
-        db.createOrUpdate(item)
+        GlobalScope.launch { db.createOrUpdate(item) }
         removeMovie(item)
     }
 
     fun restoreToggleItemOnList(item: Movie, position: Int) {
         item.isWatched = !item.isWatched
-        db.createOrUpdate(item)
+        GlobalScope.launch { db.createOrUpdate(item) }
         filteredDataSet.add(position, item)
         dataSet.add(position, item)
         notifyItemInserted(position)
@@ -89,28 +93,33 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     fun orderAlphabetical() {
-        val movies = db.reorderAlphabetical(state)
+        var movies = listOf<Movie>()
+        GlobalScope.launch { movies = db.reorderAlphabetical(state) }
         dataSet = movies as MutableList<Movie>
-        filteredDataSet = movies
+        filteredDataSet = movies as MutableList<Movie>
     }
 
     fun orderByReleaseDate() {
-        val movies = db.reorderByReleaseDate(state)
+        var movies = listOf<Movie>()
+        GlobalScope.launch { movies = db.reorderByReleaseDate(state) }
         dataSet = movies as MutableList<Movie>
-        filteredDataSet = movies
+        filteredDataSet = movies as MutableList<Movie>
     }
 
     fun orderByRuntime() {
-        val movies = db.reorderByRuntime(state)
+        var movies = listOf<Movie>()
+        GlobalScope.launch { movies = db.reorderByRuntime(state) }
         dataSet = movies as MutableList<Movie>
-        filteredDataSet = movies
+        filteredDataSet = movies as MutableList<Movie>
     }
 
     fun updatePositionsInDb() {
         while (updatedMovies.iterator().hasNext()) {
             val movies = updatedMovies.poll()
-            db.updatePosition(movies.prev)
-            db.updatePosition(movies.passiveMovie)
+            GlobalScope.launch {
+                db.updatePosition(movies.prev)
+                db.updatePosition(movies.passiveMovie)
+            }
         }
     }
 
@@ -135,7 +144,9 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
     }
 
     fun updateDataSet() {
-        this.dataSet = db.readMoviesByWatchStatus(state) as MutableList<Movie>
+        var movies = listOf<Movie>()
+        GlobalScope.launch { movies = db.readMoviesByWatchStatus(state) }
+        this.dataSet = movies as MutableList<Movie>
         this.filteredDataSet = LinkedList(dataSet)
         displayMessage.showMessageIfEmptyList()
         notifyDataSetChanged()

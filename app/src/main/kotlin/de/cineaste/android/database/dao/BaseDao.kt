@@ -112,8 +112,8 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
 
     companion object {
 
-        private const val TEXT_TYPE = " TEXT"
-        private const val INTEGER_TYPE = " INTEGER"
+        const val TEXT_TYPE = " TEXT"
+        const val INTEGER_TYPE = " INTEGER"
         private const val REAL_TYPE = " REAL"
         private const val COMMA_SEP = ","
         private const val SQL_CREATE_USER_ENTRIES = "CREATE TABLE IF NOT EXISTS " + UserEntry.TABLE_NAME + " (" +
@@ -133,7 +133,7 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
                 MovieEntry.COLUMN_MOVIE_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
                 MovieEntry.COLUMN_MOVIE_LIST_POSITION + INTEGER_TYPE +
                 " )"
-        private const val SQL_CREATE_SERIES_ENTRIES = "CREATE TABLE IF NOT EXISTS " + SeriesEntry.TABLE_NAME + " (" +
+        const val SQL_CREATE_SERIES_ENTRIES = "CREATE TABLE IF NOT EXISTS " + SeriesEntry.TABLE_NAME + " (" +
                 SeriesEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
                 SeriesEntry.COLUMN_SERIES_NAME + TEXT_TYPE + COMMA_SEP +
                 SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE + REAL_TYPE + COMMA_SEP +
@@ -148,7 +148,7 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
                 SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + INTEGER_TYPE + COMMA_SEP +
                 SeriesEntry.COLUMN_SERIES_LIST_POSITION + INTEGER_TYPE +
                 " )"
-        private const val SQL_CREATE_SEASON_ENTRIES = "CREATE TABLE IF NOT EXISTS " + SeasonEntry.TABLE_NAME + " (" +
+        const val SQL_CREATE_SEASON_ENTRIES = "CREATE TABLE IF NOT EXISTS " + SeasonEntry.TABLE_NAME + " (" +
                 SeasonEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
                 SeasonEntry.COLUMN_SEASON_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
                 SeasonEntry.COLUMN_SEASON_EPISODE_COUNT + INTEGER_TYPE + COMMA_SEP +
@@ -157,7 +157,7 @@ abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelpe
                 SeasonEntry.COLUMN_SEASON_WATCHED + INTEGER_TYPE + COMMA_SEP +
                 SeasonEntry.COLUMN_SEASON_SERIES_ID + INTEGER_TYPE + " )"
 
-        private const val SQL_CREATE_EPISODE_ENTRIES = "CREATE TABLE IF NOT EXISTS " + EpisodeEntry.TABLE_NAME + " (" +
+        const val SQL_CREATE_EPISODE_ENTRIES = "CREATE TABLE IF NOT EXISTS " + EpisodeEntry.TABLE_NAME + " (" +
                 EpisodeEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
                 EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER + INTEGER_TYPE + COMMA_SEP +
                 EpisodeEntry.COLUMN_EPISODE_NAME + TEXT_TYPE + COMMA_SEP +

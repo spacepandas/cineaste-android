@@ -1,10 +1,14 @@
 package de.cineaste.android.entity.movie
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-
-import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.*
 
 data class Movie(
+    @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
     @SerializedName("poster_path")
     var posterPath: String? = "",
@@ -38,3 +42,21 @@ data class Movie(
         return this.id.compareTo(other.id)
     }
 }
+
+fun Movie.toEntity() =
+    MovieEntity(
+        id,
+        posterPath,
+        title,
+        runtime,
+        voteAverage,
+        voteCount,
+        description,
+        this.isWatched,
+        watchedDate?.time,
+        releaseDate?.let {
+            val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH)
+            simpleDateFormat.format(it)
+        },
+        listPosition
+    )

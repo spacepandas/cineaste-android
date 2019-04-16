@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesDetailAdapter
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.SeriesDbHelper
+import de.cineaste.android.database.dbHelper.NSeriesDbHelper
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.SeriesCallback
@@ -39,7 +39,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     private var state: Int = 0
     private var seriesId: Long = 0
 
-    private lateinit var seriesDbHelper: SeriesDbHelper
+    private lateinit var seriesDbHelper: NSeriesDbHelper
     private lateinit var seriesLoader: SeriesLoader
     private var currentSeries: Series? = null
     private lateinit var progressBar: View
@@ -98,10 +98,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     override fun onDeleteClicked() {
-        layout.removeCallbacks(updateCallBack)
-        seriesDbHelper.delete(seriesId)
-        currentSeries = null
-        onBackPressed()
+        GlobalScope.launch(Main) {
+            layout.removeCallbacks(updateCallBack)
+            seriesDbHelper.delete(seriesId)
+            currentSeries = null
+            onBackPressed()
+        }
     }
 
     override fun onAddToHistoryClicked() {
@@ -158,10 +160,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
     }
 
     private fun moveBetweenLists(series: Series) {
-        if (state == R.string.searchState) {
-            seriesDbHelper.addToHistory(series)
-        } else if (state == R.string.watchlistState) {
-            seriesDbHelper.moveToHistory(series)
+        GlobalScope.launch {
+            if (state == R.string.searchState) {
+                seriesDbHelper.addToHistory(series)
+            } else if (state == R.string.watchlistState) {
+                seriesDbHelper.moveToHistory(series)
+            }
         }
 
         onBackPressed()
@@ -176,13 +180,15 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 }
 
                 override fun onSuccess(series: Series) {
-                    seriesDbHelper.addToWatchList(series)
+                    GlobalScope.launch {
+                        seriesDbHelper.addToWatchList(series)
+                    }
                 }
             }
             R.string.historyState -> {
                 val series = currentSeries
                 series?.let {
-                    seriesDbHelper.moveToWatchList(series)
+                    GlobalScope.launch { seriesDbHelper.moveToWatchList(series) }
                 }
                 callback = null
             }
@@ -190,7 +196,9 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         }
 
         callback?.let {
-            seriesLoader.loadCompleteSeries(seriesId, it)
+            GlobalScope.launch {
+                seriesLoader.loadCompleteSeries(seriesId, it)
+            }
 
             showAddToast()
         }
@@ -216,7 +224,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_series_detail)
 
-        seriesDbHelper = SeriesDbHelper.getInstance(this)
+        seriesDbHelper = NSeriesDbHelper.getInstance(this)
         seriesLoader = SeriesLoader(this)
 
         val intent = intent
@@ -228,7 +236,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         updateCallBack = getUpdateCallBack()
         autoUpdate()
 
-        currentSeries = seriesDbHelper.getSeriesById(seriesId)
+        GlobalScope.launch { currentSeries = seriesDbHelper.getSeriesById(seriesId) }
         val series = currentSeries
         if (series == null) {
             progressBar.visibility = View.VISIBLE
@@ -277,8 +285,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             fab.show()
             fab.setOnClickListener {
                 currentSeries?.let {
-                    seriesDbHelper.episodeWatched(it)
-                    currentSeries = seriesDbHelper.getSeriesById(it.id)
+                    GlobalScope.launch {
+                        seriesDbHelper.episodeWatched(it)
+                        currentSeries = seriesDbHelper.getSeriesById(it.id)
+                    }
                     assignData(it)
                 }
             }
@@ -345,8 +355,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                                 series.isWatched = oldSeries.isWatched
                                 series.listPosition = oldSeries.listPosition
                             }
-                            seriesDbHelper.update(series)
                             GlobalScope.launch(Main) {
+                                seriesDbHelper.update(series)
                                 setPoster(series)
                                 adapter.updateSeries(series)
                             }
@@ -403,10 +413,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 }
 
                 override fun onAnimationEnd(animation: Animation) {
-                    val series = seriesDbHelper.getSeriesById(seriesId)
-                    series?.let {
-                        currentSeries = series
-                        adapter.updateSeries(series)
+                    GlobalScope.launch {
+                        val series = seriesDbHelper.getSeriesById(seriesId)
+                        series?.let {
+                            currentSeries = series
+                            adapter.updateSeries(series)
+                        }
                     }
                 }
 

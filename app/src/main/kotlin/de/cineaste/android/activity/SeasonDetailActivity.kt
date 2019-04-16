@@ -13,15 +13,18 @@ import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeasonPagerAdapter
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.SeriesDbHelper
+import de.cineaste.android.database.dbHelper.NSeriesDbHelper
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.util.Constants
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SeasonDetailActivity : AppCompatActivity() {
 
     private var currentSeries: Series? = null
     private lateinit var poster: ImageView
-    private lateinit var seriesDbHelper: SeriesDbHelper
+    private lateinit var seriesDbHelper: NSeriesDbHelper
 
     private var seasonId: Long = 0
 
@@ -29,7 +32,7 @@ class SeasonDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_season_detail)
 
-        seriesDbHelper = SeriesDbHelper.getInstance(this)
+        seriesDbHelper = NSeriesDbHelper.getInstance(this)
 
         poster = findViewById(R.id.poster_image_view)
 
@@ -37,7 +40,9 @@ class SeasonDetailActivity : AppCompatActivity() {
         val seriesId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, -1)
         seasonId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, -1)
 
-        currentSeries = seriesDbHelper.getSeriesById(seriesId)
+        GlobalScope.launch {
+            currentSeries = seriesDbHelper.getSeriesById(seriesId)
+        }
 
         val series = currentSeries
 
@@ -53,7 +58,11 @@ class SeasonDetailActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         viewPager.currentItem = currentSeasonIndex()
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
                 // do nothing
             }
 
@@ -77,16 +86,16 @@ class SeasonDetailActivity : AppCompatActivity() {
 
             if (posterPath.isNullOrEmpty()) {
                 Picasso.get()
-                        .load(R.drawable.placeholder_poster)
-                        .into(poster)
+                    .load(R.drawable.placeholder_poster)
+                    .into(poster)
             } else {
                 val posterUri = Constants.POSTER_URI_SMALL
-                        .replace("<posterName>", posterPath)
-                        .replace("<API_KEY>", getString(R.string.movieKey))
+                    .replace("<posterName>", posterPath)
+                    .replace("<API_KEY>", getString(R.string.movieKey))
                 Picasso.get()
-                        .load(posterUri)
-                        .error(R.drawable.placeholder_poster)
-                        .into(poster)
+                    .load(posterUri)
+                    .error(R.drawable.placeholder_poster)
+                    .into(poster)
 
                 poster.setOnClickListener {
                     val intent = Intent(this@SeasonDetailActivity, PosterActivity::class.java)
@@ -146,18 +155,22 @@ class SeasonDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                currentSeries?.let { series ->
-                    val unwatchedEpisodes = seriesDbHelper.getUnWatchedEpisodesOfSeries(series.id)
-                    if (unwatchedEpisodes.isEmpty() && !series.isInProduction) {
-                        series.isWatched = true
-                        seriesDbHelper.updateWatchState(series)
+                GlobalScope.launch(Main) {
+                    currentSeries?.let { series ->
+                        val unwatchedEpisodes =
+                            seriesDbHelper.getUnWatchedEpisodesOfSeries(series.id)
+                        if (unwatchedEpisodes.isEmpty() && !series.isInProduction) {
+                            series.isWatched = true
+                            seriesDbHelper.updateWatchState(series)
+                        }
+                        onBackPressed()
                     }
-                    onBackPressed()
-                    return true
                 }
-            }
-        }
+                return true
 
+            }
+
+        }
         return super.onOptionsItemSelected(item)
     }
 }

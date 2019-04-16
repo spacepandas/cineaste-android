@@ -13,3 +13,6 @@ data class Episode(
     var seasonId: Long = 0,
     var isWatched: Boolean = false
 )
+
+fun Episode.toEntity() =
+        EpisodeEntity(id, episodeNumber, name, description, seriesId, seasonId, isWatched)

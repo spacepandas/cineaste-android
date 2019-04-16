@@ -3,7 +3,7 @@ package de.cineaste.android.util
 interface Constants {
     companion object {
 
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 5
         const val DATABASE_NAME = "cineaste.db"
 
         private const val POSTER_BASE_URI = "https://image.tmdb.org/t/p/%s<posterName>?api_key=<API_KEY>"

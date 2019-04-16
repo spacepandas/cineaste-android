@@ -23,9 +23,12 @@ import android.view.ViewGroup
 import de.cineaste.android.R
 import de.cineaste.android.activity.MovieNightActivity
 import de.cineaste.android.adapter.BaseListAdapter
-import de.cineaste.android.database.dbHelper.UserDbHelper
+import de.cineaste.android.database.dbHelper.NUserDbHelper
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.util.CustomRecyclerView
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter.DisplayMessage {
 
@@ -33,7 +36,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     lateinit var customRecyclerView: CustomRecyclerView
     internal lateinit var layoutManager: LinearLayoutManager
     private lateinit var emptyListTextView: TextView
-    private lateinit var userDbHelper: UserDbHelper
+    private lateinit var userDbHelper: NUserDbHelper
     lateinit var progressbar: RelativeLayout
         private set
     protected abstract val subtitle: String
@@ -139,7 +142,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         }
 
         activity?.let {
-            userDbHelper = UserDbHelper.getInstance(it)
+            userDbHelper = NUserDbHelper.getInstance(it)
         }
     }
 
@@ -176,22 +179,23 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            when (item.itemId) {
-                R.id.startMovieNight -> if (userDbHelper.user != null) {
-                    startMovieNight()
-                } else {
-                    val fragmentManager = fragmentManager
-                    if (fragmentManager != null) {
-                        UserInputFragment().show(fragmentManager, "")
+        GlobalScope.launch(Main) {
+            item?.let {
+                when (item.itemId) {
+                    R.id.startMovieNight -> if (userDbHelper.user != null) {
+                        startMovieNight()
+                    } else {
+                        val fragmentManager = fragmentManager
+                        if (fragmentManager != null) {
+                            UserInputFragment().show(fragmentManager, "")
+                        }
                     }
+                    R.id.filterAlphabetical -> reorderLists(BaseListFragment.FilterType.ALPHABETICAL)
+                    R.id.filterReleaseDate -> reorderLists(BaseListFragment.FilterType.RELEASE_DATE)
+                    R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
                 }
-                R.id.filterAlphabetical -> reorderLists(BaseListFragment.FilterType.ALPHABETICAL)
-                R.id.filterReleaseDate -> reorderLists(BaseListFragment.FilterType.RELEASE_DATE)
-                R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 

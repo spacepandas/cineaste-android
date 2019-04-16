@@ -6,18 +6,27 @@ import android.view.View
 import android.widget.Filter
 import de.cineaste.android.R
 import de.cineaste.android.adapter.BaseListAdapter
-import de.cineaste.android.database.dbHelper.SeriesDbHelper
+import de.cineaste.android.database.dbHelper.NSeriesDbHelper
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.series.SeriesViewHolder
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.Collections
 import java.util.LinkedList
 
-class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState, private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener) : BaseListAdapter(context, displayMessage, listener, state) {
+class SeriesListAdapter(
+    displayMessage: BaseListAdapter.DisplayMessage,
+    context: Context,
+    listener: ItemClickListener,
+    state: WatchState,
+    private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener
+) : BaseListAdapter(context, displayMessage, listener, state) {
 
-    private val db: SeriesDbHelper
+    private val db: NSeriesDbHelper
     private var dataSet: MutableList<Series> = mutableListOf()
     private var filteredDataSet: MutableList<Series> = mutableListOf()
 
@@ -34,7 +43,7 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
 
     init {
         this.dataSet.clear()
-        this.db = SeriesDbHelper.getInstance(context)
+        this.db = NSeriesDbHelper.getInstance(context)
         this.dataSet.addAll(db.getSeriesByWatchedState(state))
         this.filteredDataSet = LinkedList(dataSet)
     }
@@ -45,7 +54,7 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
 
     fun removeItem(position: Int) {
         val series = filteredDataSet[position]
-        db.delete(series.id)
+        GlobalScope.launch { db.delete(series.id) }
         removeSeriesFromList(series)
     }
 
@@ -54,48 +63,64 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     }
 
     fun updateSeries(givenSeries: Series, pos: Int) {
-        db.getSeriesById(givenSeries.id)?.let { series ->
-            dataSet.removeAt(pos)
-            filteredDataSet.removeAt(pos)
-            if (state == WatchState.WATCH_STATE && !series.isWatched) {
-                dataSet.add(pos, series)
-                filteredDataSet.add(pos, series)
-                notifyItemChanged(pos)
-            } else {
-                notifyItemRemoved(pos)
+        GlobalScope.launch {
+            db.getSeriesById(givenSeries.id)?.let { series ->
+                dataSet.removeAt(pos)
+                filteredDataSet.removeAt(pos)
+                if (state == WatchState.WATCH_STATE && !series.isWatched) {
+                    dataSet.add(pos, series)
+                    filteredDataSet.add(pos, series)
+                    notifyItemChanged(pos)
+                } else {
+                    notifyItemRemoved(pos)
+                }
             }
         }
     }
 
-    fun addDeletedItemToHistoryAgain(series: Series, position: Int, prevSeason: Int, prevEpisode: Int) {
-        db.addToHistory(series)
-        db.moveBackToHistory(series, prevSeason, prevEpisode)
+    fun addDeletedItemToHistoryAgain(
+        series: Series,
+        position: Int,
+        prevSeason: Int,
+        prevEpisode: Int
+    ) {
+        GlobalScope.launch {
+            db.addToHistory(series)
+            db.moveBackToHistory(series, prevSeason, prevEpisode)
+        }
+
         addSeriesToList(series, position)
     }
 
-    fun addDeletedItemToWatchListAgain(series: Series, position: Int, prevSeason: Int, prevEpisode: Int) {
-        db.addToWatchList(series)
-        db.moveBackToWatchList(series, prevSeason, prevEpisode)
+    fun addDeletedItemToWatchListAgain(
+        series: Series,
+        position: Int,
+        prevSeason: Int,
+        prevEpisode: Int
+    ) {
+        GlobalScope.launch {
+            db.addToWatchList(series)
+            db.moveBackToWatchList(series, prevSeason, prevEpisode)
+        }
         addSeriesToList(series, position)
     }
 
     fun moveToWatchList(series: Series) {
         removeSeriesFromList(series)
-
-        db.moveToWatchList(series)
+        GlobalScope.launch { db.moveToWatchList(series) }
     }
 
     fun moveBackToHistory(series: Series, position: Int, prevSeason: Int, prevEpisode: Int) {
-        db.moveBackToHistory(series, prevSeason, prevEpisode)
+        GlobalScope.launch { db.moveBackToHistory(series, prevSeason, prevEpisode) }
         addSeriesToList(series, position)
     }
 
     fun moveToHistory(series: Series) {
-        db.moveToHistory(series)
+        GlobalScope.launch { db.moveToHistory(series) }
     }
 
     fun moveBackToWatchList(series: Series, position: Int, prevSeason: Int, prevEpisode: Int) {
-        db.moveBackToWatchList(series, prevSeason, prevEpisode)
+        GlobalScope.launch { db.moveBackToWatchList(series, prevSeason, prevEpisode) }
         addSeriesToList(series, position)
     }
 
@@ -119,23 +144,28 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     }
 
     fun orderAlphabetical() {
-        val series = db.reorderAlphabetical(state)
-        dataSet = series as MutableList<Series>
-        filteredDataSet = series
+        GlobalScope.launch {
+            val series = db.reorderAlphabetical(state)
+            dataSet = series as MutableList<Series>
+            filteredDataSet = series
+        }
     }
 
     fun orderByReleaseDate() {
-        val series = db.reorderByReleaseDate(state)
-        dataSet = series as MutableList<Series>
-        filteredDataSet = series
+        GlobalScope.launch {
+            val series = db.reorderByReleaseDate(state)
+            dataSet = series as MutableList<Series>
+            filteredDataSet = series
+        }
     }
 
     fun updatePositionsInDb() {
         while (updatedSeries.iterator().hasNext()) {
             val series = updatedSeries.poll()
-
-            db.updatePosition(series.prev)
-            db.updatePosition(series.passiveSeries)
+            GlobalScope.launch {
+                db.updatePosition(series.prev)
+                db.updatePosition(series.passiveSeries)
+            }
         }
     }
 
@@ -166,13 +196,18 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
     }
 
     fun updateDataSet() {
-        this.dataSet = db.getSeriesByWatchedState(state) as MutableList<Series>
+        var tempDataSet: MutableList<Series> = mutableListOf()
+        GlobalScope.launch(Main) {tempDataSet = db.getSeriesByWatchedState(state) as MutableList<Series> }
+        this.dataSet = tempDataSet
         this.filteredDataSet = LinkedList(dataSet)
         displayMessage.showMessageIfEmptyList()
         notifyDataSetChanged()
     }
 
-    inner class FilerSeries internal constructor(private val adapter: SeriesListAdapter, private val seriesList: List<Series>) : Filter() {
+    inner class FilerSeries internal constructor(
+        private val adapter: SeriesListAdapter,
+        private val seriesList: List<Series>
+    ) : Filter() {
         private val filteredSeriesList: MutableList<Series>
 
         init {
@@ -209,5 +244,8 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
         }
     }
 
-    inner class UpdatedSeries internal constructor(internal val prev: Series, internal val passiveSeries: Series)
+    inner class UpdatedSeries internal constructor(
+        internal val prev: Series,
+        internal val passiveSeries: Series
+    )
 }

@@ -14,22 +14,26 @@ import android.widget.ImageButton
 import android.widget.TextView
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.EpisodeAdapter
-import de.cineaste.android.database.dbHelper.SeriesDbHelper
+import de.cineaste.android.database.dbHelper.NSeriesDbHelper
 import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.viewholder.series.EpisodeViewHolder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateChangeListener, EpisodeViewHolder.OnDescriptionShowToggleListener {
 
     private var seriesId: Long = 0
     private var seasonId: Long = 0
-    private lateinit var seriesDbHelper: SeriesDbHelper
+    private lateinit var seriesDbHelper: NSeriesDbHelper
     private lateinit var emptyListTextView: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EpisodeAdapter
     private val episodes: MutableList<Episode> = mutableListOf()
 
     override fun watchStateChanged(episode: Episode) {
-        seriesDbHelper.episodeClicked(episode)
+        GlobalScope.launch {
+            seriesDbHelper.episodeClicked(episode)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +45,10 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         seriesId = args.getLong("seriesId", -1)
 
         val context = context ?: return
-        seriesDbHelper = SeriesDbHelper.getInstance(context)
-        episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
+        seriesDbHelper = NSeriesDbHelper.getInstance(context)
+        GlobalScope.launch {
+            episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
+        }
     }
 
     override fun onCreateView(
@@ -93,10 +99,12 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
     }
 
     private fun toggleSeries() {
-        seriesDbHelper.toggleSeason(seasonId)
-        episodes.clear()
-        episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
-        adapter.update(episodes)
+        GlobalScope.launch {
+            seriesDbHelper.toggleSeason(seasonId)
+            episodes.clear()
+            episodes.addAll(seriesDbHelper.getEpisodesBySeasonId(seasonId))
+            adapter.update(episodes)
+        }
     }
 
     override fun showDescription(showDescription: ImageButton, hideDescription: ImageButton, description: TextView) {

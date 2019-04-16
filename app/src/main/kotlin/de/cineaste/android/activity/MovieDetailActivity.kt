@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.MovieDbHelper
+import de.cineaste.android.database.dbHelper.NMovieDbHelper
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
@@ -40,7 +40,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private var state: Int = 0
     private lateinit var poster: ImageView
 
-    private lateinit var movieDbHelper: MovieDbHelper
+    private lateinit var movieDbHelper: NMovieDbHelper
     private var movieId: Long = 0
     private var currentMovie: Movie? = null
     private lateinit var progressBar: View
@@ -99,7 +99,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun onDeleteClicked() {
         currentMovie?.let { movie ->
-            movieDbHelper.deleteMovieFromWatchlist(movie)
+            GlobalScope.launch { movieDbHelper.deleteMovieFromWatchlist(movie) }
             layout.removeCallbacks(updateCallBack)
             onBackPressed()
         }
@@ -115,13 +115,13 @@ class MovieDetailActivity : AppCompatActivity() {
 
                 override fun onSuccess(movie: Movie) {
                     movie.isWatched = true
-                    movieDbHelper.createOrUpdate(movie)
+                    GlobalScope.launch { movieDbHelper.createOrUpdate(movie) }
                 }
             }
             R.string.watchlistState -> {
                 currentMovie?.let { movie ->
                     movie.isWatched = true
-                    movieDbHelper.createOrUpdate(movie)
+                    GlobalScope.launch { movieDbHelper.createOrUpdate(movie) }
                 }
             }
         }
@@ -150,14 +150,14 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
 
                 override fun onSuccess(movie: Movie) {
-                    movieDbHelper.createOrUpdate(movie)
+                    GlobalScope.launch { movieDbHelper.createOrUpdate(movie) }
                 }
             }
             R.string.historyState -> {
                 val movie = currentMovie
                 movie?.let {
                     movie.isWatched = false
-                    movieDbHelper.createOrUpdate(movie)
+                    GlobalScope.launch { movieDbHelper.createOrUpdate(movie) }
                 }
             }
         }
@@ -187,12 +187,12 @@ class MovieDetailActivity : AppCompatActivity() {
 
         initViews()
 
-        movieDbHelper = MovieDbHelper.getInstance(this)
+        movieDbHelper = NMovieDbHelper.getInstance(this)
 
         updateCallBack = updateCallback
         autoUpdateMovie()
 
-        currentMovie = movieDbHelper.readMovie(movieId)
+        GlobalScope.launch { currentMovie = movieDbHelper.readMovie(movieId) }
         val movie = currentMovie
         if (movie == null) {
             progressBar.visibility = View.VISIBLE
@@ -365,7 +365,7 @@ class MovieDetailActivity : AppCompatActivity() {
                         GlobalScope.launch(Main) {
                             assignData(movie)
                             updateMovieDetails(movie)
-                            movieDbHelper.createOrUpdate(currentMovie ?: movie)
+                            GlobalScope.launch { movieDbHelper.createOrUpdate(currentMovie ?: movie) }
                         }
                     }
                 })

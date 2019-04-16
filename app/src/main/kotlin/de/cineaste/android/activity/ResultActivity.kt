@@ -9,7 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import de.cineaste.android.R
 import de.cineaste.android.adapter.ResultAdapter
 import de.cineaste.android.database.NearbyMessageHandler
-import de.cineaste.android.database.dbHelper.MovieDbHelper
+import de.cineaste.android.database.dbHelper.NMovieDbHelper
 import de.cineaste.android.entity.movie.MatchingResult
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.MovieDto
@@ -25,7 +25,7 @@ import java.util.Locale
 class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener {
 
     private var nearbyMessages: MutableList<NearbyMessage> = mutableListOf()
-    private lateinit var movieDbHelper: MovieDbHelper
+    private lateinit var movieDbHelper: NMovieDbHelper
 
     private val results: ArrayList<MatchingResult>
         get() {
@@ -57,7 +57,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
 
         nearbyMessages.addAll(NearbyMessageHandler.getMessages())
 
-        movieDbHelper = MovieDbHelper.getInstance(this)
+        movieDbHelper = NMovieDbHelper.getInstance(this)
 
         initToolbar()
 
@@ -89,26 +89,26 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
     }
 
     override fun onMovieSelectListener(position: Int) {
-
         val selectedMovieId = results[position].id
-        val selectedMovie = movieDbHelper.readMovie(selectedMovieId)
+        GlobalScope.launch {
+            val selectedMovie = movieDbHelper.readMovie(selectedMovieId)
+            if (selectedMovie == null) {
+                MovieLoader(this@ResultActivity).loadLocalizedMovie(results[position].id, Locale.getDefault(), (object : MovieCallback {
+                    override fun onFailure() {
+                    }
 
-        if (selectedMovie == null) {
-            MovieLoader(this).loadLocalizedMovie(results[position].id, Locale.getDefault(), (object : MovieCallback {
-                override fun onFailure() {
-                }
-
-                override fun onSuccess(movie: Movie) {
-                    GlobalScope.launch(Main) { updateMovie(movie) }
-                }
-            }))
-        } else {
-            updateMovie(selectedMovie)
+                    override fun onSuccess(movie: Movie) {
+                        GlobalScope.launch(Main) { updateMovie(movie) }
+                    }
+                }))
+            } else {
+                updateMovie(selectedMovie)
+            }
         }
     }
 
     private fun updateMovie(movie: Movie) {
         movie.isWatched = true
-        movieDbHelper.createOrUpdate(movie)
+        GlobalScope.launch { movieDbHelper.createOrUpdate(movie) }
     }
 }

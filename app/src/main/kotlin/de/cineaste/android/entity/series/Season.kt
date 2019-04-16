@@ -1,8 +1,8 @@
 package de.cineaste.android.entity.series
 
 import com.google.gson.annotations.SerializedName
-
-import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.*
 
 data class Season(
     var id: Long = 0,
@@ -18,3 +18,9 @@ data class Season(
     var isWatched: Boolean = false,
     var episodes: List<Episode> = listOf()
 )
+
+fun Season.toEntity() =
+    SeasonEntity(id, releaseDate?.let {
+        val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH)
+        simpleDateFormat.format(it)
+    }, episodeCount, posterPath, seasonNumber, seriesId, isWatched)

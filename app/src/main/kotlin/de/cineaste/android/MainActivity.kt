@@ -29,9 +29,9 @@ import de.cineaste.android.activity.AboutActivity
 import de.cineaste.android.activity.MovieNightActivity
 import de.cineaste.android.database.ExportService
 import de.cineaste.android.database.ImportService
-import de.cineaste.android.database.dbHelper.MovieDbHelper
-import de.cineaste.android.database.dbHelper.SeriesDbHelper
-import de.cineaste.android.database.dbHelper.UserDbHelper
+import de.cineaste.android.database.dbHelper.NMovieDbHelper
+import de.cineaste.android.database.dbHelper.NSeriesDbHelper
+import de.cineaste.android.database.dbHelper.NUserDbHelper
 import de.cineaste.android.entity.ImportExportObject
 import de.cineaste.android.entity.User
 import de.cineaste.android.fragment.ImportFinishedDialogFragment
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     private lateinit var fm: FragmentManager
     private lateinit var contentContainer: View
-    private lateinit var userDbHelper: UserDbHelper
+    private lateinit var userDbHelper: NUserDbHelper
     private lateinit var userName: TextView
 
     private lateinit var drawerLayout: DrawerLayout
@@ -88,7 +88,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                 Toast.makeText(
                     this,
                     R.string.missing_permission,
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             else -> {
             }
@@ -99,9 +100,9 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        userDbHelper = UserDbHelper.getInstance(this)
-        movieDbHelper = MovieDbHelper.getInstance(this)
-        seriesDbHelper = SeriesDbHelper.getInstance(this)
+        userDbHelper = NUserDbHelper.getInstance(this)
+        movieDbHelper = NMovieDbHelper.getInstance(this)
+        seriesDbHelper = NSeriesDbHelper.getInstance(this)
         contentContainer = findViewById(R.id.content_container)
 
         fm = supportFragmentManager
@@ -118,10 +119,11 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     override fun onResume() {
         super.onResume()
-
-        val user = userDbHelper.user
-        if (user != null) {
-            userName.text = user.userName
+        GlobalScope.launch(Main) {
+            val user = userDbHelper.user
+            if (user != null) {
+                userName.text = user.userName
+            }
         }
     }
 
@@ -129,7 +131,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         fm.beginTransaction()
             .replace(
                 R.id.content_container,
-                fragment, fragment.javaClass.name)
+                fragment, fragment.javaClass.name
+            )
             .addToBackStack(null)
             .commit()
     }
@@ -140,7 +143,10 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     private fun checkPermissions() {
-        val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val permissions = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
 
         val listPermissionsNeeded = ArrayList<String>()
         for (p in permissions) {
@@ -186,14 +192,24 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
             if (menuItem.title != null) {
                 val spanString = SpannableString(menuItem.title.toString())
-                spanString.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.toolbar_text)), 0, spanString.length, 0)
+                spanString.setSpan(
+                    ForegroundColorSpan(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.toolbar_text
+                        )
+                    ), 0, spanString.length, 0
+                )
                 menuItem.title = spanString
             }
 
             val drawable = menuItem.icon
             if (drawable != null) {
                 drawable.mutate()
-                drawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP)
+                drawable.setColorFilter(
+                    ContextCompat.getColor(this, R.color.colorPrimary),
+                    PorterDuff.Mode.SRC_ATOP
+                )
             }
 
             val subMenu = menuItem.subMenu
@@ -203,7 +219,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
     }
 
-    private inner class CustomDrawerClickListener : NavigationView.OnNavigationItemSelectedListener {
+    private inner class CustomDrawerClickListener :
+        NavigationView.OnNavigationItemSelectedListener {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {
                 R.id.show_movie_watchlist -> {
@@ -250,21 +267,23 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     }
 
     private fun exportMovies(uri: Uri) {
-        val importExportObject = ImportExportObject()
-        importExportObject.movies = movieDbHelper.readAllMovies()
-        importExportObject.series = seriesDbHelper.allSeries
+        GlobalScope.launch(Main) {
+            val importExportObject = ImportExportObject()
+            importExportObject.movies = movieDbHelper.readAllMovies()
+            importExportObject.series = seriesDbHelper.allSeries
 
-        val successfullyExported = ExportService.export(importExportObject, uri, this@MainActivity)
+            val successfullyExported = ExportService.export(importExportObject, uri, this@MainActivity)
 
-        var snackBarMessage = R.string.exportFailed
+            var snackBarMessage = R.string.exportFailed
 
-        if (successfullyExported) {
-            snackBarMessage = R.string.exportSucceeded
+            if (successfullyExported) {
+                snackBarMessage = R.string.exportSucceeded
+            }
+
+            val snackBar = Snackbar
+                .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
+            snackBar.show()
         }
-
-        val snackBar = Snackbar
-            .make(contentContainer, snackBarMessage, Snackbar.LENGTH_SHORT)
-        snackBar.show()
     }
 
     private fun selectImportFile() {
@@ -352,7 +371,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val bundle = Bundle()
         bundle.putString(
             WatchState.WATCH_STATE_TYPE.name,
-            state.name)
+            state.name
+        )
         watchlistFragment.arguments = bundle
         return watchlistFragment
     }
@@ -362,24 +382,27 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val bundle = Bundle()
         bundle.putString(
             WatchState.WATCH_STATE_TYPE.name,
-            state.name)
+            state.name
+        )
         seriesListFragment.arguments = bundle
         return seriesListFragment
     }
 
     override fun onFinishUserDialog(userName: String) {
-        if (userName.isNotEmpty()) {
-            userDbHelper.createUser(User(userName))
-        }
+        GlobalScope.launch(Main) {
+            if (userName.isNotEmpty()) {
+                userDbHelper.createUser(User(0, userName))
+            }
 
-        startActivity(Intent(this@MainActivity, MovieNightActivity::class.java))
+            startActivity(Intent(this@MainActivity, MovieNightActivity::class.java))
+        }
     }
 
     companion object {
         private const val READ_REQUEST_CODE = 42
         private const val WRITE_REQUEST_CODE = 43
 
-        private lateinit var movieDbHelper: MovieDbHelper
-        private lateinit var seriesDbHelper: SeriesDbHelper
+        private lateinit var movieDbHelper: NMovieDbHelper
+        private lateinit var seriesDbHelper: NSeriesDbHelper
     }
 }
