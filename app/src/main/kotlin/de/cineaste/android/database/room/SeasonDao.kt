@@ -1,25 +1,24 @@
 package de.cineaste.android.database.room
 
 import androidx.room.*
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.entity.series.SeasonEntity
 
 @Dao
 interface SeasonDao {
 
-    @Query("SELECT * FROM ${BaseDao.SeasonEntry.TABLE_NAME} WHERE ${BaseDao.SeasonEntry.SERIES_ID} LIKE :seriesId")
+    @Query("SELECT * FROM ${SeasonEntity.TABLE_NAME} WHERE ${SeasonEntity.SERIES_ID} LIKE :seriesId")
     fun getBySeriesId(seriesId: Long): List<SeasonEntity>
 
-    @Query("SELECT * FROM ${BaseDao.SeasonEntry.TABLE_NAME} WHERE ${BaseDao.SeasonEntry.ID} LIKE :seasonId")
+    @Query("SELECT * FROM ${SeasonEntity.TABLE_NAME} WHERE ${SeasonEntity.ID} LIKE :seasonId")
     fun getOne(seasonId: Long): SeasonEntity?
 
-    @Query("UPDATE ${BaseDao.SeasonEntry.TABLE_NAME} SET ${BaseDao.SeasonEntry.WATCHED} = :state WHERE ${BaseDao.SeasonEntry.ID} LIKE :seasonId")
+    @Query("UPDATE ${SeasonEntity.TABLE_NAME} SET ${SeasonEntity.WATCHED} = :state WHERE ${SeasonEntity.ID} LIKE :seasonId")
     fun updateWatchedStateBySeasonId(state: Boolean, seasonId: Long)
 
-    @Query("UPDATE ${BaseDao.SeasonEntry.TABLE_NAME} SET ${BaseDao.SeasonEntry.WATCHED} = :state WHERE ${BaseDao.SeasonEntry.SERIES_ID} LIKE :seriesId")
+    @Query("UPDATE ${SeasonEntity.TABLE_NAME} SET ${SeasonEntity.WATCHED} = :state WHERE ${SeasonEntity.SERIES_ID} LIKE :seriesId")
     fun updateWatchedStateBySeriesId(state: Boolean, seriesId: Long)
 
-    @Query("DELETE FROM ${BaseDao.SeasonEntry.TABLE_NAME} WHERE ${BaseDao.SeasonEntry.SERIES_ID} LIKE :seriesId")
+    @Query("DELETE FROM ${SeasonEntity.TABLE_NAME} WHERE ${SeasonEntity.SERIES_ID} LIKE :seriesId")
     fun deleteBySeriesId(seriesId: Long)
 
     @Insert

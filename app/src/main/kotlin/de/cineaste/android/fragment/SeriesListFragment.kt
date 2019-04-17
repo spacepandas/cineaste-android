@@ -13,9 +13,9 @@ import de.cineaste.android.activity.SeriesSearchActivity
 import de.cineaste.android.adapter.series.SeriesListAdapter
 import de.cineaste.android.controllFlow.series.HistoryListSeriesTouchHelperCallback
 import de.cineaste.android.controllFlow.series.WatchlistSeriesTouchHelperCallback
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Series
+import de.cineaste.android.entity.series.SeriesEntity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -103,7 +103,7 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
 
     override fun createIntent(itemId: Long, state: Int, activity: Activity): Intent {
         val intent = Intent(activity, SeriesDetailActivity::class.java)
-        intent.putExtra(BaseDao.SeriesEntry.ID, itemId)
+        intent.putExtra(SeriesEntity.ID, itemId)
         intent.putExtra(getString(R.string.state), state)
         return intent
     }

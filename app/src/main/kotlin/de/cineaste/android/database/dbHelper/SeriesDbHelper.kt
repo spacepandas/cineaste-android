@@ -7,7 +7,6 @@ import java.util.ArrayList
 
 import de.cineaste.android.fragment.WatchState
 
-import de.cineaste.android.database.dao.BaseDao.SeasonEntry
 import de.cineaste.android.entity.series.*
 
 class SeriesDbHelper private constructor(context: Context) {

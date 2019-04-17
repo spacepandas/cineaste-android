@@ -11,9 +11,9 @@ import java.lang.reflect.Type
 
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesSearchQueryAdapter
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Series
+import de.cineaste.android.entity.series.SeriesEntity
 import de.cineaste.android.network.NetworkClient
 import de.cineaste.android.network.NetworkRequest
 import de.cineaste.android.network.SeriesCallback
@@ -38,7 +38,7 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
 
     override fun getIntentForDetailActivity(itemId: Long): Intent {
         val intent = Intent(this, SeriesDetailActivity::class.java)
-        intent.putExtra(BaseDao.SeriesEntry.ID, itemId)
+        intent.putExtra(SeriesEntity.ID, itemId)
         intent.putExtra(this.getString(R.string.state), R.string.searchState)
         return intent
     }

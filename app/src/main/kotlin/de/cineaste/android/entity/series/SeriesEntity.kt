@@ -30,6 +30,7 @@ data class SeriesEntity(
         const val TABLE_NAME = "series"
         const val ID = "_id"
         const val SERIES_WATCHED = "seriesWatched"
+        const val LIST_POSITION = "listPosition"
         private const val NAME = "seriesName"
         private const val VOTE_AVERAGE = "voteAverage"
         private const val VOTE_COUNT = "voteCount"
@@ -39,7 +40,6 @@ data class SeriesEntity(
         private const val NUMBER_OF_EPISODES = "numberOfEpisodes"
         private const val NUMBER_OF_SEASONS = "numberOfSeasons"
         private const val POSTER_PATH = "posterPath"
-        private const val LIST_POSITION = "listPosition"
         private const val BACKDROP_PATH = "backdropPath"
 
         const val SQL_CREATE_SERIES_ENTRIES =

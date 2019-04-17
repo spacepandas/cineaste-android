@@ -28,13 +28,13 @@ data class MovieEntity(
         const val ID = "_id"
         const val RELEASE_DATE = "releaseDate"
         const val LIST_POSITION = "listPosition"
+        const val WATCHED = "watched"
         private const val POSTER_PATH = "posterPath"
         private const val RUNTIME = "runtime"
         private const val VOTE_AVERAGE = "voteAverage"
         private const val VOTE_COUNT = "voteCount"
         private const val TITLE = "title"
         private const val DESCRIPTION = "description"
-        private const val WATCHED = "watched"
         private const val WATCHED_DATE = "watchedDate"
 
         const val SQL_CREATE_MOVIE_ENTRIES =

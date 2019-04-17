@@ -14,7 +14,7 @@ import de.cineaste.android.activity.MovieSearchActivity
 import de.cineaste.android.adapter.movie.MovieListAdapter
 import de.cineaste.android.controllFlow.movie.HistoryListMovieTouchHelperCallback
 import de.cineaste.android.controllFlow.movie.WatchlistMovieTouchHelperCallback
-import de.cineaste.android.database.dao.BaseDao
+import de.cineaste.android.entity.movie.MovieEntity
 
 class MovieListFragment : BaseListFragment() {
 
@@ -88,7 +88,7 @@ class MovieListFragment : BaseListFragment() {
 
     override fun createIntent(itemId: Long, state: Int, activity: Activity): Intent {
         val intent = Intent(activity, MovieDetailActivity::class.java)
-        intent.putExtra(BaseDao.MovieEntry.ID, itemId)
+        intent.putExtra(MovieEntity.ID, itemId)
         intent.putExtra(getString(R.string.state), state)
         return intent
     }

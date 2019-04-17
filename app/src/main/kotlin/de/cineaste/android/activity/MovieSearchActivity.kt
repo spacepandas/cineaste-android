@@ -7,9 +7,9 @@ import android.view.View
 import com.google.gson.reflect.TypeToken
 import de.cineaste.android.R
 import de.cineaste.android.adapter.movie.MovieSearchQueryAdapter
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.entity.movie.Movie
+import de.cineaste.android.entity.movie.MovieEntity
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.network.NetworkClient
@@ -37,7 +37,7 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
 
     override fun getIntentForDetailActivity(itemId: Long): Intent {
         val intent = Intent(this, MovieDetailActivity::class.java)
-        intent.putExtra(BaseDao.MovieEntry.ID, itemId)
+        intent.putExtra(MovieEntity.ID, itemId)
         intent.putExtra(this.getString(R.string.state), R.string.searchState)
         return intent
     }

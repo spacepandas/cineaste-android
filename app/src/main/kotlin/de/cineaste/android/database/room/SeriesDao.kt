@@ -1,23 +1,22 @@
 package de.cineaste.android.database.room
 
 import androidx.room.*
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.entity.series.SeriesEntity
 
-const val SELECT_SERIES = "SELECT * FROM ${BaseDao.SeriesEntry.TABLE_NAME}"
+const val SELECT_SERIES = "SELECT * FROM ${SeriesEntity.TABLE_NAME}"
 @Dao
 interface SeriesDao {
 
     @Query(SELECT_SERIES)
     fun getAll(): List<SeriesEntity>
 
-    @Query("$SELECT_SERIES WHERE ${BaseDao.SeriesEntry.SERIES_WATCHED} LIKE :state")
+    @Query("$SELECT_SERIES WHERE ${SeriesEntity.SERIES_WATCHED} LIKE :state")
     fun getAllByWatchState(state: Boolean): List<SeriesEntity>
 
-    @Query("$SELECT_SERIES WHERE ${BaseDao.SeriesEntry.ID} LIKE :seriesId")
+    @Query("$SELECT_SERIES WHERE ${SeriesEntity.ID} LIKE :seriesId")
     fun getOne(seriesId: Long): SeriesEntity
 
-    @Query("SELECT MAX(${BaseDao.SeriesEntry.LIST_POSITION}) FROM ${BaseDao.SeriesEntry.TABLE_NAME} WHERE ${BaseDao.SeriesEntry.SERIES_WATCHED} LIKE :state")
+    @Query("SELECT MAX(${SeriesEntity.LIST_POSITION}) FROM ${SeriesEntity.TABLE_NAME} WHERE ${SeriesEntity.SERIES_WATCHED} LIKE :state")
     fun getHighestListPosition(state: Boolean): Int
 
     @Insert

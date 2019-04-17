@@ -20,9 +20,9 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import de.cineaste.android.R
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.entity.movie.Movie
+import de.cineaste.android.entity.movie.MovieEntity
 import de.cineaste.android.network.MovieCallback
 import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.util.Constants
@@ -182,7 +182,7 @@ class MovieDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_detail)
 
         val intent = intent
-        movieId = intent.getLongExtra(BaseDao.MovieEntry.ID, -1)
+        movieId = intent.getLongExtra(MovieEntity.ID, -1)
         state = intent.getIntExtra(getString(R.string.state), -1)
 
         initViews()

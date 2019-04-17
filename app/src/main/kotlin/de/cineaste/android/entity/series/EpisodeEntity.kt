@@ -22,11 +22,11 @@ data class EpisodeEntity(
         const val TABLE_NAME = "episode"
         const val ID = "_id"
         const val EPISODE_WATCHED = "watched"
+        const val SEASON_ID = "seasonId"
+        const val SERIES_ID = "seriesId"
         private const val EPISODE_NUMBER = "episodeNumber"
         private const val NAME = "name"
         private const val DESCRIPTION = "description"
-        private const val SERIES_ID = "seriesId"
-        private const val SEASON_ID = "seasonId"
 
         const val SQL_CREATE_EPISODE_ENTRIES =
             "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +

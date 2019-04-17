@@ -3,15 +3,6 @@ package de.cineaste.android.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,12 +11,22 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesDetailAdapter
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.database.dbHelper.SeriesDbHelper
+import de.cineaste.android.entity.series.SeasonEntity
 import de.cineaste.android.entity.series.Series
+import de.cineaste.android.entity.series.SeriesEntity
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.network.SeriesCallback
 import de.cineaste.android.network.SeriesLoader
@@ -223,8 +224,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener,
     override fun onItemClickListener(itemId: Long, views: Array<View>) {
         if (state != R.string.searchState) {
             val intent = Intent(this@SeriesDetailActivity, SeasonDetailActivity::class.java)
-            intent.putExtra(BaseDao.SeasonEntry.SERIES_ID, seriesId)
-            intent.putExtra(BaseDao.SeasonEntry.SEASON_NUMBER, itemId)
+            intent.putExtra(SeasonEntity.SERIES_ID, seriesId)
+            intent.putExtra(SeasonEntity.SEASON_NUMBER, itemId)
 
             startActivity(intent)
         } else {
@@ -244,7 +245,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener,
         seriesLoader = SeriesLoader(this)
 
         val intent = intent
-        seriesId = intent.getLongExtra(BaseDao.SeriesEntry.ID, -1)
+        seriesId = intent.getLongExtra(SeriesEntity.ID, -1)
         state = intent.getIntExtra(getString(R.string.state), -1)
 
         initViews()

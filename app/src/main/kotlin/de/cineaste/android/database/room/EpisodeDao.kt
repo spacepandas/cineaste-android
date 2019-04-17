@@ -1,33 +1,32 @@
 package de.cineaste.android.database.room
 
 import androidx.room.*
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.entity.series.EpisodeEntity
 
 
-const val SELECT_EPISODE = "SELECT * FROM ${BaseDao.EpisodeEntry.TABLE_NAME}"
+const val SELECT_EPISODE = "SELECT * FROM ${EpisodeEntity.TABLE_NAME}"
 @Dao
 interface EpisodeDao {
 
-    @Query("$SELECT_EPISODE WHERE ${BaseDao.EpisodeEntry.ID} LIKE :episodeId")
+    @Query("$SELECT_EPISODE WHERE ${EpisodeEntity.ID} LIKE :episodeId")
     fun getOne(episodeId: Long): EpisodeEntity?
 
-    @Query("$SELECT_EPISODE WHERE ${BaseDao.EpisodeEntry.SEASON_ID} LIKE :seasonId")
+    @Query("$SELECT_EPISODE WHERE ${EpisodeEntity.SEASON_ID} LIKE :seasonId")
     fun getBySeasonId(seasonId: Long): List<EpisodeEntity>
 
-    @Query("$SELECT_EPISODE WHERE ${BaseDao.EpisodeEntry.SERIES_ID} LIKE :seriesId")
+    @Query("$SELECT_EPISODE WHERE ${EpisodeEntity.SERIES_ID} LIKE :seriesId")
     fun getBySeriesId(seriesId: Long): List<EpisodeEntity>
 
-    @Query("$SELECT_EPISODE WHERE ${BaseDao.EpisodeEntry.SERIES_ID} LIKE :seriesId AND ${BaseDao.EpisodeEntry.EPISODE_WATCHED} LIKE :state")
+    @Query("$SELECT_EPISODE WHERE ${EpisodeEntity.SERIES_ID} LIKE :seriesId AND ${EpisodeEntity.EPISODE_WATCHED} LIKE :state")
     fun getBySeriesAndWatchedState(seriesId: Long, state: Boolean): List<EpisodeEntity>
 
-    @Query("UPDATE ${BaseDao.EpisodeEntry.TABLE_NAME} SET ${BaseDao.EpisodeEntry.EPISODE_WATCHED} = :state WHERE ${BaseDao.EpisodeEntry.SEASON_ID} LIKE :seasonId")
+    @Query("UPDATE ${EpisodeEntity.TABLE_NAME} SET ${EpisodeEntity.EPISODE_WATCHED} = :state WHERE ${EpisodeEntity.SEASON_ID} LIKE :seasonId")
     fun updateWatchedStateBySeasonId(state: Boolean, seasonId: Long)
 
-    @Query("UPDATE ${BaseDao.EpisodeEntry.TABLE_NAME} SET ${BaseDao.EpisodeEntry.EPISODE_WATCHED} = :state WHERE ${BaseDao.EpisodeEntry.SERIES_ID} LIKE :seriesId")
+    @Query("UPDATE ${EpisodeEntity.TABLE_NAME} SET ${EpisodeEntity.EPISODE_WATCHED} = :state WHERE ${EpisodeEntity.SERIES_ID} LIKE :seriesId")
     fun updateWatchedStateBySeriesId(state: Boolean, seriesId: Long)
 
-    @Query("DELETE FROM ${BaseDao.EpisodeEntry.TABLE_NAME} WHERE ${BaseDao.EpisodeEntry.SERIES_ID} LIKE :seriesId")
+    @Query("DELETE FROM ${EpisodeEntity.TABLE_NAME} WHERE ${EpisodeEntity.SERIES_ID} LIKE :seriesId")
     fun deleteBySeriesId(seriesId: Long)
 
     @Insert

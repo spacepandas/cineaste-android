@@ -12,9 +12,9 @@ import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeasonPagerAdapter
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Episode
+import de.cineaste.android.entity.series.SeasonEntity
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.util.Constants
 import kotlinx.coroutines.GlobalScope
@@ -37,8 +37,8 @@ class SeasonDetailActivity : AppCompatActivity() {
         poster = findViewById(R.id.poster_image_view)
 
         val intent = intent
-        val seriesId = intent.getLongExtra(BaseDao.SeasonEntry.SERIES_ID, -1)
-        seasonId = intent.getLongExtra(BaseDao.SeasonEntry.SEASON_NUMBER, -1)
+        val seriesId = intent.getLongExtra(SeasonEntity.SERIES_ID, -1)
+        seasonId = intent.getLongExtra(SeasonEntity.SEASON_NUMBER, -1)
 
         GlobalScope.launch {
             currentSeries = seriesDbHelper.getSeriesById(seriesId)
