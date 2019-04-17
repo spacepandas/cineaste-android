@@ -7,14 +7,17 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import de.cineaste.android.database.dao.BaseDao
 import de.cineaste.android.database.room.*
 import de.cineaste.android.entity.User
-import de.cineaste.android.entity.movie.Movie
+import de.cineaste.android.entity.User.Companion.SQL_CREATE_USER_ENTRIES
 import de.cineaste.android.entity.movie.MovieEntity
+import de.cineaste.android.entity.movie.MovieEntity.Companion.SQL_CREATE_MOVIE_ENTRIES
 import de.cineaste.android.entity.series.EpisodeEntity
+import de.cineaste.android.entity.series.EpisodeEntity.Companion.SQL_CREATE_EPISODE_ENTRIES
 import de.cineaste.android.entity.series.SeasonEntity
+import de.cineaste.android.entity.series.SeasonEntity.Companion.SQL_CREATE_SEASON_ENTRIES
 import de.cineaste.android.entity.series.SeriesEntity
+import de.cineaste.android.entity.series.SeriesEntity.Companion.SQL_CREATE_SERIES_ENTRIES
 import de.cineaste.android.util.Constants
 
 @Database(
@@ -59,16 +62,16 @@ abstract class CineasteDb : RoomDatabase() {
 
 val MIGRATION_0_1: Migration = object : Migration(0, 1) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(BaseDao.SQL_CREATE_MOVIE_ENTRIES)
-        database.execSQL(BaseDao.SQL_CREATE_USER_ENTRIES)
+        database.execSQL(SQL_CREATE_MOVIE_ENTRIES)
+        database.execSQL(SQL_CREATE_USER_ENTRIES)
     }
 }
 
 val MIGRATION_1_2: Migration = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(
-            "ALTER TABLE ${BaseDao.MovieEntry.TABLE_NAME} " +
-                    "ADD COLUMN ${BaseDao.MovieEntry.COLUMN_MOVIE_RELEASE_DATE} ${BaseDao.TEXT_TYPE};"
+            "ALTER TABLE ${MovieEntity.TABLE_NAME} " +
+                    "ADD COLUMN ${MovieEntity.RELEASE_DATE}  TEXT;"
         )
     }
 }
@@ -76,17 +79,17 @@ val MIGRATION_1_2: Migration = object : Migration(1, 2) {
 val MIGRATION_2_3: Migration = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(
-            "ALTER TABLE ${BaseDao.MovieEntry.TABLE_NAME} " +
-                    "ADD COLUMN ${BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION} ${BaseDao.INTEGER_TYPE};"
+            "ALTER TABLE ${MovieEntity.TABLE_NAME} " +
+                    "ADD COLUMN ${MovieEntity.LIST_POSITION}  INTEGER;"
         )
     }
 }
 
 val MIGRATION_3_4: Migration = object : Migration(3, 4) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(BaseDao.SQL_CREATE_SERIES_ENTRIES)
-        database.execSQL(BaseDao.SQL_CREATE_SEASON_ENTRIES)
-        database.execSQL(BaseDao.SQL_CREATE_EPISODE_ENTRIES)
+        database.execSQL(SQL_CREATE_SERIES_ENTRIES)
+        database.execSQL(SQL_CREATE_SEASON_ENTRIES)
+        database.execSQL(SQL_CREATE_EPISODE_ENTRIES)
     }
 }
 

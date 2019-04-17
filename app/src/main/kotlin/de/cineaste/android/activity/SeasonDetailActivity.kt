@@ -37,8 +37,8 @@ class SeasonDetailActivity : AppCompatActivity() {
         poster = findViewById(R.id.poster_image_view)
 
         val intent = intent
-        val seriesId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, -1)
-        seasonId = intent.getLongExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, -1)
+        val seriesId = intent.getLongExtra(BaseDao.SeasonEntry.SERIES_ID, -1)
+        seasonId = intent.getLongExtra(BaseDao.SeasonEntry.SEASON_NUMBER, -1)
 
         GlobalScope.launch {
             currentSeries = seriesDbHelper.getSeriesById(seriesId)

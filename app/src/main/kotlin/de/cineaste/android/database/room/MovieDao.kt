@@ -12,13 +12,13 @@ interface MovieDao {
     @Query(SELECT_MOVIE)
     fun getAll(): List<MovieEntity>
 
-    @Query("$SELECT_MOVIE WHERE ${BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED} LIKE :state")
+    @Query("$SELECT_MOVIE WHERE ${BaseDao.MovieEntry.WATCHED} LIKE :state")
     fun getAllByWatchState(state: Boolean): List<MovieEntity>
 
     @Query("$SELECT_MOVIE WHERE ${BaseDao.MovieEntry.ID} LIKE :movieId")
     fun getOne(movieId: Long): MovieEntity?
 
-    @Query("SELECT MAX(${BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION}) FROM ${BaseDao.MovieEntry.TABLE_NAME} WHERE ${BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED} LIKE :state")
+    @Query("SELECT MAX(${BaseDao.MovieEntry.LIST_POSITION}) FROM ${BaseDao.MovieEntry.TABLE_NAME} WHERE ${BaseDao.MovieEntry.WATCHED} LIKE :state")
     fun getHighestListPosition(state: Boolean): Int
 
     @Insert

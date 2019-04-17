@@ -11,13 +11,13 @@ interface SeriesDao {
     @Query(SELECT_SERIES)
     fun getAll(): List<SeriesEntity>
 
-    @Query("$SELECT_SERIES WHERE ${BaseDao.SeriesEntry.COLUMN_SERIES_SERIES_WATCHED} LIKE :state")
+    @Query("$SELECT_SERIES WHERE ${BaseDao.SeriesEntry.SERIES_WATCHED} LIKE :state")
     fun getAllByWatchState(state: Boolean): List<SeriesEntity>
 
     @Query("$SELECT_SERIES WHERE ${BaseDao.SeriesEntry.ID} LIKE :seriesId")
     fun getOne(seriesId: Long): SeriesEntity
 
-    @Query("SELECT MAX(${BaseDao.SeriesEntry.COLUMN_SERIES_LIST_POSITION}) FROM ${BaseDao.SeriesEntry.TABLE_NAME} WHERE ${BaseDao.SeriesEntry.COLUMN_SERIES_SERIES_WATCHED} LIKE :state")
+    @Query("SELECT MAX(${BaseDao.SeriesEntry.LIST_POSITION}) FROM ${BaseDao.SeriesEntry.TABLE_NAME} WHERE ${BaseDao.SeriesEntry.SERIES_WATCHED} LIKE :state")
     fun getHighestListPosition(state: Boolean): Int
 
     @Insert

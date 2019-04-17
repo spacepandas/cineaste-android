@@ -223,8 +223,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener,
     override fun onItemClickListener(itemId: Long, views: Array<View>) {
         if (state != R.string.searchState) {
             val intent = Intent(this@SeriesDetailActivity, SeasonDetailActivity::class.java)
-            intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SERIES_ID, seriesId)
-            intent.putExtra(BaseDao.SeasonEntry.COLUMN_SEASON_SEASON_NUMBER, itemId)
+            intent.putExtra(BaseDao.SeasonEntry.SERIES_ID, seriesId)
+            intent.putExtra(BaseDao.SeasonEntry.SEASON_NUMBER, itemId)
 
             startActivity(intent)
         } else {
