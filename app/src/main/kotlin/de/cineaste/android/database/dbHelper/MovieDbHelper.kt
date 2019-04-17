@@ -7,13 +7,10 @@ import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.toEntity
 import de.cineaste.android.entity.movie.toModel
 import de.cineaste.android.fragment.WatchState
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MovieDbHelper private constructor(context: Context) {
 
     private val movieDao: MovieDao = CineasteDb.getDatabase(context).movieDao()
-    private val sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
     fun readMovie(movieId: Long): Movie? {
         return movieDao.getOne(movieId)?.toModel()
@@ -29,7 +26,7 @@ class MovieDbHelper private constructor(context: Context) {
     }
 
     private fun getStatusFromState(state: WatchState): Boolean {
-        return when(state) {
+        return when (state) {
             WatchState.WATCH_STATE -> false
             WatchState.WATCHED_STATE -> true
             else -> false
@@ -37,15 +34,18 @@ class MovieDbHelper private constructor(context: Context) {
     }
 
     fun reorderAlphabetical(state: WatchState): List<Movie> {
-        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }.sortedBy { it.title }
+        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
+            .sortedBy { it.title }
     }
 
     fun reorderByReleaseDate(state: WatchState): List<Movie> {
-        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }.sortedBy { it.releaseDate }
+        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
+            .sortedBy { it.releaseDate }
     }
 
     fun reorderByRuntime(state: WatchState): List<Movie> {
-        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }.sortedBy { it.runtime }
+        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
+            .sortedBy { it.runtime }
     }
 
     fun createOrUpdate(movie: Movie) {
@@ -77,14 +77,15 @@ class MovieDbHelper private constructor(context: Context) {
     }
 
     companion object {
-
+        @Volatile
         private var instance: MovieDbHelper? = null
 
         fun getInstance(context: Context): MovieDbHelper {
-            if (instance == null) {
-                instance = MovieDbHelper(context)
+            return instance ?: synchronized(this) {
+                val dbHelper = MovieDbHelper(context)
+                this.instance = dbHelper
+                return dbHelper
             }
-            return instance!!
         }
     }
 }

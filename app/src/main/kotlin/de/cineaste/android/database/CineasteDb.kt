@@ -36,10 +36,10 @@ abstract class CineasteDb : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: CineasteDb? = null
+        private var instance: CineasteDb? = null
 
         fun getDatabase(context: Context): CineasteDb {
-            return INSTANCE ?: synchronized(this) {
+            return instance ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     CineasteDb::class.java,
@@ -53,21 +53,21 @@ abstract class CineasteDb : RoomDatabase() {
                     .addMigrations(MIGRATION_4_5)
                     .build()
 
-                INSTANCE = instance
+                this.instance = instance
                 return instance
             }
         }
     }
 }
 
-val MIGRATION_0_1: Migration = object : Migration(0, 1) {
+val MIGRATION_0_1 = object : Migration(0, 1) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(SQL_CREATE_MOVIE_ENTRIES)
         database.execSQL(SQL_CREATE_USER_ENTRIES)
     }
 }
 
-val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(
             "ALTER TABLE ${MovieEntity.TABLE_NAME} " +
@@ -76,7 +76,7 @@ val MIGRATION_1_2: Migration = object : Migration(1, 2) {
     }
 }
 
-val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(
             "ALTER TABLE ${MovieEntity.TABLE_NAME} " +
@@ -85,7 +85,7 @@ val MIGRATION_2_3: Migration = object : Migration(2, 3) {
     }
 }
 
-val MIGRATION_3_4: Migration = object : Migration(3, 4) {
+val MIGRATION_3_4 = object : Migration(3, 4) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(SQL_CREATE_SERIES_ENTRIES)
         database.execSQL(SQL_CREATE_SEASON_ENTRIES)
@@ -93,7 +93,7 @@ val MIGRATION_3_4: Migration = object : Migration(3, 4) {
     }
 }
 
-val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+val MIGRATION_4_5 = object : Migration(4, 5) {
     override fun migrate(database: SupportSQLiteDatabase) {
        // migration to room
     }

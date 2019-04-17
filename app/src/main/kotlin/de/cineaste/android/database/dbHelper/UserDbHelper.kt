@@ -15,14 +15,15 @@ class UserDbHelper private constructor(context: Context) {
     }
 
     companion object {
-        private var mInstance: UserDbHelper? = null
+        @Volatile
+        private var instance: UserDbHelper? = null
 
         fun getInstance(context: Context): UserDbHelper {
-            if (mInstance == null) {
-                mInstance = UserDbHelper(context)
+            return instance ?: synchronized(this) {
+                val dbHelper = UserDbHelper(context)
+                instance = dbHelper
+                return dbHelper
             }
-
-            return mInstance!!
         }
     }
 }

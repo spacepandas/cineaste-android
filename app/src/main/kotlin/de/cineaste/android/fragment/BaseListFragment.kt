@@ -148,7 +148,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         }
 
         activity?.let {
-            GlobalScope.launch { userDbHelper = UserDbHelper.getInstance(it) }
+            userDbHelper = UserDbHelper.getInstance(it)
         }
     }
 

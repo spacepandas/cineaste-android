@@ -43,7 +43,7 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     private fun getStatusFromState(state: WatchState): Boolean {
-        return when(state) {
+        return when (state) {
             WatchState.WATCH_STATE -> false
             WatchState.WATCHED_STATE -> true
             else -> false
@@ -144,7 +144,12 @@ class SeriesDbHelper private constructor(context: Context) {
         moveBackToList(series, prevSeason, prevEpisode, true)
     }
 
-    private fun moveBackToList(series: Series, prevSeason: Int, prevEpisode: Int, watchState: Boolean) {
+    private fun moveBackToList(
+        series: Series,
+        prevSeason: Int,
+        prevEpisode: Int,
+        watchState: Boolean
+    ) {
         moveBetweenLists(series, watchState)
         for (season in series.seasons) {
             if (season.seasonNumber < prevSeason) {
@@ -337,14 +342,15 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     companion object {
-
+        @Volatile
         private var instance: SeriesDbHelper? = null
 
         fun getInstance(context: Context): SeriesDbHelper {
-            if (instance == null) {
-                instance = SeriesDbHelper(context)
+            return instance ?: synchronized(this) {
+                val dbHelper = SeriesDbHelper(context)
+                instance = dbHelper
+                return dbHelper
             }
-            return instance!!
         }
     }
 }

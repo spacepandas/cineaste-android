@@ -49,6 +49,9 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     private lateinit var fm: FragmentManager
     private lateinit var contentContainer: View
+    private val userDbHelper: UserDbHelper = UserDbHelper.getInstance(this)
+    private val movieDbHelper: MovieDbHelper = MovieDbHelper.getInstance(this)
+    private val seriesDbHelper: SeriesDbHelper = SeriesDbHelper.getInstance(this)
     private lateinit var userName: TextView
 
     private lateinit var drawerLayout: DrawerLayout
@@ -112,7 +115,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     override fun onResume() {
         super.onResume()
         GlobalScope.launch {
-            val user = UserDbHelper.getInstance(this@MainActivity).user
+            val user = userDbHelper.user
             if (user != null) {
                 userName.text = user.userName
             }
@@ -261,8 +264,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     private fun exportMovies(uri: Uri) {
         val importExportObject = ImportExportObject()
         GlobalScope.launch {
-            importExportObject.movies = MovieDbHelper.getInstance(this@MainActivity).readAllMovies()
-            importExportObject.series = SeriesDbHelper.getInstance(this@MainActivity).allSeries
+            importExportObject.movies = movieDbHelper.readAllMovies()
+            importExportObject.series = seriesDbHelper.allSeries
         }
         val successfullyExported = ExportService.export(importExportObject, uri, this@MainActivity)
 
@@ -309,11 +312,11 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             val importExportObject = ImportService.importFiles(uri, this@MainActivity)
             // todo find a better solution to save all files
             for (movie in importExportObject.movies) {
-                MovieDbHelper.getInstance(this@MainActivity).createOrUpdate(movie)
+                movieDbHelper.createOrUpdate(movie)
             }
 
             for (series in importExportObject.series) {
-                SeriesDbHelper.getInstance(this@MainActivity).importSeries(series)
+                seriesDbHelper.importSeries(series)
             }
 
             launch(Main) {
@@ -382,7 +385,7 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
     override fun onFinishUserDialog(userName: String) {
         GlobalScope.launch {
             if (userName.isNotEmpty()) {
-                UserDbHelper.getInstance(this@MainActivity).createUser(User(0, userName))
+                userDbHelper.createUser(User(0, userName))
             }
 
             startActivity(Intent(this@MainActivity, MovieNightActivity::class.java))
