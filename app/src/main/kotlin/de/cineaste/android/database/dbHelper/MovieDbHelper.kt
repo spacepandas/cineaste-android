@@ -1,28 +1,42 @@
 package de.cineaste.android.database.dbHelper
 
 import android.content.Context
-import de.cineaste.android.database.CineasteDb
 import de.cineaste.android.database.room.MovieDao
+import de.cineaste.android.db
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.toEntity
 import de.cineaste.android.entity.movie.toModel
 import de.cineaste.android.fragment.WatchState
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MovieDbHelper private constructor(context: Context) {
 
-    private val movieDao: MovieDao = CineasteDb.getDatabase(context).movieDao()
+    private val movieDao: MovieDao = db!!.movieDao()
 
     fun readMovie(movieId: Long): Movie? {
-        return movieDao.getOne(movieId)?.toModel()
+        var movie: Movie? = null
+        GlobalScope.launch { movie = movieDao.getOne(movieId)?.toModel() }
+
+        return movie
     }
 
     fun readAllMovies(): List<Movie> {
+        val movies = mutableListOf<Movie>()
 
-        return movieDao.getAll().map { it.toModel() }
+        GlobalScope.launch {
+            movies.addAll(movieDao.getAll().map { it.toModel() })
+        }
+        return movies
     }
 
     fun readMoviesByWatchStatus(state: WatchState): List<Movie> {
-        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
+        val movies = mutableListOf<Movie>()
+
+        GlobalScope.launch {
+            movies.addAll(movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() })
+        }
+        return movies
     }
 
     private fun getStatusFromState(state: WatchState): Boolean {
@@ -34,27 +48,44 @@ class MovieDbHelper private constructor(context: Context) {
     }
 
     fun reorderAlphabetical(state: WatchState): List<Movie> {
-        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
-            .sortedBy { it.title }
+        val movies = mutableListOf<Movie>()
+
+        GlobalScope.launch {
+            movies.addAll(movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
+                .sortedBy { it.title })
+        }
+        return movies
     }
 
     fun reorderByReleaseDate(state: WatchState): List<Movie> {
-        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
-            .sortedBy { it.releaseDate }
+        val movies = mutableListOf<Movie>()
+
+        GlobalScope.launch {
+            movies.addAll(movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
+                .sortedBy { it.releaseDate })
+        }
+        return movies
     }
 
     fun reorderByRuntime(state: WatchState): List<Movie> {
-        return movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
-            .sortedBy { it.runtime }
+        val movies = mutableListOf<Movie>()
+
+        GlobalScope.launch {
+            movies.addAll(movieDao.getAllByWatchState(getStatusFromState(state)).map { it.toModel() }
+                .sortedBy { it.runtime })
+        }
+        return movies
     }
 
     fun createOrUpdate(movie: Movie) {
-        val existingMovie = movieDao.getOne(movie.id)
+        GlobalScope.launch {
+            val existingMovie = movieDao.getOne(movie.id)
 
-        if (existingMovie != null) {
-            update(movie, getNewPosition(movie, existingMovie.toModel()))
-        } else {
-            movieDao.insert(movie.toEntity())
+            if (existingMovie != null) {
+                update(movie, getNewPosition(movie, existingMovie.toModel()))
+            } else {
+                movieDao.insert(movie.toEntity())
+            }
         }
     }
 
@@ -63,17 +94,23 @@ class MovieDbHelper private constructor(context: Context) {
     }
 
     fun deleteMovieFromWatchlist(movie: Movie) {
-        movieDao.delete(movie.toEntity())
+        GlobalScope.launch { movieDao.delete(movie.toEntity()) }
     }
 
     private fun update(movie: Movie, listPosition: Int) {
-        movieDao.update(movie.copy(listPosition = listPosition).toEntity())
+        GlobalScope.launch { movieDao.update(movie.copy(listPosition = listPosition).toEntity()) }
     }
 
     private fun getNewPosition(updatedMovie: Movie, oldMovie: Movie): Int {
-        return if (updatedMovie.isWatched == oldMovie.isWatched) {
-            oldMovie.listPosition
-        } else movieDao.getHighestListPosition(updatedMovie.isWatched)
+        var position = 0
+        if (updatedMovie.isWatched == oldMovie.isWatched) {
+            position = oldMovie.listPosition
+        } else {
+            GlobalScope.launch {
+                position = movieDao.getHighestListPosition(updatedMovie.isWatched)
+            }
+        }
+        return position
     }
 
     companion object {

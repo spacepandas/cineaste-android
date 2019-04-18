@@ -14,7 +14,7 @@ interface SeriesDao {
     fun getAllByWatchState(state: Boolean): List<SeriesEntity>
 
     @Query("$SELECT_SERIES WHERE ${SeriesEntity.ID} LIKE :seriesId")
-    fun getOne(seriesId: Long): SeriesEntity
+    fun getOne(seriesId: Long): SeriesEntity?
 
     @Query("SELECT MAX(${SeriesEntity.LIST_POSITION}) FROM ${SeriesEntity.TABLE_NAME} WHERE ${SeriesEntity.SERIES_WATCHED} LIKE :state")
     fun getHighestListPosition(state: Boolean): Int
