@@ -48,7 +48,7 @@ class ResultAdapter(
         internal val moviePoster: ImageView = itemView.findViewById(R.id.poster_image_view)
         private val watchedButton: Button = itemView.findViewById(R.id.history_button)
         internal val title: TextView = itemView.findViewById(R.id.title)
-        internal val counter: TextView = itemView.findViewById(R.id.movie_counter_tv)
+        private val counter: TextView = itemView.findViewById(R.id.movie_counter_tv)
 
         fun assignData(matchingResult: MatchingResult, resultCounter: Int) {
             val posterPath = matchingResult.posterPath
