@@ -147,7 +147,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
 
                 override fun onQueryTextChange(query: String): Boolean {
                     var myQuery = query
-                    if (!myQuery.isEmpty()) {
+                    if (myQuery.isNotEmpty()) {
                         myQuery = myQuery.replace(" ", "+")
                         progressBar.visibility = View.VISIBLE
 

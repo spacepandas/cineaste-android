@@ -132,7 +132,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     }
 
     override fun onFinishUserDialog(userName: String) {
-        if (!userName.isEmpty()) {
+        if (userName.isNotEmpty()) {
             currentUser = User(userName)
             currentUser?.let { user ->
                 userDbHelper.createUser(user)
