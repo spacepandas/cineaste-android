@@ -71,7 +71,7 @@
 
                     <TextView
                         android:id="@+id/vote"
-                        style="@style/cardviewDescriptionText"
+                        style="@style/cardViewDescriptionText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="4dp"

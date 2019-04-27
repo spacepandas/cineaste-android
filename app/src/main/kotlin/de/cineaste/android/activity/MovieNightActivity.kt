@@ -88,9 +88,9 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
 
     private fun initializeTimeout() {
         timeOut = Runnable {
-            val snackbar = Snackbar
+            val snackBar = Snackbar
                 .make(nearbyUserRv, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG)
-            snackbar.show()
+            snackBar.show()
         }
     }
 

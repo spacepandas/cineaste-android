@@ -24,11 +24,11 @@ class SeriesSearchQueryAdapter(
         notifyDataSetChanged()
     }
 
-    fun addSerie(series: Series, index: Int) {
+    fun addOneSeries(series: Series, index: Int) {
         dataSet.add(index, series)
     }
 
-    fun removeSerie(index: Int) {
+    fun removeOneSeries(index: Int) {
         dataSet.removeAt(index)
         notifyItemRemoved(index)
     }

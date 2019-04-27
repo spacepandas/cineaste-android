@@ -181,9 +181,9 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     }
 
     private fun showNetworkError() {
-        val snackbar = Snackbar
+        val snackBar = Snackbar
             .make(recyclerView, R.string.noInternet, Snackbar.LENGTH_LONG)
-        snackbar.show()
+        snackBar.show()
     }
 
     override fun onStop() {

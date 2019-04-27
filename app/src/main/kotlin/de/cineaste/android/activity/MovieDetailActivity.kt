@@ -416,9 +416,9 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun showNetworkError() {
-        val snackbar = Snackbar
+        val snackBar = Snackbar
             .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
-        snackbar.show()
+        snackBar.show()
     }
 
     private fun convertDate(date: Date?): String {

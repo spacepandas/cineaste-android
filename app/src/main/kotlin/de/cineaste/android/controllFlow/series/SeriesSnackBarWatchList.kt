@@ -65,7 +65,7 @@ class SeriesSnackBarWatchList internal constructor(
             alertBuilder.setTitle(context.getString(R.string.seriesSeenHeadline, series.name))
             alertBuilder.setMessage(R.string.seriesStillInProduction)
             alertBuilder.setPositiveButton(R.string.ok) { _, _ ->
-                updateSeriesAndCreateSnackbar(
+                updateSeriesAndCreateSnackBar(
                     position,
                     message,
                     series
@@ -75,12 +75,12 @@ class SeriesSnackBarWatchList internal constructor(
 
             alertBuilder.create().show()
         } else {
-            updateSeriesAndCreateSnackbar(position, message, series)
+            updateSeriesAndCreateSnackBar(position, message, series)
         }
     }
 
     // todo  reset to current season end episode after dismiss update current status
-    private fun updateSeriesAndCreateSnackbar(position: Int, message: Int, seriesToBeUpdated: Series) {
+    private fun updateSeriesAndCreateSnackBar(position: Int, message: Int, seriesToBeUpdated: Series) {
 
         val currentSeason = seriesToBeUpdated.currentNumberOfSeason
         val currentEpisode = seriesToBeUpdated.currentNumberOfEpisode

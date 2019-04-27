@@ -75,9 +75,9 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
     }
 
     private fun movieAddError(movie: Movie, index: Int) {
-        val snackbar = Snackbar
+        val snackBar = Snackbar
             .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
-        snackbar.show()
+        snackBar.show()
         movieQueryAdapter.addMovie(movie, index)
     }
 

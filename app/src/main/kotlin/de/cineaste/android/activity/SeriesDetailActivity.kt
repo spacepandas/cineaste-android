@@ -451,8 +451,8 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener,
     }
 
     private fun showNetworkError() {
-        val snackbar = Snackbar
+        val snackBar = Snackbar
             .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
-        snackbar.show()
+        snackBar.show()
     }
 }

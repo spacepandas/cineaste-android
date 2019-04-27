@@ -71,17 +71,17 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
         }
 
         seriesCallback?.let {
-            seriesQueryAdapter.removeSerie(index)
+            seriesQueryAdapter.removeOneSeries(index)
 
             SeriesLoader(this).loadCompleteSeries(series.id, it)
         }
     }
 
     private fun seriesAddError(series: Series, index: Int) {
-        val snackbar = Snackbar
+        val snackBar = Snackbar
             .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
-        snackbar.show()
-        seriesQueryAdapter.addSerie(series, index)
+        snackBar.show()
+        seriesQueryAdapter.addOneSeries(series, index)
     }
 
     override fun initAdapter() {
