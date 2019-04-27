@@ -18,8 +18,8 @@
         android:paddingStart="16dp"
         android:paddingTop="8dp">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
+        <RelativeLayout
+                android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <CheckBox
