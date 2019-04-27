@@ -67,7 +67,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     override fun onItemClickListener(itemId: Long, views: Array<View>) {
         val intent = getIntentForDetailActivity(itemId)
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val options = ActivityOptions.makeSceneTransitionAnimation(this,
                     Pair.create(views[0], "card"),
                     Pair.create(views[1], "poster"))

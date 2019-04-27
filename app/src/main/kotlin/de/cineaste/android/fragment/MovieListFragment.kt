@@ -76,11 +76,11 @@ class MovieListFragment : BaseListFragment() {
         (customRecyclerView.adapter as MovieListAdapter).filter.filter(newText)
     }
 
-    override fun reorderEntries(filterType: BaseListFragment.FilterType) {
+    override fun reorderEntries(filterType: FilterType) {
         when (filterType) {
-            BaseListFragment.FilterType.ALPHABETICAL -> movieListAdapter.orderAlphabetical()
-            BaseListFragment.FilterType.RELEASE_DATE -> movieListAdapter.orderByReleaseDate()
-            BaseListFragment.FilterType.RUNTIME -> movieListAdapter.orderByRuntime()
+            FilterType.ALPHABETICAL -> movieListAdapter.orderAlphabetical()
+            FilterType.RELEASE_DATE -> movieListAdapter.orderByReleaseDate()
+            FilterType.RUNTIME -> movieListAdapter.orderByRuntime()
         }
 
         movieListAdapter.notifyDataSetChanged()

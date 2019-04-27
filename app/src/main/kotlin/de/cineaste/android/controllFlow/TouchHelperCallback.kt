@@ -31,7 +31,7 @@ abstract class TouchHelperCallback protected constructor(private val resources: 
 
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
         val swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
+        return makeMovementFlags(dragFlags, swipeFlags)
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

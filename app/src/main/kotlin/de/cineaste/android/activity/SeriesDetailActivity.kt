@@ -84,11 +84,11 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
             R.id.share -> {
                 currentSeries?.let { series ->
-                    val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                    val sharingIntent = Intent(Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBodyText = "${series.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace("<SERIES_ID>", series.id.toString())}"
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_series))
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_series))
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
                     startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_series)))
                 }
                 return true

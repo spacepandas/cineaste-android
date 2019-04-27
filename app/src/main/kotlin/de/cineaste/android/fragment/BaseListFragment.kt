@@ -186,8 +186,8 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
                         UserInputFragment().show(fragmentManager, "")
                     }
                 }
-                R.id.filterAlphabetical -> reorderLists(BaseListFragment.FilterType.ALPHABETICAL)
-                R.id.filterReleaseDate -> reorderLists(BaseListFragment.FilterType.RELEASE_DATE)
+                R.id.filterAlphabetical -> reorderLists(FilterType.ALPHABETICAL)
+                R.id.filterReleaseDate -> reorderLists(FilterType.RELEASE_DATE)
                 R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
             }
         }
@@ -234,7 +234,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         val activity = activity ?: return
         val intent = createIntent(itemId, state, activity)
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val options = makeSceneTransitionAnimation(activity,
                     Pair.create(views[0], "card"),
                     Pair.create(views[1], "poster")

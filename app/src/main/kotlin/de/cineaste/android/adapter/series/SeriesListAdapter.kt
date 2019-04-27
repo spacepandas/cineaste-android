@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.Collections
 import java.util.LinkedList
 
-class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState, private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener) : BaseListAdapter(context, displayMessage, listener, state) {
+class SeriesListAdapter(displayMessage: DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState, private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener) : BaseListAdapter(context, displayMessage, listener, state) {
 
     private val db: SeriesDbHelper
     private var dataSet: MutableList<Series> = mutableListOf()
@@ -179,7 +179,7 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
             this.filteredSeriesList = ArrayList()
         }
 
-        override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
             filteredSeriesList.clear()
 
             if (constraint.isNullOrEmpty()) {
@@ -194,14 +194,14 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
                 }
             }
 
-            val results = Filter.FilterResults()
+            val results = FilterResults()
             results.values = filteredSeriesList
             results.count = filteredSeriesList.size
 
             return results
         }
 
-        override fun publishResults(charSequence: CharSequence, results: Filter.FilterResults) {
+        override fun publishResults(charSequence: CharSequence, results: FilterResults) {
             adapter.filteredDataSet.clear()
 
             adapter.filteredDataSet.addAll(results.values as List<Series>)

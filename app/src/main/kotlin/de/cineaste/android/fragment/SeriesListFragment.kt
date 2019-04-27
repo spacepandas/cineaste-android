@@ -89,10 +89,10 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
         (customRecyclerView.adapter as SeriesListAdapter).filter.filter(newText)
     }
 
-    override fun reorderEntries(filterType: BaseListFragment.FilterType) {
+    override fun reorderEntries(filterType: FilterType) {
         when (filterType) {
-            BaseListFragment.FilterType.ALPHABETICAL -> seriesListAdapter.orderAlphabetical()
-            BaseListFragment.FilterType.RELEASE_DATE -> seriesListAdapter.orderByReleaseDate()
+            FilterType.ALPHABETICAL -> seriesListAdapter.orderAlphabetical()
+            FilterType.RELEASE_DATE -> seriesListAdapter.orderByReleaseDate()
             else -> { }
         }
 

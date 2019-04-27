@@ -65,14 +65,14 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     fun getUnWatchedEpisodesOfSeries(seriesId: Long): List<Episode> {
-        val selection = BaseDao.EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ? AND " + BaseDao.EpisodeEntry.COLUMN_EPISODE_WATCHED + " = 0"
+        val selection = EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ? AND " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = 0"
         val selectionArgs = arrayOf(seriesId.toString())
 
         return episodeDao.read(selection, selectionArgs)
     }
 
     fun getEpisodesBySeasonId(seasonId: Long): List<Episode> {
-        val selection = BaseDao.EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = ?"
+        val selection = EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = ?"
         val selectionArgs = arrayOf(seasonId.toString())
 
         return episodeDao.read(selection, selectionArgs)
