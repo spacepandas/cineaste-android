@@ -90,7 +90,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
         progressBar = findViewById(R.id.progressBar)
         recyclerView = findViewById(R.id.search_recycler_view)
         val layoutManager = LinearLayoutManager(this)
-        val divider = ContextCompat.getDrawable(recyclerView.context, R.drawable.divider);
+        val divider = ContextCompat.getDrawable(recyclerView.context, R.drawable.divider)
         val itemDecor = DividerItemDecoration(recyclerView.context,
             layoutManager.orientation)
         divider?.let {

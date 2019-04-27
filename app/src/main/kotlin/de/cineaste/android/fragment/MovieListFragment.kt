@@ -59,7 +59,7 @@ class MovieListFragment : BaseListFragment() {
         customRecyclerView.layoutManager = layoutManager
         customRecyclerView.adapter = movieListAdapter
 
-        val divider = ContextCompat.getDrawable(customRecyclerView.context, R.drawable.divider);
+        val divider = ContextCompat.getDrawable(customRecyclerView.context, R.drawable.divider)
         val itemDecor = DividerItemDecoration(customRecyclerView.context,
             layoutManager.orientation)
         divider?.let {
