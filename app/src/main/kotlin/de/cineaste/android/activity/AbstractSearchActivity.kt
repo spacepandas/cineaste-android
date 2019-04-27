@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import android.text.TextUtils
 import android.util.Pair
 import android.view.Menu
@@ -20,6 +19,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonParser
 import de.cineaste.android.R
 import de.cineaste.android.listener.ItemClickListener
