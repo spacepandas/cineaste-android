@@ -30,8 +30,10 @@ class PosterActivity : AppCompatActivity() {
         setTransitionNameIfNecessary()
         poster.setImageResource(R.drawable.placeholder_poster)
         setContentView(poster)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
 
         displayPoster()
     }
@@ -53,30 +55,30 @@ class PosterActivity : AppCompatActivity() {
 
     private fun displayPoster() {
         Picasso.get()
-                .load(getPosterUrl(Constants.POSTER_URI_SMALL))
-                .error(R.drawable.placeholder_poster)
-                .into(poster, object : Callback {
-                    override fun onSuccess() {
-                        val placeHolder = poster.drawable
-                        setBackgroundColor((placeHolder as BitmapDrawable).bitmap)
-                        Picasso.get()
-                                .load(getPosterUrl(Constants.POSTER_URI_ORIGINAL))
-                                .placeholder(placeHolder)
-                                .into(poster, object : Callback {
-                                    override fun onSuccess() {
-                                        Snackbar.make(poster, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show()
-                                    }
+            .load(getPosterUrl(Constants.POSTER_URI_SMALL))
+            .error(R.drawable.placeholder_poster)
+            .into(poster, object : Callback {
+                override fun onSuccess() {
+                    val placeHolder = poster.drawable
+                    setBackgroundColor((placeHolder as BitmapDrawable).bitmap)
+                    Picasso.get()
+                        .load(getPosterUrl(Constants.POSTER_URI_ORIGINAL))
+                        .placeholder(placeHolder)
+                        .into(poster, object : Callback {
+                            override fun onSuccess() {
+                                Snackbar.make(poster, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show()
+                            }
 
-                                    override fun onError(e: Exception) {
-                                        poster.setImageDrawable(placeHolder)
-                                    }
-                                })
-                    }
+                            override fun onError(e: Exception) {
+                                poster.setImageDrawable(placeHolder)
+                            }
+                        })
+                }
 
-                    override fun onError(e: Exception) {
-                        displayPoster()
-                    }
-                })
+                override fun onError(e: Exception) {
+                    displayPoster()
+                }
+            })
     }
 
     private fun setBackgroundColor(moviePoster: Bitmap) {
@@ -91,8 +93,8 @@ class PosterActivity : AppCompatActivity() {
 
     private fun getPosterUrl(postUri: String): String {
         return postUri
-                .replace("<posterName>", posterPath ?: "/")
-                .replace("<API_KEY>", getString(R.string.movieKey))
+            .replace("<posterName>", posterPath ?: "/")
+            .replace("<API_KEY>", getString(R.string.movieKey))
     }
 
     companion object {

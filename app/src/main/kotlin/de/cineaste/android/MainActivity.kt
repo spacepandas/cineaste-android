@@ -88,7 +88,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
                 Toast.makeText(
                     this,
                     R.string.missing_permission,
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             else -> {
             }
@@ -129,7 +130,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         fm.beginTransaction()
             .replace(
                 R.id.content_container,
-                fragment, fragment.javaClass.name)
+                fragment, fragment.javaClass.name
+            )
             .addToBackStack(null)
             .commit()
     }
@@ -186,7 +188,12 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
             if (menuItem.title != null) {
                 val spanString = SpannableString(menuItem.title.toString())
-                spanString.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.toolbar_text)), 0, spanString.length, 0)
+                spanString.setSpan(
+                    ForegroundColorSpan(ContextCompat.getColor(this, R.color.toolbar_text)),
+                    0,
+                    spanString.length,
+                    0
+                )
                 menuItem.title = spanString
             }
 
@@ -352,7 +359,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val bundle = Bundle()
         bundle.putString(
             WatchState.WATCH_STATE_TYPE.name,
-            state.name)
+            state.name
+        )
         watchlistFragment.arguments = bundle
         return watchlistFragment
     }
@@ -362,7 +370,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         val bundle = Bundle()
         bundle.putString(
             WatchState.WATCH_STATE_TYPE.name,
-            state.name)
+            state.name
+        )
         seriesListFragment.arguments = bundle
         return seriesListFragment
     }

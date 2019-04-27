@@ -38,8 +38,9 @@ data class NearbyMessage(
             val nearbyMessageString = String(message.content).trim { it <= ' ' }
 
             return GSON.fromJson(
-                    String(nearbyMessageString.toByteArray(Charsets.UTF_8)),
-                    NearbyMessage::class.java)
+                String(nearbyMessageString.toByteArray(Charsets.UTF_8)),
+                NearbyMessage::class.java
+            )
         }
     }
 }

@@ -69,8 +69,9 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         result.itemAnimator = DefaultItemAnimator()
 
         val resultAdapter = ResultAdapter(
-                results,
-                this)
+            results,
+            this
+        )
         result.adapter = resultAdapter
     }
 

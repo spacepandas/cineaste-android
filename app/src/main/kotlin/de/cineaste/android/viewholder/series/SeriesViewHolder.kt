@@ -12,7 +12,13 @@ import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.ItemClickListener
 
-class SeriesViewHolder(itemView: View, listener: ItemClickListener, context: Context, state: WatchState, private val onEpisodeWatchedClickListener: SeriesListAdapter.OnEpisodeWatchedClickListener) : AbstractSeriesViewHolder(itemView, listener, context) {
+class SeriesViewHolder(
+    itemView: View,
+    listener: ItemClickListener,
+    context: Context,
+    state: WatchState,
+    private val onEpisodeWatchedClickListener: SeriesListAdapter.OnEpisodeWatchedClickListener
+) : AbstractSeriesViewHolder(itemView, listener, context) {
 
     private val seasons: TextView = itemView.findViewById(R.id.season)
     private val currentStatus: TextView = itemView.findViewById(R.id.current)
@@ -28,9 +34,11 @@ class SeriesViewHolder(itemView: View, listener: ItemClickListener, context: Con
         setBaseInformation(series)
 
         seasons.text = resources.getString(R.string.seasons, series.numberOfSeasons.toString())
-        currentStatus.text = resources.getString(R.string.currentStatus,
-                series.currentNumberOfSeason.toString(),
-                series.currentNumberOfEpisode.toString())
+        currentStatus.text = resources.getString(
+            R.string.currentStatus,
+            series.currentNumberOfSeason.toString(),
+            series.currentNumberOfEpisode.toString()
+        )
 
         episodeSeen.setOnClickListener { onEpisodeWatchedClickListener.onEpisodeWatchedClick(series, position) }
 

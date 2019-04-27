@@ -79,7 +79,7 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
 
     private fun seriesAddError(series: Series, index: Int) {
         val snackbar = Snackbar
-                .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
+            .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
         snackbar.show()
         seriesQueryAdapter.addSerie(series, index)
     }

@@ -44,7 +44,13 @@ class SeriesLoader(context: Context) {
         })
     }
 
-    private fun loadEpisodesOfSeason(responseCounter: CountDownLatch, season: Season, client: NetworkClient, seriesId: Long, callback: SeriesCallback) {
+    private fun loadEpisodesOfSeason(
+        responseCounter: CountDownLatch,
+        season: Season,
+        client: NetworkClient,
+        seriesId: Long,
+        callback: SeriesCallback
+    ) {
         client.addRequest(getSeasonRequest(seriesId, season.seasonNumber), object : NetworkCallback {
             override fun onFailure() {
                 callback.onFailure()

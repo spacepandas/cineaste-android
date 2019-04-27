@@ -52,8 +52,11 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private lateinit var timeOut: Runnable
 
     private val myUUid: String
-        get() = getUUID(getSharedPreferences(
-                applicationContext.packageName, Context.MODE_PRIVATE))
+        get() = getUUID(
+            getSharedPreferences(
+                applicationContext.packageName, Context.MODE_PRIVATE
+            )
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +89,7 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private fun initializeTimeout() {
         timeOut = Runnable {
             val snackbar = Snackbar
-                    .make(nearbyUserRv, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG)
+                .make(nearbyUserRv, R.string.no_friends_found_try_again, Snackbar.LENGTH_LONG)
             snackbar.show()
         }
     }

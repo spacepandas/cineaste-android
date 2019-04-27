@@ -18,7 +18,8 @@ import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.viewholder.series.EpisodeViewHolder
 
-class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateChangeListener, EpisodeViewHolder.OnDescriptionShowToggleListener {
+class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateChangeListener,
+    EpisodeViewHolder.OnDescriptionShowToggleListener {
 
     private var seriesId: Long = 0
     private var seasonId: Long = 0

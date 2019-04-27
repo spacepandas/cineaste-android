@@ -8,7 +8,10 @@ import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.series.SeriesSearchViewHolder
 
-class SeriesSearchQueryAdapter(private val listener: ItemClickListener, private val seriesStateChange: OnSeriesStateChange) : RecyclerView.Adapter<SeriesSearchViewHolder>() {
+class SeriesSearchQueryAdapter(
+    private val listener: ItemClickListener,
+    private val seriesStateChange: OnSeriesStateChange
+) : RecyclerView.Adapter<SeriesSearchViewHolder>() {
     private val dataSet = ArrayList<Series>()
 
     interface OnSeriesStateChange {
@@ -32,8 +35,8 @@ class SeriesSearchQueryAdapter(private val listener: ItemClickListener, private 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesSearchViewHolder {
         val view = LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.card_series_search, parent, false)
+            .from(parent.context)
+            .inflate(R.layout.card_series_search, parent, false)
         return SeriesSearchViewHolder(view, listener, parent.context, seriesStateChange)
     }
 

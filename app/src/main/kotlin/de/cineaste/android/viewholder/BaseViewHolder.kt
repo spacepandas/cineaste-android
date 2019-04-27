@@ -14,7 +14,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-abstract class BaseViewHolder protected constructor(protected val view: View, protected val listener: ItemClickListener, private val context: Context) : RecyclerView.ViewHolder(view) {
+abstract class BaseViewHolder protected constructor(
+    protected val view: View,
+    protected val listener: ItemClickListener,
+    private val context: Context
+) : RecyclerView.ViewHolder(view) {
 
     protected val title: TextView = view.findViewById(R.id.title)
     protected val resources: Resources = context.resources
@@ -22,13 +26,13 @@ abstract class BaseViewHolder protected constructor(protected val view: View, pr
 
     protected fun setPoster(posterName: String?) {
         val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", posterName ?: "/")
-                .replace("<API_KEY>", context.getString(R.string.movieKey))
+            .replace("<posterName>", posterName ?: "/")
+            .replace("<API_KEY>", context.getString(R.string.movieKey))
         Picasso.get()
-                .load(posterUri)
-                .resize(222, 334)
-                .error(R.drawable.placeholder_poster)
-                .into(poster)
+            .load(posterUri)
+            .resize(222, 334)
+            .error(R.drawable.placeholder_poster)
+            .into(poster)
     }
 
     protected fun convertDate(date: Date): String {

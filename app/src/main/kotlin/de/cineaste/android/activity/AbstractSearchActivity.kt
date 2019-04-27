@@ -68,9 +68,11 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
         val intent = getIntentForDetailActivity(itemId)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = ActivityOptions.makeSceneTransitionAnimation(this,
-                    Pair.create(views[0], "card"),
-                    Pair.create(views[1], "poster"))
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                this,
+                Pair.create(views[0], "card"),
+                Pair.create(views[1], "poster")
+            )
             this.startActivity(intent, options.toBundle())
         } else {
             this.startActivity(intent)
@@ -91,8 +93,10 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
         recyclerView = findViewById(R.id.search_recycler_view)
         val layoutManager = LinearLayoutManager(this)
         val divider = ContextCompat.getDrawable(recyclerView.context, R.drawable.divider)
-        val itemDecor = DividerItemDecoration(recyclerView.context,
-            layoutManager.orientation)
+        val itemDecor = DividerItemDecoration(
+            recyclerView.context,
+            layoutManager.orientation
+        )
         divider?.let {
             itemDecor.setDrawable(it)
         }
@@ -178,7 +182,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
 
     private fun showNetworkError() {
         val snackbar = Snackbar
-                .make(recyclerView, R.string.noInternet, Snackbar.LENGTH_LONG)
+            .make(recyclerView, R.string.noInternet, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
 

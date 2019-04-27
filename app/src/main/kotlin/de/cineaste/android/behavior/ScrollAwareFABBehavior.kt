@@ -11,7 +11,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Suppress("unused")
-class ScrollAwareFABBehavior(@Suppress("UNUSED_PARAMETER")context: Context, @Suppress("UNUSED_PARAMETER")attrs: AttributeSet) : FloatingActionButton.Behavior() {
+class ScrollAwareFABBehavior(@Suppress("UNUSED_PARAMETER") context: Context, @Suppress("UNUSED_PARAMETER") attrs: AttributeSet) :
+    FloatingActionButton.Behavior() {
 
     override fun onStartNestedScroll(
         coordinatorLayout: CoordinatorLayout,
@@ -23,12 +24,13 @@ class ScrollAwareFABBehavior(@Suppress("UNUSED_PARAMETER")context: Context, @Sup
     ): Boolean {
 
         return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL || super.onStartNestedScroll(
-                coordinatorLayout,
-                child,
-                directTargetChild,
-                target,
-                nestedScrollAxes,
-                type)
+            coordinatorLayout,
+            child,
+            directTargetChild,
+            target,
+            nestedScrollAxes,
+            type
+        )
     }
 
     override fun onNestedScroll(
@@ -42,14 +44,15 @@ class ScrollAwareFABBehavior(@Suppress("UNUSED_PARAMETER")context: Context, @Sup
         type: Int
     ) {
         super.onNestedScroll(
-                coordinatorLayout,
-                child,
-                target,
-                dxConsumed,
-                dyConsumed,
-                dxUnconsumed,
-                dyUnconsumed,
-                type)
+            coordinatorLayout,
+            child,
+            target,
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            type
+        )
 
         if (dyConsumed > 0 && child.visibility == View.VISIBLE) {
             child.hide()

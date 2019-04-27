@@ -49,13 +49,13 @@ class SeasonViewHolder(
     private fun setMoviePoster(season: Season) {
         val posterName = season.posterPath
         val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", posterName ?: "/")
-                .replace("<API_KEY>", context.getString(R.string.movieKey))
+            .replace("<posterName>", posterName ?: "/")
+            .replace("<API_KEY>", context.getString(R.string.movieKey))
         Picasso.get()
-                .load(posterUri)
-                .resize(342, 513)
-                .error(R.drawable.placeholder_poster)
-                .into(poster)
+            .load(posterUri)
+            .resize(342, 513)
+            .error(R.drawable.placeholder_poster)
+            .into(poster)
     }
 
     private fun convertDate(date: Date?): String {

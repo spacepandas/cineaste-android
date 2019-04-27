@@ -34,7 +34,8 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
+class SeriesDetailActivity : AppCompatActivity(), ItemClickListener,
+    SeriesDetailAdapter.SeriesStateManipulationClickListener, View.OnClickListener {
 
     private var state: Int = 0
     private var seriesId: Long = 0
@@ -76,7 +77,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
             R.id.more_info -> {
                 currentSeries?.let { series ->
                     val tmdbUri = Constants.THE_MOVIE_DB_SERIES_URI
-                            .replace("<SERIES_ID>", series.id.toString())
+                        .replace("<SERIES_ID>", series.id.toString())
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUri))
                     startActivity(browserIntent)
                 }
@@ -86,7 +87,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
                 currentSeries?.let { series ->
                     val sharingIntent = Intent(Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
-                    val shareBodyText = "${series.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace("<SERIES_ID>", series.id.toString())}"
+                    val shareBodyText = "${series.name} ${Constants.THE_MOVIE_DB_SERIES_URI.replace(
+                        "<SERIES_ID>",
+                        series.id.toString()
+                    )}"
                     sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_series))
                     sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
                     startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_series)))
@@ -136,8 +140,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun showAddToast() {
         currentSeries?.let { series ->
-            Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                    series.name), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this, this.resources.getString(
+                    R.string.movieAdd,
+                    series.name
+                ), Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -206,8 +214,10 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
             startActivity(intent)
         } else {
-            val snackBar = Snackbar.make(layout,
-                    R.string.notAvailableDuringSearch, Snackbar.LENGTH_SHORT)
+            val snackBar = Snackbar.make(
+                layout,
+                R.string.notAvailableDuringSearch, Snackbar.LENGTH_SHORT
+            )
             snackBar.show()
         }
     }
@@ -334,24 +344,24 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
         if (state != R.string.searchState) {
 
             seriesLoader.loadCompleteSeries(seriesId,
-                    object : SeriesCallback {
-                        override fun onFailure() {
-                            GlobalScope.launch(Main) { showNetworkError() }
-                        }
+                object : SeriesCallback {
+                    override fun onFailure() {
+                        GlobalScope.launch(Main) { showNetworkError() }
+                    }
 
-                        override fun onSuccess(series: Series) {
-                            val oldSeries = currentSeries
-                            oldSeries?.let {
-                                series.isWatched = oldSeries.isWatched
-                                series.listPosition = oldSeries.listPosition
-                            }
-                            seriesDbHelper.update(series)
-                            GlobalScope.launch(Main) {
-                                setPoster(series)
-                                adapter.updateSeries(series)
-                            }
+                    override fun onSuccess(series: Series) {
+                        val oldSeries = currentSeries
+                        oldSeries?.let {
+                            series.isWatched = oldSeries.isWatched
+                            series.listPosition = oldSeries.listPosition
+                        }
+                        seriesDbHelper.update(series)
+                        GlobalScope.launch(Main) {
+                            setPoster(series)
+                            adapter.updateSeries(series)
                         }
                     }
+                }
             )
         }
     }
@@ -366,12 +376,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun setPoster(series: Series) {
         val posterUri = Constants.POSTER_URI_ORIGINAL
-                .replace("<posterName>", series.backdropPath ?: "/")
-                .replace("<API_KEY>", getString(R.string.movieKey))
+            .replace("<posterName>", series.backdropPath ?: "/")
+            .replace("<API_KEY>", getString(R.string.movieKey))
         Picasso.get()
-                .load(posterUri)
-                .error(R.drawable.placeholder_poster)
-                .into(poster)
+            .load(posterUri)
+            .error(R.drawable.placeholder_poster)
+            .into(poster)
     }
 
     private fun loadRequestedSeries() {
@@ -442,7 +452,7 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener, SeriesDetai
 
     private fun showNetworkError() {
         val snackbar = Snackbar
-                .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
+            .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
 }

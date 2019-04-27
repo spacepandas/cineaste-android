@@ -36,14 +36,29 @@ class SeriesDao private constructor(context: Context) : BaseDao(context) {
     fun read(selection: String?, selectionArgs: Array<String>?, orderBy: String?): List<Series> {
         val series = ArrayList<Series>()
 
-        val projection = arrayOf(SeriesEntry.ID, SeriesEntry.COLUMN_SERIES_NAME, SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE, SeriesEntry.COLUMN_SERIES_VOTE_COUNT, SeriesEntry.COLUMN_SERIES_DESCRIPTION, SeriesEntry.COLUMN_SERIES_RELEASE_DATE, SeriesEntry.COLUMN_SERIES_IN_PRODUCTION, SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES, SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS, SeriesEntry.COLUMN_SERIES_POSTER_PATH, SeriesEntry.COLUMN_SERIES_BACKDROP_PATH, SeriesEntry.COLUMN_SERIES_SERIES_WATCHED, SeriesEntry.COLUMN_SERIES_LIST_POSITION)
+        val projection = arrayOf(
+            SeriesEntry.ID,
+            SeriesEntry.COLUMN_SERIES_NAME,
+            SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE,
+            SeriesEntry.COLUMN_SERIES_VOTE_COUNT,
+            SeriesEntry.COLUMN_SERIES_DESCRIPTION,
+            SeriesEntry.COLUMN_SERIES_RELEASE_DATE,
+            SeriesEntry.COLUMN_SERIES_IN_PRODUCTION,
+            SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES,
+            SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS,
+            SeriesEntry.COLUMN_SERIES_POSTER_PATH,
+            SeriesEntry.COLUMN_SERIES_BACKDROP_PATH,
+            SeriesEntry.COLUMN_SERIES_SERIES_WATCHED,
+            SeriesEntry.COLUMN_SERIES_LIST_POSITION
+        )
 
         val c = readDb.query(
-                SeriesEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs, null, null,
-                orderBy, null)
+            SeriesEntry.TABLE_NAME,
+            projection,
+            selection,
+            selectionArgs, null, null,
+            orderBy, null
+        )
 
         if (c.moveToFirst()) {
             do {
@@ -54,17 +69,23 @@ class SeriesDao private constructor(context: Context) : BaseDao(context) {
                 currentSeries.voteCount = c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_VOTE_COUNT))
                 currentSeries.description = c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_DESCRIPTION))
                 try {
-                    currentSeries.releaseDate = sdf.parse(c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_RELEASE_DATE)))
+                    currentSeries.releaseDate =
+                        sdf.parse(c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_RELEASE_DATE)))
                 } catch (ex: Exception) {
                     currentSeries.releaseDate = null
                 }
 
-                currentSeries.isInProduction = c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_IN_PRODUCTION)) > 0
-                currentSeries.numberOfEpisodes = c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES))
-                currentSeries.numberOfSeasons = c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS))
+                currentSeries.isInProduction =
+                    c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_IN_PRODUCTION)) > 0
+                currentSeries.numberOfEpisodes =
+                    c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES))
+                currentSeries.numberOfSeasons =
+                    c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS))
                 currentSeries.posterPath = c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_POSTER_PATH))
-                currentSeries.backdropPath = c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_BACKDROP_PATH))
-                currentSeries.isWatched = c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_SERIES_WATCHED)) > 0
+                currentSeries.backdropPath =
+                    c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_BACKDROP_PATH))
+                currentSeries.isWatched =
+                    c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_SERIES_WATCHED)) > 0
                 currentSeries.listPosition = c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_LIST_POSITION))
 
                 series.add(currentSeries)
@@ -114,10 +135,11 @@ class SeriesDao private constructor(context: Context) : BaseDao(context) {
         val selectionArg = if (watchState) "1" else "0"
 
         val c = writeDb.query(
-                SeriesEntry.TABLE_NAME,
-                projection,
-                selection,
-                arrayOf(selectionArg), null, null, null)
+            SeriesEntry.TABLE_NAME,
+            projection,
+            selection,
+            arrayOf(selectionArg), null, null, null
+        )
         if (c.moveToFirst()) {
             do {
                 highestPos = c.getInt(c.getColumnIndex("POS"))

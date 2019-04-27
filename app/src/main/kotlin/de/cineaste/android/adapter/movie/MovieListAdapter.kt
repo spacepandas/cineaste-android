@@ -16,7 +16,12 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.LinkedList
 import java.util.Collections
 
-class MovieListAdapter(displayMessage: DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState) : BaseListAdapter(context, displayMessage, listener, state), OnMovieRemovedListener {
+class MovieListAdapter(
+    displayMessage: DisplayMessage,
+    context: Context,
+    listener: ItemClickListener,
+    state: WatchState
+) : BaseListAdapter(context, displayMessage, listener, state), OnMovieRemovedListener {
 
     private val db: MovieDbHelper = MovieDbHelper.getInstance(context)
     private var dataSet: MutableList<Movie> = ArrayList()
@@ -141,7 +146,10 @@ class MovieListAdapter(displayMessage: DisplayMessage, context: Context, listene
         notifyDataSetChanged()
     }
 
-    inner class FilterMovies internal constructor(private val adapter: MovieListAdapter, private val movieList: List<Movie>) : Filter() {
+    inner class FilterMovies internal constructor(
+        private val adapter: MovieListAdapter,
+        private val movieList: List<Movie>
+    ) : Filter() {
         private val filteredMovieList: MutableList<Movie>
 
         init {

@@ -10,7 +10,8 @@ import java.util.Locale
 
 import de.cineaste.android.util.Constants
 
-abstract class BaseDao protected constructor(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+abstract class BaseDao protected constructor(context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     protected val readDb: SQLiteDatabase = readableDatabase
     protected val writeDb: SQLiteDatabase = writableDatabase

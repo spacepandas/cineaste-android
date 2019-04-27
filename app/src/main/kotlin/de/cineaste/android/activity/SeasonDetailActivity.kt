@@ -77,16 +77,16 @@ class SeasonDetailActivity : AppCompatActivity() {
 
             if (posterPath.isNullOrEmpty()) {
                 Picasso.get()
-                        .load(R.drawable.placeholder_poster)
-                        .into(poster)
+                    .load(R.drawable.placeholder_poster)
+                    .into(poster)
             } else {
                 val posterUri = Constants.POSTER_URI_SMALL
-                        .replace("<posterName>", posterPath)
-                        .replace("<API_KEY>", getString(R.string.movieKey))
+                    .replace("<posterName>", posterPath)
+                    .replace("<API_KEY>", getString(R.string.movieKey))
                 Picasso.get()
-                        .load(posterUri)
-                        .error(R.drawable.placeholder_poster)
-                        .into(poster)
+                    .load(posterUri)
+                    .error(R.drawable.placeholder_poster)
+                    .into(poster)
 
                 poster.setOnClickListener {
                     val intent = Intent(this@SeasonDetailActivity, PosterActivity::class.java)

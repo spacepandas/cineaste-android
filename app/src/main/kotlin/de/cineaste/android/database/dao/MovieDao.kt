@@ -39,14 +39,27 @@ class MovieDao private constructor(context: Context) : BaseDao(context) {
     fun read(selection: String?, selectionArgs: Array<String>?, orderBy: String?): List<Movie> {
         val movies = ArrayList<Movie>()
 
-        val projection = arrayOf(MovieEntry.ID, MovieEntry.COLUMN_MOVIE_TITLE, MovieEntry.COlUMN_POSTER_PATH, MovieEntry.COLUMN_RUNTIME, MovieEntry.COLUMN_VOTE_AVERAGE, MovieEntry.COLUMN_VOTE_COUNT, MovieEntry.COLUMN_MOVIE_DESCRIPTION, MovieEntry.COLUMN_MOVIE_WATCHED, MovieEntry.COLUMN_MOVIE_WATCHED_DATE, MovieEntry.COLUMN_MOVIE_RELEASE_DATE, MovieEntry.COLUMN_MOVIE_LIST_POSITION)
+        val projection = arrayOf(
+            MovieEntry.ID,
+            MovieEntry.COLUMN_MOVIE_TITLE,
+            MovieEntry.COlUMN_POSTER_PATH,
+            MovieEntry.COLUMN_RUNTIME,
+            MovieEntry.COLUMN_VOTE_AVERAGE,
+            MovieEntry.COLUMN_VOTE_COUNT,
+            MovieEntry.COLUMN_MOVIE_DESCRIPTION,
+            MovieEntry.COLUMN_MOVIE_WATCHED,
+            MovieEntry.COLUMN_MOVIE_WATCHED_DATE,
+            MovieEntry.COLUMN_MOVIE_RELEASE_DATE,
+            MovieEntry.COLUMN_MOVIE_LIST_POSITION
+        )
 
         val c = readDb.query(
-                MovieEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs, null, null,
-                orderBy, null)
+            MovieEntry.TABLE_NAME,
+            projection,
+            selection,
+            selectionArgs, null, null,
+            orderBy, null
+        )
 
         if (c.moveToFirst()) {
             do {
@@ -59,10 +72,12 @@ class MovieDao private constructor(context: Context) : BaseDao(context) {
                 currentMovie.voteCount = c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_VOTE_COUNT))
                 currentMovie.description = c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_DESCRIPTION))
                 currentMovie.isWatched = c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED)) > 0
-                currentMovie.watchedDate = Date(c.getLong(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED_DATE)))
+                currentMovie.watchedDate =
+                    Date(c.getLong(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED_DATE)))
 
                 try {
-                    currentMovie.releaseDate = sdf.parse(c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_RELEASE_DATE)))
+                    currentMovie.releaseDate =
+                        sdf.parse(c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_RELEASE_DATE)))
                 } catch (ex: Exception) {
                     currentMovie.releaseDate = null
                 }
@@ -94,10 +109,11 @@ class MovieDao private constructor(context: Context) : BaseDao(context) {
         val selectionArg = if (watchState) "1" else "0"
 
         val c = writeDb.query(
-                MovieEntry.TABLE_NAME,
-                projection,
-                selection,
-                arrayOf(selectionArg), null, null, null)
+            MovieEntry.TABLE_NAME,
+            projection,
+            selection,
+            arrayOf(selectionArg), null, null, null
+        )
         if (c.moveToFirst()) {
             do {
                 highestPos = c.getInt(c.getColumnIndex("POS"))

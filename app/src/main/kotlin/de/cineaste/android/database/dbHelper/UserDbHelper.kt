@@ -13,9 +13,10 @@ class UserDbHelper private constructor(context: Context) : BaseDao(context) {
             val projection = arrayOf(UserEntry.ID, UserEntry.COLUMN_USER_NAME)
 
             val c = readDb.query(
-                    UserEntry.TABLE_NAME,
-                    projection,
-                    null, null, null, null, null, null)
+                UserEntry.TABLE_NAME,
+                projection,
+                null, null, null, null, null, null
+            )
 
             var user: User? = null
 

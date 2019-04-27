@@ -9,7 +9,8 @@ import de.cineaste.android.R
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.SeasonDetailFragment
 
-class SeasonPagerAdapter(fm: FragmentManager, private val series: Series, private val resources: Resources) : FragmentStatePagerAdapter(fm) {
+class SeasonPagerAdapter(fm: FragmentManager, private val series: Series, private val resources: Resources) :
+    FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         val fragment = SeasonDetailFragment()

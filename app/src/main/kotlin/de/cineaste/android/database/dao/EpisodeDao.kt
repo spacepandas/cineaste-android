@@ -19,8 +19,10 @@ class EpisodeDao private constructor(context: Context) : BaseDao(context) {
         values.put(EpisodeEntry.COLUMN_EPISODE_SEASON_ID, episode.seasonId)
         values.put(EpisodeEntry.COLUMN_EPISODE_WATCHED, if (episode.isWatched) 1 else 0)
 
-        writeDb.insert(EpisodeEntry.TABLE_NAME,
-                null, values)
+        writeDb.insert(
+            EpisodeEntry.TABLE_NAME,
+            null, values
+        )
     }
 
     fun create(episode: Episode, seriesId: Long, seasonId: Long) {
@@ -39,22 +41,33 @@ class EpisodeDao private constructor(context: Context) : BaseDao(context) {
     fun read(selection: String, selectionArgs: Array<String>): List<Episode> {
         val episodes = ArrayList<Episode>()
 
-        val projection = arrayOf(EpisodeEntry.ID, EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER, EpisodeEntry.COLUMN_EPISODE_NAME, EpisodeEntry.COLUMN_EPISODE_DESCRIPTION, EpisodeEntry.COLUMN_EPISODE_SERIES_ID, EpisodeEntry.COLUMN_EPISODE_SEASON_ID, EpisodeEntry.COLUMN_EPISODE_WATCHED)
+        val projection = arrayOf(
+            EpisodeEntry.ID,
+            EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER,
+            EpisodeEntry.COLUMN_EPISODE_NAME,
+            EpisodeEntry.COLUMN_EPISODE_DESCRIPTION,
+            EpisodeEntry.COLUMN_EPISODE_SERIES_ID,
+            EpisodeEntry.COLUMN_EPISODE_SEASON_ID,
+            EpisodeEntry.COLUMN_EPISODE_WATCHED
+        )
 
         val c = readDb.query(
-                EpisodeEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs, null, null,
-                EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER + " ASC", null)
+            EpisodeEntry.TABLE_NAME,
+            projection,
+            selection,
+            selectionArgs, null, null,
+            EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER + " ASC", null
+        )
 
         if (c.moveToFirst()) {
             do {
                 val currentEpisode = Episode()
                 currentEpisode.id = c.getLong(c.getColumnIndexOrThrow(EpisodeEntry.ID))
-                currentEpisode.episodeNumber = c.getInt(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER))
+                currentEpisode.episodeNumber =
+                    c.getInt(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER))
                 currentEpisode.name = c.getString(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_NAME))
-                currentEpisode.description = c.getString(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_DESCRIPTION))
+                currentEpisode.description =
+                    c.getString(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_DESCRIPTION))
                 currentEpisode.seriesId = c.getLong(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_SERIES_ID))
                 currentEpisode.seasonId = c.getLong(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_SEASON_ID))
                 currentEpisode.isWatched = c.getInt(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_WATCHED)) > 0
@@ -83,7 +96,11 @@ class EpisodeDao private constructor(context: Context) : BaseDao(context) {
     }
 
     fun deleteBySeriesId(seriesId: Long) {
-        writeDb.delete(EpisodeEntry.TABLE_NAME, EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ?", arrayOf(seriesId.toString() + ""))
+        writeDb.delete(
+            EpisodeEntry.TABLE_NAME,
+            EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ?",
+            arrayOf(seriesId.toString() + "")
+        )
     }
 
     companion object {

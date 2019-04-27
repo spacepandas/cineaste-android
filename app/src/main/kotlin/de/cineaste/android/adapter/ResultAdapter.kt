@@ -53,13 +53,13 @@ class ResultAdapter(
         fun assignData(matchingResult: MatchingResult, resultCounter: Int) {
             val posterPath = matchingResult.posterPath
             val posterUri = Constants.POSTER_URI_SMALL
-                    .replace("<posterName>", posterPath ?: "/")
-                    .replace("<API_KEY>", context.getString(R.string.movieKey))
+                .replace("<posterName>", posterPath ?: "/")
+                .replace("<API_KEY>", context.getString(R.string.movieKey))
             Picasso.get()
-                    .load(Uri.parse(posterUri))
-                    .resize(222, 334)
-                    .error(R.drawable.placeholder_poster)
-                    .into(moviePoster)
+                .load(Uri.parse(posterUri))
+                .resize(222, 334)
+                .error(R.drawable.placeholder_poster)
+                .into(moviePoster)
             watchedButton.setOnClickListener(this)
             title.text = matchingResult.title
             counter.text = String.format(Locale.getDefault(), "%d/%d", matchingResult.counter, resultCounter)

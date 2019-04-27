@@ -9,7 +9,12 @@ import de.cineaste.android.adapter.movie.MovieSearchQueryAdapter
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.listener.ItemClickListener
 
-class MovieSearchViewHolder(itemView: View, context: Context, private val movieStateChange: MovieSearchQueryAdapter.OnMovieStateChange, listener: ItemClickListener) : AbstractMovieViewHolder(itemView, context, listener) {
+class MovieSearchViewHolder(
+    itemView: View,
+    context: Context,
+    private val movieStateChange: MovieSearchQueryAdapter.OnMovieStateChange,
+    listener: ItemClickListener
+) : AbstractMovieViewHolder(itemView, context, listener) {
 
     private val addToWatchlistButton: Button = itemView.findViewById(R.id.to_watchlist_button)
     private val movieWatchedButton: Button = itemView.findViewById(R.id.history_button)

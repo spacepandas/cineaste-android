@@ -9,7 +9,8 @@ import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.BaseViewHolder
 
-abstract class AbstractMovieViewHolder(itemView: View, context: Context, listener: ItemClickListener) : BaseViewHolder(itemView, listener, context) {
+abstract class AbstractMovieViewHolder(itemView: View, context: Context, listener: ItemClickListener) :
+    BaseViewHolder(itemView, listener, context) {
 
     private val movieReleaseDate: TextView = itemView.findViewById(R.id.movieReleaseDate)
     lateinit var movieRuntime: TextView

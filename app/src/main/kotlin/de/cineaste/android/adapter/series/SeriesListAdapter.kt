@@ -15,7 +15,13 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.Collections
 import java.util.LinkedList
 
-class SeriesListAdapter(displayMessage: DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState, private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener) : BaseListAdapter(context, displayMessage, listener, state) {
+class SeriesListAdapter(
+    displayMessage: DisplayMessage,
+    context: Context,
+    listener: ItemClickListener,
+    state: WatchState,
+    private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener
+) : BaseListAdapter(context, displayMessage, listener, state) {
 
     private val db: SeriesDbHelper
     private var dataSet: MutableList<Series> = mutableListOf()
@@ -172,7 +178,10 @@ class SeriesListAdapter(displayMessage: DisplayMessage, context: Context, listen
         notifyDataSetChanged()
     }
 
-    inner class FilerSeries internal constructor(private val adapter: SeriesListAdapter, private val seriesList: List<Series>) : Filter() {
+    inner class FilerSeries internal constructor(
+        private val adapter: SeriesListAdapter,
+        private val seriesList: List<Series>
+    ) : Filter() {
         private val filteredSeriesList: MutableList<Series>
 
         init {

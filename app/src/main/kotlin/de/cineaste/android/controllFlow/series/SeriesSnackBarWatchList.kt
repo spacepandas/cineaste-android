@@ -11,7 +11,12 @@ import de.cineaste.android.adapter.series.SeriesListAdapter
 import de.cineaste.android.controllFlow.BaseSnackBar
 import de.cineaste.android.entity.series.Series
 
-class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLayoutManager, view: View, private val adapter: SeriesListAdapter, private val context: Context) : BaseSnackBar(linearLayoutManager, view) {
+class SeriesSnackBarWatchList internal constructor(
+    linearLayoutManager: LinearLayoutManager,
+    view: View,
+    private val adapter: SeriesListAdapter,
+    private val context: Context
+) : BaseSnackBar(linearLayoutManager, view) {
 
     override fun getSnackBarLeftSwipe(position: Int) {
         val seriesToBeDeleted = adapter.getItem(position)
@@ -20,8 +25,10 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
         val currentSeason = seriesToBeDeleted.currentNumberOfSeason
         val currentEpisode = seriesToBeDeleted.currentNumberOfEpisode
 
-        val mySnackbar = Snackbar.make(view,
-                R.string.series_deleted, Snackbar.LENGTH_LONG)
+        val mySnackbar = Snackbar.make(
+            view,
+            R.string.series_deleted, Snackbar.LENGTH_LONG
+        )
         mySnackbar.setAction(R.string.undo) {
             // do nothing
         }
@@ -29,7 +36,12 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                 when (event) {
                     Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.addDeletedItemToWatchListAgain(seriesToBeDeleted, position, currentSeason, currentEpisode)
+                        adapter.addDeletedItemToWatchListAgain(
+                            seriesToBeDeleted,
+                            position,
+                            currentSeason,
+                            currentEpisode
+                        )
                         val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
                         if (first >= position) {
                             linearLayoutManager.scrollToPosition(position)
@@ -54,7 +66,13 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
             val alertBuilder = AlertDialog.Builder(context)
             alertBuilder.setTitle(context.getString(R.string.seriesSeenHeadline, series.name))
             alertBuilder.setMessage(R.string.seriesStillInProduction)
-            alertBuilder.setPositiveButton(R.string.ok) { _, _ -> updateSeriesAndCreateSnackbar(position, message, series) }
+            alertBuilder.setPositiveButton(R.string.ok) { _, _ ->
+                updateSeriesAndCreateSnackbar(
+                    position,
+                    message,
+                    series
+                )
+            }
             alertBuilder.setNegativeButton(R.string.cancel) { _, _ -> adapter.addSeriesToList(series, position) }
 
             alertBuilder.create().show()
@@ -70,8 +88,10 @@ class SeriesSnackBarWatchList internal constructor(linearLayoutManager: LinearLa
         val currentEpisode = seriesToBeUpdated.currentNumberOfEpisode
 
         adapter.moveToHistory(seriesToBeUpdated)
-        val mySnackbar = Snackbar.make(view,
-                message, Snackbar.LENGTH_LONG)
+        val mySnackbar = Snackbar.make(
+            view,
+            message, Snackbar.LENGTH_LONG
+        )
         mySnackbar.setAction(R.string.undo) {
             // do nothing
         }

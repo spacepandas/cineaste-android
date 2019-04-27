@@ -96,14 +96,15 @@ class MovieLoader(context: Context) {
         }
 
         return Movie(
-                id,
-                posterPath,
-                title,
-                runtime,
-                voteAverage,
-                voteCount,
-                description,
-                releaseDate = releaseDate)
+            id,
+            posterPath,
+            title,
+            runtime,
+            voteAverage,
+            voteCount,
+            description,
+            releaseDate = releaseDate
+        )
     }
 
     private fun getReleaseDates(jsonString: JsonObject): HashMap<String, ReleaseDate> {

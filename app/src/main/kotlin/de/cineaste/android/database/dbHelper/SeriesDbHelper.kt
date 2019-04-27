@@ -61,7 +61,8 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     fun getUnWatchedEpisodesOfSeries(seriesId: Long): List<Episode> {
-        val selection = EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ? AND " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = 0"
+        val selection =
+            EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ? AND " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = 0"
         val selectionArgs = arrayOf(seriesId.toString())
 
         return episodeDao.read(selection, selectionArgs)

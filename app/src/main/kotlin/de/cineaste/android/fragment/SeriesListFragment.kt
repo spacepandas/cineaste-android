@@ -39,7 +39,13 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
 
     override val correctCallBack: ItemTouchHelper.Callback
         get() = if (watchState == WatchState.WATCH_STATE) {
-            WatchlistSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter, activity!!)
+            WatchlistSeriesTouchHelperCallback(
+                resources,
+                layoutManager,
+                customRecyclerView,
+                seriesListAdapter,
+                activity!!
+            )
         } else {
             HistoryListSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter)
         }
@@ -93,7 +99,8 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
         when (filterType) {
             FilterType.ALPHABETICAL -> seriesListAdapter.orderAlphabetical()
             FilterType.RELEASE_DATE -> seriesListAdapter.orderByReleaseDate()
-            else -> { }
+            else -> {
+            }
         }
 
         seriesListAdapter.notifyDataSetChanged()
