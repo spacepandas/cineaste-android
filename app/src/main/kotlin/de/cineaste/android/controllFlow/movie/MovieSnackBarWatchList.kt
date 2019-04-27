@@ -18,53 +18,49 @@ class MovieSnackBarWatchList internal constructor(
         val movieToBeDeleted = adapter.getItem(position)
         adapter.removeItem(position)
 
-        val mySnackbar = Snackbar.make(
+        val mySnackBar = Snackbar.make(
             view,
             R.string.movie_deleted, Snackbar.LENGTH_LONG
         )
-        mySnackbar.setAction(R.string.undo) {
+        mySnackBar.setAction(R.string.undo) {
             // do nothing
         }
-        mySnackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+        mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                when (event) {
-                    Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.restoreDeletedItem(movieToBeDeleted, position)
-                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (first >= position) {
-                            linearLayoutManager.scrollToPosition(position)
-                        }
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    adapter.restoreDeletedItem(movieToBeDeleted, position)
+                    val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (first >= position) {
+                        linearLayoutManager.scrollToPosition(position)
                     }
                 }
             }
         })
-        mySnackbar.show()
+        mySnackBar.show()
     }
 
     override fun getSnackBarRightSwipe(position: Int, message: Int) {
         val movieToBeUpdated = adapter.getItem(position)
         adapter.toggleItemOnList(movieToBeUpdated)
 
-        val mySnackbar = Snackbar.make(
+        val mySnackBar = Snackbar.make(
             view,
             message, Snackbar.LENGTH_LONG
         )
-        mySnackbar.setAction(R.string.undo) {
+        mySnackBar.setAction(R.string.undo) {
             // do nothing
         }
-        mySnackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+        mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                when (event) {
-                    Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.restoreToggleItemOnList(movieToBeUpdated, position)
-                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (first >= position) {
-                            linearLayoutManager.scrollToPosition(position)
-                        }
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    adapter.restoreToggleItemOnList(movieToBeUpdated, position)
+                    val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (first >= position) {
+                        linearLayoutManager.scrollToPosition(position)
                     }
                 }
             }
         })
-        mySnackbar.show()
+        mySnackBar.show()
     }
 }

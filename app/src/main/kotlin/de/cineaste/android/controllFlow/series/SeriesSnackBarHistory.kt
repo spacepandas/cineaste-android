@@ -30,13 +30,11 @@ class SeriesSnackBarHistory internal constructor(
         }
         mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                when (event) {
-                    Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.addDeletedItemToHistoryAgain(seriesToBeDeleted, position, currentSeason, currentEpisode)
-                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (first >= position) {
-                            linearLayoutManager.scrollToPosition(position)
-                        }
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    adapter.addDeletedItemToHistoryAgain(seriesToBeDeleted, position, currentSeason, currentEpisode)
+                    val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (first >= position) {
+                        linearLayoutManager.scrollToPosition(position)
                     }
                 }
             }
@@ -57,13 +55,11 @@ class SeriesSnackBarHistory internal constructor(
         }
         mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                when (event) {
-                    Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.moveBackToHistory(seriesToBeUpdated, position, currentSeason, currentEpisode)
-                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (first >= position) {
-                            linearLayoutManager.scrollToPosition(position)
-                        }
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    adapter.moveBackToHistory(seriesToBeUpdated, position, currentSeason, currentEpisode)
+                    val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (first >= position) {
+                        linearLayoutManager.scrollToPosition(position)
                     }
                 }
             }

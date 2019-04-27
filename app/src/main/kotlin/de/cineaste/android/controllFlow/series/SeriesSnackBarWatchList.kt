@@ -25,32 +25,30 @@ class SeriesSnackBarWatchList internal constructor(
         val currentSeason = seriesToBeDeleted.currentNumberOfSeason
         val currentEpisode = seriesToBeDeleted.currentNumberOfEpisode
 
-        val mySnackbar = Snackbar.make(
+        val mySnackBar = Snackbar.make(
             view,
             R.string.series_deleted, Snackbar.LENGTH_LONG
         )
-        mySnackbar.setAction(R.string.undo) {
+        mySnackBar.setAction(R.string.undo) {
             // do nothing
         }
-        mySnackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+        mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                when (event) {
-                    Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.addDeletedItemToWatchListAgain(
-                            seriesToBeDeleted,
-                            position,
-                            currentSeason,
-                            currentEpisode
-                        )
-                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (first >= position) {
-                            linearLayoutManager.scrollToPosition(position)
-                        }
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    adapter.addDeletedItemToWatchListAgain(
+                        seriesToBeDeleted,
+                        position,
+                        currentSeason,
+                        currentEpisode
+                    )
+                    val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (first >= position) {
+                        linearLayoutManager.scrollToPosition(position)
                     }
                 }
             }
         })
-        mySnackbar.show()
+        mySnackBar.show()
     }
 
     override fun getSnackBarRightSwipe(position: Int, message: Int) {
@@ -88,26 +86,24 @@ class SeriesSnackBarWatchList internal constructor(
         val currentEpisode = seriesToBeUpdated.currentNumberOfEpisode
 
         adapter.moveToHistory(seriesToBeUpdated)
-        val mySnackbar = Snackbar.make(
+        val mySnackBar = Snackbar.make(
             view,
             message, Snackbar.LENGTH_LONG
         )
-        mySnackbar.setAction(R.string.undo) {
+        mySnackBar.setAction(R.string.undo) {
             // do nothing
         }
-        mySnackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+        mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                when (event) {
-                    Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.moveBackToWatchList(seriesToBeUpdated, position, currentSeason, currentEpisode)
-                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (first >= position) {
-                            linearLayoutManager.scrollToPosition(position)
-                        }
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    adapter.moveBackToWatchList(seriesToBeUpdated, position, currentSeason, currentEpisode)
+                    val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (first >= position) {
+                        linearLayoutManager.scrollToPosition(position)
                     }
                 }
             }
         })
-        mySnackbar.show()
+        mySnackBar.show()
     }
 }
