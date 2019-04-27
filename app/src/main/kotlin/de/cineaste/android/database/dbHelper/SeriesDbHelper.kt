@@ -1,10 +1,10 @@
 package de.cineaste.android.database.dbHelper
 
 import android.content.Context
-
 import java.util.ArrayList
-
-import de.cineaste.android.database.dao.BaseDao
+import de.cineaste.android.database.dao.BaseDao.EpisodeEntry
+import de.cineaste.android.database.dao.BaseDao.SeasonEntry
+import de.cineaste.android.database.dao.BaseDao.SeriesEntry
 import de.cineaste.android.database.dao.EpisodeDao
 import de.cineaste.android.database.dao.SeasonDao
 import de.cineaste.android.database.dao.SeriesDao
@@ -12,10 +12,6 @@ import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.entity.series.Season
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.WatchState
-
-import de.cineaste.android.database.dao.BaseDao.EpisodeEntry
-import de.cineaste.android.database.dao.BaseDao.SeasonEntry
-import de.cineaste.android.database.dao.BaseDao.SeriesEntry
 
 class SeriesDbHelper private constructor(context: Context) {
 
