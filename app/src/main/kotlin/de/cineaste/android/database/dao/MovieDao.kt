@@ -31,7 +31,10 @@ class MovieDao private constructor(context: Context) : BaseDao(context) {
             values.put(MovieEntry.COLUMN_MOVIE_RELEASE_DATE, "")
         }
 
-        values.put(MovieEntry.COLUMN_MOVIE_LIST_POSITION, getHighestListPosition(movie.isWatched) + 1)
+        values.put(
+            MovieEntry.COLUMN_MOVIE_LIST_POSITION,
+            getHighestListPosition(movie.isWatched) + 1
+        )
 
         writeDb.insert(MovieEntry.TABLE_NAME, null, values)
     }
@@ -65,13 +68,19 @@ class MovieDao private constructor(context: Context) : BaseDao(context) {
             do {
                 val currentMovie = Movie()
                 currentMovie.id = c.getLong(c.getColumnIndexOrThrow(MovieEntry.ID))
-                currentMovie.title = c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_TITLE))
-                currentMovie.posterPath = c.getString(c.getColumnIndexOrThrow(MovieEntry.COlUMN_POSTER_PATH))
+                currentMovie.title =
+                    c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_TITLE))
+                currentMovie.posterPath =
+                    c.getString(c.getColumnIndexOrThrow(MovieEntry.COlUMN_POSTER_PATH))
                 currentMovie.runtime = c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_RUNTIME))
-                currentMovie.voteAverage = c.getDouble(c.getColumnIndexOrThrow(MovieEntry.COLUMN_VOTE_AVERAGE))
-                currentMovie.voteCount = c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_VOTE_COUNT))
-                currentMovie.description = c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_DESCRIPTION))
-                currentMovie.isWatched = c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED)) > 0
+                currentMovie.voteAverage =
+                    c.getDouble(c.getColumnIndexOrThrow(MovieEntry.COLUMN_VOTE_AVERAGE))
+                currentMovie.voteCount =
+                    c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_VOTE_COUNT))
+                currentMovie.description =
+                    c.getString(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_DESCRIPTION))
+                currentMovie.isWatched =
+                    c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED)) > 0
                 currentMovie.watchedDate =
                     Date(c.getLong(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_WATCHED_DATE)))
 
@@ -82,7 +91,8 @@ class MovieDao private constructor(context: Context) : BaseDao(context) {
                     currentMovie.releaseDate = null
                 }
 
-                currentMovie.listPosition = c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_LIST_POSITION))
+                currentMovie.listPosition =
+                    c.getInt(c.getColumnIndexOrThrow(MovieEntry.COLUMN_MOVIE_LIST_POSITION))
 
                 movies.add(currentMovie)
             } while (c.moveToNext())

@@ -47,7 +47,12 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
                 activity!!
             )
         } else {
-            HistoryListSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter)
+            HistoryListSeriesTouchHelperCallback(
+                resources,
+                layoutManager,
+                customRecyclerView,
+                seriesListAdapter
+            )
         }
 
     override fun onEpisodeWatchedClick(series: Series, position: Int) {

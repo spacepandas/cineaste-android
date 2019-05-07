@@ -44,7 +44,8 @@ class ResultAdapter(
         holder.assignData(results[position], NearbyMessageHandler.size)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         internal val moviePoster: ImageView = itemView.findViewById(R.id.poster_image_view)
         private val watchedButton: Button = itemView.findViewById(R.id.history_button)
         internal val title: TextView = itemView.findViewById(R.id.title)
@@ -62,7 +63,8 @@ class ResultAdapter(
                 .into(moviePoster)
             watchedButton.setOnClickListener(this)
             title.text = matchingResult.title
-            counter.text = String.format(Locale.getDefault(), "%d/%d", matchingResult.counter, resultCounter)
+            counter.text =
+                String.format(Locale.getDefault(), "%d/%d", matchingResult.counter, resultCounter)
         }
 
         override fun onClick(v: View) {

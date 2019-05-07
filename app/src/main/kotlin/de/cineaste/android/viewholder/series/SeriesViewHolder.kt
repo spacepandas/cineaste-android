@@ -40,9 +40,19 @@ class SeriesViewHolder(
             series.currentNumberOfEpisode.toString()
         )
 
-        episodeSeen.setOnClickListener { onEpisodeWatchedClickListener.onEpisodeWatchedClick(series, position) }
+        episodeSeen.setOnClickListener {
+            onEpisodeWatchedClickListener.onEpisodeWatchedClick(
+                series,
+                position
+            )
+        }
 
-        view.setOnClickListener { view -> listener.onItemClickListener(series.id, arrayOf(view, poster, title)) }
+        view.setOnClickListener { view ->
+            listener.onItemClickListener(
+                series.id,
+                arrayOf(view, poster, title)
+            )
+        }
     }
 
     fun onItemSelected() {

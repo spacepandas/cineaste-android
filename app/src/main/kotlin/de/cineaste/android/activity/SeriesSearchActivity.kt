@@ -22,7 +22,8 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.OnSeriesStateChange {
+class SeriesSearchActivity : AbstractSearchActivity(),
+    SeriesSearchQueryAdapter.OnSeriesStateChange {
 
     private lateinit var seriesQueryAdapter: SeriesSearchQueryAdapter
 

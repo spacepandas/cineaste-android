@@ -31,8 +31,10 @@ class SeasonViewHolder(
     private val resources: Resources = context.resources
 
     fun assignData(season: Season) {
-        seasonNumber.text = resources.getString(R.string.currentSeason, season.seasonNumber.toString())
-        numberOfEpisodes.text = resources.getString(R.string.episodes, season.episodeCount.toString())
+        seasonNumber.text =
+            resources.getString(R.string.currentSeason, season.seasonNumber.toString())
+        numberOfEpisodes.text =
+            resources.getString(R.string.episodes, season.episodeCount.toString())
         if (season.releaseDate == null) {
             releaseDate.visibility = View.GONE
         } else {

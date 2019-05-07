@@ -71,7 +71,12 @@ class SeriesSnackBarWatchList internal constructor(
                     series
                 )
             }
-            alertBuilder.setNegativeButton(R.string.cancel) { _, _ -> adapter.addSeriesToList(series, position) }
+            alertBuilder.setNegativeButton(R.string.cancel) { _, _ ->
+                adapter.addSeriesToList(
+                    series,
+                    position
+                )
+            }
 
             alertBuilder.create().show()
         } else {
@@ -100,7 +105,12 @@ class SeriesSnackBarWatchList internal constructor(
         mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                 if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                    adapter.moveBackToWatchList(seriesToBeUpdated, position, currentSeason, currentEpisode)
+                    adapter.moveBackToWatchList(
+                        seriesToBeUpdated,
+                        position,
+                        currentSeason,
+                        currentEpisode
+                    )
                     val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
                     if (first >= position) {
                         linearLayoutManager.scrollToPosition(position)

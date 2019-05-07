@@ -64,11 +64,16 @@ class SeasonDao private constructor(context: Context) : BaseDao(context) {
                     currentSeason.releaseDate = null
                 }
 
-                currentSeason.episodeCount = c.getInt(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_EPISODE_COUNT))
-                currentSeason.posterPath = c.getString(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_POSTER_PATH))
-                currentSeason.seasonNumber = c.getInt(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_SEASON_NUMBER))
-                currentSeason.seriesId = c.getLong(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_SERIES_ID))
-                currentSeason.isWatched = c.getInt(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_WATCHED)) > 0
+                currentSeason.episodeCount =
+                    c.getInt(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_EPISODE_COUNT))
+                currentSeason.posterPath =
+                    c.getString(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_POSTER_PATH))
+                currentSeason.seasonNumber =
+                    c.getInt(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_SEASON_NUMBER))
+                currentSeason.seriesId =
+                    c.getLong(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_SERIES_ID))
+                currentSeason.isWatched =
+                    c.getInt(c.getColumnIndexOrThrow(SeasonEntry.COLUMN_SEASON_WATCHED)) > 0
 
                 seasons.add(currentSeason)
             } while (c.moveToNext())

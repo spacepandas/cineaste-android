@@ -9,5 +9,10 @@ data class MatchingResult(
     var title: String = "",
     val counter: Int
 ) {
-    constructor(movieDto: MovieDto, counter: Int) : this(movieDto.id, movieDto.posterPath, movieDto.title, counter)
+    constructor(movieDto: MovieDto, counter: Int) : this(
+        movieDto.id,
+        movieDto.posterPath,
+        movieDto.title,
+        counter
+    )
 }

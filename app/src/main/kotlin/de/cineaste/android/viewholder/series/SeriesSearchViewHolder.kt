@@ -41,6 +41,11 @@ class SeriesSearchViewHolder(
             seriesStateChange.onSeriesStateChangeListener(series, v.id, index)
         }
 
-        view.setOnClickListener { view -> listener.onItemClickListener(series.id, arrayOf(view, poster)) }
+        view.setOnClickListener { view ->
+            listener.onItemClickListener(
+                series.id,
+                arrayOf(view, poster)
+            )
+        }
     }
 }

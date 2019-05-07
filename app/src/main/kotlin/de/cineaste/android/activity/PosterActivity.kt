@@ -66,7 +66,11 @@ class PosterActivity : AppCompatActivity() {
                         .placeholder(placeHolder)
                         .into(poster, object : Callback {
                             override fun onSuccess() {
-                                Snackbar.make(poster, R.string.poster_reloaded, Snackbar.LENGTH_SHORT).show()
+                                Snackbar.make(
+                                    poster,
+                                    R.string.poster_reloaded,
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
                             }
 
                             override fun onError(e: Exception) {

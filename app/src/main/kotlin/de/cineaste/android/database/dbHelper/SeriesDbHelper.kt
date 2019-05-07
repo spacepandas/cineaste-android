@@ -51,7 +51,11 @@ class SeriesDbHelper private constructor(context: Context) {
         val selection = SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + " = ?"
         val selectionArgs = arrayOf(selectionArg)
 
-        val seriesList = seriesDao.read(selection, selectionArgs, SeriesEntry.COLUMN_SERIES_LIST_POSITION + " ASC")
+        val seriesList = seriesDao.read(
+            selection,
+            selectionArgs,
+            SeriesEntry.COLUMN_SERIES_LIST_POSITION + " ASC"
+        )
 
         for (series in seriesList) {
             loadRemainingInformation(series)

@@ -38,9 +38,19 @@ class MovieListFragment : BaseListFragment() {
 
     override val correctCallBack: ItemTouchHelper.Callback
         get() = if (watchState == WatchState.WATCH_STATE) {
-            WatchlistMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, resources)
+            WatchlistMovieTouchHelperCallback(
+                layoutManager,
+                movieListAdapter,
+                customRecyclerView,
+                resources
+            )
         } else {
-            HistoryListMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, resources)
+            HistoryListMovieTouchHelperCallback(
+                layoutManager,
+                movieListAdapter,
+                customRecyclerView,
+                resources
+            )
         }
 
     override fun updateAdapter() {

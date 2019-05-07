@@ -348,19 +348,22 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun updateMovie() {
         if (state != R.string.searchState) {
-            MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback {
-                override fun onFailure() {
-                    GlobalScope.launch(Main) { showNetworkError() }
-                }
-
-                override fun onSuccess(movie: Movie) {
-                    GlobalScope.launch(Main) {
-                        assignData(movie)
-                        updateMovieDetails(movie)
-                        movieDbHelper.createOrUpdate(currentMovie ?: movie)
+            MovieLoader(this).loadLocalizedMovie(
+                movieId,
+                Locale.getDefault(),
+                object : MovieCallback {
+                    override fun onFailure() {
+                        GlobalScope.launch(Main) { showNetworkError() }
                     }
-                }
-            })
+
+                    override fun onSuccess(movie: Movie) {
+                        GlobalScope.launch(Main) {
+                            assignData(movie)
+                            updateMovieDetails(movie)
+                            movieDbHelper.createOrUpdate(currentMovie ?: movie)
+                        }
+                    }
+                })
         }
     }
 

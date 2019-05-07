@@ -65,12 +65,16 @@ class EpisodeDao private constructor(context: Context) : BaseDao(context) {
                 currentEpisode.id = c.getLong(c.getColumnIndexOrThrow(EpisodeEntry.ID))
                 currentEpisode.episodeNumber =
                     c.getInt(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER))
-                currentEpisode.name = c.getString(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_NAME))
+                currentEpisode.name =
+                    c.getString(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_NAME))
                 currentEpisode.description =
                     c.getString(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_DESCRIPTION))
-                currentEpisode.seriesId = c.getLong(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_SERIES_ID))
-                currentEpisode.seasonId = c.getLong(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_SEASON_ID))
-                currentEpisode.isWatched = c.getInt(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_WATCHED)) > 0
+                currentEpisode.seriesId =
+                    c.getLong(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_SERIES_ID))
+                currentEpisode.seasonId =
+                    c.getLong(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_SEASON_ID))
+                currentEpisode.isWatched =
+                    c.getInt(c.getColumnIndexOrThrow(EpisodeEntry.COLUMN_EPISODE_WATCHED)) > 0
 
                 episodes.add(currentEpisode)
             } while (c.moveToNext())

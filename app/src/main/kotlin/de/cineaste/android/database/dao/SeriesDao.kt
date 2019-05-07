@@ -28,7 +28,10 @@ class SeriesDao private constructor(context: Context) : BaseDao(context) {
         values.put(SeriesEntry.COLUMN_SERIES_POSTER_PATH, series.posterPath)
         values.put(SeriesEntry.COLUMN_SERIES_BACKDROP_PATH, series.backdropPath)
         values.put(SeriesEntry.COLUMN_SERIES_SERIES_WATCHED, if (series.isWatched) 1 else 0)
-        values.put(SeriesEntry.COLUMN_SERIES_LIST_POSITION, getHighestListPosition(series.isWatched))
+        values.put(
+            SeriesEntry.COLUMN_SERIES_LIST_POSITION,
+            getHighestListPosition(series.isWatched)
+        )
 
         writeDb.insert(SeriesEntry.TABLE_NAME, null, values)
     }
@@ -64,10 +67,14 @@ class SeriesDao private constructor(context: Context) : BaseDao(context) {
             do {
                 val currentSeries = Series()
                 currentSeries.id = c.getLong(c.getColumnIndexOrThrow(SeriesEntry.ID))
-                currentSeries.name = c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NAME))
-                currentSeries.voteAverage = c.getDouble(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE))
-                currentSeries.voteCount = c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_VOTE_COUNT))
-                currentSeries.description = c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_DESCRIPTION))
+                currentSeries.name =
+                    c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NAME))
+                currentSeries.voteAverage =
+                    c.getDouble(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE))
+                currentSeries.voteCount =
+                    c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_VOTE_COUNT))
+                currentSeries.description =
+                    c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_DESCRIPTION))
                 try {
                     currentSeries.releaseDate =
                         sdf.parse(c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_RELEASE_DATE)))
@@ -81,12 +88,14 @@ class SeriesDao private constructor(context: Context) : BaseDao(context) {
                     c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES))
                 currentSeries.numberOfSeasons =
                     c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS))
-                currentSeries.posterPath = c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_POSTER_PATH))
+                currentSeries.posterPath =
+                    c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_POSTER_PATH))
                 currentSeries.backdropPath =
                     c.getString(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_BACKDROP_PATH))
                 currentSeries.isWatched =
                     c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_SERIES_WATCHED)) > 0
-                currentSeries.listPosition = c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_LIST_POSITION))
+                currentSeries.listPosition =
+                    c.getInt(c.getColumnIndexOrThrow(SeriesEntry.COLUMN_SERIES_LIST_POSITION))
 
                 series.add(currentSeries)
             } while (c.moveToNext())

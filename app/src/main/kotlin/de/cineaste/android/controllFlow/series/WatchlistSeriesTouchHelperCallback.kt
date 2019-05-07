@@ -18,7 +18,12 @@ class WatchlistSeriesTouchHelperCallback(
 ) : BaseSeriesTouchHelperCallback(resources, linearLayoutManager, recyclerView, seriesListAdapter) {
 
     override val snackBar: BaseSnackBar
-        get() = SeriesSnackBarWatchList(linearLayoutManager, recyclerView, seriesListAdapter, context)
+        get() = SeriesSnackBarWatchList(
+            linearLayoutManager,
+            recyclerView,
+            seriesListAdapter,
+            context
+        )
 
     override val icon: Int
         get() = R.drawable.ic_add_to_history_white

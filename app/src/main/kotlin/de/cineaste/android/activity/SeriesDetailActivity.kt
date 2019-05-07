@@ -93,7 +93,12 @@ class SeriesDetailActivity : AppCompatActivity(), ItemClickListener,
                     )}"
                     sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_series))
                     sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
-                    startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_series)))
+                    startActivity(
+                        Intent.createChooser(
+                            sharingIntent,
+                            getString(R.string.share_series)
+                        )
+                    )
                 }
                 return true
             }

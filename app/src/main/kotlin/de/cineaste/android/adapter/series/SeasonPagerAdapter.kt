@@ -32,6 +32,9 @@ class SeasonPagerAdapter(
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return resources.getString(R.string.currentSeason, series.seasons[position].seasonNumber.toString())
+        return resources.getString(
+            R.string.currentSeason,
+            series.seasons[position].seasonNumber.toString()
+        )
     }
 }

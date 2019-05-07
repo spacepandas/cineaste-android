@@ -33,6 +33,7 @@ class EpisodeViewHolder(
             hideDescription: ImageButton,
             description: TextView
         )
+
         fun hideDescription(
             showDescription: ImageButton,
             hideDescription: ImageButton,
@@ -59,7 +60,11 @@ class EpisodeViewHolder(
         }
 
         hideDescription.setOnClickListener {
-            onDescriptionShowToggleListener.hideDescription(showDescription, hideDescription, description)
+            onDescriptionShowToggleListener.hideDescription(
+                showDescription,
+                hideDescription,
+                description
+            )
         }
 
         checkBox.setOnClickListener { onEpisodeWatchStateChangeListener.watchStateChanged(episode) }

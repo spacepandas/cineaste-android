@@ -51,20 +51,22 @@ class SeriesLoader(context: Context) {
         seriesId: Long,
         callback: SeriesCallback
     ) {
-        client.addRequest(getSeasonRequest(seriesId, season.seasonNumber), object : NetworkCallback {
-            override fun onFailure() {
-                callback.onFailure()
-            }
-
-            override fun onSuccess(response: NetworkResponse) {
-                responseCounter.countDown()
-                val episodes = parseResponse(response)
-                for (episode in episodes) {
-                    episode.seasonId = season.id
+        client.addRequest(
+            getSeasonRequest(seriesId, season.seasonNumber),
+            object : NetworkCallback {
+                override fun onFailure() {
+                    callback.onFailure()
                 }
-                season.episodes = episodes
-            }
-        })
+
+                override fun onSuccess(response: NetworkResponse) {
+                    responseCounter.countDown()
+                    val episodes = parseResponse(response)
+                    for (episode in episodes) {
+                        episode.seasonId = season.id
+                    }
+                    season.episodes = episodes
+                }
+            })
     }
 
     private fun parseResponse(response: NetworkResponse): List<Episode> {

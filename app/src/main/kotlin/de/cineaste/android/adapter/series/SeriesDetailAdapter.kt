@@ -144,7 +144,8 @@ class SeriesDetailAdapter(
                 releaseDate.visibility = View.GONE
             }
 
-            episodes.text = resources.getString(R.string.episodes, series.numberOfEpisodes.toString())
+            episodes.text =
+                resources.getString(R.string.episodes, series.numberOfEpisodes.toString())
             seasons.text = resources.getString(R.string.seasons, series.numberOfSeasons.toString())
             currentStatus.text = resources.getString(
                 R.string.currentStatus,

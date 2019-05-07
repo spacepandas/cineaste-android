@@ -138,7 +138,10 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         setHasOptionsMenu(true)
         if (savedInstanceState != null) {
             val currentState =
-                savedInstanceState.getString(WatchState.WATCH_STATE_TYPE.name, WatchState.WATCH_STATE.name)
+                savedInstanceState.getString(
+                    WatchState.WATCH_STATE_TYPE.name,
+                    WatchState.WATCH_STATE.name
+                )
             this.watchState = getWatchState(currentState)
         }
 

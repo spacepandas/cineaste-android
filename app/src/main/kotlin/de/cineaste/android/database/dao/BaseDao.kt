@@ -117,56 +117,61 @@ abstract class BaseDao protected constructor(context: Context) :
         private const val INTEGER_TYPE = " INTEGER"
         private const val REAL_TYPE = " REAL"
         private const val COMMA_SEP = ","
-        private const val SQL_CREATE_USER_ENTRIES = "CREATE TABLE IF NOT EXISTS " + UserEntry.TABLE_NAME + " (" +
-                UserEntry.ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT" + COMMA_SEP +
-                UserEntry.COLUMN_USER_NAME + TEXT_TYPE +
-                " )"
-        private const val SQL_CREATE_MOVIE_ENTRIES = "CREATE TABLE IF NOT EXISTS " + MovieEntry.TABLE_NAME + " (" +
-                MovieEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
-                MovieEntry.COLUMN_MOVIE_TITLE + TEXT_TYPE + COMMA_SEP +
-                MovieEntry.COlUMN_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
-                MovieEntry.COLUMN_RUNTIME + INTEGER_TYPE + COMMA_SEP +
-                MovieEntry.COLUMN_VOTE_AVERAGE + REAL_TYPE + COMMA_SEP +
-                MovieEntry.COLUMN_VOTE_COUNT + INTEGER_TYPE + COMMA_SEP +
-                MovieEntry.COLUMN_MOVIE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                MovieEntry.COLUMN_MOVIE_WATCHED + INTEGER_TYPE + COMMA_SEP +
-                MovieEntry.COLUMN_MOVIE_WATCHED_DATE + INTEGER_TYPE + COMMA_SEP +
-                MovieEntry.COLUMN_MOVIE_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
-                MovieEntry.COLUMN_MOVIE_LIST_POSITION + INTEGER_TYPE +
-                " )"
-        private const val SQL_CREATE_SERIES_ENTRIES = "CREATE TABLE IF NOT EXISTS " + SeriesEntry.TABLE_NAME + " (" +
-                SeriesEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_NAME + TEXT_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE + REAL_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_VOTE_COUNT + INTEGER_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_IN_PRODUCTION + INTEGER_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES + INTEGER_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS + INTEGER_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_BACKDROP_PATH + TEXT_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + INTEGER_TYPE + COMMA_SEP +
-                SeriesEntry.COLUMN_SERIES_LIST_POSITION + INTEGER_TYPE +
-                " )"
-        private const val SQL_CREATE_SEASON_ENTRIES = "CREATE TABLE IF NOT EXISTS " + SeasonEntry.TABLE_NAME + " (" +
-                SeasonEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
-                SeasonEntry.COLUMN_SEASON_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
-                SeasonEntry.COLUMN_SEASON_EPISODE_COUNT + INTEGER_TYPE + COMMA_SEP +
-                SeasonEntry.COLUMN_SEASON_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
-                SeasonEntry.COLUMN_SEASON_SEASON_NUMBER + INTEGER_TYPE + COMMA_SEP +
-                SeasonEntry.COLUMN_SEASON_WATCHED + INTEGER_TYPE + COMMA_SEP +
-                SeasonEntry.COLUMN_SEASON_SERIES_ID + INTEGER_TYPE + " )"
+        private const val SQL_CREATE_USER_ENTRIES =
+            "CREATE TABLE IF NOT EXISTS " + UserEntry.TABLE_NAME + " (" +
+                    UserEntry.ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT" + COMMA_SEP +
+                    UserEntry.COLUMN_USER_NAME + TEXT_TYPE +
+                    " )"
+        private const val SQL_CREATE_MOVIE_ENTRIES =
+            "CREATE TABLE IF NOT EXISTS " + MovieEntry.TABLE_NAME + " (" +
+                    MovieEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
+                    MovieEntry.COLUMN_MOVIE_TITLE + TEXT_TYPE + COMMA_SEP +
+                    MovieEntry.COlUMN_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_RUNTIME + INTEGER_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_VOTE_AVERAGE + REAL_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_VOTE_COUNT + INTEGER_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_MOVIE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_MOVIE_WATCHED + INTEGER_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_MOVIE_WATCHED_DATE + INTEGER_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_MOVIE_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
+                    MovieEntry.COLUMN_MOVIE_LIST_POSITION + INTEGER_TYPE +
+                    " )"
+        private const val SQL_CREATE_SERIES_ENTRIES =
+            "CREATE TABLE IF NOT EXISTS " + SeriesEntry.TABLE_NAME + " (" +
+                    SeriesEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_NAME + TEXT_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_VOTE_AVERAGE + REAL_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_VOTE_COUNT + INTEGER_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_IN_PRODUCTION + INTEGER_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_NUMBER_OF_EPISODES + INTEGER_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_NUMBER_OF_SEASONS + INTEGER_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_BACKDROP_PATH + TEXT_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + INTEGER_TYPE + COMMA_SEP +
+                    SeriesEntry.COLUMN_SERIES_LIST_POSITION + INTEGER_TYPE +
+                    " )"
+        private const val SQL_CREATE_SEASON_ENTRIES =
+            "CREATE TABLE IF NOT EXISTS " + SeasonEntry.TABLE_NAME + " (" +
+                    SeasonEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
+                    SeasonEntry.COLUMN_SEASON_RELEASE_DATE + TEXT_TYPE + COMMA_SEP +
+                    SeasonEntry.COLUMN_SEASON_EPISODE_COUNT + INTEGER_TYPE + COMMA_SEP +
+                    SeasonEntry.COLUMN_SEASON_POSTER_PATH + TEXT_TYPE + COMMA_SEP +
+                    SeasonEntry.COLUMN_SEASON_SEASON_NUMBER + INTEGER_TYPE + COMMA_SEP +
+                    SeasonEntry.COLUMN_SEASON_WATCHED + INTEGER_TYPE + COMMA_SEP +
+                    SeasonEntry.COLUMN_SEASON_SERIES_ID + INTEGER_TYPE + " )"
 
-        private const val SQL_CREATE_EPISODE_ENTRIES = "CREATE TABLE IF NOT EXISTS " + EpisodeEntry.TABLE_NAME + " (" +
-                EpisodeEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
-                EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER + INTEGER_TYPE + COMMA_SEP +
-                EpisodeEntry.COLUMN_EPISODE_NAME + TEXT_TYPE + COMMA_SEP +
-                EpisodeEntry.COLUMN_EPISODE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                EpisodeEntry.COLUMN_EPISODE_SERIES_ID + INTEGER_TYPE + COMMA_SEP +
-                EpisodeEntry.COLUMN_EPISODE_SEASON_ID + INTEGER_TYPE + COMMA_SEP +
-                EpisodeEntry.COLUMN_EPISODE_WATCHED + INTEGER_TYPE +
-                " )"
+        private const val SQL_CREATE_EPISODE_ENTRIES =
+            "CREATE TABLE IF NOT EXISTS " + EpisodeEntry.TABLE_NAME + " (" +
+                    EpisodeEntry.ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP +
+                    EpisodeEntry.COLUMN_EPISODE_EPISODE_NUMBER + INTEGER_TYPE + COMMA_SEP +
+                    EpisodeEntry.COLUMN_EPISODE_NAME + TEXT_TYPE + COMMA_SEP +
+                    EpisodeEntry.COLUMN_EPISODE_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                    EpisodeEntry.COLUMN_EPISODE_SERIES_ID + INTEGER_TYPE + COMMA_SEP +
+                    EpisodeEntry.COLUMN_EPISODE_SEASON_ID + INTEGER_TYPE + COMMA_SEP +
+                    EpisodeEntry.COLUMN_EPISODE_WATCHED + INTEGER_TYPE +
+                    " )"
 
         private const val DATABASE_VERSION = Constants.DATABASE_VERSION
         private const val DATABASE_NAME = Constants.DATABASE_NAME
