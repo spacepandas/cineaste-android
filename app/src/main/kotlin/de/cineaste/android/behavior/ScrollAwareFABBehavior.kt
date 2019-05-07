@@ -11,7 +11,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Suppress("unused")
-class ScrollAwareFABBehavior(@Suppress("UNUSED_PARAMETER") context: Context, @Suppress("UNUSED_PARAMETER") attrs: AttributeSet) :
+class ScrollAwareFABBehavior(
+    @Suppress("UNUSED_PARAMETER") context: Context,
+    @Suppress("UNUSED_PARAMETER") attrs: AttributeSet
+) :
     FloatingActionButton.Behavior() {
 
     override fun onStartNestedScroll(

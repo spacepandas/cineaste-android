@@ -80,7 +80,11 @@ class SeriesSnackBarWatchList internal constructor(
     }
 
     // todo  reset to current season end episode after dismiss update current status
-    private fun updateSeriesAndCreateSnackBar(position: Int, message: Int, seriesToBeUpdated: Series) {
+    private fun updateSeriesAndCreateSnackBar(
+        position: Int,
+        message: Int,
+        seriesToBeUpdated: Series
+    ) {
 
         val currentSeason = seriesToBeUpdated.currentNumberOfSeason
         val currentEpisode = seriesToBeUpdated.currentNumberOfEpisode

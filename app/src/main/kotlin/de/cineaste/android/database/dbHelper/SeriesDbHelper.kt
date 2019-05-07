@@ -199,7 +199,12 @@ class SeriesDbHelper private constructor(context: Context) {
         moveBackToList(series, prevSeason, prevEpisode, true)
     }
 
-    private fun moveBackToList(series: Series, prevSeason: Int, prevEpisode: Int, watchState: Boolean) {
+    private fun moveBackToList(
+        series: Series,
+        prevSeason: Int,
+        prevEpisode: Int,
+        watchState: Boolean
+    ) {
         moveBetweenLists(series, watchState)
         for (season in series.seasons) {
             if (season.seasonNumber < prevSeason) {

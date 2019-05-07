@@ -53,7 +53,11 @@ class SeasonDetailActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         viewPager.currentItem = currentSeasonIndex()
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
                 // do nothing
             }
 

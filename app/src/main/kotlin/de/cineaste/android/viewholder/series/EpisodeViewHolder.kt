@@ -28,8 +28,16 @@ class EpisodeViewHolder(
     }
 
     interface OnDescriptionShowToggleListener {
-        fun showDescription(showDescription: ImageButton, hideDescription: ImageButton, description: TextView)
-        fun hideDescription(showDescription: ImageButton, hideDescription: ImageButton, description: TextView)
+        fun showDescription(
+            showDescription: ImageButton,
+            hideDescription: ImageButton,
+            description: TextView
+        )
+        fun hideDescription(
+            showDescription: ImageButton,
+            hideDescription: ImageButton,
+            description: TextView
+        )
     }
 
     fun assignData(episode: Episode) {

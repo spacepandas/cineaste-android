@@ -73,13 +73,23 @@ class SeriesListAdapter(
         }
     }
 
-    fun addDeletedItemToHistoryAgain(series: Series, position: Int, prevSeason: Int, prevEpisode: Int) {
+    fun addDeletedItemToHistoryAgain(
+        series: Series,
+        position: Int,
+        prevSeason: Int,
+        prevEpisode: Int
+    ) {
         db.addToHistory(series)
         db.moveBackToHistory(series, prevSeason, prevEpisode)
         addSeriesToList(series, position)
     }
 
-    fun addDeletedItemToWatchListAgain(series: Series, position: Int, prevSeason: Int, prevEpisode: Int) {
+    fun addDeletedItemToWatchListAgain(
+        series: Series,
+        position: Int,
+        prevSeason: Int,
+        prevEpisode: Int
+    ) {
         db.addToWatchList(series)
         db.moveBackToWatchList(series, prevSeason, prevEpisode)
         addSeriesToList(series, position)
@@ -218,5 +228,8 @@ class SeriesListAdapter(
         }
     }
 
-    inner class UpdatedSeries internal constructor(internal val prev: Series, internal val passiveSeries: Series)
+    inner class UpdatedSeries internal constructor(
+        internal val prev: Series,
+        internal val passiveSeries: Series
+    )
 }

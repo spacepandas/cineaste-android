@@ -10,7 +10,11 @@ import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.BaseViewHolder
 
-abstract class AbstractSeriesViewHolder(itemView: View, listener: ItemClickListener, context: Context) :
+abstract class AbstractSeriesViewHolder(
+    itemView: View,
+    listener: ItemClickListener,
+    context: Context
+) :
     BaseViewHolder(itemView, listener, context) {
 
     private val vote: TextView = itemView.findViewById(R.id.vote)

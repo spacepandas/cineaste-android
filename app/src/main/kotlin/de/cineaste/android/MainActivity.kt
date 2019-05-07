@@ -84,7 +84,9 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         grantResults: IntArray
     ) {
         when (requestCode) {
-            1 -> if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            1 -> if (grantResults.isNotEmpty() &&
+                grantResults[0] != PackageManager.PERMISSION_GRANTED
+            ) {
                 Toast.makeText(
                     this,
                     R.string.missing_permission,
@@ -113,7 +115,10 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         checkPermissions()
 
         if (savedInstanceState == null) {
-            replaceFragment(fm, getBaseWatchlistFragment(WatchState.WATCH_STATE))
+            replaceFragment(
+                fm,
+                getBaseWatchlistFragment(WatchState.WATCH_STATE)
+            )
         }
     }
 
@@ -136,13 +141,19 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             .commit()
     }
 
-    private fun replaceFragmentPopBackStack(fm: FragmentManager, fragment: Fragment) {
+    private fun replaceFragmentPopBackStack(
+        fm: FragmentManager,
+        fragment: Fragment
+    ) {
         fm.popBackStack()
         replaceFragment(fm, fragment)
     }
 
     private fun checkPermissions() {
-        val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val permissions = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
 
         val listPermissionsNeeded = ArrayList<String>()
         for (p in permissions) {
@@ -153,7 +164,11 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
 
         if (listPermissionsNeeded.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toTypedArray(), 1)
+            ActivityCompat.requestPermissions(
+                this,
+                listPermissionsNeeded.toTypedArray(),
+                1
+            )
         }
     }
 
@@ -167,7 +182,9 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
 
     private fun initNavDrawer() {
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
-        navigationView.setNavigationItemSelectedListener(CustomDrawerClickListener())
+        navigationView.setNavigationItemSelectedListener(
+            CustomDrawerClickListener()
+        )
 
         colorMenu(navigationView.menu)
 
@@ -189,7 +206,12 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             if (menuItem.title != null) {
                 val spanString = SpannableString(menuItem.title.toString())
                 spanString.setSpan(
-                    ForegroundColorSpan(ContextCompat.getColor(this, R.color.toolbar_text)),
+                    ForegroundColorSpan(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.toolbar_text
+                        )
+                    ),
                     0,
                     spanString.length,
                     0
@@ -200,7 +222,12 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
             val drawable = menuItem.icon
             if (drawable != null) {
                 drawable.mutate()
-                drawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP)
+                drawable.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.colorPrimary
+                    ), PorterDuff.Mode.SRC_ATOP
+                )
             }
 
             val subMenu = menuItem.subMenu
@@ -210,29 +237,35 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         }
     }
 
-    private inner class CustomDrawerClickListener : NavigationView.OnNavigationItemSelectedListener {
+    private inner class CustomDrawerClickListener :
+        NavigationView.OnNavigationItemSelectedListener {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {
                 R.id.show_movie_watchlist -> {
-                    val watchlistFragment = getBaseWatchlistFragment(WatchState.WATCH_STATE)
+                    val watchlistFragment =
+                        getBaseWatchlistFragment(WatchState.WATCH_STATE)
                     replaceFragmentPopBackStack(fm, watchlistFragment)
                 }
                 R.id.show_movie_watchedlist -> {
-                    val historyFragment = getBaseWatchlistFragment(WatchState.WATCHED_STATE)
+                    val historyFragment =
+                        getBaseWatchlistFragment(WatchState.WATCHED_STATE)
                     replaceFragmentPopBackStack(fm, historyFragment)
                 }
                 R.id.show_series_watchlist -> {
-                    val seriesWatchlistFragment = getSeriesListFragment(WatchState.WATCH_STATE)
+                    val seriesWatchlistFragment =
+                        getSeriesListFragment(WatchState.WATCH_STATE)
                     replaceFragmentPopBackStack(fm, seriesWatchlistFragment)
                 }
                 R.id.show_series_watchedlist -> {
-                    val seriesHistoryFragment = getSeriesListFragment(WatchState.WATCHED_STATE)
+                    val seriesHistoryFragment =
+                        getSeriesListFragment(WatchState.WATCHED_STATE)
                     replaceFragmentPopBackStack(fm, seriesHistoryFragment)
                 }
                 R.id.exportMovies -> createExportFile()
                 R.id.importMovies -> selectImportFile()
                 R.id.about -> {
-                    val intent = Intent(this@MainActivity, AboutActivity::class.java)
+                    val intent =
+                        Intent(this@MainActivity, AboutActivity::class.java)
                     startActivity(intent)
                 }
             }
@@ -261,7 +294,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         importExportObject.movies = movieDbHelper.readAllMovies()
         importExportObject.series = seriesDbHelper.allSeries
 
-        val successfullyExported = ExportService.export(importExportObject, uri, this@MainActivity)
+        val successfullyExported =
+            ExportService.export(importExportObject, uri, this@MainActivity)
 
         var snackBarMessage = R.string.exportFailed
 
@@ -303,7 +337,8 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         baseListFragment.progressbar.visibility = View.VISIBLE
 
         GlobalScope.launch {
-            val importExportObject = ImportService.importFiles(uri, this@MainActivity)
+            val importExportObject =
+                ImportService.importFiles(uri, this@MainActivity)
             // todo find a better solution to save all files
             for (movie in importExportObject.movies) {
                 movieDbHelper.createOrUpdate(movie)

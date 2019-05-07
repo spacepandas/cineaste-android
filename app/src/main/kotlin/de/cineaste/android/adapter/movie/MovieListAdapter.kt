@@ -186,5 +186,8 @@ class MovieListAdapter(
         }
     }
 
-    inner class UpdatedMovies internal constructor(internal val prev: Movie, internal val passiveMovie: Movie)
+    inner class UpdatedMovies internal constructor(
+        internal val prev: Movie,
+        internal val passiveMovie: Movie
+    )
 }
