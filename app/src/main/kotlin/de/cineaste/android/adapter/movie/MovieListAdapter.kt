@@ -16,7 +16,12 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.LinkedList
 import java.util.Collections
 
-class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState) : BaseListAdapter(context, displayMessage, listener, state), OnMovieRemovedListener {
+class MovieListAdapter(
+    displayMessage: DisplayMessage,
+    context: Context,
+    listener: ItemClickListener,
+    state: WatchState
+) : BaseListAdapter(context, displayMessage, listener, state), OnMovieRemovedListener {
 
     private val db: MovieDbHelper = MovieDbHelper.getInstance(context)
     private var dataSet: MutableList<Movie> = ArrayList()
@@ -141,16 +146,19 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
         notifyDataSetChanged()
     }
 
-    inner class FilterMovies internal constructor(private val adapter: MovieListAdapter, private val movieList: List<Movie>) : Filter() {
+    inner class FilterMovies internal constructor(
+        private val adapter: MovieListAdapter,
+        private val movieList: List<Movie>
+    ) : Filter() {
         private val filteredMovieList: MutableList<Movie>
 
         init {
             this.filteredMovieList = ArrayList()
         }
 
-        override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
             filteredMovieList.clear()
-            val results = Filter.FilterResults()
+            val results = FilterResults()
 
             if (constraint == null || constraint.isEmpty()) {
                 filteredMovieList.addAll(movieList)
@@ -170,7 +178,7 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
             return results
         }
 
-        override fun publishResults(charSequence: CharSequence, results: Filter.FilterResults) {
+        override fun publishResults(charSequence: CharSequence, results: FilterResults) {
             adapter.filteredDataSet.clear()
 
             adapter.filteredDataSet.addAll(results.values as List<Movie>)
@@ -178,5 +186,8 @@ class MovieListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: 
         }
     }
 
-    inner class UpdatedMovies internal constructor(internal val prev: Movie, internal val passiveMovie: Movie)
+    inner class UpdatedMovies internal constructor(
+        internal val prev: Movie,
+        internal val passiveMovie: Movie
+    )
 }

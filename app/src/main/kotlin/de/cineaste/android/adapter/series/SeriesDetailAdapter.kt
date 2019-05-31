@@ -56,38 +56,38 @@ class SeriesDetailAdapter(
         when (viewType) {
             0 -> {
                 val view = LayoutInflater
-                        .from(parent.context)
-                        .inflate(R.layout.series_detail_triangle, parent, false)
+                    .from(parent.context)
+                    .inflate(R.layout.series_detail_triangle, parent, false)
                 return TriangleViewHolder(view)
             }
             1 -> {
                 val view = LayoutInflater
-                        .from(parent.context)
-                        .inflate(R.layout.series_detail_base, parent, false)
+                    .from(parent.context)
+                    .inflate(R.layout.series_detail_base, parent, false)
                 return BaseViewHolder(view, parent.context, posterClickListener)
             }
             2 -> {
                 val view = LayoutInflater
-                        .from(parent.context)
-                        .inflate(R.layout.series_detail_buttons, parent, false)
+                    .from(parent.context)
+                    .inflate(R.layout.series_detail_buttons, parent, false)
                 return ButtonsViewHolder(view, state, listener)
             }
             3 -> {
                 val view = LayoutInflater
-                        .from(parent.context)
-                        .inflate(R.layout.series_detail_description, parent, false)
+                    .from(parent.context)
+                    .inflate(R.layout.series_detail_description, parent, false)
                 return DescriptionViewHolder(view, parent.context)
             }
             4 -> {
                 val view = LayoutInflater
-                        .from(parent.context)
-                        .inflate(R.layout.series_detail_seasons, parent, false)
+                    .from(parent.context)
+                    .inflate(R.layout.series_detail_seasons, parent, false)
                 return SeasonsListViewHolder(view, parent.context, clickListener)
             }
             else -> {
                 val view = LayoutInflater
-                        .from(parent.context)
-                        .inflate(R.layout.series_detail_base, parent, false)
+                    .from(parent.context)
+                    .inflate(R.layout.series_detail_base, parent, false)
                 return BaseViewHolder(view, parent.context, posterClickListener)
             }
         }
@@ -112,7 +112,7 @@ class SeriesDetailAdapter(
     }
 
     private inner class TriangleViewHolder internal constructor(itemView: View) :
-            RecyclerView.ViewHolder(itemView) {
+        RecyclerView.ViewHolder(itemView) {
         private val rating: TextView = itemView.findViewById(R.id.rating)
 
         internal fun assignData(series: Series) {
@@ -144,11 +144,14 @@ class SeriesDetailAdapter(
                 releaseDate.visibility = View.GONE
             }
 
-            episodes.text = resources.getString(R.string.episodes, series.numberOfEpisodes.toString())
+            episodes.text =
+                resources.getString(R.string.episodes, series.numberOfEpisodes.toString())
             seasons.text = resources.getString(R.string.seasons, series.numberOfSeasons.toString())
-            currentStatus.text = resources.getString(R.string.currentStatus,
-                    series.currentNumberOfSeason.toString(),
-                    series.currentNumberOfEpisode.toString())
+            currentStatus.text = resources.getString(
+                R.string.currentStatus,
+                series.currentNumberOfSeason.toString(),
+                series.currentNumberOfEpisode.toString()
+            )
             if (series.isInProduction) {
                 toBeContinued.visibility = View.VISIBLE
             } else {
@@ -162,13 +165,13 @@ class SeriesDetailAdapter(
         private fun setPoster(series: Series) {
             val posterName = series.posterPath
             val posterUri = Constants.POSTER_URI_SMALL
-                    .replace("<posterName>", posterName ?: "/")
-                    .replace("<API_KEY>", context.getString(R.string.movieKey))
+                .replace("<posterName>", posterName ?: "/")
+                .replace("<API_KEY>", context.getString(R.string.movieKey))
             Picasso.get()
-                    .load(posterUri)
-                    .resize(273, 410)
-                    .error(R.drawable.placeholder_poster)
-                    .into(poster)
+                .load(posterUri)
+                .resize(273, 410)
+                .error(R.drawable.placeholder_poster)
+                .into(poster)
         }
 
         private fun convertDate(date: Date?): String {
@@ -265,14 +268,13 @@ class SeriesDetailAdapter(
         itemView: View,
         private val context: Context,
         private val itemClickListener: ItemClickListener
-    )
-        : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(itemView) {
         private val recyclerView: RecyclerView = itemView.findViewById(R.id.seasonPoster)
 
         internal fun assignData(series: Series?) {
             recyclerView.layoutManager = StaggeredGridLayoutManager(
-                    2,
-                    StaggeredGridLayoutManager.VERTICAL
+                2,
+                StaggeredGridLayoutManager.VERTICAL
             )
             recyclerView.itemAnimator = DefaultItemAnimator()
             recyclerView.isNestedScrollingEnabled = false

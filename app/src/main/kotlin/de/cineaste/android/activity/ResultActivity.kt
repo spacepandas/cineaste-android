@@ -69,8 +69,9 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         result.itemAnimator = DefaultItemAnimator()
 
         val resultAdapter = ResultAdapter(
-                results,
-                this)
+            results,
+            this
+        )
         result.adapter = resultAdapter
     }
 
@@ -94,14 +95,18 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         val selectedMovie = movieDbHelper.readMovie(selectedMovieId)
 
         if (selectedMovie == null) {
-            MovieLoader(this).loadLocalizedMovie(results[position].id, Locale.getDefault(), (object : MovieCallback {
-                override fun onFailure() {
-                }
+            MovieLoader(this).loadLocalizedMovie(
+                results[position].id,
+                Locale.getDefault(),
+                (object : MovieCallback {
+                    override fun onFailure() {
+                    }
 
-                override fun onSuccess(movie: Movie) {
-                    GlobalScope.launch(Main) { updateMovie(movie) }
-                }
-            }))
+                    override fun onSuccess(movie: Movie) {
+                        GlobalScope.launch(Main) { updateMovie(movie) }
+                    }
+                })
+            )
         } else {
             updateMovie(selectedMovie)
         }

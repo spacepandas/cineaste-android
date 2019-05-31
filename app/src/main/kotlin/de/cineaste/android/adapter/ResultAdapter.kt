@@ -44,25 +44,27 @@ class ResultAdapter(
         holder.assignData(results[position], NearbyMessageHandler.size)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         internal val moviePoster: ImageView = itemView.findViewById(R.id.poster_image_view)
         private val watchedButton: Button = itemView.findViewById(R.id.history_button)
         internal val title: TextView = itemView.findViewById(R.id.title)
-        internal val counter: TextView = itemView.findViewById(R.id.movie_counter_tv)
+        private val counter: TextView = itemView.findViewById(R.id.movie_counter_tv)
 
         fun assignData(matchingResult: MatchingResult, resultCounter: Int) {
             val posterPath = matchingResult.posterPath
             val posterUri = Constants.POSTER_URI_SMALL
-                    .replace("<posterName>", posterPath ?: "/")
-                    .replace("<API_KEY>", context.getString(R.string.movieKey))
+                .replace("<posterName>", posterPath ?: "/")
+                .replace("<API_KEY>", context.getString(R.string.movieKey))
             Picasso.get()
-                    .load(Uri.parse(posterUri))
-                    .resize(222, 334)
-                    .error(R.drawable.placeholder_poster)
-                    .into(moviePoster)
+                .load(Uri.parse(posterUri))
+                .resize(222, 334)
+                .error(R.drawable.placeholder_poster)
+                .into(moviePoster)
             watchedButton.setOnClickListener(this)
             title.text = matchingResult.title
-            counter.text = String.format(Locale.getDefault(), "%d/%d", matchingResult.counter, resultCounter)
+            counter.text =
+                String.format(Locale.getDefault(), "%d/%d", matchingResult.counter, resultCounter)
         }
 
         override fun onClick(v: View) {

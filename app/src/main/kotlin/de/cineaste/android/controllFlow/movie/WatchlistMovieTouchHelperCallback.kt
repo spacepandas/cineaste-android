@@ -8,7 +8,12 @@ import de.cineaste.android.R
 import de.cineaste.android.adapter.movie.MovieListAdapter
 import de.cineaste.android.controllFlow.BaseSnackBar
 
-class WatchlistMovieTouchHelperCallback(linearLayoutManager: LinearLayoutManager, movieListAdapter: MovieListAdapter, recyclerView: RecyclerView, resources: Resources) : BaseMovieTouchHelperCallback(linearLayoutManager, movieListAdapter, recyclerView, resources) {
+class WatchlistMovieTouchHelperCallback(
+    linearLayoutManager: LinearLayoutManager,
+    movieListAdapter: MovieListAdapter,
+    recyclerView: RecyclerView,
+    resources: Resources
+) : BaseMovieTouchHelperCallback(linearLayoutManager, movieListAdapter, recyclerView, resources) {
 
     override val snackBar: BaseSnackBar
         get() = MovieSnackBarWatchList(linearLayoutManager, movieListAdapter, recyclerView)

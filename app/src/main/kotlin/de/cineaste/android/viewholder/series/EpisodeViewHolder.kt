@@ -10,7 +10,12 @@ import android.widget.TextView
 import de.cineaste.android.R
 import de.cineaste.android.entity.series.Episode
 
-class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeListener: OnEpisodeWatchStateChangeListener, private val onDescriptionShowToggleListener: OnDescriptionShowToggleListener, private val context: Context) : RecyclerView.ViewHolder(itemView) {
+class EpisodeViewHolder(
+    itemView: View,
+    private val onEpisodeWatchStateChangeListener: OnEpisodeWatchStateChangeListener,
+    private val onDescriptionShowToggleListener: OnDescriptionShowToggleListener,
+    private val context: Context
+) : RecyclerView.ViewHolder(itemView) {
 
     private val episodeTitle: TextView = itemView.findViewById(R.id.episodeTitle)
     private val description: TextView = itemView.findViewById(R.id.description)
@@ -23,8 +28,17 @@ class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeLis
     }
 
     interface OnDescriptionShowToggleListener {
-        fun showDescription(showDescription: ImageButton, hideDescription: ImageButton, description: TextView)
-        fun hideDescription(showDescription: ImageButton, hideDescription: ImageButton, description: TextView)
+        fun showDescription(
+            showDescription: ImageButton,
+            hideDescription: ImageButton,
+            description: TextView
+        )
+
+        fun hideDescription(
+            showDescription: ImageButton,
+            hideDescription: ImageButton,
+            description: TextView
+        )
     }
 
     fun assignData(episode: Episode) {
@@ -37,10 +51,20 @@ class EpisodeViewHolder(itemView: View, private val onEpisodeWatchStateChangeLis
             description.text = episode.description
         }
 
-        showDescription.setOnClickListener { onDescriptionShowToggleListener.showDescription(showDescription, hideDescription, description) }
+        showDescription.setOnClickListener {
+            onDescriptionShowToggleListener.showDescription(
+                showDescription,
+                hideDescription,
+                description
+            )
+        }
 
         hideDescription.setOnClickListener {
-            onDescriptionShowToggleListener.hideDescription(showDescription, hideDescription, description)
+            onDescriptionShowToggleListener.hideDescription(
+                showDescription,
+                hideDescription,
+                description
+            )
         }
 
         checkBox.setOnClickListener { onEpisodeWatchStateChangeListener.watchStateChanged(episode) }

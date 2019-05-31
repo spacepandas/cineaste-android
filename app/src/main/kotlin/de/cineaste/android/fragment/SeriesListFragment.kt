@@ -39,9 +39,20 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
 
     override val correctCallBack: ItemTouchHelper.Callback
         get() = if (watchState == WatchState.WATCH_STATE) {
-            WatchlistSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter, activity!!)
+            WatchlistSeriesTouchHelperCallback(
+                resources,
+                layoutManager,
+                customRecyclerView,
+                seriesListAdapter,
+                activity!!
+            )
         } else {
-            HistoryListSeriesTouchHelperCallback(resources, layoutManager, customRecyclerView, seriesListAdapter)
+            HistoryListSeriesTouchHelperCallback(
+                resources,
+                layoutManager,
+                customRecyclerView,
+                seriesListAdapter
+            )
         }
 
     override fun onEpisodeWatchedClick(series: Series, position: Int) {
@@ -89,11 +100,12 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
         (customRecyclerView.adapter as SeriesListAdapter).filter.filter(newText)
     }
 
-    override fun reorderEntries(filterType: BaseListFragment.FilterType) {
+    override fun reorderEntries(filterType: FilterType) {
         when (filterType) {
-            BaseListFragment.FilterType.ALPHABETICAL -> seriesListAdapter.orderAlphabetical()
-            BaseListFragment.FilterType.RELEASE_DATE -> seriesListAdapter.orderByReleaseDate()
-            else -> { }
+            FilterType.ALPHABETICAL -> seriesListAdapter.orderAlphabetical()
+            FilterType.RELEASE_DATE -> seriesListAdapter.orderByReleaseDate()
+            else -> {
+            }
         }
 
         seriesListAdapter.notifyDataSetChanged()

@@ -8,7 +8,11 @@ import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesListAdapter
 import de.cineaste.android.controllFlow.BaseSnackBar
 
-class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayoutManager, view: View, private val adapter: SeriesListAdapter) : BaseSnackBar(linearLayoutManager, view) {
+class SeriesSnackBarHistory internal constructor(
+    linearLayoutManager: LinearLayoutManager,
+    view: View,
+    private val adapter: SeriesListAdapter
+) : BaseSnackBar(linearLayoutManager, view) {
 
     override fun getSnackBarLeftSwipe(position: Int) {
         val seriesToBeDeleted = adapter.getItem(position)
@@ -17,20 +21,25 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
         val currentSeason = seriesToBeDeleted.currentNumberOfSeason
         val currentEpisode = seriesToBeDeleted.currentNumberOfEpisode
 
-        val mySnackBar = Snackbar.make(view,
-                R.string.series_deleted, Snackbar.LENGTH_LONG)
+        val mySnackBar = Snackbar.make(
+            view,
+            R.string.series_deleted, Snackbar.LENGTH_LONG
+        )
         mySnackBar.setAction(R.string.undo) {
             // do nothing
         }
         mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                when (event) {
-                    Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.addDeletedItemToHistoryAgain(seriesToBeDeleted, position, currentSeason, currentEpisode)
-                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (first >= position) {
-                            linearLayoutManager.scrollToPosition(position)
-                        }
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    adapter.addDeletedItemToHistoryAgain(
+                        seriesToBeDeleted,
+                        position,
+                        currentSeason,
+                        currentEpisode
+                    )
+                    val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (first >= position) {
+                        linearLayoutManager.scrollToPosition(position)
                     }
                 }
             }
@@ -51,13 +60,16 @@ class SeriesSnackBarHistory internal constructor(linearLayoutManager: LinearLayo
         }
         mySnackBar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                when (event) {
-                    Snackbar.Callback.DISMISS_EVENT_ACTION -> {
-                        adapter.moveBackToHistory(seriesToBeUpdated, position, currentSeason, currentEpisode)
-                        val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                        if (first >= position) {
-                            linearLayoutManager.scrollToPosition(position)
-                        }
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    adapter.moveBackToHistory(
+                        seriesToBeUpdated,
+                        position,
+                        currentSeason,
+                        currentEpisode
+                    )
+                    val first = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (first >= position) {
+                        linearLayoutManager.scrollToPosition(position)
                     }
                 }
             }

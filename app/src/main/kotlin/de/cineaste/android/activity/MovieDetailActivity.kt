@@ -70,7 +70,7 @@ class MovieDetailActivity : AppCompatActivity() {
                 val movie = currentMovie
                 movie?.let {
                     val tmdbUri = Constants.THE_MOVIE_DB_MOVIES_URI
-                            .replace("<MOVIE_ID>", movie.id.toString())
+                        .replace("<MOVIE_ID>", movie.id.toString())
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(tmdbUri))
                     startActivity(browserIntent)
                 }
@@ -78,16 +78,16 @@ class MovieDetailActivity : AppCompatActivity() {
 
             R.id.share -> {
                 currentMovie?.let { movie ->
-                    val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                    val sharingIntent = Intent(Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBodyText = "${movie.title} ${Constants.THE_MOVIE_DB_MOVIES_URI
-                            .replace("<MOVIE_ID>", movie.id.toString())}"
+                        .replace("<MOVIE_ID>", movie.id.toString())}"
                     sharingIntent.putExtra(
-                            android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_movie)
+                        Intent.EXTRA_SUBJECT, getString(R.string.share_movie)
                     )
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
                     startActivity(
-                            Intent.createChooser(sharingIntent, getString(R.string.share_movie))
+                        Intent.createChooser(sharingIntent, getString(R.string.share_movie))
                     )
                 }
                 return true
@@ -128,8 +128,12 @@ class MovieDetailActivity : AppCompatActivity() {
         if (callback != null) {
             MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), callback)
             currentMovie?.title?.let { title ->
-                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                        title), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this, this.resources.getString(
+                        R.string.movieAdd,
+                        title
+                    ), Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -160,8 +164,12 @@ class MovieDetailActivity : AppCompatActivity() {
         if (callback != null) {
             MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), callback)
             currentMovie?.let { movie ->
-                Toast.makeText(this, this.resources.getString(R.string.movieAdd,
-                        movie.title), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this, this.resources.getString(
+                        R.string.movieAdd,
+                        movie.title
+                    ), Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -288,12 +296,12 @@ class MovieDetailActivity : AppCompatActivity() {
         rating.text = currentMovie.voteAverage.toString()
 
         val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", currentMovie.posterPath ?: "/")
-                .replace("<API_KEY>", getString(R.string.movieKey))
+            .replace("<posterName>", currentMovie.posterPath ?: "/")
+            .replace("<API_KEY>", getString(R.string.movieKey))
         Picasso.get()
-                .load(posterUri)
-                .error(R.drawable.placeholder_poster)
-                .into(poster)
+            .load(posterUri)
+            .error(R.drawable.placeholder_poster)
+            .into(poster)
     }
 
     private fun initToolbar() {
@@ -340,19 +348,22 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun updateMovie() {
         if (state != R.string.searchState) {
-            MovieLoader(this).loadLocalizedMovie(movieId, Locale.getDefault(), object : MovieCallback {
-                override fun onFailure() {
-                    GlobalScope.launch(Main) { showNetworkError() }
-                }
-
-                override fun onSuccess(movie: Movie) {
-                    GlobalScope.launch(Main) {
-                        assignData(movie)
-                        updateMovieDetails(movie)
-                        movieDbHelper.createOrUpdate(currentMovie ?: movie)
+            MovieLoader(this).loadLocalizedMovie(
+                movieId,
+                Locale.getDefault(),
+                object : MovieCallback {
+                    override fun onFailure() {
+                        GlobalScope.launch(Main) { showNetworkError() }
                     }
-                }
-            })
+
+                    override fun onSuccess(movie: Movie) {
+                        GlobalScope.launch(Main) {
+                            assignData(movie)
+                            updateMovieDetails(movie)
+                            movieDbHelper.createOrUpdate(currentMovie ?: movie)
+                        }
+                    }
+                })
         }
     }
 
@@ -360,17 +371,17 @@ class MovieDetailActivity : AppCompatActivity() {
         val oldMovie = currentMovie
         oldMovie?.let {
             val updatedMovie = Movie(
-                    id = oldMovie.id,
-                    posterPath = movie.posterPath,
-                    title = movie.title,
-                    runtime = movie.runtime,
-                    voteAverage = movie.voteAverage,
-                    voteCount = movie.voteCount,
-                    description = movie.description,
-                    watched = oldMovie.isWatched,
-                    watchedDate = oldMovie.watchedDate,
-                    releaseDate = movie.releaseDate,
-                    listPosition = oldMovie.listPosition
+                id = oldMovie.id,
+                posterPath = movie.posterPath,
+                title = movie.title,
+                runtime = movie.runtime,
+                voteAverage = movie.voteAverage,
+                voteCount = movie.voteCount,
+                description = movie.description,
+                watched = oldMovie.isWatched,
+                watchedDate = oldMovie.watchedDate,
+                releaseDate = movie.releaseDate,
+                listPosition = oldMovie.listPosition
             )
 
             currentMovie = updatedMovie
@@ -408,9 +419,9 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun showNetworkError() {
-        val snackbar = Snackbar
-                .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
-        snackbar.show()
+        val snackBar = Snackbar
+            .make(layout, R.string.noInternet, Snackbar.LENGTH_LONG)
+        snackBar.show()
     }
 
     private fun convertDate(date: Date?): String {

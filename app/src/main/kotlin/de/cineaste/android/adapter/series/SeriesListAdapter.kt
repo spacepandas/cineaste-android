@@ -15,7 +15,13 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.Collections
 import java.util.LinkedList
 
-class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context: Context, listener: ItemClickListener, state: WatchState, private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener) : BaseListAdapter(context, displayMessage, listener, state) {
+class SeriesListAdapter(
+    displayMessage: DisplayMessage,
+    context: Context,
+    listener: ItemClickListener,
+    state: WatchState,
+    private val onEpisodeWatchedClickListener: OnEpisodeWatchedClickListener
+) : BaseListAdapter(context, displayMessage, listener, state) {
 
     private val db: SeriesDbHelper
     private var dataSet: MutableList<Series> = mutableListOf()
@@ -67,13 +73,23 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
         }
     }
 
-    fun addDeletedItemToHistoryAgain(series: Series, position: Int, prevSeason: Int, prevEpisode: Int) {
+    fun addDeletedItemToHistoryAgain(
+        series: Series,
+        position: Int,
+        prevSeason: Int,
+        prevEpisode: Int
+    ) {
         db.addToHistory(series)
         db.moveBackToHistory(series, prevSeason, prevEpisode)
         addSeriesToList(series, position)
     }
 
-    fun addDeletedItemToWatchListAgain(series: Series, position: Int, prevSeason: Int, prevEpisode: Int) {
+    fun addDeletedItemToWatchListAgain(
+        series: Series,
+        position: Int,
+        prevSeason: Int,
+        prevEpisode: Int
+    ) {
         db.addToWatchList(series)
         db.moveBackToWatchList(series, prevSeason, prevEpisode)
         addSeriesToList(series, position)
@@ -172,14 +188,17 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
         notifyDataSetChanged()
     }
 
-    inner class FilerSeries internal constructor(private val adapter: SeriesListAdapter, private val seriesList: List<Series>) : Filter() {
+    inner class FilerSeries internal constructor(
+        private val adapter: SeriesListAdapter,
+        private val seriesList: List<Series>
+    ) : Filter() {
         private val filteredSeriesList: MutableList<Series>
 
         init {
             this.filteredSeriesList = ArrayList()
         }
 
-        override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
             filteredSeriesList.clear()
 
             if (constraint.isNullOrEmpty()) {
@@ -194,14 +213,14 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
                 }
             }
 
-            val results = Filter.FilterResults()
+            val results = FilterResults()
             results.values = filteredSeriesList
             results.count = filteredSeriesList.size
 
             return results
         }
 
-        override fun publishResults(charSequence: CharSequence, results: Filter.FilterResults) {
+        override fun publishResults(charSequence: CharSequence, results: FilterResults) {
             adapter.filteredDataSet.clear()
 
             adapter.filteredDataSet.addAll(results.values as List<Series>)
@@ -209,5 +228,8 @@ class SeriesListAdapter(displayMessage: BaseListAdapter.DisplayMessage, context:
         }
     }
 
-    inner class UpdatedSeries internal constructor(internal val prev: Series, internal val passiveSeries: Series)
+    inner class UpdatedSeries internal constructor(
+        internal val prev: Series,
+        internal val passiveSeries: Series
+    )
 }

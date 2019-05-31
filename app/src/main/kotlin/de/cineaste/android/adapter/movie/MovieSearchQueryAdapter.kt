@@ -8,7 +8,10 @@ import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.movie.MovieSearchViewHolder
 
-class MovieSearchQueryAdapter(private val listener: ItemClickListener, private val movieStateChange: OnMovieStateChange) : RecyclerView.Adapter<MovieSearchViewHolder>() {
+class MovieSearchQueryAdapter(
+    private val listener: ItemClickListener,
+    private val movieStateChange: OnMovieStateChange
+) : RecyclerView.Adapter<MovieSearchViewHolder>() {
     private val dataSet = ArrayList<Movie>()
 
     interface OnMovieStateChange {
@@ -36,8 +39,8 @@ class MovieSearchQueryAdapter(private val listener: ItemClickListener, private v
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieSearchViewHolder {
         val v = LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.card_movie_search, parent, false)
+            .from(parent.context)
+            .inflate(R.layout.card_movie_search, parent, false)
         return MovieSearchViewHolder(v, parent.context, movieStateChange, listener)
     }
 

@@ -18,7 +18,8 @@ import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.viewholder.series.EpisodeViewHolder
 
-class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateChangeListener, EpisodeViewHolder.OnDescriptionShowToggleListener {
+class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateChangeListener,
+    EpisodeViewHolder.OnDescriptionShowToggleListener {
 
     private var seriesId: Long = 0
     private var seasonId: Long = 0
@@ -99,13 +100,21 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         adapter.update(episodes)
     }
 
-    override fun showDescription(showDescription: ImageButton, hideDescription: ImageButton, description: TextView) {
+    override fun showDescription(
+        showDescription: ImageButton,
+        hideDescription: ImageButton,
+        description: TextView
+    ) {
         showDescription.visibility = View.INVISIBLE
         hideDescription.visibility = View.VISIBLE
         description.visibility = View.VISIBLE
     }
 
-    override fun hideDescription(showDescription: ImageButton, hideDescription: ImageButton, description: TextView) {
+    override fun hideDescription(
+        showDescription: ImageButton,
+        hideDescription: ImageButton,
+        description: TextView
+    ) {
         showDescription.visibility = View.VISIBLE
         hideDescription.visibility = View.INVISIBLE
         description.visibility = View.GONE

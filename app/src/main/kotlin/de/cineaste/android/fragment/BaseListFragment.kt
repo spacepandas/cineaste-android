@@ -61,8 +61,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         super.setArguments(args)
         args?.let {
             watchState = getWatchState(
-                    args.getString(WatchState.WATCH_STATE_TYPE.name,
-                            WatchState.WATCH_STATE.name))
+                args.getString(
+                    WatchState.WATCH_STATE_TYPE.name,
+                    WatchState.WATCH_STATE.name
+                )
+            )
         }
     }
 
@@ -134,7 +137,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         if (savedInstanceState != null) {
-            val currentState = savedInstanceState.getString(WatchState.WATCH_STATE_TYPE.name, WatchState.WATCH_STATE.name)
+            val currentState =
+                savedInstanceState.getString(
+                    WatchState.WATCH_STATE_TYPE.name,
+                    WatchState.WATCH_STATE.name
+                )
             this.watchState = getWatchState(currentState)
         }
 
@@ -186,8 +193,8 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
                         UserInputFragment().show(fragmentManager, "")
                     }
                 }
-                R.id.filterAlphabetical -> reorderLists(BaseListFragment.FilterType.ALPHABETICAL)
-                R.id.filterReleaseDate -> reorderLists(BaseListFragment.FilterType.RELEASE_DATE)
+                R.id.filterAlphabetical -> reorderLists(FilterType.ALPHABETICAL)
+                R.id.filterReleaseDate -> reorderLists(FilterType.RELEASE_DATE)
                 R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
             }
         }
@@ -234,10 +241,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         val activity = activity ?: return
         val intent = createIntent(itemId, state, activity)
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = makeSceneTransitionAnimation(activity,
-                    Pair.create(views[0], "card"),
-                    Pair.create(views[1], "poster")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = makeSceneTransitionAnimation(
+                activity,
+                Pair.create(views[0], "card"),
+                Pair.create(views[1], "poster")
             )
             activity.startActivity(intent, options.toBundle())
         } else {

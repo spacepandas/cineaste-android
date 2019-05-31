@@ -32,7 +32,11 @@ class MovieDbHelper private constructor(context: Context) {
         val selection = BaseDao.MovieEntry.COLUMN_MOVIE_WATCHED + " = ?"
         val selectionArgs = arrayOf(selectionArg)
 
-        return movieDao.read(selection, selectionArgs, BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION + " ASC")
+        return movieDao.read(
+            selection,
+            selectionArgs,
+            BaseDao.MovieEntry.COLUMN_MOVIE_LIST_POSITION + " ASC"
+        )
     }
 
     fun reorderAlphabetical(state: WatchState): List<Movie> {

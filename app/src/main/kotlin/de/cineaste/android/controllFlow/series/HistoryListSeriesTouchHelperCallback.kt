@@ -8,7 +8,12 @@ import de.cineaste.android.R
 import de.cineaste.android.adapter.series.SeriesListAdapter
 import de.cineaste.android.controllFlow.BaseSnackBar
 
-class HistoryListSeriesTouchHelperCallback(resources: Resources, linearLayoutManager: LinearLayoutManager, recyclerView: RecyclerView, seriesListAdapter: SeriesListAdapter) : BaseSeriesTouchHelperCallback(resources, linearLayoutManager, recyclerView, seriesListAdapter) {
+class HistoryListSeriesTouchHelperCallback(
+    resources: Resources,
+    linearLayoutManager: LinearLayoutManager,
+    recyclerView: RecyclerView,
+    seriesListAdapter: SeriesListAdapter
+) : BaseSeriesTouchHelperCallback(resources, linearLayoutManager, recyclerView, seriesListAdapter) {
 
     override val icon: Int
         get() = R.drawable.ic_add_to_watchlist_white

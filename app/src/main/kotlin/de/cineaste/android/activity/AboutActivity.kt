@@ -19,7 +19,7 @@ class AboutActivity : AppCompatActivity() {
 
         initToolbar()
 
-        val webView = findViewById<WebView>(R.id.webview)
+        val webView = findViewById<WebView>(R.id.webView)
         webView.settings.javaScriptEnabled = true
         webView.addJavascriptInterface(WebInterface(resources), "Android")
         webView.loadUrl("file:///android_res/raw/about.html")

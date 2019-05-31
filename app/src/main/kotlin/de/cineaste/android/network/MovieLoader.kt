@@ -96,14 +96,15 @@ class MovieLoader(context: Context) {
         }
 
         return Movie(
-                id,
-                posterPath,
-                title,
-                runtime,
-                voteAverage,
-                voteCount,
-                description,
-                releaseDate = releaseDate)
+            id,
+            posterPath,
+            title,
+            runtime,
+            voteAverage,
+            voteCount,
+            description,
+            releaseDate = releaseDate
+        )
     }
 
     private fun getReleaseDates(jsonString: JsonObject): HashMap<String, ReleaseDate> {
@@ -119,7 +120,10 @@ class MovieLoader(context: Context) {
     }
 
     // Type 3 means only cinema release dates
-    private fun getOnlyType3Dates(dates: HashMap<String, ReleaseDate>, language: Locale): ReleaseDateType? {
+    private fun getOnlyType3Dates(
+        dates: HashMap<String, ReleaseDate>,
+        language: Locale
+    ): ReleaseDateType? {
         val date = dates[language.country]
 
         date?.let {
