@@ -31,8 +31,10 @@ class SeasonViewHolder(
     private val resources: Resources = context.resources
 
     fun assignData(season: Season) {
-        seasonNumber.text = resources.getString(R.string.currentSeason, season.seasonNumber.toString())
-        numberOfEpisodes.text = resources.getString(R.string.episodes, season.episodeCount.toString())
+        seasonNumber.text =
+            resources.getString(R.string.currentSeason, season.seasonNumber.toString())
+        numberOfEpisodes.text =
+            resources.getString(R.string.episodes, season.episodeCount.toString())
         if (season.releaseDate == null) {
             releaseDate.visibility = View.GONE
         } else {
@@ -49,13 +51,13 @@ class SeasonViewHolder(
     private fun setMoviePoster(season: Season) {
         val posterName = season.posterPath
         val posterUri = Constants.POSTER_URI_SMALL
-                .replace("<posterName>", posterName ?: "/")
-                .replace("<API_KEY>", context.getString(R.string.movieKey))
+            .replace("<posterName>", posterName ?: "/")
+            .replace("<API_KEY>", context.getString(R.string.movieKey))
         Picasso.get()
-                .load(posterUri)
-                .resize(342, 513)
-                .error(R.drawable.placeholder_poster)
-                .into(poster)
+            .load(posterUri)
+            .resize(342, 513)
+            .error(R.drawable.placeholder_poster)
+            .into(poster)
     }
 
     private fun convertDate(date: Date?): String {

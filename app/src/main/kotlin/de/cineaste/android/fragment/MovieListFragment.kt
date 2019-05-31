@@ -38,9 +38,19 @@ class MovieListFragment : BaseListFragment() {
 
     override val correctCallBack: ItemTouchHelper.Callback
         get() = if (watchState == WatchState.WATCH_STATE) {
-            WatchlistMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, resources)
+            WatchlistMovieTouchHelperCallback(
+                layoutManager,
+                movieListAdapter,
+                customRecyclerView,
+                resources
+            )
         } else {
-            HistoryListMovieTouchHelperCallback(layoutManager, movieListAdapter, customRecyclerView, resources)
+            HistoryListMovieTouchHelperCallback(
+                layoutManager,
+                movieListAdapter,
+                customRecyclerView,
+                resources
+            )
         }
 
     override fun updateAdapter() {
@@ -59,9 +69,11 @@ class MovieListFragment : BaseListFragment() {
         customRecyclerView.layoutManager = layoutManager
         customRecyclerView.adapter = movieListAdapter
 
-        val divider = ContextCompat.getDrawable(customRecyclerView.context, R.drawable.divider);
-        val itemDecor = DividerItemDecoration(customRecyclerView.context,
-            layoutManager.orientation)
+        val divider = ContextCompat.getDrawable(customRecyclerView.context, R.drawable.divider)
+        val itemDecor = DividerItemDecoration(
+            customRecyclerView.context,
+            layoutManager.orientation
+        )
         divider?.let {
             itemDecor.setDrawable(it)
         }
@@ -76,11 +88,11 @@ class MovieListFragment : BaseListFragment() {
         (customRecyclerView.adapter as MovieListAdapter).filter.filter(newText)
     }
 
-    override fun reorderEntries(filterType: BaseListFragment.FilterType) {
+    override fun reorderEntries(filterType: FilterType) {
         when (filterType) {
-            BaseListFragment.FilterType.ALPHABETICAL -> movieListAdapter.orderAlphabetical()
-            BaseListFragment.FilterType.RELEASE_DATE -> movieListAdapter.orderByReleaseDate()
-            BaseListFragment.FilterType.RUNTIME -> movieListAdapter.orderByRuntime()
+            FilterType.ALPHABETICAL -> movieListAdapter.orderAlphabetical()
+            FilterType.RELEASE_DATE -> movieListAdapter.orderByReleaseDate()
+            FilterType.RUNTIME -> movieListAdapter.orderByRuntime()
         }
 
         movieListAdapter.notifyDataSetChanged()

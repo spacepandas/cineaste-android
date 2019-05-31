@@ -27,19 +27,20 @@ data class NearbyMessage(
     }
 
     fun toNearbyMessage(): Message {
-        return Message(GSON.toJson(this).toByteArray(Charsets.UTF_8))
+        return Message(gson.toJson(this).toByteArray(Charsets.UTF_8))
     }
 
     companion object {
 
-        private val GSON = Gson()
+        private val gson = Gson()
 
         fun fromMessage(message: Message): NearbyMessage {
             val nearbyMessageString = String(message.content).trim { it <= ' ' }
 
-            return GSON.fromJson(
-                    String(nearbyMessageString.toByteArray(Charsets.UTF_8)),
-                    NearbyMessage::class.java)
+            return gson.fromJson(
+                String(nearbyMessageString.toByteArray(Charsets.UTF_8)),
+                NearbyMessage::class.java
+            )
         }
     }
 }

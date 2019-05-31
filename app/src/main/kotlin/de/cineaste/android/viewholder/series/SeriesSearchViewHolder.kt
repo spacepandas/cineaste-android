@@ -10,7 +10,12 @@ import de.cineaste.android.adapter.series.SeriesSearchQueryAdapter
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.listener.ItemClickListener
 
-class SeriesSearchViewHolder(itemView: View, listener: ItemClickListener, context: Context, private val seriesStateChange: SeriesSearchQueryAdapter.OnSeriesStateChange) : AbstractSeriesViewHolder(itemView, listener, context) {
+class SeriesSearchViewHolder(
+    itemView: View,
+    listener: ItemClickListener,
+    context: Context,
+    private val seriesStateChange: SeriesSearchQueryAdapter.OnSeriesStateChange
+) : AbstractSeriesViewHolder(itemView, listener, context) {
 
     private val releaseDate: TextView = itemView.findViewById(R.id.releaseDate)
     private val addToWatchlistButton: Button = itemView.findViewById(R.id.to_watchlist_button)
@@ -36,6 +41,11 @@ class SeriesSearchViewHolder(itemView: View, listener: ItemClickListener, contex
             seriesStateChange.onSeriesStateChangeListener(series, v.id, index)
         }
 
-        view.setOnClickListener { view -> listener.onItemClickListener(series.id, arrayOf(view, poster)) }
+        view.setOnClickListener { view ->
+            listener.onItemClickListener(
+                series.id,
+                arrayOf(view, poster)
+            )
+        }
     }
 }

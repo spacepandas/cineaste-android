@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/movieReleaseDate"
-        style="@style/cardviewDescriptionText"
+        style="@style/cardViewDescriptionText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -53,7 +53,7 @@
 
     <TextView
         android:id="@+id/movieRuntime"
-        style="@style/cardviewDescriptionText"
+        style="@style/cardViewDescriptionText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/runtime"
@@ -79,7 +79,7 @@
 
     <TextView
         android:id="@+id/movie_vote"
-        style="@style/cardviewDescriptionText"
+        style="@style/cardViewDescriptionText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

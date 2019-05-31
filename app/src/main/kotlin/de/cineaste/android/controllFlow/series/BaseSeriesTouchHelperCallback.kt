@@ -9,9 +9,18 @@ import de.cineaste.android.adapter.series.SeriesListAdapter
 import de.cineaste.android.controllFlow.TouchHelperCallback
 import de.cineaste.android.viewholder.series.SeriesViewHolder
 
-abstract class BaseSeriesTouchHelperCallback(resources: Resources, linearLayoutManager: LinearLayoutManager, recyclerView: RecyclerView, val seriesListAdapter: SeriesListAdapter) : TouchHelperCallback(resources, linearLayoutManager, recyclerView) {
+abstract class BaseSeriesTouchHelperCallback(
+    resources: Resources,
+    linearLayoutManager: LinearLayoutManager,
+    recyclerView: RecyclerView,
+    val seriesListAdapter: SeriesListAdapter
+) : TouchHelperCallback(resources, linearLayoutManager, recyclerView) {
 
-    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
         seriesListAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
         return true
     }

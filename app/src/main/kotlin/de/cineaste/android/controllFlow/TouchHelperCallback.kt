@@ -12,7 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
 import de.cineaste.android.R
 
-abstract class TouchHelperCallback protected constructor(private val resources: Resources, protected val linearLayoutManager: LinearLayoutManager, protected val recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
+abstract class TouchHelperCallback protected constructor(
+    private val resources: Resources,
+    protected val linearLayoutManager: LinearLayoutManager,
+    protected val recyclerView: RecyclerView
+) : ItemTouchHelper.Callback() {
 
     protected abstract val snackBar: BaseSnackBar
 
@@ -28,11 +32,14 @@ abstract class TouchHelperCallback protected constructor(private val resources: 
         return true
     }
 
-    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
 
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
         val swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
+        return makeMovementFlags(dragFlags, swipeFlags)
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -45,7 +52,15 @@ abstract class TouchHelperCallback protected constructor(private val resources: 
         }
     }
 
-    override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+    override fun onChildDraw(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
 

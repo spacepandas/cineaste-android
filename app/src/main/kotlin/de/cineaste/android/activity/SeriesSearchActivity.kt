@@ -22,7 +22,8 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.OnSeriesStateChange {
+class SeriesSearchActivity : AbstractSearchActivity(),
+    SeriesSearchQueryAdapter.OnSeriesStateChange {
 
     private lateinit var seriesQueryAdapter: SeriesSearchQueryAdapter
 
@@ -71,17 +72,17 @@ class SeriesSearchActivity : AbstractSearchActivity(), SeriesSearchQueryAdapter.
         }
 
         seriesCallback?.let {
-            seriesQueryAdapter.removeSerie(index)
+            seriesQueryAdapter.removeOneSeries(index)
 
             SeriesLoader(this).loadCompleteSeries(series.id, it)
         }
     }
 
     private fun seriesAddError(series: Series, index: Int) {
-        val snackbar = Snackbar
-                .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
-        snackbar.show()
-        seriesQueryAdapter.addSerie(series, index)
+        val snackBar = Snackbar
+            .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
+        snackBar.show()
+        seriesQueryAdapter.addOneSeries(series, index)
     }
 
     override fun initAdapter() {

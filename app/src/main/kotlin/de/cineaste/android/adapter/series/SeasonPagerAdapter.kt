@@ -9,7 +9,12 @@ import de.cineaste.android.R
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.SeasonDetailFragment
 
-class SeasonPagerAdapter(fm: FragmentManager, private val series: Series, private val resources: Resources) : FragmentStatePagerAdapter(fm) {
+class SeasonPagerAdapter(
+    fm: FragmentManager,
+    private val series: Series,
+    private val resources: Resources
+) :
+    FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         val fragment = SeasonDetailFragment()
@@ -27,6 +32,9 @@ class SeasonPagerAdapter(fm: FragmentManager, private val series: Series, privat
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return resources.getString(R.string.currentSeason, series.seasons[position].seasonNumber.toString())
+        return resources.getString(
+            R.string.currentSeason,
+            series.seasons[position].seasonNumber.toString()
+        )
     }
 }

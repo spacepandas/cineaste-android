@@ -11,7 +11,12 @@ import android.widget.Filterable
 import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.ItemClickListener
 
-abstract class BaseListAdapter constructor(val context: Context, val displayMessage: DisplayMessage, val listener: ItemClickListener, val state: WatchState) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
+abstract class BaseListAdapter constructor(
+    val context: Context,
+    val displayMessage: DisplayMessage,
+    val listener: ItemClickListener,
+    val state: WatchState
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
     protected abstract val internalFilter: Filter
     protected abstract val layout: Int
@@ -29,8 +34,8 @@ abstract class BaseListAdapter constructor(val context: Context, val displayMess
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater
-                .from(parent.context)
-                .inflate(layout, parent, false)
+            .from(parent.context)
+            .inflate(layout, parent, false)
         return createViewHolder(view)
     }
 

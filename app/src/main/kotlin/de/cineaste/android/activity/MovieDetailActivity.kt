@@ -79,14 +79,14 @@ class MovieDetailActivity : AppCompatActivity() {
 
             R.id.share -> {
                 currentMovie?.let { movie ->
-                    val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                    val sharingIntent = Intent(Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBodyText = "${movie.title} ${Constants.THE_MOVIE_DB_MOVIES_URI
                         .replace("<MOVIE_ID>", movie.id.toString())}"
                     sharingIntent.putExtra(
-                        android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_movie)
+                        Intent.EXTRA_SUBJECT, getString(R.string.share_movie)
                     )
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText)
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
                     startActivity(
                         Intent.createChooser(sharingIntent, getString(R.string.share_movie))
                     )

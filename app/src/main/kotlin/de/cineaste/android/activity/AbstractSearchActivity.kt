@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import android.text.TextUtils
 import android.util.Pair
 import android.view.Menu
@@ -20,6 +19,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonParser
 import de.cineaste.android.R
 import de.cineaste.android.listener.ItemClickListener
@@ -67,10 +67,12 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     override fun onItemClickListener(itemId: Long, views: Array<View>) {
         val intent = getIntentForDetailActivity(itemId)
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = ActivityOptions.makeSceneTransitionAnimation(this,
-                    Pair.create(views[0], "card"),
-                    Pair.create(views[1], "poster"))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                this,
+                Pair.create(views[0], "card"),
+                Pair.create(views[1], "poster")
+            )
             this.startActivity(intent, options.toBundle())
         } else {
             this.startActivity(intent)
@@ -90,9 +92,11 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
         progressBar = findViewById(R.id.progressBar)
         recyclerView = findViewById(R.id.search_recycler_view)
         val layoutManager = LinearLayoutManager(this)
-        val divider = ContextCompat.getDrawable(recyclerView.context, R.drawable.divider);
-        val itemDecor = DividerItemDecoration(recyclerView.context,
-            layoutManager.orientation)
+        val divider = ContextCompat.getDrawable(recyclerView.context, R.drawable.divider)
+        val itemDecor = DividerItemDecoration(
+            recyclerView.context,
+            layoutManager.orientation
+        )
         divider?.let {
             itemDecor.setDrawable(it)
         }
@@ -147,7 +151,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
 
                 override fun onQueryTextChange(query: String): Boolean {
                     var myQuery = query
-                    if (!myQuery.isEmpty()) {
+                    if (myQuery.isNotEmpty()) {
                         myQuery = myQuery.replace(" ", "+")
                         progressBar.visibility = View.VISIBLE
 
@@ -177,9 +181,9 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
     }
 
     private fun showNetworkError() {
-        val snackbar = Snackbar
-                .make(recyclerView, R.string.noInternet, Snackbar.LENGTH_LONG)
-        snackbar.show()
+        val snackBar = Snackbar
+            .make(recyclerView, R.string.noInternet, Snackbar.LENGTH_LONG)
+        snackBar.show()
     }
 
     override fun onStop() {

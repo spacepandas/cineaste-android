@@ -1,10 +1,10 @@
 package de.cineaste.android.database.dbHelper
 
 import android.content.Context
-
 import java.util.ArrayList
-
-import de.cineaste.android.database.dao.BaseDao
+import de.cineaste.android.database.dao.BaseDao.EpisodeEntry
+import de.cineaste.android.database.dao.BaseDao.SeasonEntry
+import de.cineaste.android.database.dao.BaseDao.SeriesEntry
 import de.cineaste.android.database.dao.EpisodeDao
 import de.cineaste.android.database.dao.SeasonDao
 import de.cineaste.android.database.dao.SeriesDao
@@ -12,10 +12,6 @@ import de.cineaste.android.entity.series.Episode
 import de.cineaste.android.entity.series.Season
 import de.cineaste.android.entity.series.Series
 import de.cineaste.android.fragment.WatchState
-
-import de.cineaste.android.database.dao.BaseDao.EpisodeEntry
-import de.cineaste.android.database.dao.BaseDao.SeasonEntry
-import de.cineaste.android.database.dao.BaseDao.SeriesEntry
 
 class SeriesDbHelper private constructor(context: Context) {
 
@@ -55,7 +51,11 @@ class SeriesDbHelper private constructor(context: Context) {
         val selection = SeriesEntry.COLUMN_SERIES_SERIES_WATCHED + " = ?"
         val selectionArgs = arrayOf(selectionArg)
 
-        val seriesList = seriesDao.read(selection, selectionArgs, SeriesEntry.COLUMN_SERIES_LIST_POSITION + " ASC")
+        val seriesList = seriesDao.read(
+            selection,
+            selectionArgs,
+            SeriesEntry.COLUMN_SERIES_LIST_POSITION + " ASC"
+        )
 
         for (series in seriesList) {
             loadRemainingInformation(series)
@@ -65,14 +65,15 @@ class SeriesDbHelper private constructor(context: Context) {
     }
 
     fun getUnWatchedEpisodesOfSeries(seriesId: Long): List<Episode> {
-        val selection = BaseDao.EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ? AND " + BaseDao.EpisodeEntry.COLUMN_EPISODE_WATCHED + " = 0"
+        val selection =
+            EpisodeEntry.COLUMN_EPISODE_SERIES_ID + " = ? AND " + EpisodeEntry.COLUMN_EPISODE_WATCHED + " = 0"
         val selectionArgs = arrayOf(seriesId.toString())
 
         return episodeDao.read(selection, selectionArgs)
     }
 
     fun getEpisodesBySeasonId(seasonId: Long): List<Episode> {
-        val selection = BaseDao.EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = ?"
+        val selection = EpisodeEntry.COLUMN_EPISODE_SEASON_ID + " = ?"
         val selectionArgs = arrayOf(seasonId.toString())
 
         return episodeDao.read(selection, selectionArgs)
@@ -202,7 +203,12 @@ class SeriesDbHelper private constructor(context: Context) {
         moveBackToList(series, prevSeason, prevEpisode, true)
     }
 
-    private fun moveBackToList(series: Series, prevSeason: Int, prevEpisode: Int, watchState: Boolean) {
+    private fun moveBackToList(
+        series: Series,
+        prevSeason: Int,
+        prevEpisode: Int,
+        watchState: Boolean
+    ) {
         moveBetweenLists(series, watchState)
         for (season in series.seasons) {
             if (season.seasonNumber < prevSeason) {

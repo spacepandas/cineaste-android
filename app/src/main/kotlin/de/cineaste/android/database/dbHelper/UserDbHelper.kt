@@ -10,19 +10,20 @@ class UserDbHelper private constructor(context: Context) : BaseDao(context) {
     val user: User?
         get() {
 
-            val projection = arrayOf(BaseDao.UserEntry.ID, BaseDao.UserEntry.COLUMN_USER_NAME)
+            val projection = arrayOf(UserEntry.ID, UserEntry.COLUMN_USER_NAME)
 
             val c = readDb.query(
-                    BaseDao.UserEntry.TABLE_NAME,
-                    projection,
-                    null, null, null, null, null, null)
+                UserEntry.TABLE_NAME,
+                projection,
+                null, null, null, null, null, null
+            )
 
             var user: User? = null
 
             if (c.moveToFirst()) {
                 do {
                     user = User()
-                    user.userName = c.getString(c.getColumnIndexOrThrow(BaseDao.UserEntry.COLUMN_USER_NAME))
+                    user.userName = c.getString(c.getColumnIndexOrThrow(UserEntry.COLUMN_USER_NAME))
                 } while (c.moveToNext())
             }
             c.close()
@@ -31,9 +32,9 @@ class UserDbHelper private constructor(context: Context) : BaseDao(context) {
 
     fun createUser(user: User) {
         val values = ContentValues()
-        values.put(BaseDao.UserEntry.COLUMN_USER_NAME, user.userName)
+        values.put(UserEntry.COLUMN_USER_NAME, user.userName)
 
-        writeDb.insert(BaseDao.UserEntry.TABLE_NAME, null, values)
+        writeDb.insert(UserEntry.TABLE_NAME, null, values)
     }
 
     companion object {

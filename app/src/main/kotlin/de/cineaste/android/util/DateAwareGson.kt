@@ -24,7 +24,11 @@ object DateAwareGson {
             val df: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
             @Throws(JsonParseException::class)
-            override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Date? {
+            override fun deserialize(
+                json: JsonElement,
+                typeOfT: Type,
+                context: JsonDeserializationContext
+            ): Date? {
                 return try {
                     df.parse(json.asString)
                 } catch (e: ParseException) {
@@ -45,7 +49,11 @@ object ExtendedDateAwareGson {
             val df: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
 
             @Throws(JsonParseException::class)
-            override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Date? {
+            override fun deserialize(
+                json: JsonElement,
+                typeOfT: Type,
+                context: JsonDeserializationContext
+            ): Date? {
                 return try {
                     df.parse(json.asString)
                 } catch (e: ParseException) {

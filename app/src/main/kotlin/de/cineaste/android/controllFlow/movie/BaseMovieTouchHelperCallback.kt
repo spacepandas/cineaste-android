@@ -15,9 +15,13 @@ abstract class BaseMovieTouchHelperCallback(
     recyclerView: RecyclerView,
     resources: Resources
 ) :
-        TouchHelperCallback(resources, linearLayoutManager, recyclerView) {
+    TouchHelperCallback(resources, linearLayoutManager, recyclerView) {
 
-    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
         movieListAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
         return true
     }
