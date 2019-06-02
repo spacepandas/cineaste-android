@@ -179,12 +179,12 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
-                    android:paddingTop="16dp"
                     android:id="@+id/movie_description"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:lineSpacingMultiplier="1.4"
                     android:text="@string/noDescription"
+                    android:paddingBottom="16dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:textSize="17sp" />

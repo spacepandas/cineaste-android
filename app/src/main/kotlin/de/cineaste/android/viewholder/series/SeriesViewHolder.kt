@@ -47,11 +47,13 @@ class SeriesViewHolder(
             )
         }
 
-        view.setOnClickListener { view ->
-            listener.onItemClickListener(
-                series.id,
-                arrayOf(view, poster, title)
-            )
+        listener?.let {
+            view.setOnClickListener { view ->
+                listener.onItemClickListener(
+                    series.id,
+                    arrayOf(view, poster, title)
+                )
+            }
         }
     }
 

@@ -16,7 +16,7 @@ import java.util.Locale
 
 abstract class BaseViewHolder protected constructor(
     protected val view: View,
-    protected val listener: ItemClickListener,
+    protected val listener: ItemClickListener?,
     private val context: Context
 ) : RecyclerView.ViewHolder(view) {
 

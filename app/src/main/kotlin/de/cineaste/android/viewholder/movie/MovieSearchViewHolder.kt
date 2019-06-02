@@ -32,6 +32,14 @@ class MovieSearchViewHolder(
             movieStateChange.onMovieStateChangeListener(movie, v.id, index)
         }
 
-        view.setOnClickListener { listener.onItemClickListener(movie.id, arrayOf(view, poster)) }
+        listener?.let {
+            view.setOnClickListener {
+                listener.onItemClickListener(
+                    movie.id,
+                    arrayOf(view, poster)
+                )
+            }
+        }
+
     }
 }

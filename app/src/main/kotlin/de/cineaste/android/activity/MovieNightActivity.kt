@@ -4,19 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.messages.Message
 import com.google.android.gms.nearby.messages.MessageListener
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import de.cineaste.android.R
 import de.cineaste.android.adapter.NearbyUserAdapter
 import de.cineaste.android.database.NearbyMessageHandler
@@ -27,13 +30,16 @@ import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.MovieDto
 import de.cineaste.android.entity.movie.NearbyMessage
 import de.cineaste.android.fragment.UserInputFragment
+import de.cineaste.android.fragment.UserMovieListFragment
 import de.cineaste.android.fragment.WatchState
+import de.cineaste.android.listener.UserClickListener
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.UUID
+import java.util.*
+import kotlin.collections.ArrayList
 
-class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
+class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener, UserClickListener {
 
     private val nearbyMessagesArrayList = ArrayList<NearbyMessage>()
 
@@ -57,6 +63,14 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
                 applicationContext.packageName, Context.MODE_PRIVATE
             )
         )
+
+    override fun onUserClickListener(nearbyMessage: NearbyMessage) {
+        val dialog = UserMovieListFragment()
+        val args = Bundle()
+        args.putString("entry", Gson().toJson(nearbyMessage))
+        dialog.arguments = args
+        dialog.show(supportFragmentManager, "")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,13 +116,24 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         progressBar = findViewById(R.id.progressBar)
 
         nearbyMessagesArrayList.clear()
-        nearbyUserAdapter = NearbyUserAdapter(nearbyMessagesArrayList, this)
+        nearbyUserAdapter = NearbyUserAdapter(nearbyMessagesArrayList, this, this)
 
         val llm = LinearLayoutManager(this)
         llm.orientation = RecyclerView.VERTICAL
         nearbyUserRv.layoutManager = llm
         nearbyUserRv.itemAnimator = DefaultItemAnimator()
         nearbyUserRv.adapter = nearbyUserAdapter
+
+        val divider = ContextCompat.getDrawable(nearbyUserRv.context, R.drawable.divider)
+        val itemDecor = DividerItemDecoration(
+            nearbyUserRv.context,
+            llm.orientation
+        )
+
+        divider?.let {
+            itemDecor.setDrawable(it)
+        }
+        nearbyUserRv.addItemDecoration(itemDecor)
         initToolbar()
     }
 
@@ -171,6 +196,36 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
             val intent = Intent(this@MovieNightActivity, ResultActivity::class.java)
             startActivity(intent)
             finish()
+        }
+        //todo remove after testing
+        addInitalUsers()
+    }
+
+    private fun addInitalUsers() {
+        val messages = mutableListOf<NearbyMessage>()
+        messages.add(NearbyMessage("Test1", "1234567890", mutableListOf(
+            MovieDto(120, "/zn5dEU1ygVeCEtFgttvujW3dCUj.jpg", "Der Herr der Ringe - Die Gefährten", Date(), 9.0, 120),
+            MovieDto(121, "/cMa7haLxqVe4fWNORPIq6fGdjys.jpg", "Der Herr der Ringe - Die zwei Türme", Date(), 9.5, 124),
+            MovieDto(122, "/viKyV73yclmtmpnJmCkfQsni9aa.jpg", "Der Herr der Ringe - Die Rückkehr des Königs", Date(), 8.0, 125)
+        )))
+        messages.add(NearbyMessage("Test2", "12345678901", mutableListOf(
+            MovieDto(253, "/dgabslxiRr0lLSarFASWrf9Ihqv.jpg", "James Bond 007 - Leben und sterben lassen", Date(), 7.0, 110),
+            MovieDto(272, "/bDpi3sixe9YwWB5KTPwmjhqZQGk.jpg", "Batman Begins", Date(), 4.0, 12)
+        )))
+
+        GlobalScope.launch(Main) {
+            for (message in messages) {
+                if (!nearbyMessagesArrayList.contains(message)) {
+                    nearbyMessagesArrayList.add(message)
+                    if (nearbyMessagesArrayList.isNotEmpty()) {
+                        startBtn.visibility = View.VISIBLE
+                        nearbyUserRv.visibility = View.VISIBLE
+                        searchingFriends.visibility = View.GONE
+                        progressBar.visibility = View.GONE
+                    }
+                    nearbyUserAdapter.notifyDataSetChanged()
+                }
+            }
         }
     }
 

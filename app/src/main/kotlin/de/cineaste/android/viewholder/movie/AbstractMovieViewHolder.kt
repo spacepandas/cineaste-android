@@ -12,7 +12,7 @@ import de.cineaste.android.viewholder.BaseViewHolder
 abstract class AbstractMovieViewHolder(
     itemView: View,
     context: Context,
-    listener: ItemClickListener
+    listener: ItemClickListener?
 ) :
     BaseViewHolder(itemView, listener, context) {
 

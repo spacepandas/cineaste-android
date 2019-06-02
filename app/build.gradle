@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion sdk_version
@@ -53,6 +54,7 @@ dependencies {
     implementation 'com.github.markusfisch:ScalingImageView:1.1.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     ktlint "com.github.shyiko:ktlint:0.29.0"
 }
