@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import de.cineaste.android.R
 import de.cineaste.android.activity.SeriesDetailActivity
 import de.cineaste.android.activity.SeriesSearchActivity
@@ -78,6 +80,16 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
     override fun initRecyclerView() {
         customRecyclerView.layoutManager = layoutManager
         customRecyclerView.adapter = seriesListAdapter
+
+        val divider = ContextCompat.getDrawable(customRecyclerView.context, R.drawable.divider)
+        val itemDecor = DividerItemDecoration(
+            customRecyclerView.context,
+            layoutManager.orientation
+        )
+        divider?.let {
+            itemDecor.setDrawable(it)
+        }
+        customRecyclerView.addItemDecoration(itemDecor)
     }
 
     override fun initAdapter(activity: Activity) {

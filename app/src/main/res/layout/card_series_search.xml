@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                    android:id="@+id/card_view"
-                                   style="@style/cardView"
-                                   android:layout_margin="5dp">
+                                   style="@style/cardView">
 
     <RelativeLayout
             android:id="@+id/relativeLayout"
