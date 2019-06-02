@@ -178,6 +178,7 @@ class MovieListAdapter(
             return results
         }
 
+        @Suppress("UNCHECKED_CAST")
         override fun publishResults(charSequence: CharSequence, results: FilterResults) {
             adapter.filteredDataSet.clear()
 

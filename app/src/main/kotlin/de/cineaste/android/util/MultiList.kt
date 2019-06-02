@@ -16,6 +16,8 @@ class MultiList {
 
     private val movies: LongSparseArray<MultiListEntry> = LongSparseArray()
 
+    fun clear() = movies.clear()
+
     fun size(): Int = movies.size()
 
     fun sortedList(): List<MultiListEntry> {

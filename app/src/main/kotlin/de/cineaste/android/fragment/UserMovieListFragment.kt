@@ -1,5 +1,8 @@
 package de.cineaste.android.fragment
 
+import android.app.ActivityOptions
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +15,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import de.cineaste.android.R
+import de.cineaste.android.activity.MovieDetailActivity
 import de.cineaste.android.adapter.UserMovieListAdapter
+import de.cineaste.android.database.dao.BaseDao
+import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.entity.movie.MatchingResult
 import de.cineaste.android.entity.movie.Movie
+import de.cineaste.android.listener.ItemClickListener
+import de.cineaste.android.listener.MovieSelectClickListener
+import de.cineaste.android.network.MovieCallback
+import de.cineaste.android.network.MovieLoader
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.util.Locale
 
-class UserMovieListFragment : DialogFragment() {
+class UserMovieListFragment : DialogFragment(), ItemClickListener, MovieSelectClickListener {
 
+    private lateinit var movieDbHelper: MovieDbHelper
     private lateinit var toolbar: Toolbar
     private lateinit var movieList: RecyclerView
     private lateinit var userMovieListAdapter: UserMovieListAdapter
@@ -25,14 +40,69 @@ class UserMovieListFragment : DialogFragment() {
 
     private lateinit var result: MatchingResult
 
+    override fun onMovieClickListener(movieId: Long) {
+        val selectedMovie = movieDbHelper.readMovie(movieId)
+
+        if (selectedMovie == null) {
+            val context = this@UserMovieListFragment.context
+            context?.let {
+                MovieLoader(it).loadLocalizedMovie(
+                    movieId,
+                    Locale.getDefault(),
+                    (object : MovieCallback {
+                        override fun onFailure() {
+                        }
+
+                        override fun onSuccess(movie: Movie) {
+                            GlobalScope.launch(Dispatchers.Main) { updateMovie(movie) }
+                        }
+                    })
+                )
+            }
+
+        } else {
+            updateMovie(selectedMovie)
+        }
+        activity?.onBackPressed()
+    }
+
+    private fun updateMovie(movie: Movie) {
+        movie.isWatched = true
+        movieDbHelper.createOrUpdate(movie)
+    }
+
+    override fun onItemClickListener(itemId: Long, views: Array<View>) {
+        val activity = activity ?: return
+
+        val intent = Intent(activity, MovieDetailActivity::class.java)
+        intent.putExtra(BaseDao.MovieEntry.ID, itemId)
+        intent.putExtra(getString(R.string.state), R.string.matchState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                activity,
+                android.util.Pair.create(views[0], "card"),
+                android.util.Pair.create(views[1], "poster")
+            )
+            activity.startActivity(intent, options.toBundle())
+        } else {
+            activity.startActivity(intent)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(
             STYLE_NORMAL,
             R.style.Dialog
         )
-        val test = arguments?.getString("entry")
-        result = Gson().fromJson(test, MatchingResult::class.java)
+        val context = this@UserMovieListFragment.context
+        context?.let {
+            movieDbHelper = MovieDbHelper.getInstance(it)
+        }
+
+        val resultJson = arguments?.getString("entry")
+        result = Gson().fromJson(resultJson, MatchingResult::class.java)
     }
 
     override fun onCreateView(
@@ -45,20 +115,12 @@ class UserMovieListFragment : DialogFragment() {
 
         toolbar = view.findViewById(R.id.toolbar)
 
-        userMovieListAdapter = UserMovieListAdapter(result.movies.map {
-            Movie(
-                it.id,
-                it.posterPath,
-                it.title,
-                it.runtime,
-                it.voteAverage,
-                0,
-                "",
-                false,
-                null,
-                it.releaseDate
+        userMovieListAdapter =
+            UserMovieListAdapter(
+                this,
+                result.movies.map { Pair(it, result.participatingUser) },
+                this
             )
-        })
 
         movieList = view.findViewById(R.id.recycler_view)
         layoutManager = LinearLayoutManager(context)

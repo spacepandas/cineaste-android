@@ -6,7 +6,7 @@ import de.cineaste.android.util.MultiList
 
 data class NearbyMessage(
     val userName: String = "",
-    private val deviceId: String = "",
+    val deviceId: String = "",
     val movies: MultiList = MultiList()
 ) {
 

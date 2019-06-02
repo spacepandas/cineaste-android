@@ -244,6 +244,11 @@ class MovieDetailActivity : AppCompatActivity() {
                 detailMovieList.visibility = View.VISIBLE
                 detailSearch.visibility = View.GONE
             }
+            R.string.matchState -> {
+                detailHistory.visibility = View.GONE
+                detailMovieList.visibility = View.GONE
+                detailSearch.visibility = View.GONE
+            }
         }
 
         detailHistory.setClickListener(

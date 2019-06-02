@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/b"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/poster_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/placeholder_poster"
+        android:transitionName="poster"
+        android:contentDescription="@string/moviePoster"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UnusedAttribute" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="6dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/poster_image_view"
+        app:layout_constraintStart_toEndOf="@+id/poster_image_view"
+        app:layout_constraintTop_toTopOf="@+id/poster_image_view" />
+
+    <TextView
+        android:id="@+id/movieReleaseDate"
+        style="@style/cardViewDescriptionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/releaseDate"
+        android:textColor="@color/information"
+        app:layout_constraintStart_toEndOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/poster_image_view" />
+
+    <TextView
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" ∙ "
+        android:textColor="@color/information"
+        app:layout_constraintBottom_toBottomOf="@+id/movieReleaseDate"
+        app:layout_constraintEnd_toStartOf="@id/movieRuntime"
+        app:layout_constraintStart_toEndOf="@+id/movieReleaseDate"
+        app:layout_constraintTop_toTopOf="@+id/movieReleaseDate"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/movieRuntime"
+        style="@style/cardViewDescriptionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/runtime"
+        android:textColor="@color/information"
+        app:layout_constraintBottom_toBottomOf="@+id/movieReleaseDate"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="@+id/movieReleaseDate" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:maxLines="2"
+        android:text="@string/movieTitle"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/movieReleaseDate" />
+
+    <TextView
+        android:id="@+id/movie_counter"
+        style="@style/cardViewDescriptionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/vote"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <Button
+        android:id="@+id/watch_now"
+        style="@style/CardActions"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/watch_now"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

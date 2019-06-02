@@ -7,6 +7,7 @@
     <string name="watchlistState">watchlist</string>
     <string name="historyState">history</string>
     <string name="searchState">search</string>
+    <string name="matchState">match</string>
     <string name="counter">counter</string>
     <string name="gradient">gradient</string>
     <string name="banner">Banner</string>
