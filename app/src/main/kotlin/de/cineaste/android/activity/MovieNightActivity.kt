@@ -155,7 +155,6 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
 
         localNearbyMessage =
             NearbyMessage(this.getString(R.string.all_movies), myUUid, MultiList(localMovies))
-
     }
 
     private fun startDialogFragment() {

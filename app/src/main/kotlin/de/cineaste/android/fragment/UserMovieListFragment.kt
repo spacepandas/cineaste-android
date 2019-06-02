@@ -59,7 +59,6 @@ class UserMovieListFragment : DialogFragment(), ItemClickListener, MovieSelectCl
                     })
                 )
             }
-
         } else {
             updateMovie(selectedMovie)
         }

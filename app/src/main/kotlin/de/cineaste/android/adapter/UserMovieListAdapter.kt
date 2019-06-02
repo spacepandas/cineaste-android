@@ -59,7 +59,6 @@ class UserMovieListAdapter(
         private val watchNow = itemView.findViewById<Button>(R.id.watch_now)
         private val resources: Resources = context.resources
 
-
         fun assignData(movie: MatchingResultMovie, counter: Int) {
             itemView.setOnClickListener {
                 listener.onItemClickListener(
