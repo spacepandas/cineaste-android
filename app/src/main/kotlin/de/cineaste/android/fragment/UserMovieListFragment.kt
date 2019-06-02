@@ -16,7 +16,6 @@ import de.cineaste.android.adapter.UserMovieListAdapter
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.NearbyMessage
 
-
 class UserMovieListFragment : DialogFragment() {
 
     private lateinit var toolbar: Toolbar
@@ -37,7 +36,8 @@ class UserMovieListFragment : DialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment

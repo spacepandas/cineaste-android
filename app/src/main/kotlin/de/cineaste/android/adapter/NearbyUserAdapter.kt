@@ -40,7 +40,7 @@ class NearbyUserAdapter(
             val resources = context.resources
             val count = nearbyMessage.movies.size
             movieCounter.text = resources.getQuantityString(R.plurals.movieCounter, count, count)
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 listener.onUserClickListener(nearbyMessage)
             }
         }

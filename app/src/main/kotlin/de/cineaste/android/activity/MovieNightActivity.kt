@@ -36,10 +36,12 @@ import de.cineaste.android.listener.UserClickListener
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.collections.ArrayList
 
-class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener, UserClickListener {
+class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener,
+    UserClickListener {
 
     private val nearbyMessagesArrayList = ArrayList<NearbyMessage>()
 
@@ -197,21 +199,64 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
             startActivity(intent)
             finish()
         }
-        //todo remove after testing
+        // todo remove after testing
         addInitalUsers()
     }
 
     private fun addInitalUsers() {
         val messages = mutableListOf<NearbyMessage>()
-        messages.add(NearbyMessage("Test1", "1234567890", mutableListOf(
-            MovieDto(120, "/zn5dEU1ygVeCEtFgttvujW3dCUj.jpg", "Der Herr der Ringe - Die Gefährten", Date(), 9.0, 120),
-            MovieDto(121, "/cMa7haLxqVe4fWNORPIq6fGdjys.jpg", "Der Herr der Ringe - Die zwei Türme", Date(), 9.5, 124),
-            MovieDto(122, "/viKyV73yclmtmpnJmCkfQsni9aa.jpg", "Der Herr der Ringe - Die Rückkehr des Königs", Date(), 8.0, 125)
-        )))
-        messages.add(NearbyMessage("Test2", "12345678901", mutableListOf(
-            MovieDto(253, "/dgabslxiRr0lLSarFASWrf9Ihqv.jpg", "James Bond 007 - Leben und sterben lassen", Date(), 7.0, 110),
-            MovieDto(272, "/bDpi3sixe9YwWB5KTPwmjhqZQGk.jpg", "Batman Begins", Date(), 4.0, 12)
-        )))
+        messages.add(
+            NearbyMessage(
+                "Test1", "1234567890", mutableListOf(
+                    MovieDto(
+                        120,
+                        "/zn5dEU1ygVeCEtFgttvujW3dCUj.jpg",
+                        "Der Herr der Ringe - Die Gefährten",
+                        Date(),
+                        9.0,
+                        120
+                    ),
+                    MovieDto(
+                        121,
+                        "/cMa7haLxqVe4fWNORPIq6fGdjys.jpg",
+                        "Der Herr der Ringe - Die zwei Türme",
+                        Date(),
+                        9.5,
+                        124
+                    ),
+                    MovieDto(
+                        122,
+                        "/viKyV73yclmtmpnJmCkfQsni9aa.jpg",
+                        "Der Herr der Ringe - Die Rückkehr des Königs",
+                        Date(),
+                        8.0,
+                        125
+                    )
+                )
+            )
+        )
+        messages.add(
+            NearbyMessage(
+                "Test2", "12345678901", mutableListOf(
+                    MovieDto(
+                        253,
+                        "/dgabslxiRr0lLSarFASWrf9Ihqv.jpg",
+                        "James Bond 007 - Leben und sterben lassen",
+                        Date(),
+                        7.0,
+                        110
+                    ),
+                    MovieDto(
+                        272,
+                        "/bDpi3sixe9YwWB5KTPwmjhqZQGk.jpg",
+                        "Batman Begins",
+                        Date(),
+                        4.0,
+                        12
+                    )
+                )
+            )
+        )
 
         GlobalScope.launch(Main) {
             for (message in messages) {

@@ -1,7 +1,7 @@
 package de.cineaste.android.entity.movie
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.util.Date
 
 data class MovieDto(
     var id: Long = 0,
@@ -19,7 +19,8 @@ data class MovieDto(
         movie.title,
         movie.releaseDate,
         movie.voteAverage,
-        movie.runtime)
+        movie.runtime
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
