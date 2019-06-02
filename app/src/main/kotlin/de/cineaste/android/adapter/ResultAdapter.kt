@@ -16,10 +16,10 @@ import java.util.Locale
 import de.cineaste.android.util.Constants
 import de.cineaste.android.R
 import de.cineaste.android.database.NearbyMessageHandler
-import de.cineaste.android.entity.movie.MatchingResult
+import de.cineaste.android.entity.movie.MatchingResultMovie
 
 class ResultAdapter(
-    private val results: MutableList<MatchingResult> = mutableListOf(),
+    private val resultMovies: MutableList<MatchingResultMovie> = mutableListOf(),
     private val listener: OnMovieSelectListener?
 ) : RecyclerView.Adapter<ResultAdapter.ViewHolder>() {
 
@@ -31,7 +31,7 @@ class ResultAdapter(
     }
 
     override fun getItemCount(): Int {
-        return results.size
+        return resultMovies.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,7 +41,7 @@ class ResultAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.assignData(results[position], NearbyMessageHandler.size)
+        holder.assignData(resultMovies[position], NearbyMessageHandler.size)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -51,8 +51,8 @@ class ResultAdapter(
         internal val title: TextView = itemView.findViewById(R.id.title)
         private val counter: TextView = itemView.findViewById(R.id.movie_counter_tv)
 
-        fun assignData(matchingResult: MatchingResult, resultCounter: Int) {
-            val posterPath = matchingResult.posterPath
+        fun assignData(matchingResultMovie: MatchingResultMovie, resultCounter: Int) {
+            val posterPath = matchingResultMovie.posterPath
             val posterUri = Constants.POSTER_URI_SMALL
                 .replace("<posterName>", posterPath ?: "/")
                 .replace("<API_KEY>", context.getString(R.string.movieKey))
@@ -62,15 +62,15 @@ class ResultAdapter(
                 .error(R.drawable.placeholder_poster)
                 .into(moviePoster)
             watchedButton.setOnClickListener(this)
-            title.text = matchingResult.title
+            title.text = matchingResultMovie.title
             counter.text =
-                String.format(Locale.getDefault(), "%d/%d", matchingResult.counter, resultCounter)
+                String.format(Locale.getDefault(), "%d/%d", matchingResultMovie.counter, resultCounter)
         }
 
         override fun onClick(v: View) {
             val position = adapterPosition
             listener?.onMovieSelectListener(position)
-            results.removeAt(position)
+            resultMovies.removeAt(position)
             notifyItemRemoved(position)
         }
     }

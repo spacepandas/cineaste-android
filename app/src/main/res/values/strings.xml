@@ -84,5 +84,6 @@
     <string name="no_episodes">No episodes available</string>
     <string name="notAvailableDuringSearch">Not available during search</string>
     <string name="more_info">More Info</string>
+    <string name="all_movies">All Movies</string>
 
 </resources>

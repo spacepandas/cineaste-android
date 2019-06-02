@@ -8,9 +8,17 @@ import de.cineaste.android.entity.movie.MovieDto
 
 class MultiList {
 
+    constructor()
+
+    constructor(movieDtos: List<MovieDto>) {
+        addAll(movieDtos)
+    }
+
     private val movies: LongSparseArray<MultiListEntry> = LongSparseArray()
 
-    fun getSortedList(): List<MultiListEntry> {
+    fun size(): Int = movies.size()
+
+    fun sortedList(): List<MultiListEntry> {
         val entries = ArrayList<MultiListEntry>()
         for (i in 0 until movies.size()) {
             entries.add(movies.valueAt(i))

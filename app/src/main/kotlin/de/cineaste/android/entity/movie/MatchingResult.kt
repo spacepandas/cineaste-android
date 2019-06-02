@@ -1,18 +1,18 @@
 package de.cineaste.android.entity.movie
 
-import com.google.gson.annotations.SerializedName
-
 data class MatchingResult(
-    var id: Long = 0,
-    @SerializedName("poster_path")
-    var posterPath: String? = "",
-    var title: String = "",
-    val counter: Int
+    var participatingUser: Int = 0,
+    var listTitle: String,
+    var movies: MutableList<MatchingResultMovie> = mutableListOf()
 ) {
-    constructor(movieDto: MovieDto, counter: Int) : this(
-        movieDto.id,
-        movieDto.posterPath,
-        movieDto.title,
-        counter
+    constructor(participatingUser: Int, nearbyMessage: NearbyMessage) : this(
+        participatingUser = participatingUser,
+        listTitle = nearbyMessage.userName,
+        movies = nearbyMessage.movies.sortedList().map {
+            MatchingResultMovie(
+                it.movieDto,
+                it.counter
+            )
+        }.toMutableList()
     )
 }

@@ -26,19 +26,20 @@ import de.cineaste.android.database.NearbyMessageHandler
 import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.database.dbHelper.UserDbHelper
 import de.cineaste.android.entity.User
-import de.cineaste.android.entity.movie.Movie
+import de.cineaste.android.entity.movie.MatchingResult
 import de.cineaste.android.entity.movie.MovieDto
 import de.cineaste.android.entity.movie.NearbyMessage
 import de.cineaste.android.fragment.UserInputFragment
 import de.cineaste.android.fragment.UserMovieListFragment
 import de.cineaste.android.fragment.WatchState
 import de.cineaste.android.listener.UserClickListener
+import de.cineaste.android.util.MultiList
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
-import kotlin.collections.ArrayList
 
 class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListener,
     UserClickListener {
@@ -69,7 +70,8 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     override fun onUserClickListener(nearbyMessage: NearbyMessage) {
         val dialog = UserMovieListFragment()
         val args = Bundle()
-        args.putString("entry", Gson().toJson(nearbyMessage))
+        val matchingResult = MatchingResult(0, nearbyMessage)
+        args.putString("entry", Gson().toJson(matchingResult))
         dialog.arguments = args
         dialog.show(supportFragmentManager, "")
     }
@@ -151,10 +153,11 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
     private fun buildLocalMessage() {
         val watchlistDbHelper = MovieDbHelper.getInstance(this)
         val localWatchlistMovies = watchlistDbHelper.readMoviesByWatchStatus(WatchState.WATCH_STATE)
-        val localMovies = transFormMovies(localWatchlistMovies)
-        currentUser?.userName?.let { userName ->
-            localNearbyMessage = NearbyMessage(userName, myUUid, localMovies)
-        }
+        val localMovies = localWatchlistMovies.map { MovieDto(it) }
+
+        localNearbyMessage =
+            NearbyMessage(this.getString(R.string.all_movies), myUUid, MultiList(localMovies))
+
     }
 
     private fun startDialogFragment() {
@@ -169,14 +172,6 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
             }
         }
         buildLocalMessage()
-    }
-
-    private fun transFormMovies(movies: List<Movie>): List<MovieDto> {
-        val movieDtos = ArrayList<MovieDto>()
-        for (movie in movies) {
-            movieDtos.add(MovieDto(movie))
-        }
-        return movieDtos
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -199,78 +194,73 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
             startActivity(intent)
             finish()
         }
+        addUser(localNearbyMessage)
         // todo remove after testing
-        addInitalUsers()
+           addInitalUsers()
     }
 
     private fun addInitalUsers() {
-        val messages = mutableListOf<NearbyMessage>()
-        messages.add(
-            NearbyMessage(
-                "Test1", "1234567890", mutableListOf(
-                    MovieDto(
-                        120,
-                        "/zn5dEU1ygVeCEtFgttvujW3dCUj.jpg",
-                        "Der Herr der Ringe - Die Gefährten",
-                        Date(),
-                        9.0,
-                        120
-                    ),
-                    MovieDto(
-                        121,
-                        "/cMa7haLxqVe4fWNORPIq6fGdjys.jpg",
-                        "Der Herr der Ringe - Die zwei Türme",
-                        Date(),
-                        9.5,
-                        124
-                    ),
-                    MovieDto(
-                        122,
-                        "/viKyV73yclmtmpnJmCkfQsni9aa.jpg",
-                        "Der Herr der Ringe - Die Rückkehr des Königs",
-                        Date(),
-                        8.0,
-                        125
-                    )
-                )
-            )
-        )
-        messages.add(
-            NearbyMessage(
-                "Test2", "12345678901", mutableListOf(
-                    MovieDto(
-                        253,
-                        "/dgabslxiRr0lLSarFASWrf9Ihqv.jpg",
-                        "James Bond 007 - Leben und sterben lassen",
-                        Date(),
-                        7.0,
-                        110
-                    ),
-                    MovieDto(
-                        272,
-                        "/bDpi3sixe9YwWB5KTPwmjhqZQGk.jpg",
-                        "Batman Begins",
-                        Date(),
-                        4.0,
-                        12
-                    )
+        val userList1 = MultiList()
+        userList1.addAll(
+            mutableListOf(
+                MovieDto(
+                    120,
+                    "/zn5dEU1ygVeCEtFgttvujW3dCUj.jpg",
+                    "Der Herr der Ringe - Die Gefährten",
+                    Date(),
+                    9.0,
+                    120
+                ),
+                MovieDto(
+                    121,
+                    "/cMa7haLxqVe4fWNORPIq6fGdjys.jpg",
+                    "Der Herr der Ringe - Die zwei Türme",
+                    Date(),
+                    9.5,
+                    124
+                ),
+                MovieDto(
+                    122,
+                    "/viKyV73yclmtmpnJmCkfQsni9aa.jpg",
+                    "Der Herr der Ringe - Die Rückkehr des Königs",
+                    Date(),
+                    8.0,
+                    125
                 )
             )
         )
 
-        GlobalScope.launch(Main) {
-            for (message in messages) {
-                if (!nearbyMessagesArrayList.contains(message)) {
-                    nearbyMessagesArrayList.add(message)
-                    if (nearbyMessagesArrayList.isNotEmpty()) {
-                        startBtn.visibility = View.VISIBLE
-                        nearbyUserRv.visibility = View.VISIBLE
-                        searchingFriends.visibility = View.GONE
-                        progressBar.visibility = View.GONE
-                    }
-                    nearbyUserAdapter.notifyDataSetChanged()
-                }
-            }
+        val userList2 = MultiList()
+        userList2.addAll(
+            mutableListOf(
+                MovieDto(
+                    253,
+                    "/dgabslxiRr0lLSarFASWrf9Ihqv.jpg",
+                    "James Bond 007 - Leben und sterben lassen",
+                    Date(),
+                    7.0,
+                    110
+                ),
+                MovieDto(
+                    272,
+                    "/bDpi3sixe9YwWB5KTPwmjhqZQGk.jpg",
+                    "Batman Begins",
+                    Date(),
+                    4.0,
+                    12
+                )
+            )
+        )
+
+        GlobalScope.launch {
+            delay(2000)
+            addUser(NearbyMessage("Test1", "1234567890", userList1))
+        }
+
+
+        GlobalScope.launch {
+            delay(4000)
+            addUser(NearbyMessage("Test2", "12345678901", userList2))
         }
     }
 
@@ -288,21 +278,29 @@ class MovieNightActivity : AppCompatActivity(), UserInputFragment.UserNameListen
         }
     }
 
+    private fun addUser(nearbyMessage: NearbyMessage) {
+        GlobalScope.launch(Main) {
+            if (nearbyMessagesArrayList.isNotEmpty()) {
+                nearbyMessagesArrayList.remove(nearbyMessagesArrayList.first())
+            }
+            localNearbyMessage.movies.addAll(nearbyMessage.movies.sortedList().map { it.movieDto })
+            nearbyMessagesArrayList.add(0, localNearbyMessage)
+            if (!nearbyMessagesArrayList.contains(nearbyMessage)) {
+                nearbyMessagesArrayList.add(nearbyMessage)
+                if (nearbyMessagesArrayList.isNotEmpty()) {
+                    startBtn.visibility = View.VISIBLE
+                    nearbyUserRv.visibility = View.VISIBLE
+                    searchingFriends.visibility = View.GONE
+                    progressBar.visibility = View.GONE
+                }
+                nearbyUserAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
     private inner class CineasteMessageListener : MessageListener() {
         override fun onFound(message: Message) {
-            GlobalScope.launch(Main) {
-                val nearbyMessage = NearbyMessage.fromMessage(message)
-                if (!nearbyMessagesArrayList.contains(nearbyMessage)) {
-                    nearbyMessagesArrayList.add(nearbyMessage)
-                    if (nearbyMessagesArrayList.isNotEmpty()) {
-                        startBtn.visibility = View.VISIBLE
-                        nearbyUserRv.visibility = View.VISIBLE
-                        searchingFriends.visibility = View.GONE
-                        progressBar.visibility = View.GONE
-                    }
-                    nearbyUserAdapter.notifyDataSetChanged()
-                }
-            }
+            addUser(NearbyMessage.fromMessage(message))
         }
 
         override fun onLost(message: Message) {

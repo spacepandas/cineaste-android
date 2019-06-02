@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import de.cineaste.android.R
 import de.cineaste.android.adapter.UserMovieListAdapter
+import de.cineaste.android.entity.movie.MatchingResult
 import de.cineaste.android.entity.movie.Movie
-import de.cineaste.android.entity.movie.NearbyMessage
 
 class UserMovieListFragment : DialogFragment() {
 
@@ -23,7 +23,7 @@ class UserMovieListFragment : DialogFragment() {
     private lateinit var userMovieListAdapter: UserMovieListAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
-    private lateinit var message: NearbyMessage
+    private lateinit var result: MatchingResult
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class UserMovieListFragment : DialogFragment() {
             R.style.Dialog
         )
         val test = arguments?.getString("entry")
-        message = Gson().fromJson(test, NearbyMessage::class.java)
+        result = Gson().fromJson(test, MatchingResult::class.java)
     }
 
     override fun onCreateView(
@@ -45,7 +45,7 @@ class UserMovieListFragment : DialogFragment() {
 
         toolbar = view.findViewById(R.id.toolbar)
 
-        userMovieListAdapter = UserMovieListAdapter(message.movies.map {
+        userMovieListAdapter = UserMovieListAdapter(result.movies.map {
             Movie(
                 it.id,
                 it.posterPath,
@@ -81,7 +81,7 @@ class UserMovieListFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setNavigationOnClickListener { dismiss() }
-        toolbar.title = message.userName
+        toolbar.title = result.listTitle
         toolbar.setOnMenuItemClickListener {
             dismiss()
             true

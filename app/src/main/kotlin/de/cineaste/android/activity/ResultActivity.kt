@@ -10,7 +10,7 @@ import de.cineaste.android.R
 import de.cineaste.android.adapter.ResultAdapter
 import de.cineaste.android.database.NearbyMessageHandler
 import de.cineaste.android.database.dbHelper.MovieDbHelper
-import de.cineaste.android.entity.movie.MatchingResult
+import de.cineaste.android.entity.movie.MatchingResultMovie
 import de.cineaste.android.entity.movie.Movie
 import de.cineaste.android.entity.movie.MovieDto
 import de.cineaste.android.entity.movie.NearbyMessage
@@ -27,14 +27,14 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
     private var nearbyMessages: MutableList<NearbyMessage> = mutableListOf()
     private lateinit var movieDbHelper: MovieDbHelper
 
-    private val results: ArrayList<MatchingResult>
+    private val resultMovies: ArrayList<MatchingResultMovie>
         get() {
-            val results = ArrayList<MatchingResult>()
+            val results = ArrayList<MatchingResultMovie>()
             val multiList = MultiList()
             multiList.addAll(movies)
 
-            for (multiListEntry in multiList.getSortedList()) {
-                results.add(MatchingResult(multiListEntry.movieDto, multiListEntry.counter))
+            for (multiListEntry in multiList.sortedList()) {
+                results.add(MatchingResultMovie(multiListEntry.movieDto, multiListEntry.counter))
             }
 
             return results
@@ -45,7 +45,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
             val movies = ArrayList<MovieDto>()
 
             for (current in nearbyMessages) {
-                movies.addAll(current.movies)
+                movies.addAll(current.movies.sortedList().map { it.movieDto })
             }
 
             return movies
@@ -69,7 +69,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
         result.itemAnimator = DefaultItemAnimator()
 
         val resultAdapter = ResultAdapter(
-            results,
+            resultMovies,
             this
         )
         result.adapter = resultAdapter
@@ -91,12 +91,12 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.OnMovieSelectListener 
 
     override fun onMovieSelectListener(position: Int) {
 
-        val selectedMovieId = results[position].id
+        val selectedMovieId = resultMovies[position].id
         val selectedMovie = movieDbHelper.readMovie(selectedMovieId)
 
         if (selectedMovie == null) {
             MovieLoader(this).loadLocalizedMovie(
-                results[position].id,
+                resultMovies[position].id,
                 Locale.getDefault(),
                 (object : MovieCallback {
                     override fun onFailure() {

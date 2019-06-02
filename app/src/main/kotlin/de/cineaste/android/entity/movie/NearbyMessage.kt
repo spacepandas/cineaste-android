@@ -2,11 +2,12 @@ package de.cineaste.android.entity.movie
 
 import com.google.android.gms.nearby.messages.Message
 import com.google.gson.Gson
+import de.cineaste.android.util.MultiList
 
 data class NearbyMessage(
     val userName: String = "",
     private val deviceId: String = "",
-    val movies: List<MovieDto> = emptyList()
+    val movies: MultiList = MultiList()
 ) {
 
     override fun equals(other: Any?): Boolean {

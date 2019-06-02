@@ -31,22 +31,18 @@ class NearbyUserAdapter(
         holder.assignData(nearbyMessage)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val userName: TextView = itemView.findViewById(R.id.userName_tv)
         private val movieCounter: TextView = itemView.findViewById(R.id.movie_counter_tv)
 
         fun assignData(nearbyMessage: NearbyMessage) {
             userName.text = nearbyMessage.userName
             val resources = context.resources
-            val count = nearbyMessage.movies.size
+            val count = nearbyMessage.movies.size()
             movieCounter.text = resources.getQuantityString(R.plurals.movieCounter, count, count)
             itemView.setOnClickListener {
                 listener.onUserClickListener(nearbyMessage)
             }
-        }
-
-        override fun onClick(v: View?) {
-            listener.onUserClickListener(nearbyMessages[adapterPosition])
         }
     }
 }
