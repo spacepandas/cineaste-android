@@ -76,7 +76,8 @@ abstract class TouchHelperCallback protected constructor(
             if (dX > 0) {
                 val tempIcon = ContextCompat.getDrawable(recyclerView.context, icon) ?: return
                 myIcon = tempIcon
-                background = ColorDrawable(ContextCompat.getColor(recyclerView.context, R.color.colorAccent))
+                background =
+                    ColorDrawable(ContextCompat.getColor(recyclerView.context, R.color.colorAccent))
 
                 intrinsicWidth = myIcon.intrinsicWidth
 
@@ -84,9 +85,16 @@ abstract class TouchHelperCallback protected constructor(
                 iconRight = itemView.left + iconMargin + intrinsicWidth
                 myIcon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
             } else {
-                val tempIcon = ContextCompat.getDrawable(recyclerView.context, R.drawable.ic_delete_white) ?: return
+                val tempIcon =
+                    ContextCompat.getDrawable(recyclerView.context, R.drawable.ic_delete_white)
+                        ?: return
                 myIcon = tempIcon
-                background = ColorDrawable(ContextCompat.getColor(recyclerView.context, R.color.colorPrimary))
+                background = ColorDrawable(
+                    ContextCompat.getColor(
+                        recyclerView.context,
+                        R.color.colorPrimary
+                    )
+                )
 
                 intrinsicWidth = myIcon.intrinsicWidth
 
