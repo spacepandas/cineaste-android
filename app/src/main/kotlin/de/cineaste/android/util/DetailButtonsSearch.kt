@@ -9,8 +9,8 @@ import de.cineaste.android.R
 
 class DetailButtonsSearch : ConstraintLayout {
 
-    lateinit var toMovieListBtn: Button
-    lateinit var toHistoryButton: Button
+    private lateinit var toMovieListBtn: Button
+    private lateinit var toHistoryButton: Button
 
     constructor(context: Context) : super(context) {
         init(context)

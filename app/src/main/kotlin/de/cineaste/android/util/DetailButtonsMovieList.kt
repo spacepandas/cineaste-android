@@ -9,8 +9,8 @@ import de.cineaste.android.R
 
 class DetailButtonsMovieList : ConstraintLayout {
 
-    lateinit var toHistoryBtn: Button
-    lateinit var deleteBtn: Button
+    private lateinit var toHistoryBtn: Button
+    private lateinit var deleteBtn: Button
 
     constructor(context: Context) : super(context) {
         init(context)
