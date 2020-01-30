@@ -6,7 +6,6 @@
         <item quantity="one">Film: %d</item>
         <item quantity="other">Filme: %d</item>
     </plurals>
-    <string name="startMovieNight">Filmnacht starten</string>
     <string name="result">Ergebnis</string>
 
     <string name="enter_username">Dein Benutzername</string>

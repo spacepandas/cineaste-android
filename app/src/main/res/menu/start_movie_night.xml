@@ -7,10 +7,6 @@
         app:showAsAction="ifRoom"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="@string/search"/>
-    <item android:id="@+id/startMovieNight"
-          android:title="@string/startMovieNight"
-          android:icon="@drawable/ic_tap_and_play"
-          app:showAsAction="ifRoom"/>
     <item android:id="@+id/filterAlphabetical"
         android:title="@string/sort_by_alpha"
         android:icon="@drawable/ic_sort_by_alpha"

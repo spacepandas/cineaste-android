@@ -26,20 +26,17 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import de.cineaste.android.activity.AboutActivity
-import de.cineaste.android.activity.MovieNightActivity
 import de.cineaste.android.database.ExportService
 import de.cineaste.android.database.ImportService
 import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.database.dbHelper.SeriesDbHelper
 import de.cineaste.android.database.dbHelper.UserDbHelper
 import de.cineaste.android.entity.ImportExportObject
-import de.cineaste.android.entity.User
 import de.cineaste.android.fragment.ImportFinishedDialogFragment
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.MOVIE_COUNT
 import de.cineaste.android.fragment.ImportFinishedDialogFragment.BundleKeyWords.Companion.SERIES_COUNT
 import de.cineaste.android.fragment.BaseListFragment
 import de.cineaste.android.fragment.SeriesListFragment
-import de.cineaste.android.fragment.UserInputFragment
 import de.cineaste.android.fragment.MovieListFragment
 import de.cineaste.android.fragment.WatchState
 import kotlinx.coroutines.Dispatchers.Main
@@ -49,7 +46,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Date
 
-class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var fm: FragmentManager
     private lateinit var contentContainer: View
@@ -409,14 +406,6 @@ class MainActivity : AppCompatActivity(), UserInputFragment.UserNameListener {
         )
         seriesListFragment.arguments = bundle
         return seriesListFragment
-    }
-
-    override fun onFinishUserDialog(userName: String) {
-        if (userName.isNotEmpty()) {
-            userDbHelper.createUser(User(userName))
-        }
-
-        startActivity(Intent(this@MainActivity, MovieNightActivity::class.java))
     }
 
     companion object {

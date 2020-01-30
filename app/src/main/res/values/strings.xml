@@ -6,7 +6,6 @@
         <item quantity="one">Movie: %d</item>
         <item quantity="other">Movies: %d</item>
     </plurals>
-    <string name="startMovieNight">Start Movie Night</string>
     <string name="result">Result</string>
 
     <string name="enter_username">Your Username</string>
