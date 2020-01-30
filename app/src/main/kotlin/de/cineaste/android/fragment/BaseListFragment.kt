@@ -161,7 +161,7 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         activity?.let {
-            it.menuInflater.inflate(R.menu.start_movie_night, menu)
+            it.menuInflater.inflate(R.menu.filter_menu, menu)
 
             menu?.findItem(R.id.action_search)?.let { searchItem ->
                 val searchView = searchItem.actionView as SearchView
