@@ -49,7 +49,6 @@ dependencies {
     implementation "androidx.cardview:cardview:$ax_version"
     implementation "androidx.recyclerview:recyclerview:$ax_version"
     implementation "com.google.android.material:material:$ax_version"
-    implementation 'com.google.android.gms:play-services-nearby:16.0.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.markusfisch:ScalingImageView:1.1.2'
     implementation 'com.squareup.picasso:picasso:2.71828'

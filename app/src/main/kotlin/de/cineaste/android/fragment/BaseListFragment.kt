@@ -5,23 +5,22 @@ import android.app.ActivityOptions.makeSceneTransitionAnimation
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Pair
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.MenuInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.cineaste.android.R
-import de.cineaste.android.activity.MovieNightActivity
 import de.cineaste.android.adapter.BaseListAdapter
 import de.cineaste.android.database.dbHelper.UserDbHelper
 import de.cineaste.android.listener.ItemClickListener
@@ -185,14 +184,6 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         item?.let {
             when (item.itemId) {
-                R.id.startMovieNight -> if (userDbHelper.user != null) {
-                    startMovieNight()
-                } else {
-                    val fragmentManager = fragmentManager
-                    if (fragmentManager != null) {
-                        UserInputFragment().show(fragmentManager, "")
-                    }
-                }
                 R.id.filterAlphabetical -> reorderLists(FilterType.ALPHABETICAL)
                 R.id.filterReleaseDate -> reorderLists(FilterType.RELEASE_DATE)
                 R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
@@ -210,12 +201,6 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
 
         progressbar.visibility = View.GONE
         customRecyclerView.enableScrolling(true)
-    }
-
-    private fun startMovieNight() {
-        val activity = activity ?: return
-        val intent = Intent(activity, MovieNightActivity::class.java)
-        activity.startActivity(intent)
     }
 
     override fun showMessageIfEmptyList() {

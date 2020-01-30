@@ -100,9 +100,6 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
         super.onCreateOptionsMenu(menu, inflater)
 
         menu?.let {
-            val movieNight = menu.findItem(R.id.startMovieNight)
-            movieNight.isVisible = false
-
             val sortByRuntime = menu.findItem(R.id.filterRunTime)
             sortByRuntime.isVisible = false
         }
