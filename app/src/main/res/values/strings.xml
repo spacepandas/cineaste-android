@@ -44,7 +44,7 @@
     <string name="undo">Undo</string>
     <string name="movie_deleted">Movie deleted</string>
     <string name="series_deleted">Series deleted</string>
-    <string name="movie_seen">Movie watched</string>
+    <string name="movie_seen">Watched</string>
     <string name="series_seen">Series watched</string>
     <string name="not_seen">Must see</string>
     <string name="watch_now">Watch now</string>
