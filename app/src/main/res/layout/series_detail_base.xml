@@ -66,8 +66,6 @@
                 android:id="@+id/releaseDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="4dp"
-                android:drawableStart="@drawable/ic_release"
                 android:text="@string/releaseDate" />
 
             <TextView

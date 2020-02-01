@@ -1,28 +1,19 @@
 package de.cineaste.android.activity
 
 import android.content.Intent
-import com.google.android.material.snackbar.Snackbar
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.reflect.TypeToken
 import de.cineaste.android.R
 import de.cineaste.android.adapter.movie.MovieSearchQueryAdapter
 import de.cineaste.android.database.dao.BaseDao
-import de.cineaste.android.database.dbHelper.MovieDbHelper
 import de.cineaste.android.entity.movie.Movie
-import de.cineaste.android.network.MovieCallback
-import de.cineaste.android.network.MovieLoader
 import de.cineaste.android.network.NetworkClient
 import de.cineaste.android.network.NetworkRequest
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.lang.reflect.Type
-import java.util.Locale
 
-class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.OnMovieStateChange {
+class MovieSearchActivity : AbstractSearchActivity() {
 
-    private val db = MovieDbHelper.getInstance(this)
     private lateinit var movieQueryAdapter: MovieSearchQueryAdapter
 
     override val layout: Int
@@ -42,47 +33,8 @@ class MovieSearchActivity : AbstractSearchActivity(), MovieSearchQueryAdapter.On
         return intent
     }
 
-    override fun onMovieStateChangeListener(movie: Movie, viewId: Int, index: Int) {
-        val callback: MovieCallback?
-        when (viewId) {
-            R.id.to_watchlist_button -> callback = object : MovieCallback {
-                override fun onFailure() {
-                    GlobalScope.launch(Main) { movieAddError(movie, index) }
-                }
-
-                override fun onSuccess(movie: Movie) {
-                    db.createOrUpdate(movie)
-                }
-            }
-            R.id.history_button -> callback = object : MovieCallback {
-                override fun onFailure() {
-                    GlobalScope.launch(Main) { movieAddError(movie, index) }
-                }
-
-                override fun onSuccess(movie: Movie) {
-                    movie.isWatched = true
-                    db.createOrUpdate(movie)
-                }
-            }
-            else -> callback = null
-        }
-
-        if (callback != null) {
-            movieQueryAdapter.removeMovie(movie)
-
-            MovieLoader(this).loadLocalizedMovie(movie.id, Locale.getDefault(), callback)
-        }
-    }
-
-    private fun movieAddError(movie: Movie, index: Int) {
-        val snackBar = Snackbar
-            .make(recyclerView, R.string.could_not_add_movie, Snackbar.LENGTH_LONG)
-        snackBar.show()
-        movieQueryAdapter.addMovie(movie, index)
-    }
-
     override fun initAdapter() {
-        movieQueryAdapter = MovieSearchQueryAdapter(this, this)
+        movieQueryAdapter = MovieSearchQueryAdapter(this)
     }
 
     override fun getSuggestions() {

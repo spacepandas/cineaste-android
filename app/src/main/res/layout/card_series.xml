@@ -15,7 +15,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/placeholder_poster"
-            android:contentDescription="@string/moviePoster" />
+            android:contentDescription="@string/posterDescription" />
 
         <View
             android:id="@+id/view"

@@ -30,7 +30,7 @@
 
 
     <string name="missing_permission">Import/Export Permissions missing</string>
-    <string name="moviePoster">Movie poster</string>
+    <string name="posterDescription">Poster</string>
     <string name="remove">Remove movie</string>
     <string name="noInternet">No internet-connection!</string>
     <string name="runtime">%d min</string>
@@ -40,7 +40,6 @@
     <string name="movieTitle">Title</string>
     <string name="noDescription">No description available</string>
     <string name="movieAdd">Added %s</string>
-    <string name="could_not_add_movie">Movie could not be added!</string>
 
     <string name="undo">Undo</string>
     <string name="movie_deleted">Movie deleted</string>
@@ -85,5 +84,6 @@
     <string name="more_info">More Info</string>
     <string name="all_movies">All Movies</string>
     <string name="movie_counter">%d of %d</string>
+    <string name="coming_soon">coming soon</string>
 
 </resources>

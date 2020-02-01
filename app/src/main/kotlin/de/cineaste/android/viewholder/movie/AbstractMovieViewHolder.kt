@@ -16,7 +16,8 @@ abstract class AbstractMovieViewHolder(
 ) :
     BaseViewHolder(itemView, listener, context) {
 
-    private val movieReleaseDate: TextView = itemView.findViewById(R.id.movieReleaseDate)
+    private val releaseDate: TextView = itemView.findViewById(R.id.releaseDate)
+    val movieVote: TextView = itemView.findViewById(R.id.vote)
     lateinit var movieRuntime: TextView
 
     init {
@@ -30,13 +31,14 @@ abstract class AbstractMovieViewHolder(
 
     fun setBaseInformation(movie: Movie) {
         title.text = movie.title
-        val releaseDate = movie.releaseDate
+        val movieReleaseDate = movie.releaseDate
 
-        if (releaseDate != null) {
-            movieReleaseDate.text = convertDate(releaseDate)
-            movieReleaseDate.visibility = View.VISIBLE
+        movieVote.text = resources.getString(R.string.vote, movie.voteAverage.toString())
+
+        if (movieReleaseDate != null) {
+            releaseDate.text = convertDate(movieReleaseDate)
         } else {
-            movieReleaseDate.visibility = View.GONE
+            releaseDate.text = resources.getString(R.string.coming_soon)
         }
         setPoster(movie.posterPath)
     }

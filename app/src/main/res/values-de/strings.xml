@@ -29,7 +29,7 @@
     <string name="importedSeriesFailed">Serien Import fehlgeschlagen</string>
 
     <string name="missing_permission">Import/Export Berechtigungen fehlen</string>
-    <string name="moviePoster">Filmposter</string>
+    <string name="posterDescription">Poster</string>
     <string name="remove">Film entfernen</string>
     <string name="noInternet">Keine Internetverbindung!</string>
     <string name="runtime">%d min</string>
@@ -39,7 +39,6 @@
     <string name="movieTitle">Titel</string>
     <string name="noDescription">Keine Beschreibung vorhanden</string>
     <string name="movieAdd">%s hinzugefügt</string>
-    <string name="could_not_add_movie">Der Film konnte nicht hinzugefügt werden!</string>
 
     <string name="undo">Rückgängig machen</string>
     <string name="movie_deleted">Film gelöscht</string>
@@ -83,4 +82,5 @@
     <string name="more_info">Weitere Infos</string>
     <string name="all_movies">Alle Filme</string>
     <string name="movie_counter">%d von %d</string>
+    <string name="coming_soon">Demnächst</string>
 </resources>

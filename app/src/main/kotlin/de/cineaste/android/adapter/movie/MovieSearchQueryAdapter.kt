@@ -9,14 +9,9 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.movie.MovieSearchViewHolder
 
 class MovieSearchQueryAdapter(
-    private val listener: ItemClickListener,
-    private val movieStateChange: OnMovieStateChange
+    private val listener: ItemClickListener
 ) : RecyclerView.Adapter<MovieSearchViewHolder>() {
     private val dataSet = ArrayList<Movie>()
-
-    interface OnMovieStateChange {
-        fun onMovieStateChangeListener(movie: Movie, viewId: Int, index: Int)
-    }
 
     fun addMovies(movies: List<Movie>) {
         dataSet.clear()
@@ -24,24 +19,11 @@ class MovieSearchQueryAdapter(
         notifyDataSetChanged()
     }
 
-    fun addMovie(movie: Movie, index: Int) {
-        dataSet.add(index, movie)
-    }
-
-    fun removeMovie(movie: Movie) {
-        val index = dataSet.indexOf(movie)
-
-        if (index >= 0) {
-            dataSet.removeAt(index)
-            notifyItemRemoved(index)
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieSearchViewHolder {
         val v = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.card_movie_search, parent, false)
-        return MovieSearchViewHolder(v, parent.context, movieStateChange, listener)
+            .inflate(R.layout.card_search, parent, false)
+        return MovieSearchViewHolder(v, parent.context, listener)
     }
 
     override fun onBindViewHolder(holder: MovieSearchViewHolder, position: Int) {

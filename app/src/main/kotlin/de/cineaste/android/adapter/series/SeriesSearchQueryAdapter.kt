@@ -9,14 +9,9 @@ import de.cineaste.android.listener.ItemClickListener
 import de.cineaste.android.viewholder.series.SeriesSearchViewHolder
 
 class SeriesSearchQueryAdapter(
-    private val listener: ItemClickListener,
-    private val seriesStateChange: OnSeriesStateChange
+    private val listener: ItemClickListener
 ) : RecyclerView.Adapter<SeriesSearchViewHolder>() {
     private val dataSet = ArrayList<Series>()
-
-    interface OnSeriesStateChange {
-        fun onSeriesStateChangeListener(series: Series, viewId: Int, index: Int)
-    }
 
     fun addSeries(series: List<Series>) {
         dataSet.clear()
@@ -24,20 +19,11 @@ class SeriesSearchQueryAdapter(
         notifyDataSetChanged()
     }
 
-    fun addOneSeries(series: Series, index: Int) {
-        dataSet.add(index, series)
-    }
-
-    fun removeOneSeries(index: Int) {
-        dataSet.removeAt(index)
-        notifyItemRemoved(index)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesSearchViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.card_series_search, parent, false)
-        return SeriesSearchViewHolder(view, listener, parent.context, seriesStateChange)
+            .inflate(R.layout.card_search, parent, false)
+        return SeriesSearchViewHolder(view, listener, parent.context)
     }
 
     override fun onBindViewHolder(holder: SeriesSearchViewHolder, position: Int) {

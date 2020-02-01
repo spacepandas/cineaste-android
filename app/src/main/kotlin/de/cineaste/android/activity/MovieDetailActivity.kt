@@ -217,7 +217,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun initViews() {
         progressBar = findViewById(R.id.progressBar)
-        movieReleaseDate = findViewById(R.id.movieReleaseDate)
+        movieReleaseDate = findViewById(R.id.releaseDate)
         poster = findViewById(R.id.movie_poster)
         rating = findViewById(R.id.rating)
         movieTitle = findViewById(R.id.movieTitle)

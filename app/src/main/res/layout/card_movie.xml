@@ -14,7 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/placeholder_poster"
-        android:contentDescription="@string/moviePoster"
+        android:contentDescription="@string/posterDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="@+id/poster_image_view" />
 
     <TextView
-        android:id="@+id/movieReleaseDate"
+        android:id="@+id/releaseDate"
         style="@style/cardViewDescriptionText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -45,10 +45,10 @@
         android:layout_height="wrap_content"
         android:text=" ∙ "
         android:textColor="@color/information"
-        app:layout_constraintBottom_toBottomOf="@+id/movieReleaseDate"
+        app:layout_constraintBottom_toBottomOf="@+id/releaseDate"
         app:layout_constraintEnd_toStartOf="@id/movieRuntime"
-        app:layout_constraintStart_toEndOf="@+id/movieReleaseDate"
-        app:layout_constraintTop_toTopOf="@+id/movieReleaseDate"
+        app:layout_constraintStart_toEndOf="@+id/releaseDate"
+        app:layout_constraintTop_toTopOf="@+id/releaseDate"
         tools:ignore="HardcodedText" />
 
     <TextView
@@ -58,9 +58,9 @@
         android:layout_height="wrap_content"
         android:text="@string/runtime"
         android:textColor="@color/information"
-        app:layout_constraintBottom_toBottomOf="@+id/movieReleaseDate"
+        app:layout_constraintBottom_toBottomOf="@+id/releaseDate"
         app:layout_constraintStart_toEndOf="@+id/divider"
-        app:layout_constraintTop_toTopOf="@+id/movieReleaseDate" />
+        app:layout_constraintTop_toTopOf="@+id/releaseDate" />
 
     <TextView
         android:id="@+id/title"
@@ -75,10 +75,10 @@
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/movieReleaseDate" />
+        app:layout_constraintTop_toBottomOf="@+id/releaseDate" />
 
     <TextView
-        android:id="@+id/movie_vote"
+        android:id="@+id/vote"
         style="@style/cardViewDescriptionText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
