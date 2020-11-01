@@ -70,8 +70,7 @@ class SeriesLoader(context: Context) {
     }
 
     private fun parseResponse(response: NetworkResponse): List<Episode> {
-        val parser = JsonParser()
-        val responseObject = parser.parse(response.responseReader).asJsonObject
+        val responseObject = JsonParser.parseReader(response.responseReader).asJsonObject
         val episodesListJson = responseObject.get("episodes").toString()
         val listType = object : TypeToken<List<Episode>>() {
         }.type

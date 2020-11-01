@@ -49,8 +49,7 @@ abstract class AbstractSearchActivity : AppCompatActivity(), ItemClickListener {
             }
 
             override fun onSuccess(response: NetworkResponse) {
-                val parser = JsonParser()
-                val responseObject = parser.parse(response.responseReader).asJsonObject
+                val responseObject = JsonParser.parseReader(response.responseReader).asJsonObject
                 val json = responseObject.get("results").toString()
                 val listType = listType
 

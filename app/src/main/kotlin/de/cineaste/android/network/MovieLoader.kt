@@ -38,8 +38,7 @@ class MovieLoader(context: Context) {
     }
 
     private fun parseResponse(response: NetworkResponse, language: Locale): Movie {
-        val parser = JsonParser()
-        val responseObject = parser.parse(response.responseReader).asJsonObject
+        val responseObject = JsonParser.parseReader(response.responseReader).asJsonObject
         val movie = getMovieFromJson(responseObject)
 
         val localReleaseDate = getOnlyType3Dates(getReleaseDates(responseObject), language)
