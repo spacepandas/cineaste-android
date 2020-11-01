@@ -37,3 +37,6 @@ clean:
 
 format: 
 	./gradlew ktlintFormat
+
+test:
+	./gradlew test
