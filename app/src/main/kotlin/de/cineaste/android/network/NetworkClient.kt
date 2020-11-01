@@ -35,7 +35,7 @@ class NetworkClient {
                     callback.onFailure()
                 }
                 callback.onSuccess(
-                    NetworkResponse(response.body()?.charStream())
+                    NetworkResponse(response.body?.charStream())
                 )
             }
         })
@@ -55,7 +55,7 @@ class NetworkClient {
                     callback.onFailure()
                 }
                 callback.onSuccess(
-                    NetworkResponse(response.body()?.charStream())
+                    NetworkResponse(response.body?.charStream())
                 )
             }
         })

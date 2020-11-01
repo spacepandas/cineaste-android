@@ -96,13 +96,11 @@ class SeriesListFragment : BaseListFragment(), SeriesListAdapter.OnEpisodeWatche
         seriesListAdapter = SeriesListAdapter(this, activity, this, watchState, this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        menu?.let {
-            val sortByRuntime = menu.findItem(R.id.filterRunTime)
-            sortByRuntime.isVisible = false
-        }
+        val sortByRuntime = menu.findItem(R.id.filterRunTime)
+        sortByRuntime.isVisible = false
     }
 
     override fun filterOnQueryTextChange(newText: String) {
