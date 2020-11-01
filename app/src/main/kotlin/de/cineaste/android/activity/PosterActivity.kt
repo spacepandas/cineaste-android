@@ -3,11 +3,13 @@ package de.cineaste.android.activity
 import android.annotation.TargetApi
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.palette.graphics.Palette
 import android.view.MenuItem
+import android.view.WindowInsets
 import android.view.WindowManager
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -30,10 +32,16 @@ class PosterActivity : AppCompatActivity() {
         setTransitionNameIfNecessary()
         poster.setImageResource(R.drawable.placeholder_poster)
         setContentView(poster)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
 
         displayPoster()
     }
