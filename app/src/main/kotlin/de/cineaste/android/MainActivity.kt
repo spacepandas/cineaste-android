@@ -368,6 +368,7 @@ class MainActivity : AppCompatActivity() {
         resultCode: Int,
         resultData: Intent?
     ) {
+        super.onActivityResult(requestCode, resultCode, resultData)
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
