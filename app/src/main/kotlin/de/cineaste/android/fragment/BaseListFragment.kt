@@ -149,21 +149,19 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         }
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        menu?.let {
+    override fun onPrepareOptionsMenu(menu: Menu) {
             val searchViewMenuItem = menu.findItem(R.id.action_search)
-            val mSearchView = searchViewMenuItem.actionView as SearchView
-            val v = mSearchView.findViewById<ImageView>(R.id.search_button)
-            v.setImageResource(R.drawable.ic_filter)
-            super.onPrepareOptionsMenu(menu)
-        }
+        val mSearchView = searchViewMenuItem.actionView as SearchView
+        val v = mSearchView.findViewById<ImageView>(R.id.search_button)
+        v.setImageResource(R.drawable.ic_filter)
+        super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         activity?.let {
             it.menuInflater.inflate(R.menu.filter_menu, menu)
 
-            menu?.findItem(R.id.action_search)?.let { searchItem ->
+            menu.findItem(R.id.action_search)?.let { searchItem ->
                 val searchView = searchItem.actionView as SearchView
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
@@ -181,13 +179,11 @@ abstract class BaseListFragment : Fragment(), ItemClickListener, BaseListAdapter
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            when (item.itemId) {
-                R.id.filterAlphabetical -> reorderLists(FilterType.ALPHABETICAL)
-                R.id.filterReleaseDate -> reorderLists(FilterType.RELEASE_DATE)
-                R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
-            }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.filterAlphabetical -> reorderLists(FilterType.ALPHABETICAL)
+            R.id.filterReleaseDate -> reorderLists(FilterType.RELEASE_DATE)
+            R.id.filterRunTime -> reorderLists(FilterType.RUNTIME)
         }
 
         return super.onOptionsItemSelected(item)

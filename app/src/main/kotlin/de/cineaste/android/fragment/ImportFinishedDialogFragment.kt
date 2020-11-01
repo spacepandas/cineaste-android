@@ -45,14 +45,14 @@ class ImportFinishedDialogFragment : DialogFragment() {
 
         val button = view.findViewById<Button>(R.id.ok)
 
-        button.setOnClickListener { dialog.dismiss() }
+        button.setOnClickListener { dialog?.dismiss() }
 
         movies = view.findViewById(R.id.movie)
         series = view.findViewById(R.id.series)
 
         fillTextViews()
 
-        dialog.setCancelable(false)
+        dialog?.setCancelable(false)
 
         return view
     }

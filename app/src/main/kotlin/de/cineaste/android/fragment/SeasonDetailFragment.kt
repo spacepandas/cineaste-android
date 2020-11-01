@@ -1,17 +1,17 @@
 package de.cineaste.android.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
+import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.Menu
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import de.cineaste.android.R
 import de.cineaste.android.adapter.series.EpisodeAdapter
 import de.cineaste.android.database.dbHelper.SeriesDbHelper
@@ -75,11 +75,9 @@ class SeasonDetailFragment : Fragment(), EpisodeViewHolder.OnEpisodeWatchStateCh
         return view
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.let {
-            if (episodes.isNotEmpty()) {
-                it.inflate(R.menu.season_menu, menu)
-            }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (episodes.isNotEmpty()) {
+            inflater.inflate(R.menu.season_menu, menu)
         }
 
         super.onCreateOptionsMenu(menu, inflater)
