@@ -26,6 +26,10 @@ android {
             resValue "string", "app_name", "Cineaste-Debug"
         }
 
+        nokey {
+            resValue "string", "movieKey", "x"
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
